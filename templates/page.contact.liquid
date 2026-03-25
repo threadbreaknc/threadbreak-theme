@@ -93,10 +93,116 @@
       <h2 class="reveal reveal-d1">Request a Quote.</h2>
     </div>
 
-    <div class="hulk-form-wrap">
-      <div style="margin:0 auto;" class="pxFormGenerator" id="3ZalJ0yMb5-ApNkO0OKUBg"></div>
-    </div>
+    {%- form 'contact', id: 'quote-form' -%}
 
+      {%- if form.posted_successfully? -%}
+        <div class="quote-success">
+          <div class="quote-success-stars" aria-hidden="true">
+            <span class="qstar" style="--tx:-70px;--ty:-50px;">✦</span>
+            <span class="qstar" style="--tx:70px;--ty:-60px;">✦</span>
+            <span class="qstar" style="--tx:-40px;--ty:-80px;">✦</span>
+            <span class="qstar" style="--tx:50px;--ty:-40px;">✦</span>
+            <span class="qstar" style="--tx:-90px;--ty:-25px;">✦</span>
+            <span class="qstar" style="--tx:90px;--ty:-35px;">✦</span>
+          </div>
+          <div class="quote-success-icon">✦</div>
+          <h3>Request Received.</h3>
+          <div class="quote-success-divider"></div>
+          <p>We'll get back to you at <strong>{{ form.email }}</strong> within 24 hours.</p>
+          <p class="quote-success-sub">Check your inbox, we'll be in touch soon.</p>
+        </div>
+      {%- else -%}
+
+      <input type="hidden" name="contact[subject]" value="Quote Request – Threadbreak">
+
+      <div class="qform">
+
+        <div class="qform-section">
+          <h4 class="qform-section-title">01, Contact Info</h4>
+          <div class="qform-row">
+            <div class="qform-field">
+              <label for="q-name">Name <span class="req">*</span></label>
+              <input type="text" id="q-name" name="contact[name]" required placeholder="Your name">
+            </div>
+            <div class="qform-field">
+              <label for="q-email">Email <span class="req">*</span></label>
+              <input type="email" id="q-email" name="contact[email]" required placeholder="you@email.com">
+            </div>
+          </div>
+          <div class="qform-row">
+            <div class="qform-field">
+              <label for="q-company">Company / Brand</label>
+              <input type="text" id="q-company" name="contact[company]" placeholder="Optional">
+            </div>
+            <div class="qform-field">
+              <label for="q-phone">Phone</label>
+              <input type="tel" id="q-phone" name="contact[phone]" placeholder="Optional">
+            </div>
+          </div>
+        </div>
+
+        <div class="qform-section">
+          <h4 class="qform-section-title">02, Order Details</h4>
+
+          <div class="qform-field">
+            <label for="q-qty">How Many Hats? <span class="req">*</span></label>
+            <input type="number" id="q-qty" name="contact[quantity]" required min="10" placeholder="e.g. 24" style="max-width:200px;background:#ffffff;color:#1a1520;border:1px solid rgba(26,21,32,0.15);">
+            <p class="qform-hint" style="margin-top:0.4rem;">Minimum order is <strong style="color:var(--purple-light);">10 hats</strong>. The more you order, the better the price.</p>
+          </div>
+
+          <div class="qform-field">
+            <label>Hat Style Preference</label>
+            <div class="qform-options">
+              <label class="qopt"><input type="radio" name="contact[hat_style]" value="Snapback"><span>Snapback</span></label>
+              <label class="qopt"><input type="radio" name="contact[hat_style]" value="Fitted"><span>Fitted</span></label>
+              <label class="qopt"><input type="radio" name="contact[hat_style]" value="Dad Hat"><span>Dad Hat</span></label>
+              <label class="qopt"><input type="radio" name="contact[hat_style]" value="Trucker"><span>Trucker</span></label>
+              <label class="qopt"><input type="radio" name="contact[hat_style]" value="Beanie"><span>Beanie</span></label>
+              <label class="qopt"><input type="radio" name="contact[hat_style]" value="Not sure"><span>Not sure</span></label>
+            </div>
+          </div>
+
+          <div class="qform-field">
+            <label>Stitch Type</label>
+            <div class="qform-options">
+              <label class="qopt"><input type="radio" name="contact[stitch_type]" value="Flat Embroidery"><span>Flat Embroidery</span></label>
+              <label class="qopt"><input type="radio" name="contact[stitch_type]" value="3D Puff"><span>3D Puff <em style="font-size:0.7em;opacity:0.7">(additional charge)</em></span></label>
+              <label class="qopt"><input type="radio" name="contact[stitch_type]" value="Not sure"><span>Not sure</span></label>
+            </div>
+          </div>
+
+          <div class="qform-field">
+            <label for="q-hat-color">Preferred Hat Color(s)</label>
+            <input type="text" id="q-hat-color" name="contact[hat_color]" placeholder="e.g. Black, White, Natural, Navy, etc.">
+          </div>
+
+          <div class="qform-field">
+            <label for="q-colors">Thread / Embroidery Colors</label>
+            <input type="text" id="q-colors" name="contact[colors]" placeholder="e.g. Red, White, Black, or we can match your logo's colors exactly">
+          </div>
+
+          <div class="qform-field">
+            <label for="q-notes">Additional Notes <span class="req">*</span></label>
+            <textarea id="q-notes" name="contact[body]" rows="5" required placeholder="Deadline, specific brands, budget range, anything else we should know..."></textarea>
+          </div>
+
+          <div class="qform-field">
+            <label for="q-file">Upload Your Logo / Design File</label>
+            <p class="qform-hint" style="margin-bottom:0.75rem;">PNG, JPG, PDF, AI, SVG accepted. File saves to our system on submit.</p>
+            <input type="file" id="q-file" name="contact[logo]" accept=".png,.jpg,.jpeg,.pdf,.ai,.svg,.eps" class="qform-file-input">
+          </div>
+
+        </div>
+
+        <div class="qform-submit-row">
+          <button type="submit" class="btn btn-fill quote-submit">Send Quote Request →</button>
+          <p class="quote-privacy">We respond within 24 hours. No spam, ever.</p>
+        </div>
+
+      </div>
+
+      {%- endif -%}
+    {%- endform -%}
   </section>
 
 </div>

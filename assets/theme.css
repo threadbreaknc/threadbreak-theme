@@ -6187,167 +6187,20 @@ body:has(.product-page) #main-nav,
   font-size: 0.95rem !important;
 }
 
-/* ══════════════════════════════════════
-   HULK FORM — FULL THEME OVERRIDE
-══════════════════════════════════════ */
-.hulk-form-wrap {
-  max-width: 780px;
-  margin: 0 auto;
-  padding: 0 0 5rem;
-}
 
-/* Nuke the outer card/box */
-.pxFormGenerator,
-.pxFormGenerator > div,
-.pxFormGenerator form,
-.pxFormGenerator [class*="form-wrap"],
-.pxFormGenerator [class*="form-card"],
-.pxFormGenerator [class*="card"],
-.pxFormGenerator [class*="container"],
-.pxFormGenerator [class*="wrapper"],
-.pxFormGenerator [class*="inner"] {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-  padding: 0 !important;
-  margin: 0 !important;
-}
-
-/* Font everywhere */
-.pxFormGenerator * {
-  font-family: var(--font-body) !important;
-  color: var(--black) !important;
-  box-sizing: border-box !important;
-}
-
-/* Labels */
-.pxFormGenerator label {
-  font-size: 0.72rem !important;
-  font-weight: 500 !important;
-  letter-spacing: 0.18em !important;
-  text-transform: uppercase !important;
-  color: var(--black) !important;
-  margin-bottom: 0.5rem !important;
-  display: block !important;
-}
-
-/* All inputs */
-.pxFormGenerator input[type="text"],
-.pxFormGenerator input[type="email"],
-.pxFormGenerator input[type="tel"],
-.pxFormGenerator input[type="number"],
-.pxFormGenerator input[type="url"],
-.pxFormGenerator textarea,
-.pxFormGenerator select {
-  background: #ffffff !important;
-  border: 1px solid rgba(26,21,32,0.18) !important;
-  border-radius: 0 !important;
-  color: #1a1520 !important;
-  font-size: 0.92rem !important;
-  padding: 0.85rem 1rem !important;
-  width: 100% !important;
-  outline: none !important;
-  box-shadow: none !important;
-  -webkit-appearance: none !important;
-  appearance: none !important;
-  transition: border-color 0.2s !important;
-}
-.pxFormGenerator input:focus,
-.pxFormGenerator textarea:focus,
-.pxFormGenerator select:focus {
-  border-color: var(--purple) !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-.pxFormGenerator input::placeholder,
-.pxFormGenerator textarea::placeholder {
-  color: rgba(26,21,32,0.3) !important;
-}
-
-/* Select arrow */
-.pxFormGenerator select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%231a1520' d='M6 8L0 0h12z'/%3E%3C/svg%3E") !important;
-  background-repeat: no-repeat !important;
-  background-position: right 1rem center !important;
-  background-size: 10px !important;
-  padding-right: 2.5rem !important;
-}
-
-/* File upload */
-.pxFormGenerator input[type="file"] {
+/* ── QUOTE FILE UPLOAD ── */
+.qform-file-input {
+  width: 100%;
+  padding: 1rem;
   background: rgba(112,80,200,0.04) !important;
-  border: 1px dashed rgba(112,80,200,0.4) !important;
-  padding: 1rem !important;
-  cursor: pointer !important;
-  color: rgba(26,21,32,0.5) !important;
-  border-radius: 0 !important;
+  border: 1px dashed rgba(112,80,200,0.35) !important;
+  color: rgba(26,21,32,0.6) !important;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
 }
-
-/* Field spacing */
-.pxFormGenerator [class*="field"],
-.pxFormGenerator [class*="form-group"],
-.pxFormGenerator [class*="input-group"] {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-  margin-bottom: 1.75rem !important;
-  padding: 0 !important;
-}
-
-/* Submit button */
-.pxFormGenerator button[type="submit"],
-.pxFormGenerator input[type="submit"],
-.pxFormGenerator [class*="submit-btn"],
-.pxFormGenerator [class*="btn-submit"],
-.pxFormGenerator [class*="form-btn"] {
-  background: var(--purple) !important;
-  color: #ffffff !important;
-  border: none !important;
-  border-radius: 0 !important;
-  padding: 1.1rem 2.5rem !important;
-  font-family: var(--font-display) !important;
-  font-size: 0.82rem !important;
-  letter-spacing: 0.2em !important;
-  text-transform: uppercase !important;
-  cursor: pointer !important;
-  width: 100% !important;
-  box-shadow: none !important;
-  transition: background 0.2s !important;
-  margin-top: 0.5rem !important;
-}
-.pxFormGenerator button[type="submit"]:hover {
-  background: var(--purple-mid) !important;
-}
-
-/* Error states */
-.pxFormGenerator [class*="error"],
-.pxFormGenerator [class*="invalid"] {
-  color: #c0392b !important;
-  font-size: 0.75rem !important;
-  background: transparent !important;
-  border: none !important;
-  margin-top: 0.25rem !important;
-}
-
-/* Success */
-.pxFormGenerator [class*="success-msg"],
-.pxFormGenerator [class*="success-message"] {
-  background: rgba(112,80,200,0.08) !important;
-  border: 1px solid rgba(112,80,200,0.3) !important;
-  border-left: 3px solid var(--purple) !important;
-  color: #1a1520 !important;
-  padding: 1.5rem !important;
-  border-radius: 0 !important;
-}
-
-/* Radio/checkbox */
-.pxFormGenerator input[type="radio"],
-.pxFormGenerator input[type="checkbox"] {
-  width: auto !important;
-  padding: 0 !important;
-  border: none !important;
-  background: transparent !important;
-  accent-color: var(--purple) !important;
+.qform-file-input:hover {
+  border-color: var(--purple) !important;
+  background: rgba(112,80,200,0.07) !important;
 }
