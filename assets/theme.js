@@ -376,3 +376,40 @@ if (hamburger && mobileMenu) {
     });
   });
 })();
+
+// ── ROTATING REVIEWS ──
+(function() {
+  const reviews = [
+    { text: "Seller was quick with response. Hat is amazing, great quality, really cool!", author: "Diane", source: "Etsy" },
+    { text: "Nice quality and craftsmanship of the hat I ordered.", author: "Beth", source: "eBay" },
+    { text: "Allowed me to change my order to a different hat before shipping with no issues!", author: "Max", source: "Etsy" },
+    { text: "It came in as pictured. An absolute fun gift to give him. Can't wait to see him open it.", author: "Marsha", source: "eBay" },
+    { text: "Hat is great! Love the design and love to support local businesses. Great value for the cost and shipping. Go Canes!", author: "Matt", source: "Etsy" },
+    { text: "This hat is awesome and my son loves it! It was shipped quickly and it's a perfect gift for a Hurricanes fan!", author: "Brad", source: "eBay" },
+    { text: "Great looking ball cap, the logo is sweet. Thanks for the added Bussi decal. Those are awesome. Probably gonna end up with a few of these hats in my wardrobe.", author: "Matt", source: "Etsy" },
+  ];
+
+  document.querySelectorAll('.review-rotator').forEach(el => {
+    // Pick a random review
+    const r = reviews[Math.floor(Math.random() * reviews.length)];
+    const textEl = el.querySelector('.review-text');
+    const authorEl = el.querySelector('.review-author');
+    const sourceEl = el.querySelector('.review-source');
+    if (textEl) textEl.textContent = '"' + r.text + '"';
+    if (authorEl) authorEl.textContent = '— ' + r.author;
+    if (sourceEl) sourceEl.textContent = 'via ' + r.source;
+
+    // Auto-rotate every 6 seconds
+    let idx = reviews.indexOf(r);
+    setInterval(() => {
+      idx = (idx + 1) % reviews.length;
+      el.classList.add('review-fade');
+      setTimeout(() => {
+        if (textEl) textEl.textContent = '"' + reviews[idx].text + '"';
+        if (authorEl) authorEl.textContent = '— ' + reviews[idx].author;
+        if (sourceEl) sourceEl.textContent = 'via ' + reviews[idx].source;
+        el.classList.remove('review-fade');
+      }, 400);
+    }, 6000);
+  });
+})();
