@@ -6250,45 +6250,71 @@ body:has(.product-page) #main-nav,
   fill: rgba(26,21,32,0.75) !important;
 }
 
-/* ── REVIEW ROTATOR ── */
-.review-rotator {
-  padding: 3rem 6rem;
+
+/* ── REVIEW STRIP (3 cards) ── */
+.review-strip {
   background: #f4f1fc;
   border-top: 1px solid rgba(112,80,200,0.1);
   border-bottom: 1px solid rgba(112,80,200,0.1);
-  text-align: center;
+  padding: 2.5rem 6rem;
+}
+
+.review-strip-inner {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.review-card {
+  padding: 1.25rem 1.5rem;
+  background: #ffffff;
+  border: 1px solid rgba(112,80,200,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  opacity: 0;
   transition: opacity 0.4s ease;
 }
-.review-rotator.review-fade { opacity: 0; }
-.review-stars {
+.review-card.rc-visible { opacity: 1; }
+.rc-stars {
   color: #f4c542;
-  font-size: 0.85rem;
-  letter-spacing: 0.1em;
-  margin-bottom: 0.75rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
 }
-.review-text {
-  font-size: clamp(0.95rem, 1.5vw, 1.15rem);
-  color: rgba(26,21,32,0.75);
+.rc-text {
+  font-size: 0.83rem;
+  color: rgba(26,21,32,0.7);
   font-style: italic;
-  line-height: 1.7;
-  max-width: 640px;
-  margin: 0 auto 0.75rem;
+  line-height: 1.6;
+  flex: 1;
+  margin: 0;
 }
-.review-author {
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
+.rc-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  margin-top: 0.25rem;
+}
+.rc-author {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--purple);
-  font-style: normal;
 }
-.review-source {
+.rc-source {
   font-size: 0.65rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: rgba(26,21,32,0.25);
-  margin-top: 0.4rem;
+  color: rgba(26,21,32,0.3);
+  letter-spacing: 0.08em;
+}
+.rc-source::before { content: "· "; }
+@media (max-width: 900px) {
+  .review-strip { padding: 2rem 3rem; }
+  .review-strip-inner { grid-template-columns: 1fr; gap: 1rem; }
+  .review-card:not(:first-child) { display: none; }
 }
 @media (max-width: 640px) {
-  .review-rotator { padding: 2.5rem 1.5rem; }
-  .review-text { font-size: 0.9rem; }
+  .review-strip { padding: 2rem 1.5rem; }
 }
