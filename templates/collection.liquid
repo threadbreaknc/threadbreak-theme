@@ -1,0 +1,94 @@
+<div class="collection-page">
+
+  <!-- HERO -->
+  <section class="collection-hero">
+    <div class="collection-hero-bg"></div>
+    <div class="collection-hero-content">
+      <p class="eyebrow">{{ collection.title }}</p>
+      <h1>{{ collection.title | upcase }}</h1>
+      <p class="collection-hero-sub">Sports & culture inspired designs, free shipping on every order.</p>
+    </div>
+  </section>
+
+  <!-- TICKER -->
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-wrap">
+      <span>Premium Hats</span><span class="ticker-sep">✦</span>
+      <span>Free Shipping</span><span class="ticker-sep">✦</span>
+      <span>Ships in 2-4 Days</span><span class="ticker-sep">✦</span>
+      <span>Custom Orders Available</span><span class="ticker-sep">✦</span>
+      <span>Premium Hats</span><span class="ticker-sep">✦</span>
+      <span>Free Shipping</span><span class="ticker-sep">✦</span>
+      <span>Ships in 2-4 Days</span><span class="ticker-sep">✦</span>
+      <span>Custom Orders Available</span><span class="ticker-sep">✦</span>
+      <span>Premium Hats</span><span class="ticker-sep">✦</span>
+      <span>Free Shipping</span><span class="ticker-sep">✦</span>
+      <span>Ships in 2-4 Days</span><span class="ticker-sep">✦</span>
+      <span>Custom Orders Available</span><span class="ticker-sep">✦</span>
+    </div>
+  </div>
+
+  <!-- SORT + COUNT BAR -->
+  <div class="collection-bar">
+    <p class="collection-count">{{ collection.products_count }} Products</p>
+    <form class="collection-sort">
+      <label for="sort-by" class="sort-label">Sort</label>
+      <select name="sort_by" id="sort-by" class="sort-select" onchange="this.form.submit()">
+        <option value="best-selling" {% if collection.sort_by == 'best-selling' or collection.sort_by == blank %}selected{% endif %}>Popular</option>
+        <option value="created-descending" {% if collection.sort_by == 'created-descending' %}selected{% endif %}>Newest</option>
+        <option value="title-ascending" {% if collection.sort_by == 'title-ascending' %}selected{% endif %}>Name A-Z</option>
+        <option value="price-ascending" {% if collection.sort_by == 'price-ascending' %}selected{% endif %}>Price Low-High</option>
+        <option value="price-descending" {% if collection.sort_by == 'price-descending' %}selected{% endif %}>Price High-Low</option>
+      </select>
+    </form>
+  </div>
+
+  <!-- PRODUCT GRID -->
+  <div class="collection-grid">
+    {%- for product in collection.products -%}
+      <a href="{{ product.url }}" class="coll-card">
+        <div class="coll-img-wrap">
+          {%- if product.featured_image -%}
+            <img
+              src="{{ product.featured_image | img_url: '600x600', crop: 'center' }}"
+              alt="{{ product.title | escape }}"
+              class="coll-img"
+              loading="lazy"
+            >
+          {%- else -%}
+            <div class="coll-img-placeholder">🧢</div>
+          {%- endif -%}
+          <div class="coll-card-overlay">
+            <span class="coll-quick-view">View Product →</span>
+          </div>
+          {%- if product.compare_at_price > product.price -%}
+            <div class="coll-badge coll-badge-sale">Sale</div>
+          {%- endif -%}
+          {%- unless product.available -%}
+            <div class="coll-badge coll-badge-sold">Sold Out</div>
+          {%- endunless -%}
+        </div>
+        <div class="coll-info">
+          <h3 class="coll-name">{{ product.title }}</h3>
+          <div class="coll-meta">
+            <span class="coll-price">{{ product.price | money }}</span>
+            {%- if product.variants.size > 1 -%}
+              <span class="coll-variants">{{ product.variants.size }} styles</span>
+            {%- endif -%}
+          </div>
+        </div>
+      </a>
+    {%- else -%}
+      <p class="collection-empty">No products found.</p>
+    {%- endfor -%}
+  </div>
+
+  <!-- CTA BAND -->
+  <section class="collection-cta">
+    <p class="eyebrow reveal">Can't find what you're looking for?</p>
+    <h2 class="reveal reveal-d1">Get Something<br>Custom Made.</h2>
+    <p class="reveal reveal-d2">Send us your logo and we'll build something unique. Wholesale pricing starts at 10 hats.</p>
+    <a href="/pages/quote" class="btn btn-fill reveal reveal-d3">Get a Quote →</a>
+  </section>
+
+</div>

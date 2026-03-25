@@ -1,0 +1,84 @@
+{%- if cart.item_count > 0 -%}
+<div class="cart-page">
+  <div class="about-sparkles" id="about-sparkles" aria-hidden="true"></div>
+
+  <section class="cart-hero">
+    <div class="cart-hero-content">
+      <p class="eyebrow">Almost There.</p>
+      <h1>Your Cart.</h1>
+    </div>
+    <div class="cart-progress-wrap">
+      <p class="cart-progress-label">{{ cart.item_count }} item{% if cart.item_count > 1 %}s{% endif %} ready to ship</p>
+      <div class="cart-progress-bar"><div class="cart-progress-fill"></div></div>
+      <p class="cart-progress-sub">Free shipping included ✦</p>
+    </div>
+  </section>
+
+  {%- form 'cart', cart, id: 'cart-form' -%}
+  <section class="cart-section">
+
+    <div class="cart-items">
+      {%- for item in cart.items -%}
+        <div class="cart-item">
+          <div class="cart-item-img">
+            <img src="{{ item.image | img_url: '200x200', crop: 'center' }}" alt="{{ item.title | escape }}">
+          </div>
+          <div class="cart-item-info">
+            <a href="{{ item.url }}" class="cart-item-name">{{ item.product.title }}</a>
+            {%- unless item.variant.title == 'Default Title' -%}
+              <p class="cart-item-variant">{{ item.variant.title }}</p>
+            {%- endunless -%}
+            <div class="cart-item-bottom">
+              <div class="cart-item-qty">
+                <button type="button" class="qty-btn cart-qty-minus" data-line="{{ forloop.index }}">−</button>
+                <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" class="qty-input cart-qty-input" data-line="{{ forloop.index }}">
+                <button type="button" class="qty-btn cart-qty-plus" data-line="{{ forloop.index }}">+</button>
+              </div>
+              <span class="cart-item-total">{{ item.line_price | money }}</span>
+              <a href="{{ item.url_to_remove }}" class="cart-item-remove">✕</a>
+            </div>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <div class="cart-summary">
+      <div class="cart-summary-inner">
+        <div class="cart-summary-row">
+          <span>Subtotal</span>
+          <span class="cart-total-price">{{ cart.total_price | money }}</span>
+        </div>
+        <div class="cart-free-shipping">
+          <div class="cart-free-row">
+            <span class="cart-free-icon">✦</span>
+            <span>Free Shipping</span>
+            <span class="cart-free-badge">Included</span>
+          </div>
+        </div>
+        <div class="cart-nudge">
+          <p>Your hat is sitting here, waiting. Don't leave it hanging.</p>
+        </div>
+        <button type="submit" name="checkout" class="btn btn-fill cart-checkout-btn">Complete Order →</button>
+        <a href="/collections/pre-made-hats" class="cart-continue">← Keep Shopping</a>
+
+      </div>
+    </div>
+
+  </section>
+  {%- endform -%}
+
+</div>
+
+{%- else -%}
+
+<div class="cart-page">
+  <section class="cart-empty">
+    <div class="cart-empty-content">
+      <h1>Your cart is empty.</h1>
+      <p>Looks like you haven't added anything yet. Let's fix that.</p>
+      <a href="/collections/pre-made-hats" class="btn btn-fill">Shop Hats</a>
+    </div>
+  </section>
+</div>
+
+{%- endif -%}

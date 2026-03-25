@@ -1,0 +1,29 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "settings": {}
+    },
+    "ticker": {
+      "type": "ticker",
+      "settings": {}
+    },
+    "overview": {
+      "type": "overview",
+      "settings": {}
+    },
+    "photo-band": {
+      "type": "photo-band",
+      "settings": {}
+    },
+    "process": {
+      "type": "process",
+      "settings": {}
+    },
+    "wholesale": {
+      "type": "wholesale",
+      "settings": {}
+    }
+  },
+  "order": ["hero","ticker","overview","photo-band","process","wholesale"]
+}

@@ -1,0 +1,174 @@
+{%- assign selected_variant = product.selected_or_first_available_variant -%}
+<div class="product-page">
+
+  <section class="product-main">
+    <div class="product-gallery">
+      <div class="product-gallery-main">
+        <img src="{{ selected_variant.featured_image | default: product.featured_image | img_url: '800x800', crop: 'center' }}" alt="{{ product.title | escape }}" id="product-main-img" class="product-main-img">
+      </div>
+      <div class="product-thumbs">
+        {%- for image in product.images limit: 6 -%}
+          <button class="product-thumb{% if forloop.first %} active{% endif %}" data-src="{{ image | img_url: '800x800', crop: 'center' }}">
+            <img src="{{ image | img_url: '160x160', crop: 'center' }}" alt="{{ product.title | escape }}">
+          </button>
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <div class="product-info">
+      <p class="product-collection">
+        {%- for collection in product.collections limit: 1 -%}
+          <a href="{{ collection.url }}">{{ collection.title }}</a>
+        {%- endfor -%}
+      </p>
+      <h1 class="product-title">{{ product.title }}</h1>
+      <p class="product-price">{{ selected_variant.price | money }}</p>
+
+      {%- form 'product', product, id: 'product-form' -%}
+        <input type="hidden" name="id" id="variant-id" value="{{ selected_variant.id }}">
+
+        {%- unless product.has_only_default_variant -%}
+          {%- for option in product.options_with_values -%}
+            <div class="product-option">
+              <p class="option-label">{{ option.name }}: <span class="option-selected" id="option-{{ forloop.index0 }}-label">{{ option.selected_value }}</span></p>
+              <div class="option-swatches">
+                {%- for value in option.values -%}
+                  {%- assign opt_idx = forloop.parentloop.index0 -%}
+                  {%- for variant in product.variants -%}
+                    {%- if variant.option1 == value or variant.option2 == value -%}
+                      <button type="button" class="swatch{% if value == option.selected_value %} active{% endif %}"
+                        data-value="{{ value | escape }}"
+                        data-option-index="{{ opt_idx }}"
+                        data-variant-id="{{ variant.id }}"
+                        data-variant-image="{% if variant.featured_image %}{{ variant.featured_image | img_url: '800x800', crop: 'center' }}{% endif %}"
+                        {% unless variant.available %}disabled{% endunless %}>
+                        {{ value }}
+                      </button>
+                      {%- break -%}
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endfor -%}
+              </div>
+            </div>
+          {%- endfor -%}
+        {%- endunless -%}
+
+        <div class="product-actions">
+          <div class="qty-wrap">
+            <button type="button" class="qty-btn" id="qty-minus">−</button>
+            <input type="number" name="quantity" value="1" min="1" id="qty-input" class="qty-input">
+            <button type="button" class="qty-btn" id="qty-plus">+</button>
+          </div>
+          <button type="submit" class="btn btn-fill product-atc" id="atc-btn">
+            {%- if selected_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
+          </button>
+        </div>
+
+        <p class="product-shipping-badge">✦ Free shipping on all orders · Ships in 2-4 business days</p>
+
+        {%- if product.metafields.custom.sticker_url != blank -%}
+        <a href="{{ product.metafields.custom.sticker_url }}" class="sticker-upsell">
+          <span class="sticker-upsell-icon">🔖</span>
+          <div>
+            <p class="sticker-upsell-title">Also available as a sticker pack</p>
+            <p class="sticker-upsell-sub">Get this design as a sticker. Tap to shop.</p>
+          </div>
+          <span class="sticker-upsell-arrow">→</span>
+        </a>
+        {%- endif -%}
+      {%- endform -%}
+
+      <div class="product-desc">{{ product.description }}</div>
+    </div>
+  </section>
+
+  {%- comment -%}
+    IN THE WILD, only shows if the product has wild photos set via metafields.
+    To set up: Shopify Admin → Settings → Custom data → Products
+    Add these metafields:
+      - custom.wild_photo_1  (type: File)
+      - custom.wild_photo_2  (type: File, optional)
+      - custom.wild_location (type: Single line text, e.g. "Lenovo Center, Carolina Hurricanes")
+  {%- endcomment -%}
+
+  {%- if product.metafields.custom.wild_photo_1 != blank -%}
+  <section class="in-the-wild">
+    <div class="wild-header">
+      <p class="eyebrow reveal">
+        {%- if product.metafields.custom.wild_location != blank -%}
+          Spotted at {{ product.metafields.custom.wild_location }}
+        {%- else -%}
+          In The Wild
+        {%- endif -%}
+      </p>
+      <h2 class="reveal reveal-d1">In The Wild.</h2>
+      <p class="reveal reveal-d2">Real fans. Real games. Real hats.</p>
+    </div>
+    <div class="wild-photos{% if product.metafields.custom.wild_photo_2 == blank %} wild-photos--single{% endif %}">
+      <div class="wild-photo reveal">
+        <img src="{{ product.metafields.custom.wild_photo_1 | img_url: '800x800' }}" alt="{{ product.title | escape }} in the wild">
+        {%- if product.metafields.custom.wild_location != blank -%}
+          <div class="wild-tag">📍 {{ product.metafields.custom.wild_location }}</div>
+        {%- endif -%}
+      </div>
+      {%- if product.metafields.custom.wild_photo_2 != blank -%}
+        <div class="wild-photo reveal reveal-d1">
+          <img src="{{ product.metafields.custom.wild_photo_2 | img_url: '800x800' }}" alt="{{ product.title | escape }} in the wild">
+          {%- if product.metafields.custom.wild_location != blank -%}
+            <div class="wild-tag">📍 {{ product.metafields.custom.wild_location }}</div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </section>
+  {%- endif -%}
+
+  <!-- TRUST SECTION -->
+  <section class="product-trust">
+    <div class="trust-inner">
+      <div class="trust-item reveal">
+        <div class="trust-stars">★★★★★</div>
+        <p class="trust-platform">Etsy</p>
+        <p class="trust-stat">5 Stars</p>
+        <p class="trust-desc">Verified seller with 5-star ratings across all orders on Etsy.</p>
+      </div>
+      <div class="trust-divider"></div>
+      <div class="trust-item reveal reveal-d1">
+        <div class="trust-stars">★★★★★</div>
+        <p class="trust-platform">eBay</p>
+        <p class="trust-stat">100% Positive</p>
+        <p class="trust-desc">100% positive feedback from every buyer on eBay. Not a single complaint.</p>
+      </div>
+      <div class="trust-divider"></div>
+      <div class="trust-item reveal reveal-d2">
+        <div class="trust-stars">✦ ✦ ✦</div>
+        <p class="trust-platform">Our Promise</p>
+        <p class="trust-stat">Made Right</p>
+        <p class="trust-desc">Every hat is stitched in-house. If something's wrong on our end, we make it right. Period.</p>
+      </div>
+    </div>
+  </section>
+
+  {%- if product.collections.first.products.size > 1 -%}
+  <section class="related-products">
+    <p class="eyebrow reveal">Keep Browsing</p>
+    <h2 class="reveal reveal-d1">You May Also Like</h2>
+    <div class="related-grid">
+      {%- for related in product.collections.first.products limit: 5 -%}
+        {%- unless related.handle == product.handle -%}
+          <a href="{{ related.url }}" class="hat-card reveal">
+            <div class="hat-img-wrap">
+              <img src="{{ related.featured_image | img_url: '600x600', crop: 'center' }}" alt="{{ related.title | escape }}" class="hat-img">
+            </div>
+            <div class="hat-info">
+              <div class="hat-name">{{ related.title }}</div>
+              <div class="hat-price">{{ related.price | money }}</div>
+            </div>
+          </a>
+        {%- endunless -%}
+      {%- endfor -%}
+    </div>
+  </section>
+  {%- endif -%}
+
+</div>

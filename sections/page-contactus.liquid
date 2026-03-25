@@ -1,0 +1,94 @@
+<div class="contact-page">
+
+  <section class="contact-hero">
+    <div class="contact-hero-content">
+      <p class="eyebrow">We're Here</p>
+      <h1>Contact.</h1>
+      <p class="contact-hero-sub">Questions about an order, a product, or anything else, send us a message and we'll get back to you within 24 hours.</p>
+    </div>
+  </section>
+
+  <section class="contact-options">
+    <div class="contact-option reveal">
+      <div class="contact-option-icon">✦</div>
+      <h3>General Questions</h3>
+      <p>Order status, product questions, sizing info, anything you need.</p>
+      <p class="contact-email"><a href="mailto:help@threadbreak.com">help@threadbreak.com</a></p>
+    </div>
+    <div class="contact-option reveal reveal-d1">
+      <div class="contact-option-icon">✦</div>
+      <h3>Custom & Wholesale</h3>
+      <p>Looking for a quote on custom embroidered hats? Use our dedicated quote form.</p>
+      <a href="/pages/quote" class="contact-option-link">Get a Quote →</a>
+    </div>
+    <div class="contact-option reveal reveal-d2">
+      <div class="contact-option-icon">✦</div>
+      <h3>Instagram</h3>
+      <p>Slide into our DMs. We're active on Instagram and respond there too.</p>
+      <a href="https://www.instagram.com/THREADBREAK_" target="_blank" rel="noopener" class="contact-option-link">@THREADBREAK_ →</a>
+    </div>
+  </section>
+
+  <section class="contact-form-section">
+    <div class="contact-form-header">
+      <p class="eyebrow reveal">Send a Message</p>
+      <h2 class="reveal reveal-d1">We'll Get Back<br>To You.</h2>
+    </div>
+
+    {%- form 'contact', id: 'contact-form' -%}
+      {%- if form.posted_successfully? -%}
+        <div class="contact-success">
+          <div class="contact-success-stars" aria-hidden="true">
+            <span class="qstar" style="--tx:-70px;--ty:-50px;">✦</span>
+            <span class="qstar" style="--tx:70px;--ty:-60px;">✦</span>
+            <span class="qstar" style="--tx:-40px;--ty:-80px;">✦</span>
+            <span class="qstar" style="--tx:50px;--ty:-40px;">✦</span>
+            <span class="qstar" style="--tx:-90px;--ty:-25px;">✦</span>
+            <span class="qstar" style="--tx:90px;--ty:-35px;">✦</span>
+          </div>
+          <div class="quote-success-icon">✦</div>
+          <h3>Message Sent!</h3>
+          <div class="quote-success-divider"></div>
+          <p>We'll get back to you at <strong>{{ form.email }}</strong> within 24 hours.</p>
+          <p class="quote-success-sub">Check your inbox, we'll be in touch soon.</p>
+        </div>
+      {%- else -%}
+      <input type="hidden" name="contact[subject]" value="Contact Form, Threadbreak">
+      <div class="cform">
+        <div class="cform-row">
+          <div class="qform-field">
+            <label for="c-name">Name <span class="req">*</span></label>
+            <input type="text" id="c-name" name="contact[name]" required placeholder="Your name">
+          </div>
+          <div class="qform-field">
+            <label for="c-email">Email <span class="req">*</span></label>
+            <input type="email" id="c-email" name="contact[email]" required placeholder="you@email.com">
+          </div>
+        </div>
+        <div class="qform-field">
+          <label>What's this about?</label>
+          <div class="qform-options">
+            <label class="qopt"><input type="radio" name="contact[subject_type]" value="Order question"><span>Order question</span></label>
+            <label class="qopt"><input type="radio" name="contact[subject_type]" value="Product question"><span>Product question</span></label>
+            <label class="qopt"><input type="radio" name="contact[subject_type]" value="Shipping question"><span>Shipping</span></label>
+            <label class="qopt"><input type="radio" name="contact[subject_type]" value="Something else"><span>Something else</span></label>
+          </div>
+        </div>
+        <div class="qform-field">
+          <label for="c-order">Order Number <span style="opacity:0.4;font-size:0.65rem;">(if applicable)</span></label>
+          <input type="text" id="c-order" name="contact[order_number]" placeholder="e.g. #TB1234" style="max-width:240px;">
+        </div>
+        <div class="qform-field">
+          <label for="c-message">Message <span class="req">*</span></label>
+          <textarea id="c-message" name="contact[body]" rows="5" required placeholder="How can we help?"></textarea>
+        </div>
+        <div class="qform-submit-row">
+          <button type="submit" class="btn btn-fill quote-submit">Send Message →</button>
+          <p class="quote-privacy">We respond within 24 hours. No spam, ever.</p>
+        </div>
+      </div>
+      {%- endif -%}
+    {%- endform -%}
+  </section>
+
+</div>
