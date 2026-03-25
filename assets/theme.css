@@ -809,9 +809,9 @@ header[role="banner"],
 /* Nav always dark on product pages */
 .product-page ~ footer,
 body:has(.product-page) nav {
-  background: rgba(10,10,10,0.97) !important;
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(155,89,212,0.2);
+  background: rgba(255,255,255,0.97) !important;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(112,80,200,0.12);
 }
 
 /* Main image zooms in on load */
@@ -1581,11 +1581,11 @@ body:has(.product-page) nav {
   flex-shrink: 0;
 }
 
-/* Qty input override — dark, larger */
+/* Qty input override — light */
 #q-qty {
-  background: rgba(10,10,10,0.8) !important;
-  border: 1px solid rgba(155,89,212,0.4) !important;
-  color: var(--offwhite) !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(26,21,32,0.15) !important;
+  color: #1a1520 !important;
   padding: 1rem 1.25rem !important;
   font-size: 1.1rem !important;
   max-width: 280px;
@@ -1906,9 +1906,9 @@ body:has(.product-page) nav {
 
 /* ── NAV LOCKED DARK ON COLLECTION PAGE ── */
 body:has(.collection-page) #main-nav {
-  background: rgba(10,10,10,0.97) !important;
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(155,89,212,0.2);
+  background: rgba(255,255,255,0.97) !important;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(112,80,200,0.12);
 }
 
 /* ── PURPLE ACCENT ON HOVER — card left border ── */
@@ -3509,9 +3509,9 @@ h1.hero-h1 .accent {
 /* Nav always dark on product pages */
 .product-page ~ footer,
 body:has(.product-page) nav {
-  background: rgba(10,10,10,0.97) !important;
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(155,89,212,0.2);
+  background: rgba(255,255,255,0.97) !important;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(112,80,200,0.12);
 }
 
 /* Main image zooms in on load */
@@ -4281,11 +4281,11 @@ body:has(.product-page) nav {
   flex-shrink: 0;
 }
 
-/* Qty input override — dark, larger */
+/* Qty input override — light */
 #q-qty {
-  background: rgba(10,10,10,0.8) !important;
-  border: 1px solid rgba(155,89,212,0.4) !important;
-  color: var(--offwhite) !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(26,21,32,0.15) !important;
+  color: #1a1520 !important;
   padding: 1rem 1.25rem !important;
   font-size: 1.1rem !important;
   max-width: 280px;
@@ -4606,9 +4606,9 @@ body:has(.product-page) nav {
 
 /* ── NAV LOCKED DARK ON COLLECTION PAGE ── */
 body:has(.collection-page) #main-nav {
-  background: rgba(10,10,10,0.97) !important;
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(155,89,212,0.2);
+  background: rgba(255,255,255,0.97) !important;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(112,80,200,0.12);
 }
 
 /* ── PURPLE ACCENT ON HOVER — card left border ── */
