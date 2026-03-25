@@ -5889,22 +5889,24 @@ h1.hero-h1 .accent {
 
 body { background: #fafafa !important; }
 
-/* Nav */
-nav { background: transparent !important; }
+/* Nav - always visible on light bg */
+nav { background: rgba(255,255,255,0.95) !important; border-bottom: 1px solid rgba(112,80,200,0.1) !important; }
 nav.scrolled {
-  background: rgba(255,255,255,0.96) !important;
-  border-bottom: 1px solid rgba(112,80,200,0.12) !important;
+  background: rgba(255,255,255,0.98) !important;
+  border-bottom: 1px solid rgba(112,80,200,0.15) !important;
 }
 .nav-wordmark { color: var(--black) !important; }
-.nav-links a { color: rgba(26,21,32,0.55) !important; }
+.nav-links a { color: rgba(26,21,32,0.65) !important; }
 .nav-links a:hover { color: var(--purple) !important; }
+.nav-cta { background: var(--purple) !important; color: #ffffff !important; }
+.nav-cta:hover { background: var(--purple-mid) !important; color: #ffffff !important; }
 .nav-hamburger span { background: var(--black) !important; }
 .nav-cart { color: rgba(26,21,32,0.6) !important; }
 .nav-cart:hover { color: var(--purple) !important; }
 .nav-mobile-menu { background: rgba(248,245,255,0.98) !important; }
 .nav-mobile-menu a { color: var(--black) !important; }
 .nav-mobile-menu a:hover { color: var(--purple) !important; }
-.nav-mobile-menu .nav-cta { color: #fff !important; }
+.nav-mobile-menu .nav-cta { color: #fff !important; background: var(--purple) !important; }
 .nav-logo-img { filter: brightness(0) !important; animation: none !important; }
 .footer-logo { filter: brightness(0) !important; }
 
@@ -6057,12 +6059,29 @@ footer { background: #f0edf8 !important; border-top: 1px solid rgba(112,80,200,0
 .quote-form-section { background: #f4f1fc !important; }
 .quote-form-section h2 { color: var(--black) !important; }
 .cform input, .cform textarea,
-.qform-field input, .qform-field textarea, .qform-field select {
+.qform-field input[type="text"],
+.qform-field input[type="email"],
+.qform-field input[type="number"],
+.qform-field textarea,
+.qform-field select {
   background: #fff !important;
   border-color: rgba(26,21,32,0.15) !important;
   color: var(--black) !important;
 }
 .qform-field label { color: var(--black) !important; }
+/* Fix radio/checkbox option pills */
+.qform-options { background: transparent !important; }
+.qopt { background: #ffffff !important; border: 1px solid rgba(26,21,32,0.15) !important; }
+.qopt span { color: var(--black) !important; }
+.qopt:has(input:checked) { background: var(--purple) !important; border-color: var(--purple) !important; }
+.qopt:has(input:checked) span { color: #ffffff !important; }
+.qopt input[type="radio"], .qopt input[type="checkbox"] { accent-color: var(--purple) !important; }
+/* Stitch type cards */
+.stitch-item { background: #ffffff !important; border-color: rgba(112,80,200,0.15) !important; }
+.qform-field { background: transparent !important; }
+/* Warning box */
+.quote-warning { background: rgba(112,80,200,0.08) !important; border-color: rgba(112,80,200,0.25) !important; }
+.quote-warning p { color: var(--black) !important; }
 
 /* Sticker upsell */
 .sticker-upsell { background: #f0edf8 !important; }
