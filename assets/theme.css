@@ -6148,3 +6148,86 @@ body:has(.product-page) #main-nav,
 .cform textarea::placeholder {
   color: rgba(26,21,32,0.35) !important;
 }
+
+/* ── HULK FORM OVERRIDES ── */
+.hulk-form-wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 0 4rem;
+}
+.pxFormGenerator,
+.pxFormGenerator * {
+  font-family: var(--font-body) !important;
+}
+.pxFormGenerator input,
+.pxFormGenerator textarea,
+.pxFormGenerator select {
+  background: #ffffff !important;
+  border: 1px solid rgba(26,21,32,0.15) !important;
+  border-radius: 0 !important;
+  color: #1a1520 !important;
+  font-family: var(--font-body) !important;
+  font-size: 0.92rem !important;
+  padding: 0.9rem 1rem !important;
+}
+.pxFormGenerator input:focus,
+.pxFormGenerator textarea:focus,
+.pxFormGenerator select:focus {
+  border-color: var(--purple) !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+.pxFormGenerator input::placeholder,
+.pxFormGenerator textarea::placeholder {
+  color: rgba(26,21,32,0.35) !important;
+}
+.pxFormGenerator label {
+  color: #1a1520 !important;
+  font-size: 0.78rem !important;
+  letter-spacing: 0.12em !important;
+  text-transform: uppercase !important;
+  font-weight: 500 !important;
+  margin-bottom: 0.5rem !important;
+  display: block !important;
+}
+.pxFormGenerator button[type="submit"],
+.pxFormGenerator input[type="submit"] {
+  background: var(--purple) !important;
+  color: #ffffff !important;
+  border: none !important;
+  padding: 1rem 2.5rem !important;
+  font-family: var(--font-display) !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  transition: background 0.2s !important;
+  border-radius: 0 !important;
+  width: 100% !important;
+}
+.pxFormGenerator button[type="submit"]:hover,
+.pxFormGenerator input[type="submit"]:hover {
+  background: var(--purple-mid) !important;
+}
+.pxFormGenerator .form-group,
+.pxFormGenerator .field-wrapper {
+  margin-bottom: 1.5rem !important;
+}
+/* File upload styling */
+.pxFormGenerator input[type="file"] {
+  padding: 0.75rem !important;
+  border: 1px dashed rgba(112,80,200,0.4) !important;
+  background: rgba(112,80,200,0.04) !important;
+  cursor: pointer !important;
+  width: 100% !important;
+}
+/* Success message */
+.pxFormGenerator .success-message,
+.pxFormGenerator .form-success {
+  background: rgba(112,80,200,0.08) !important;
+  border: 1px solid rgba(112,80,200,0.3) !important;
+  border-left: 3px solid var(--purple) !important;
+  color: #1a1520 !important;
+  padding: 1.5rem !important;
+  font-size: 0.95rem !important;
+}
