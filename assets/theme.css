@@ -6240,3 +6240,12 @@ body:has(.product-page) #main-nav,
 .stitch-visual-dark {
   background: #2a1f4a !important;
 }
+
+/* ── PUFF WARNING TEXT FIX ── */
+.puff-warning,
+.puff-warning *,
+.puff-warning p,
+.puff-warning svg {
+  color: rgba(26,21,32,0.75) !important;
+  fill: rgba(26,21,32,0.75) !important;
+}
