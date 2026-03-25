@@ -6211,3 +6211,28 @@ body:has(.product-page) #main-nav,
 .quote-success-sub { color: rgba(26,21,32,0.4) !important; }
 .quote-success-icon { color: var(--purple) !important; }
 .quote-success { background: transparent !important; }
+
+/* ── STITCH CARD DARK PANEL — LIGHT THEME FIX ── */
+.stitch-card:has(.stitch-visual-dark) .stitch-info {
+  background: #e8e4f0 !important;
+}
+.stitch-card:has(.stitch-visual-dark) .stitch-info h3 {
+  color: var(--black) !important;
+}
+.stitch-card:has(.stitch-visual-dark) .stitch-info p {
+  color: rgba(26,21,32,0.6) !important;
+}
+.stitch-card:has(.stitch-visual-dark) .stitch-pros li {
+  color: rgba(26,21,32,0.55) !important;
+}
+.stitch-card:has(.stitch-visual-dark) .stitch-pros em {
+  color: var(--purple) !important;
+}
+.stitch-card:has(.stitch-visual-dark) .stitch-warning {
+  background: rgba(112,80,200,0.08) !important;
+  border-color: rgba(112,80,200,0.25) !important;
+  color: rgba(26,21,32,0.6) !important;
+}
+.stitch-card:has(.stitch-visual-dark) .stitch-warning p {
+  color: rgba(26,21,32,0.6) !important;
+}
