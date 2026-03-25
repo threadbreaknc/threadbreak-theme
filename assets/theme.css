@@ -5898,8 +5898,8 @@ nav.scrolled {
 .nav-wordmark { color: var(--black) !important; }
 .nav-links a { color: rgba(26,21,32,0.65) !important; }
 .nav-links a:hover { color: var(--purple) !important; }
-.nav-cta { background: var(--purple) !important; color: #ffffff !important; }
-.nav-cta:hover { background: var(--purple-mid) !important; color: #ffffff !important; }
+.nav-cta, a.nav-cta, li .nav-cta { background: var(--purple) !important; color: #ffffff !important; }
+.nav-cta:hover, a.nav-cta:hover { background: var(--purple-mid) !important; color: #ffffff !important; }
 .nav-hamburger span { background: var(--black) !important; }
 .nav-cart { color: rgba(26,21,32,0.6) !important; }
 .nav-cart:hover { color: var(--purple) !important; }
@@ -6071,11 +6071,21 @@ footer { background: #f0edf8 !important; border-top: 1px solid rgba(112,80,200,0
 .qform-field label { color: var(--black) !important; }
 /* Fix radio/checkbox option pills */
 .qform-options { background: transparent !important; }
-.qopt { background: #ffffff !important; border: 1px solid rgba(26,21,32,0.15) !important; }
-.qopt span { color: var(--black) !important; }
-.qopt:has(input:checked) { background: var(--purple) !important; border-color: var(--purple) !important; }
-.qopt:has(input:checked) span { color: #ffffff !important; }
-.qopt input[type="radio"], .qopt input[type="checkbox"] { accent-color: var(--purple) !important; }
+.qopt span {
+  background: #ffffff !important;
+  border: 1px solid rgba(26,21,32,0.15) !important;
+  color: rgba(26,21,32,0.7) !important;
+}
+.qopt:hover span {
+  border-color: var(--purple) !important;
+  color: var(--purple) !important;
+  background: #f4f1fc !important;
+}
+.qopt input:checked + span {
+  background: var(--purple) !important;
+  border-color: var(--purple) !important;
+  color: #ffffff !important;
+}
 /* Stitch type cards */
 .stitch-item { background: #ffffff !important; border-color: rgba(112,80,200,0.15) !important; }
 .qform-field { background: transparent !important; }
