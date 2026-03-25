@@ -6204,3 +6204,10 @@ body:has(.product-page) #main-nav,
   border-color: var(--purple) !important;
   background: rgba(112,80,200,0.07) !important;
 }
+
+/* ── QUOTE SUCCESS LIGHT THEME ── */
+.quote-success h3 { color: var(--black) !important; }
+.quote-success p { color: rgba(26,21,32,0.65) !important; }
+.quote-success-sub { color: rgba(26,21,32,0.4) !important; }
+.quote-success-icon { color: var(--purple) !important; }
+.quote-success { background: transparent !important; }
