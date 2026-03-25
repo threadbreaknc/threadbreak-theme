@@ -6101,3 +6101,34 @@ footer { background: #f0edf8 !important; border-top: 1px solid rgba(112,80,200,0
 
 /* Sparkles more subtle */
 .sparkle::before { background: var(--purple-light) !important; }
+
+/* Force nav white on ALL pages including collection */
+body:has(.collection-page) #main-nav,
+body:has(.product-page) #main-nav,
+#main-nav {
+  background: rgba(255,255,255,0.97) !important;
+  border-bottom: 1px solid rgba(112,80,200,0.12) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+/* Fix ALL form inputs including number type */
+.qform-field input[type="text"],
+.qform-field input[type="email"],
+.qform-field input[type="tel"],
+.qform-field input[type="number"],
+.qform-field input[type="url"],
+.qform-field input,
+.qform-field textarea,
+.qform-field select,
+.cform input,
+.cform textarea {
+  background: #ffffff !important;
+  border: 1px solid rgba(26,21,32,0.15) !important;
+  color: #1a1520 !important;
+}
+.qform-field input::placeholder,
+.qform-field textarea::placeholder,
+.cform input::placeholder,
+.cform textarea::placeholder {
+  color: rgba(26,21,32,0.35) !important;
+}
