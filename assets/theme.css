@@ -6118,6 +6118,35 @@ footer { background: #f0edf8 !important; border-top: 1px solid rgba(112,80,200,0
   opacity: 0 !important;
 }
 
+/* Cart light theme fixes */
+.cart-progress-sub { color: var(--purple) !important; }
+.cart-free-row span:not(.cart-free-icon):not(.cart-free-badge) { color: rgba(26,21,32,0.7) !important; }
+.cart-free-badge { color: var(--purple) !important; background: rgba(112,80,200,0.1) !important; }
+.cart-item-variant { color: rgba(26,21,32,0.4) !important; }
+.cart-item-remove { color: rgba(26,21,32,0.25) !important; }
+.qty-btn {
+  color: var(--black) !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(26,21,32,0.15) !important;
+}
+.qty-input {
+  color: var(--black) !important;
+  background: #ffffff !important;
+  border-top: 1px solid rgba(26,21,32,0.15) !important;
+  border-bottom: 1px solid rgba(26,21,32,0.15) !important;
+}
+.cart-item-qty {
+  border: 1px solid rgba(26,21,32,0.15) !important;
+}
+.cart-item-qty .qty-btn {
+  border: none !important;
+  border-right: 1px solid rgba(26,21,32,0.15) !important;
+}
+.cart-item-qty .qty-btn:last-child {
+  border-right: none !important;
+  border-left: 1px solid rgba(26,21,32,0.15) !important;
+}
+
 /* Force nav white on ALL pages including collection */
 body:has(.collection-page) #main-nav,
 body:has(.product-page) #main-nav,
