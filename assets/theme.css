@@ -6178,80 +6178,6 @@ body:has(.product-page) #main-nav,
   color: rgba(26,21,32,0.35) !important;
 }
 
-/* ── HULK FORM OVERRIDES ── */
-.hulk-form-wrap {
-  max-width: 780px;
-  margin: 0 auto;
-  padding: 0 0 4rem;
-}
-.pxFormGenerator,
-.pxFormGenerator * {
-  font-family: var(--font-body) !important;
-}
-.pxFormGenerator input,
-.pxFormGenerator textarea,
-.pxFormGenerator select {
-  background: #ffffff !important;
-  border: 1px solid rgba(26,21,32,0.15) !important;
-  border-radius: 0 !important;
-  color: #1a1520 !important;
-  font-family: var(--font-body) !important;
-  font-size: 0.92rem !important;
-  padding: 0.9rem 1rem !important;
-}
-.pxFormGenerator input:focus,
-.pxFormGenerator textarea:focus,
-.pxFormGenerator select:focus {
-  border-color: var(--purple) !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-.pxFormGenerator input::placeholder,
-.pxFormGenerator textarea::placeholder {
-  color: rgba(26,21,32,0.35) !important;
-}
-.pxFormGenerator label {
-  color: #1a1520 !important;
-  font-size: 0.78rem !important;
-  letter-spacing: 0.12em !important;
-  text-transform: uppercase !important;
-  font-weight: 500 !important;
-  margin-bottom: 0.5rem !important;
-  display: block !important;
-}
-.pxFormGenerator button[type="submit"],
-.pxFormGenerator input[type="submit"] {
-  background: var(--purple) !important;
-  color: #ffffff !important;
-  border: none !important;
-  padding: 1rem 2.5rem !important;
-  font-family: var(--font-display) !important;
-  font-size: 0.8rem !important;
-  letter-spacing: 0.2em !important;
-  text-transform: uppercase !important;
-  cursor: pointer !important;
-  transition: background 0.2s !important;
-  border-radius: 0 !important;
-  width: 100% !important;
-}
-.pxFormGenerator button[type="submit"]:hover,
-.pxFormGenerator input[type="submit"]:hover {
-  background: var(--purple-mid) !important;
-}
-.pxFormGenerator .form-group,
-.pxFormGenerator .field-wrapper {
-  margin-bottom: 1.5rem !important;
-}
-/* File upload styling */
-.pxFormGenerator input[type="file"] {
-  padding: 0.75rem !important;
-  border: 1px dashed rgba(112,80,200,0.4) !important;
-  background: rgba(112,80,200,0.04) !important;
-  cursor: pointer !important;
-  width: 100% !important;
-}
-/* Success message */
-.pxFormGenerator .success-message,
 .pxFormGenerator .form-success {
   background: rgba(112,80,200,0.08) !important;
   border: 1px solid rgba(112,80,200,0.3) !important;
@@ -6259,4 +6185,174 @@ body:has(.product-page) #main-nav,
   color: #1a1520 !important;
   padding: 1.5rem !important;
   font-size: 0.95rem !important;
+}
+
+/* ══════════════════════════════════════
+   HULK FORM — FULL THEME OVERRIDE
+══════════════════════════════════════ */
+.hulk-form-wrap {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 0 5rem;
+}
+
+/* Reset everything inside Hulk */
+.pxFormGenerator { font-family: var(--font-body) !important; color: var(--black) !important; background: transparent !important; }
+.pxFormGenerator * { font-family: var(--font-body) !important; box-sizing: border-box !important; }
+
+/* Section titles / headings */
+.pxFormGenerator h1,
+.pxFormGenerator h2,
+.pxFormGenerator h3,
+.pxFormGenerator h4,
+.pxFormGenerator h5 {
+  font-family: var(--font-display) !important;
+  color: var(--black) !important;
+  letter-spacing: 0.05em !important;
+  margin-bottom: 1.5rem !important;
+}
+
+/* Labels */
+.pxFormGenerator label,
+.pxFormGenerator .form-label,
+.pxFormGenerator [class*="label"] {
+  color: var(--black) !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase !important;
+  margin-bottom: 0.5rem !important;
+  display: block !important;
+}
+
+/* All text inputs */
+.pxFormGenerator input[type="text"],
+.pxFormGenerator input[type="email"],
+.pxFormGenerator input[type="tel"],
+.pxFormGenerator input[type="number"],
+.pxFormGenerator input[type="url"],
+.pxFormGenerator textarea,
+.pxFormGenerator select {
+  background: #ffffff !important;
+  border: 1px solid rgba(26,21,32,0.15) !important;
+  border-radius: 0 !important;
+  color: #1a1520 !important;
+  font-size: 0.92rem !important;
+  padding: 0.9rem 1rem !important;
+  width: 100% !important;
+  outline: none !important;
+  box-shadow: none !important;
+  transition: border-color 0.2s !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+.pxFormGenerator input:focus,
+.pxFormGenerator textarea:focus,
+.pxFormGenerator select:focus {
+  border-color: var(--purple) !important;
+  box-shadow: none !important;
+}
+.pxFormGenerator input::placeholder,
+.pxFormGenerator textarea::placeholder {
+  color: rgba(26,21,32,0.3) !important;
+}
+
+/* Radio / checkbox options */
+.pxFormGenerator input[type="radio"],
+.pxFormGenerator input[type="checkbox"] {
+  width: auto !important;
+  padding: 0 !important;
+  accent-color: var(--purple) !important;
+}
+.pxFormGenerator [class*="radio"],
+.pxFormGenerator [class*="check"] {
+  background: transparent !important;
+}
+
+/* File upload */
+.pxFormGenerator input[type="file"] {
+  background: rgba(112,80,200,0.04) !important;
+  border: 1px dashed rgba(112,80,200,0.4) !important;
+  padding: 1rem !important;
+  cursor: pointer !important;
+  color: rgba(26,21,32,0.6) !important;
+}
+
+/* Submit button */
+.pxFormGenerator button[type="submit"],
+.pxFormGenerator input[type="submit"],
+.pxFormGenerator [class*="submit"],
+.pxFormGenerator [class*="btn-primary"],
+.pxFormGenerator [class*="button-primary"] {
+  background: var(--purple) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 0 !important;
+  padding: 1.1rem 2.5rem !important;
+  font-family: var(--font-display) !important;
+  font-size: 0.8rem !important;
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase !important;
+  cursor: pointer !important;
+  width: 100% !important;
+  transition: background 0.2s !important;
+  box-shadow: none !important;
+}
+.pxFormGenerator button[type="submit"]:hover,
+.pxFormGenerator input[type="submit"]:hover {
+  background: var(--purple-mid) !important;
+}
+
+/* Form groups / field wrappers */
+.pxFormGenerator [class*="form-group"],
+.pxFormGenerator [class*="field"],
+.pxFormGenerator [class*="row"],
+.pxFormGenerator [class*="input-wrap"] {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  margin-bottom: 1.5rem !important;
+}
+
+/* Form wrapper / card */
+.pxFormGenerator [class*="form-wrap"],
+.pxFormGenerator [class*="form-card"],
+.pxFormGenerator [class*="form-inner"],
+.pxFormGenerator [class*="form-container"],
+.pxFormGenerator form {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+/* Error messages */
+.pxFormGenerator [class*="error"],
+.pxFormGenerator [class*="invalid"] {
+  color: #c0392b !important;
+  font-size: 0.78rem !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+/* Success message */
+.pxFormGenerator [class*="success"] {
+  background: rgba(112,80,200,0.08) !important;
+  border: 1px solid rgba(112,80,200,0.3) !important;
+  border-left: 3px solid var(--purple) !important;
+  color: #1a1520 !important;
+  padding: 1.5rem !important;
+  font-size: 0.95rem !important;
+  border-radius: 0 !important;
+}
+
+/* Remove any background colors Hulk adds */
+.pxFormGenerator [style*="background"] {
+  background: transparent !important;
+}
+.pxFormGenerator [style*="border-radius"] {
+  border-radius: 0 !important;
+}
+.pxFormGenerator [style*="box-shadow"] {
+  box-shadow: none !important;
 }
