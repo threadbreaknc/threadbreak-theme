@@ -5904,15 +5904,16 @@ nav, nav.scrolled {
 .nav-mobile-menu a { color: var(--black) !important; }
 .nav-mobile-menu a:hover { color: var(--purple) !important; }
 .nav-mobile-menu .nav-cta { color: #fff !important; background: var(--purple) !important; }
-.nav-logo-img {
+.nav-logo-img,
+.nav-logo-img.nav-logo-animated {
   filter: brightness(0) !important;
   animation: logoGlowLight 3.5s ease-in-out infinite !important;
 }
 .footer-logo { filter: brightness(0) !important; }
 @keyframes logoGlowLight {
-  0%   { filter: brightness(0); }
-  50%  { filter: brightness(0) drop-shadow(0 0 6px rgba(112,80,200,0.8)) drop-shadow(0 0 16px rgba(112,80,200,0.4)); }
-  100% { filter: brightness(0); }
+  0%   { filter: brightness(0) !important; }
+  50%  { filter: brightness(0) drop-shadow(0 0 6px rgba(112,80,200,0.9)) drop-shadow(0 0 18px rgba(112,80,200,0.5)) !important; }
+  100% { filter: brightness(0) !important; }
 }
 
 /* Hero */
