@@ -2039,10 +2039,10 @@ body:has(.collection-page) #main-nav {
 }
 .about-statement {
   font-family: var(--font-body);
-  font-size: clamp(1rem, 1.4vw, 1.2rem);
-  font-weight: 400;
-  line-height: 1.85;
-  color: rgba(26,21,32,0.75);
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+  font-weight: 500;
+  line-height: 1.9;
+  color: rgba(26,21,32,0.85);
   margin: 0 0 3rem 0;
   border: none;
   padding: 0;
@@ -4738,10 +4738,10 @@ body:has(.collection-page) #main-nav {
 }
 .about-statement {
   font-family: var(--font-body);
-  font-size: clamp(1rem, 1.4vw, 1.2rem);
-  font-weight: 400;
-  line-height: 1.85;
-  color: rgba(26,21,32,0.75);
+  font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+  font-weight: 500;
+  line-height: 1.9;
+  color: rgba(26,21,32,0.85);
   margin: 0 0 3rem 0;
   border: none;
   padding: 0;
@@ -5940,7 +5940,7 @@ h1.hero-h1 { color: var(--black) !important; }
 /* Process */
 .process { background: #f4f1fc !important; }
 .process-header h2 { color: var(--black) !important; }
-.step-num { color: var(--purple) !important; border-color: rgba(112,80,200,0.3) !important; }
+.step-num { color: var(--purple) !important; border-color: rgba(112,80,200,0.5) !important; background: rgba(112,80,200,0.08) !important; }
 .step-title { color: var(--black) !important; }
 .step-desc { color: rgba(26,21,32,0.5) !important; }
 
@@ -6099,6 +6099,21 @@ footer { background: #f0edf8 !important; border-top: 1px solid rgba(112,80,200,0
 
 /* Sparkles more subtle */
 .sparkle::before { background: var(--purple-light) !important; }
+
+/* Hide all background watermark/ghost text */
+.wholesale::before,
+.about-hero::before,
+.about-values::before,
+.about-closing::before,
+.faq-hero::before,
+.contact-hero::before,
+.quote-hero::before,
+.collection-hero::after,
+.cart-hero::before {
+  display: none !important;
+  content: none !important;
+  opacity: 0 !important;
+}
 
 /* Force nav white on ALL pages including collection */
 body:has(.collection-page) #main-nav,
