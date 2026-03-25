@@ -5889,11 +5889,10 @@ h1.hero-h1 .accent {
 
 body { background: #fafafa !important; }
 
-/* Nav - always visible on light bg */
-nav { background: rgba(255,255,255,0.95) !important; border-bottom: 1px solid rgba(112,80,200,0.1) !important; }
-nav.scrolled {
-  background: rgba(255,255,255,0.98) !important;
-  border-bottom: 1px solid rgba(112,80,200,0.15) !important;
+/* Nav - always white on light theme */
+nav, nav.scrolled {
+  background: rgba(255,255,255,0.97) !important;
+  border-bottom: 1px solid rgba(112,80,200,0.12) !important;
 }
 .nav-wordmark { color: var(--black) !important; }
 .nav-links a { color: rgba(26,21,32,0.65) !important; }
@@ -6059,16 +6058,19 @@ footer { background: #f0edf8 !important; border-top: 1px solid rgba(112,80,200,0
 .quote-form-section { background: #f4f1fc !important; }
 .quote-form-section h2 { color: var(--black) !important; }
 .cform input, .cform textarea,
-.qform-field input[type="text"],
-.qform-field input[type="email"],
-.qform-field input[type="number"],
+.qform-field input,
 .qform-field textarea,
 .qform-field select {
-  background: #fff !important;
-  border-color: rgba(26,21,32,0.15) !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(26,21,32,0.15) !important;
   color: var(--black) !important;
 }
+.qform-field input::placeholder,
+.qform-field textarea::placeholder { color: rgba(26,21,32,0.35) !important; }
 .qform-field label { color: var(--black) !important; }
+.qform-hint, .quote-hint, p.qform-hint { color: rgba(26,21,32,0.5) !important; }
+.qform-field p { color: rgba(26,21,32,0.5) !important; }
+.req { color: var(--purple) !important; }
 /* Fix radio/checkbox option pills */
 .qform-options { background: transparent !important; }
 .qopt span {
