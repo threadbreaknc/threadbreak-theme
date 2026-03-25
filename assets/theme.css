@@ -6100,6 +6100,9 @@ footer { background: #f0edf8 !important; border-top: 1px solid rgba(112,80,200,0
 /* Sparkles more subtle */
 .sparkle::before { background: var(--purple-light) !important; }
 
+/* About sig - Burlington text */
+.about-sig { color: rgba(26,21,32,0.35) !important; }
+
 /* Hide all background watermark/ghost text */
 .wholesale::before,
 .about-hero::before,
