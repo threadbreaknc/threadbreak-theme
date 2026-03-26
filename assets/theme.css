@@ -6331,3 +6331,20 @@ body:has(.product-page) #main-nav,
   .review-card { padding: 1.25rem; }
   .rc-text { font-size: 0.88rem; }
 }
+
+/* ── FAQ CTA LIGHT THEME FIX ── */
+.faq-cta { position: relative; }
+.faq-cta::before { display: none !important; content: none !important; }
+.faq-cta h2 { color: #ffffff !important; }
+.faq-cta p { color: rgba(255,255,255,0.7) !important; }
+.faq-cta .eyebrow { color: rgba(255,255,255,0.6) !important; }
+
+/* ── FAQ CTA LIGHT THEME FIX ── */
+.faq-cta { background: var(--purple) !important; }
+.faq-cta .eyebrow { color: rgba(247,244,240,0.6) !important; }
+.faq-cta h2 { color: #ffffff !important; }
+.faq-cta p { color: rgba(247,244,240,0.7) !important; }
+
+/* Hide FAQ background text */
+.faq-hero::before,
+.faq-cta::before { display: none !important; content: none !important; }
