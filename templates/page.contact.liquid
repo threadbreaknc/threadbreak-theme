@@ -2,69 +2,53 @@
 
   <!-- HERO -->
   <section class="quote-hero">
+    <div class="quote-hero-bg"></div>
     <div class="quote-hero-content">
-      <p class="eyebrow">Custom Embroidery · Wholesale · Bulk Orders</p>
-      <h1>Get a Quote.</h1>
-      <p class="quote-hero-sub">Tell us what you need and we'll get back to you within 24 hours with pricing. No commitment required.</p>
-    </div>
-    <div class="quote-hero-stats">
-      <div class="qstat"><strong>10+</strong><span>Hat minimum</span></div>
-      <div class="qstat"><strong>24hr</strong><span>Response time</span></div>
-      <div class="qstat"><strong>Free</strong><span>Digital proof</span></div>
-      <div class="qstat"><strong>All</strong><span>Major brands</span></div>
+      <p class="eyebrow reveal">Custom & Wholesale</p>
+      <h1 class="reveal reveal-d1">Get a Quote.</h1>
+      <p class="quote-hero-sub reveal reveal-d2">Tell us what you need. We'll get back to you within 24 hours with pricing, timelines, and next steps.</p>
+      <div class="quote-stats reveal reveal-d3">
+        <div class="qstat"><strong>10+</strong><span>Hat Minimum</span></div>
+        <div class="qstat"><strong>24hr</strong><span>Response Time</span></div>
+        <div class="qstat"><strong>Free</strong><span>Shipping</span></div>
+      </div>
     </div>
   </section>
 
-  <!-- STITCH TYPE EXPLAINER -->
+  <!-- STITCH EXPLAINER -->
   <section class="stitch-section">
-    <div class="stitch-header">
-      <p class="eyebrow reveal">Know Before You Order</p>
-      <h2 class="reveal reveal-d1">Flat Stitch vs.<br>3D Puff.</h2>
-      <p class="stitch-intro reveal reveal-d2">Two different embroidery techniques, both look great, but each works better for certain designs. Here's what you need to know.</p>
-    </div>
-
+    <h3 class="stitch-title reveal">Choose Your Stitch Type</h3>
     <div class="stitch-cards">
 
-      <!-- FLAT STITCH CARD -->
-      <div class="stitch-card reveal" id="stitch-flat">
+      <div class="stitch-card reveal">
         <div class="stitch-visual">
-          <div class="stitch-demo stitch-demo-flat">
-            <span class="flat-word">FLAT STITCH</span>
-            <p class="stitch-sublabel">Sits flush against fabric, no movement, no depth</p>
+          <div class="flat-demo">
+            <span class="flat-letter">T</span>
+            <span class="flat-letter">B</span>
           </div>
-          <div class="stitch-badge stitch-badge-flat">Flat Stitch</div>
+          <span class="stitch-label">FLAT</span>
         </div>
         <div class="stitch-info">
-          <h3>Flat Stitch</h3>
-          <p>Traditional embroidery that sits flush against the fabric. Sharp, clean, and works great for detailed logos with fine lines, small text, or complex shapes.</p>
+          <h4>Flat Embroidery</h4>
+          <p>The classic. Clean, sharp, and works on virtually any design. Best for detailed logos, text-heavy designs, and small elements.</p>
           <ul class="stitch-pros">
-            <li>✦ Best for detailed designs & small text</li>
-            <li>✦ Works on all hat styles</li>
-            <li>✦ Cleaner edges on complex logos</li>
-            <li>✦ Most popular choice</li>
+            <li>✦ Works with any design complexity</li>
+            <li>✦ Sharp, clean edges</li>
+            <li>✦ Best for fine detail</li>
           </ul>
         </div>
       </div>
 
-      <!-- 3D PUFF CARD -->
-      <div class="stitch-card reveal reveal-d1" id="stitch-puff">
+      <div class="stitch-card reveal reveal-d1">
         <div class="stitch-visual stitch-visual-dark">
-          <div class="stitch-demo stitch-demo-puff">
-            <div class="puff-word-demo">
-              <span class="puff-letter">3</span>
-              <span class="puff-letter">D</span>
-              <span class="puff-letter"> </span>
-              <span class="puff-letter">P</span>
-              <span class="puff-letter">U</span>
-              <span class="puff-letter">F</span>
-              <span class="puff-letter">F</span>
-            </div>
-            <p class="puff-label">Raises off the fabric, watch it pop</p>
+          <div class="puff-demo">
+            <span class="puff-letter">T</span>
+            <span class="puff-letter">B</span>
           </div>
-          <div class="stitch-badge stitch-badge-puff">3D Puff</div>
+          <span class="stitch-label">3D PUFF</span>
         </div>
         <div class="stitch-info">
-          <h3>3D Puff Embroidery</h3>
+          <h4>3D Puff Embroidery</h4>
           <p>A foam layer is placed under the stitching, causing the design to raise up from the fabric. Bold, dimensional, and eye-catching, the streetwear look.</p>
           <ul class="stitch-pros">
             <li>✦ Bold raised 3D effect</li>
@@ -80,10 +64,6 @@
       </div>
 
     </div>
-
-    <div class="stitch-note reveal">
-      <strong>Not sure which to choose?</strong> Just send us your design and we'll recommend the best technique. 3D puff carries an additional charge and requires design approval, we'll confirm before proceeding.
-    </div>
   </section>
 
   <!-- QUOTE FORM -->
@@ -93,50 +73,48 @@
       <h2 class="reveal reveal-d1">Request a Quote.</h2>
     </div>
 
-    {%- form 'contact', id: 'quote-form' -%}
+    <div class="qform" id="quote-form-wrap">
 
-      {%- if form.posted_successfully? -%}
-        <div class="quote-success">
-          <div class="quote-success-stars" aria-hidden="true">
-            <span class="qstar" style="--tx:-70px;--ty:-50px;">✦</span>
-            <span class="qstar" style="--tx:70px;--ty:-60px;">✦</span>
-            <span class="qstar" style="--tx:-40px;--ty:-80px;">✦</span>
-            <span class="qstar" style="--tx:50px;--ty:-40px;">✦</span>
-            <span class="qstar" style="--tx:-90px;--ty:-25px;">✦</span>
-            <span class="qstar" style="--tx:90px;--ty:-35px;">✦</span>
-          </div>
-          <div class="quote-success-icon">✦</div>
-          <h3>Request Received.</h3>
-          <div class="quote-success-divider"></div>
-          <p>We'll get back to you at <strong>{{ form.email }}</strong> within 24 hours.</p>
-          <p class="quote-success-sub">Check your inbox, we'll be in touch soon.</p>
+      <!-- SUCCESS STATE -->
+      <div class="quote-success" id="quote-success" style="display:none;">
+        <div class="quote-success-stars" aria-hidden="true">
+          <span class="qstar" style="--tx:-70px;--ty:-50px;">✦</span>
+          <span class="qstar" style="--tx:70px;--ty:-60px;">✦</span>
+          <span class="qstar" style="--tx:-40px;--ty:-80px;">✦</span>
+          <span class="qstar" style="--tx:50px;--ty:-40px;">✦</span>
+          <span class="qstar" style="--tx:-90px;--ty:-25px;">✦</span>
+          <span class="qstar" style="--tx:90px;--ty:-35px;">✦</span>
         </div>
-      {%- else -%}
+        <div class="quote-success-icon">✦</div>
+        <h3>Request Received.</h3>
+        <div class="quote-success-divider"></div>
+        <p>We'll get back to you within 24 hours.</p>
+        <p class="quote-success-sub">Check your inbox, we'll be in touch soon.</p>
+      </div>
 
-      <input type="hidden" name="contact[subject]" value="Quote Request – Threadbreak">
-
-      <div class="qform">
+      <!-- FORM -->
+      <form id="quote-form" enctype="multipart/form-data">
 
         <div class="qform-section">
           <h4 class="qform-section-title">01, Contact Info</h4>
           <div class="qform-row">
             <div class="qform-field">
               <label for="q-name">Name <span class="req">*</span></label>
-              <input type="text" id="q-name" name="contact[name]" required placeholder="Your name">
+              <input type="text" id="q-name" name="name" required placeholder="Your name">
             </div>
             <div class="qform-field">
               <label for="q-email">Email <span class="req">*</span></label>
-              <input type="email" id="q-email" name="contact[email]" required placeholder="you@email.com">
+              <input type="email" id="q-email" name="email" required placeholder="you@email.com">
             </div>
           </div>
           <div class="qform-row">
             <div class="qform-field">
               <label for="q-company">Company / Brand</label>
-              <input type="text" id="q-company" name="contact[company]" placeholder="Optional">
+              <input type="text" id="q-company" name="company" placeholder="Optional">
             </div>
             <div class="qform-field">
               <label for="q-phone">Phone</label>
-              <input type="tel" id="q-phone" name="contact[phone]" placeholder="Optional">
+              <input type="tel" id="q-phone" name="phone" placeholder="Optional">
             </div>
           </div>
         </div>
@@ -146,63 +124,143 @@
 
           <div class="qform-field">
             <label for="q-qty">How Many Hats? <span class="req">*</span></label>
-            <input type="number" id="q-qty" name="contact[quantity]" required min="10" placeholder="e.g. 24" style="max-width:200px;background:#ffffff;color:#1a1520;border:1px solid rgba(26,21,32,0.15);">
-            <p class="qform-hint" style="margin-top:0.4rem;">Minimum order is <strong style="color:var(--purple-light);">10 hats</strong>. The more you order, the better the price.</p>
+            <input type="number" id="q-qty" name="quantity" required min="10" placeholder="e.g. 24" style="max-width:200px;background:#ffffff;color:#1a1520;border:1px solid rgba(26,21,32,0.15);">
+            <p class="qform-hint" style="margin-top:0.4rem;color:rgba(26,21,32,0.5);font-size:0.78rem;">Minimum order is <strong style="color:var(--purple);">10 hats</strong>. The more you order, the better the price.</p>
           </div>
 
           <div class="qform-field">
             <label>Hat Style Preference</label>
             <div class="qform-options">
-              <label class="qopt"><input type="radio" name="contact[hat_style]" value="Snapback"><span>Snapback</span></label>
-              <label class="qopt"><input type="radio" name="contact[hat_style]" value="Fitted"><span>Fitted</span></label>
-              <label class="qopt"><input type="radio" name="contact[hat_style]" value="Dad Hat"><span>Dad Hat</span></label>
-              <label class="qopt"><input type="radio" name="contact[hat_style]" value="Trucker"><span>Trucker</span></label>
-              <label class="qopt"><input type="radio" name="contact[hat_style]" value="Beanie"><span>Beanie</span></label>
-              <label class="qopt"><input type="radio" name="contact[hat_style]" value="Not sure"><span>Not sure</span></label>
+              <label class="qopt"><input type="radio" name="hatStyle" value="Snapback"><span>Snapback</span></label>
+              <label class="qopt"><input type="radio" name="hatStyle" value="Fitted"><span>Fitted</span></label>
+              <label class="qopt"><input type="radio" name="hatStyle" value="Dad Hat"><span>Dad Hat</span></label>
+              <label class="qopt"><input type="radio" name="hatStyle" value="Trucker"><span>Trucker</span></label>
+              <label class="qopt"><input type="radio" name="hatStyle" value="Beanie"><span>Beanie</span></label>
+              <label class="qopt"><input type="radio" name="hatStyle" value="Not sure"><span>Not sure</span></label>
             </div>
           </div>
 
           <div class="qform-field">
             <label>Stitch Type</label>
             <div class="qform-options">
-              <label class="qopt"><input type="radio" name="contact[stitch_type]" value="Flat Embroidery"><span>Flat Embroidery</span></label>
-              <label class="qopt"><input type="radio" name="contact[stitch_type]" value="3D Puff"><span>3D Puff <em style="font-size:0.7em;opacity:0.7">(additional charge)</em></span></label>
-              <label class="qopt"><input type="radio" name="contact[stitch_type]" value="Not sure"><span>Not sure</span></label>
+              <label class="qopt"><input type="radio" name="stitchType" value="Flat Embroidery"><span>Flat Embroidery</span></label>
+              <label class="qopt"><input type="radio" name="stitchType" value="3D Puff"><span>3D Puff <em style="font-size:0.7em;opacity:0.7">(additional charge)</em></span></label>
+              <label class="qopt"><input type="radio" name="stitchType" value="Not sure"><span>Not sure</span></label>
             </div>
           </div>
 
           <div class="qform-field">
             <label for="q-hat-color">Preferred Hat Color(s)</label>
-            <input type="text" id="q-hat-color" name="contact[hat_color]" placeholder="e.g. Black, White, Natural, Navy, etc.">
+            <input type="text" id="q-hat-color" name="hatColor" placeholder="e.g. Black, White, Natural, Navy, etc.">
           </div>
 
           <div class="qform-field">
             <label for="q-colors">Thread / Embroidery Colors</label>
-            <input type="text" id="q-colors" name="contact[colors]" placeholder="e.g. Red, White, Black, or we can match your logo's colors exactly">
+            <input type="text" id="q-colors" name="colors" placeholder="e.g. Red, White, Black, or match my logo colors">
           </div>
 
           <div class="qform-field">
             <label for="q-notes">Additional Notes <span class="req">*</span></label>
-            <textarea id="q-notes" name="contact[body]" rows="5" required placeholder="Deadline, specific brands, budget range, anything else we should know..."></textarea>
+            <textarea id="q-notes" name="notes" rows="5" required placeholder="Deadline, specific brands, budget range, anything else we should know..."></textarea>
           </div>
 
           <div class="qform-field">
             <label for="q-file">Upload Your Logo / Design File</label>
-            <p class="qform-hint" style="margin-bottom:0.75rem;">PNG, JPG, PDF, AI, SVG accepted. File saves to our system on submit.</p>
-            <input type="file" id="q-file" name="contact[logo]" accept=".png,.jpg,.jpeg,.pdf,.ai,.svg,.eps" class="qform-file-input">
+            <p style="font-size:0.75rem;color:rgba(26,21,32,0.45);margin-bottom:0.6rem;">PNG, JPG, PDF, AI, SVG, EPS accepted. Max 10MB.</p>
+            <input type="file" id="q-file" name="logo" accept=".png,.jpg,.jpeg,.pdf,.ai,.svg,.eps" class="qform-file-input">
           </div>
 
         </div>
 
         <div class="qform-submit-row">
-          <button type="submit" class="btn btn-fill quote-submit">Send Quote Request →</button>
+          <button type="submit" class="btn btn-fill quote-submit" id="quote-submit-btn">
+            <span id="quote-btn-text">Send Quote Request →</span>
+            <span id="quote-btn-loading" style="display:none;">Sending...</span>
+          </button>
           <p class="quote-privacy">We respond within 24 hours. No spam, ever.</p>
         </div>
 
-      </div>
+        <p id="quote-error" style="display:none;color:#c0392b;font-size:0.82rem;margin-top:1rem;"></p>
 
-      {%- endif -%}
-    {%- endform -%}
+      </form>
+    </div>
   </section>
 
 </div>
+
+<script>
+document.getElementById('quote-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const btn = document.getElementById('quote-submit-btn');
+  const btnText = document.getElementById('quote-btn-text');
+  const btnLoading = document.getElementById('quote-btn-loading');
+  const errorEl = document.getElementById('quote-error');
+
+  btn.disabled = true;
+  btnText.style.display = 'none';
+  btnLoading.style.display = 'inline';
+  errorEl.style.display = 'none';
+
+  try {
+    const form = e.target;
+    const fileInput = document.getElementById('q-file');
+    const file = fileInput.files[0];
+
+    // Build payload
+    const payload = {
+      name: form.name.value,
+      email: form.email.value,
+      company: form.company.value,
+      phone: form.phone.value,
+      quantity: form.quantity.value,
+      hatStyle: form.hatStyle ? (form.hatStyle.value || '') : '',
+      stitchType: form.stitchType ? (form.stitchType.value || '') : '',
+      hatColor: form.hatColor.value,
+      colors: form.colors.value,
+      notes: form.notes.value,
+      fileName: '',
+      fileType: '',
+      file: ''
+    };
+
+    // Encode file as base64 if provided
+    if (file) {
+      payload.fileName = file.name;
+      payload.fileType = file.type;
+      const base64 = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+      payload.file = base64;
+    }
+
+    const response = await fetch('https://script.google.com/macros/s/AKfycbxYr32UWH88iaImaMmd-GbPV9X-J2TDES2soBNUVCZWGj_xUinIMesdywh3Y4I0VgjM/exec', {
+      method: 'POST',
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+
+    if (result.success) {
+      document.getElementById('quote-form').style.display = 'none';
+      document.getElementById('quote-success').style.display = 'block';
+      // Trigger star animations
+      document.querySelectorAll('.qstar').forEach((star, i) => {
+        star.style.animationDelay = (i * 0.1) + 's';
+      });
+    } else {
+      throw new Error(result.error || 'Something went wrong');
+    }
+
+  } catch (err) {
+    errorEl.textContent = 'Something went wrong. Please email us at help@threadbreak.com';
+    errorEl.style.display = 'block';
+    btn.disabled = false;
+    btnText.style.display = 'inline';
+    btnLoading.style.display = 'none';
+  }
+});
+</script>
