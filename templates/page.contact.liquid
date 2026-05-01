@@ -26,57 +26,6 @@
     </div>
   </section>
 
-  <!-- STITCH EXPLAINER -->
-  <section class="stitch-section" style="padding:5rem 6rem;background:#ffffff;">
-    <h3 class="stitch-title reveal" style="font-family:var(--font-display);font-size:1.8rem;letter-spacing:0.05em;color:var(--black);margin-bottom:2.5rem;">Choose Your Stitch Type</h3>
-    <div class="stitch-cards" style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(26,21,32,0.08);">
-
-      <div class="stitch-card reveal" style="background:#fff;overflow:hidden;">
-        <div class="stitch-visual" style="background:#f4f1fc;padding:4rem 3rem;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;">
-          <span style="font-family:var(--font-display);font-size:3.5rem;letter-spacing:0.08em;color:var(--black);display:block;">FLAT STITCH</span>
-          <span style="font-size:0.62rem;letter-spacing:0.35em;text-transform:uppercase;color:rgba(26,21,32,0.35);display:block;">Clean · Sharp · Any Design</span>
-        </div>
-        <div class="stitch-info" style="padding:2rem 2.5rem;">
-          <h4 style="font-family:var(--font-display);font-size:1.4rem;letter-spacing:0.04em;color:var(--black);margin-bottom:0.75rem;">Flat Embroidery</h4>
-          <p>The classic. Clean, sharp, and works on virtually any design. Best for detailed logos, text-heavy designs, and small elements.</p>
-          <ul class="stitch-pros">
-            <li>✦ Works with any design complexity</li>
-            <li>✦ Sharp, clean edges</li>
-            <li>✦ Best for fine detail</li>
-          </ul>
-        </div>
-      </div>
-
-      <div class="stitch-card reveal reveal-d1" style="background:#fff;overflow:hidden;">
-        <div class="stitch-visual stitch-visual-dark" style="background:#0f1a2e;padding:4rem 3rem;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;">
-          <style>
-            @keyframes puffPulse {
-              0%, 100% { text-shadow: 0 4px 16px rgba(112,80,200,0.5), 0 0 40px rgba(112,80,200,0.2); transform: translateY(0); }
-              50% { text-shadow: 0 8px 32px rgba(112,80,200,0.9), 0 0 80px rgba(112,80,200,0.5), 0 0 120px rgba(112,80,200,0.2); transform: translateY(-4px); }
-            }
-          </style>
-          <span style="font-family:var(--font-display);font-size:3.5rem;letter-spacing:0.08em;color:#9b6ee8;display:block;animation:puffPulse 2.5s ease-in-out infinite;">3D PUFF</span>
-          <span style="font-size:0.62rem;letter-spacing:0.35em;text-transform:uppercase;color:rgba(255,255,255,0.3);display:block;">Raised · Bold · Dimensional</span>
-        </div>
-        <div class="stitch-info" style="padding:2rem 2.5rem;background:#ddd8eb;">
-          <h4 style="font-family:var(--font-display);font-size:1.4rem;letter-spacing:0.04em;color:var(--black);margin-bottom:0.75rem;">3D Puff Embroidery</h4>
-          <p>A foam layer is placed under the stitching, causing the design to raise up from the fabric. Bold, dimensional, and eye-catching, the streetwear look.</p>
-          <ul class="stitch-pros">
-            <li>✦ Bold raised 3D effect</li>
-            <li>✦ Best for block letters & simple shapes</li>
-            <li>✦ Premium, high-end appearance</li>
-            <li>✦ <em>Additional charge applies</em></li>
-          </ul>
-          <div class="puff-warning">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 3.5L20.5 19h-17L12 5.5zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/></svg>
-            Not all designs work with 3D puff, fine details and small text don't transfer well. We'll let you know if your design isn't a good fit.
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
   <!-- QUOTE FORM -->
   <section class="quote-form-section">
     <div class="quote-form-header">
@@ -152,10 +101,25 @@
           </div>
 
           <div class="qform-field">
-            <label>Stitch Type</label>
+            <label style="display:flex;align-items:center;gap:0.5rem;">
+              Stitch Type
+              <button type="button" class="stitch-info-btn" id="stitch-info-btn" aria-label="What is this?">?</button>
+            </label>
+            <div class="stitch-tooltip" id="stitch-tooltip" style="display:none;">
+              <button type="button" class="stitch-tooltip-close" id="stitch-tooltip-close">✕</button>
+              <div class="stitch-tooltip-item">
+                <strong>Flat Embroidery</strong>
+                <p>The standard. Clean, sharp stitching that sits flat on the fabric. Works with any design, including fine detail and small text. No extra charge.</p>
+              </div>
+              <div class="stitch-tooltip-divider"></div>
+              <div class="stitch-tooltip-item">
+                <strong>3D Puff</strong>
+                <p>A foam layer under the stitching raises the design off the fabric for a bold, dimensional look. Best for block letters and simple shapes. Fine details and small text don't transfer well. <em style="color:var(--purple);">Additional charge applies.</em></p>
+              </div>
+            </div>
             <div class="qform-options">
               <label class="qopt"><input type="radio" name="stitchType" value="Flat Embroidery"><span>Flat Embroidery</span></label>
-              <label class="qopt"><input type="radio" name="stitchType" value="3D Puff"><span>3D Puff <em style="font-size:0.7em;opacity:0.7">(additional charge)</em></span></label>
+              <label class="qopt"><input type="radio" name="stitchType" value="3D Puff"><span>3D Puff <em style="font-size:0.7em;opacity:0.7">(+ charge)</em></span></label>
               <label class="qopt"><input type="radio" name="stitchType" value="Not sure"><span>Not sure</span></label>
             </div>
           </div>
@@ -272,4 +236,80 @@ document.getElementById('quote-form').addEventListener('submit', async function(
     btnLoading.style.display = 'none';
   }
 });
+
+// Stitch type tooltip
+const infoBtn = document.getElementById('stitch-info-btn');
+const tooltip = document.getElementById('stitch-tooltip');
+const closeBtn = document.getElementById('stitch-tooltip-close');
+if (infoBtn) {
+  infoBtn.addEventListener('click', () => {
+    tooltip.style.display = tooltip.style.display === 'none' ? 'block' : 'none';
+  });
+}
+if (closeBtn) {
+  closeBtn.addEventListener('click', () => {
+    tooltip.style.display = 'none';
+  });
+}
 </script>
+
+<style>
+.stitch-info-btn {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid var(--purple);
+  background: transparent;
+  color: var(--purple);
+  font-size: 0.65rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+  flex-shrink: 0;
+}
+.stitch-info-btn:hover { background: var(--purple); color: #fff; }
+.stitch-tooltip {
+  background: #fff;
+  border: 1px solid rgba(112,80,200,0.2);
+  border-left: 3px solid var(--purple);
+  padding: 1.25rem 1.25rem 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+  max-width: 520px;
+}
+.stitch-tooltip-close {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  font-size: 0.7rem;
+  color: rgba(26,21,32,0.3);
+  cursor: pointer;
+  padding: 0;
+}
+.stitch-tooltip-close:hover { color: var(--black); }
+.stitch-tooltip-item strong {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--black);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+.stitch-tooltip-item p {
+  font-size: 0.8rem;
+  line-height: 1.65;
+  color: rgba(26,21,32,0.6);
+  margin: 0;
+}
+.stitch-tooltip-divider {
+  height: 1px;
+  background: rgba(26,21,32,0.08);
+  margin: 1rem 0;
+}
+</style>
