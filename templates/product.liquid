@@ -53,45 +53,36 @@
           {%- endfor -%}
         {%- endunless -%}
 
+        <div class="leadtime-check-wrap">
+          <label class="leadtime-check-label" for="leadtime-cb">
+            <input type="checkbox" id="leadtime-cb" onchange="
+              var checked = this.checked;
+              var btn = document.getElementById('atc-btn');
+              btn.disabled = !checked;
+              var noteInput = document.querySelector('input[name=note]');
+              if (!noteInput) {
+                noteInput = document.createElement('input');
+                noteInput.type = 'hidden';
+                noteInput.name = 'note';
+                this.closest('form').appendChild(noteInput);
+              }
+              noteInput.value = checked ? 'Customer acknowledged 1-week lead time at checkout.' : '';
+            ">
+            <span class="leadtime-check-box"></span>
+            <span class="leadtime-check-text">I acknowledge this item is made to order and may take up to <strong>1 week</strong> to ship.</span>
+          </label>
+        </div>
+
         <div class="product-actions">
           <div class="qty-wrap">
             <button type="button" class="qty-btn" id="qty-minus">−</button>
             <input type="number" name="quantity" value="1" min="1" id="qty-input" class="qty-input">
             <button type="button" class="qty-btn" id="qty-plus">+</button>
           </div>
-          <button type="button" class="btn btn-fill product-atc" id="atc-btn-proxy"
-            onclick="
-              if (!document.getElementById('leadtime-cb').checked) {
-                document.getElementById('leadtime-hint').style.display = 'block';
-                document.getElementById('leadtime-cb').closest('.leadtime-check-wrap').scrollIntoView({behavior:'smooth',block:'nearest'});
-              }
-            ">
+          <button type="submit" name="add" class="btn btn-fill product-atc" id="atc-btn" disabled>
             {%- if selected_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
           </button>
         </div>
-
-        <div class="leadtime-check-wrap">
-          <p class="leadtime-hint" id="leadtime-hint" style="display:none;">⚠ Check the box below to add to cart.</p>
-          <label class="leadtime-check-label" for="leadtime-cb">
-            <input type="checkbox" id="leadtime-cb" onchange="
-              var checked = this.checked;
-              document.getElementById('leadtime-hint').style.display = checked ? 'none' : 'none';
-              var realBtn = document.getElementById('atc-btn');
-              var noteInput = document.querySelector('input[name=note]');
-              if (!noteInput) {
-                noteInput = document.createElement('input');
-                noteInput.type = 'hidden';
-                noteInput.name = 'note';
-                this.closest('form') && this.closest('form').appendChild(noteInput);
-              }
-              noteInput.value = checked ? 'Customer acknowledged 1-week lead time at checkout.' : '';
-              if (checked && realBtn) realBtn.click();
-            ">
-            <span class="leadtime-check-box"></span>
-            <span class="leadtime-check-text">I acknowledge this item is made to order and may take up to <strong>1 week</strong> to ship.</span>
-          </label>
-        </div>
-        <button type="submit" name="add" id="atc-btn" style="display:none;">Add to Cart</button>
 
         {%- if product.metafields.custom.sticker_url != blank -%}
         <a href="{{ product.metafields.custom.sticker_url }}" class="sticker-upsell">
