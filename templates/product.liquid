@@ -59,6 +59,7 @@
               var checked = this.checked;
               var btn = document.getElementById('atc-btn');
               btn.disabled = !checked;
+              document.querySelector('.leadtime-hint').style.display = checked ? 'none' : 'block';
               var noteInput = document.querySelector('input[name=note]');
               if (!noteInput) {
                 noteInput = document.createElement('input');
@@ -72,6 +73,8 @@
             <span class="leadtime-check-text">I acknowledge this item is made to order and may take up to <strong>1 week</strong> to ship.</span>
           </label>
         </div>
+
+        <p class="leadtime-hint">⚠ The box above must be checked before adding to cart.</p>
 
         <div class="product-actions">
           <div class="qty-wrap">
