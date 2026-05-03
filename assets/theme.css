@@ -6391,11 +6391,11 @@ body:has(.product-page) #main-nav,
 }
 .leadtime-check-text { color: rgba(26,21,32,0.7); }
 .leadtime-hint {
-  font-size: 0.7rem;
-  color: rgba(26,21,32,0.4);
-  margin-top: 0.4rem;
-  margin-bottom: 0;
-  letter-spacing: 0.04em;
+  font-size: 0.78rem;
+  color: #c0392b;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  letter-spacing: 0.03em;
 }
 .product-atc:disabled {
   opacity: 0.4;
