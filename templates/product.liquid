@@ -53,18 +53,27 @@
           {%- endfor -%}
         {%- endunless -%}
 
+        <div class="leadtime-check-wrap">
+          <label class="leadtime-check-label" for="leadtime-cb">
+            <input type="checkbox" id="leadtime-cb" onchange="document.getElementById('atc-btn').disabled=!this.checked;document.getElementById('leadtime-hint').style.display=this.checked?'none':'block';">
+            <span class="leadtime-check-box"></span>
+            <span class="leadtime-check-text">I acknowledge this item is made to order and may take up to <strong>1 week</strong> to ship.</span>
+          </label>
+        </div>
+
         <div class="product-actions">
           <div class="qty-wrap">
             <button type="button" class="qty-btn" id="qty-minus">−</button>
             <input type="number" name="quantity" value="1" min="1" id="qty-input" class="qty-input">
             <button type="button" class="qty-btn" id="qty-plus">+</button>
           </div>
-          <button type="submit" class="btn btn-fill product-atc" id="atc-btn">
+          <button type="submit" class="btn btn-fill product-atc" id="atc-btn" disabled>
             {%- if selected_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
           </button>
         </div>
+        <p class="leadtime-hint" id="leadtime-hint">↑ Check the box above to add to cart.</p>
 
-        <p class="product-shipping-badge">✦ Free shipping on all orders · Ships in 2-4 business days</p>
+        <p class="product-shipping-badge">✦ Free shipping on all orders · Ships within 1 week</p>
 
         {%- if product.metafields.custom.sticker_url != blank -%}
         <a href="{{ product.metafields.custom.sticker_url }}" class="sticker-upsell">

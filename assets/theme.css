@@ -6348,3 +6348,56 @@ body:has(.product-page) #main-nav,
 /* Hide FAQ background text */
 .faq-hero::before,
 .faq-cta::before { display: none !important; content: none !important; }
+
+/* ── LEAD TIME CHECKBOX ── */
+.leadtime-check-wrap {
+  margin-bottom: 1rem;
+  padding: 0.9rem 1.1rem;
+  background: rgba(112,80,200,0.05);
+  border: 1px solid rgba(112,80,200,0.18);
+  border-left: 3px solid var(--purple);
+}
+.leadtime-check-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  cursor: pointer;
+  font-size: 0.83rem;
+  color: var(--black);
+  line-height: 1.5;
+  user-select: none;
+}
+.leadtime-check-label input[type="checkbox"] { display: none; }
+.leadtime-check-box {
+  width: 18px; height: 18px; min-width: 18px;
+  border: 2px solid rgba(112,80,200,0.3);
+  background: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.leadtime-check-label input:checked ~ .leadtime-check-box {
+  background: var(--purple);
+  border-color: var(--purple);
+}
+.leadtime-check-label input:checked ~ .leadtime-check-box::after {
+  content: "✓";
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+.leadtime-check-text { color: rgba(26,21,32,0.7); }
+.leadtime-hint {
+  font-size: 0.7rem;
+  color: rgba(26,21,32,0.4);
+  margin-top: 0.4rem;
+  margin-bottom: 0;
+  letter-spacing: 0.04em;
+}
+.product-atc:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
