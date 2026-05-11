@@ -30,7 +30,7 @@
           <span class="nl-code" id="nl-code">WELCOME10</span>
           <button class="nl-copy" id="nl-copy">Copy</button>
         </div>
-        <p class="nl-success-note">Save this code — copy it before closing!</p>
+        <p class="nl-success-note">Check your inbox — we sent it there too.</p>
       </div>
     </div>
 
@@ -260,10 +260,10 @@
     submitBtn.textContent = 'Signing up...';
     submitBtn.disabled = true;
 
-    fetch('/contact#newsletter', {
+    fetch('/contact', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'form_type=customer&utf8=%E2%9C%93&customer[email]=' + encodeURIComponent(email) + '&customer[accepts_marketing]=1&contact[email]=' + encodeURIComponent(email) + '&contact[tags]=newsletter&email=' + encodeURIComponent(email)
+      body: 'form_type=customer&utf8=%E2%9C%93&contact[email]=' + encodeURIComponent(email) + '&contact[tags]=newsletter'
     }).finally(function() {
       document.getElementById('nl-form-state').style.display = 'none';
       document.getElementById('nl-success-state').style.display = 'block';
