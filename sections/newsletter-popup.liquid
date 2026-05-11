@@ -5,7 +5,8 @@
 
     <div id="nl-form-state">
       <div class="nl-top">
-        <span class="nl-tag">Members Only</span>
+        <img src="{{ 'logo-white.png' | asset_url }}" alt="Threadbreak" class="nl-logo">
+      <span class="nl-tag">Members Only</span>
         <h2 class="nl-title">
           <em>First order discount</em>
           10% Off
@@ -16,6 +17,7 @@
         <input type="email" id="nl-email" class="nl-input" placeholder="Your email address" autocomplete="email">
         <button class="nl-btn" id="nl-submit">Claim 10% Off →</button>
         <button class="nl-skip" id="nl-skip">No thanks, I'll pay full price</button>
+        <p class="nl-consent">By signing up you agree to receive emails from Threadbreak — new products and deals only. No spam, ever. Unsubscribe anytime.</p>
       </div>
     </div>
 
@@ -28,7 +30,7 @@
           <span class="nl-code" id="nl-code">WELCOME10</span>
           <button class="nl-copy" id="nl-copy">Copy</button>
         </div>
-        <p class="nl-success-note">Check your inbox — we sent it there too.</p>
+        <p class="nl-success-note">Save this code — copy it before closing!</p>
       </div>
     </div>
 
@@ -80,6 +82,13 @@
 }
 .nl-close:hover { background: rgba(26,21,32,0.25); }
 
+.nl-logo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  margin-bottom: 1rem;
+  opacity: 0.9;
+}
 .nl-top {
   background: var(--purple, #5028aa);
   padding: 2rem 1.75rem 1.5rem;
@@ -174,6 +183,13 @@
   -webkit-appearance: none;
 }
 .nl-skip:hover { color: rgba(26,21,32,0.6); }
+.nl-consent {
+  font-size: 0.62rem;
+  color: rgba(26,21,32,0.28);
+  line-height: 1.55;
+  text-align: center;
+  margin-top: 0.85rem;
+}
 
 .nl-success {
   padding: 2rem 1.75rem 2.5rem;
@@ -244,10 +260,10 @@
     submitBtn.textContent = 'Signing up...';
     submitBtn.disabled = true;
 
-    fetch('/contact', {
+    fetch('/contact#newsletter', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'form_type=customer&utf8=%E2%9C%93&contact[email]=' + encodeURIComponent(email) + '&contact[tags]=newsletter'
+      body: 'form_type=customer&utf8=%E2%9C%93&customer[email]=' + encodeURIComponent(email) + '&customer[accepts_marketing]=1&contact[email]=' + encodeURIComponent(email) + '&contact[tags]=newsletter&email=' + encodeURIComponent(email)
     }).finally(function() {
       document.getElementById('nl-form-state').style.display = 'none';
       document.getElementById('nl-success-state').style.display = 'block';
