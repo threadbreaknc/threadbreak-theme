@@ -1,0 +1,272 @@
+<div class="nl-overlay nl-hidden" id="nl-overlay">
+  <div class="nl-popup">
+
+    <button class="nl-close" id="nl-close" aria-label="Close">✕</button>
+
+    <div id="nl-form-state">
+      <div class="nl-top">
+        <span class="nl-tag">Members Only</span>
+        <h2 class="nl-title">
+          <em>First order discount</em>
+          10% Off
+        </h2>
+        <span class="nl-badge">✦ Sign up · Get the code instantly</span>
+      </div>
+      <div class="nl-bottom">
+        <input type="email" id="nl-email" class="nl-input" placeholder="Your email address" autocomplete="email">
+        <button class="nl-btn" id="nl-submit">Claim 10% Off →</button>
+        <button class="nl-skip" id="nl-skip">No thanks, I'll pay full price</button>
+      </div>
+    </div>
+
+    <div id="nl-success-state" style="display:none;">
+      <div class="nl-success">
+        <span class="nl-success-star">✦</span>
+        <h3 class="nl-success-title">You're In!</h3>
+        <p class="nl-success-msg">Use this code at checkout for 10% off:</p>
+        <div class="nl-code-wrap">
+          <span class="nl-code" id="nl-code">WELCOME10</span>
+          <button class="nl-copy" id="nl-copy">Copy</button>
+        </div>
+        <p class="nl-success-note">Check your inbox — we sent it there too.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+.nl-overlay {
+  position: fixed; inset: 0;
+  background: rgba(14,12,18,0.65);
+  z-index: 9999;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: nlFadeIn 0.3s ease;
+  padding: 0;
+}
+.nl-overlay.nl-hidden { display: none !important; }
+@keyframes nlFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.nl-popup {
+  background: #fff;
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+  animation: nlSlideUp 0.4s cubic-bezier(0.16,1,0.3,1);
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
+}
+@keyframes nlSlideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.nl-close {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(26,21,32,0.15);
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--black, #1a1520);
+  z-index: 2;
+  transition: background 0.2s;
+  line-height: 1;
+  -webkit-appearance: none;
+}
+.nl-close:hover { background: rgba(26,21,32,0.25); }
+
+.nl-top {
+  background: var(--purple, #5028aa);
+  padding: 2rem 1.75rem 1.5rem;
+  text-align: center;
+}
+.nl-tag {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.8);
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  padding: 0.3rem 0.75rem;
+  margin-bottom: 1rem;
+}
+.nl-title {
+  font-family: var(--font-display, 'Bebas Neue', sans-serif);
+  font-size: 3.2rem;
+  line-height: 0.9;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+.nl-title em {
+  color: rgba(255,255,255,0.55);
+  font-style: normal;
+  font-size: 0.55em;
+  display: block;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+.nl-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.7);
+  font-size: 0.7rem;
+  padding: 0.35rem 0.85rem;
+  margin-top: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+.nl-bottom {
+  padding: 1.5rem 1.75rem 2rem;
+}
+.nl-input {
+  width: 100%;
+  border: 1.5px solid rgba(26,21,32,0.15);
+  background: #fafafa;
+  padding: 0.9rem 1rem;
+  font-family: var(--font-body, 'DM Sans', sans-serif);
+  font-size: 1rem;
+  color: var(--black, #1a1520);
+  outline: none;
+  margin-bottom: 0.75rem;
+  border-radius: 4px;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+  display: block;
+}
+.nl-input:focus { border-color: var(--purple, #5028aa); background: #fff; }
+.nl-btn {
+  width: 100%;
+  background: var(--purple, #5028aa);
+  color: #fff;
+  border: none;
+  padding: 1rem;
+  font-family: var(--font-display, 'Bebas Neue', sans-serif);
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  -webkit-appearance: none;
+  display: block;
+  transition: background 0.2s;
+}
+.nl-btn:hover { background: var(--purple-mid, #6b3fc0); }
+.nl-btn:active { transform: scale(0.98); }
+.nl-skip {
+  display: block;
+  text-align: center;
+  background: none; border: none;
+  font-size: 0.72rem;
+  color: rgba(26,21,32,0.35);
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 0;
+  font-family: var(--font-body, 'DM Sans', sans-serif);
+  width: 100%;
+  -webkit-appearance: none;
+}
+.nl-skip:hover { color: rgba(26,21,32,0.6); }
+
+.nl-success {
+  padding: 2rem 1.75rem 2.5rem;
+  text-align: center;
+}
+.nl-success-star { font-size: 2.5rem; color: var(--purple, #5028aa); margin-bottom: 0.75rem; display: block; }
+.nl-success-title { font-family: var(--font-display, 'Bebas Neue', sans-serif); font-size: 2.8rem; color: var(--black, #1a1520); margin-bottom: 0.5rem; }
+.nl-success-msg { font-size: 0.82rem; color: rgba(26,21,32,0.5); margin-bottom: 1.25rem; }
+.nl-code-wrap { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+.nl-code {
+  flex: 1;
+  background: #f0edf8;
+  border: 1.5px dashed var(--purple, #5028aa);
+  padding: 0.85rem;
+  font-family: var(--font-display, 'Bebas Neue', sans-serif);
+  font-size: 1.6rem;
+  letter-spacing: 0.12em;
+  color: var(--purple, #5028aa);
+  text-align: center;
+  border-radius: 4px;
+}
+.nl-copy {
+  background: var(--purple, #5028aa); color: #fff; border: none;
+  padding: 0 1.25rem; font-size: 0.72rem; letter-spacing: 0.1em;
+  text-transform: uppercase; cursor: pointer;
+  font-family: var(--font-body, 'DM Sans', sans-serif);
+  border-radius: 4px; white-space: nowrap; transition: background 0.2s;
+}
+.nl-copy:hover { background: var(--purple-mid, #6b3fc0); }
+.nl-success-note { font-size: 0.7rem; color: rgba(26,21,32,0.35); line-height: 1.6; }
+</style>
+
+<script>
+(function() {
+  var KEY = 'tb_nl_v1';
+  if (localStorage.getItem(KEY)) return;
+
+  var overlay = document.getElementById('nl-overlay');
+  var closeBtn = document.getElementById('nl-close');
+  var skipBtn = document.getElementById('nl-skip');
+  var submitBtn = document.getElementById('nl-submit');
+  var emailInput = document.getElementById('nl-email');
+  var copyBtn = document.getElementById('nl-copy');
+
+  setTimeout(function() {
+    overlay.classList.remove('nl-hidden');
+  }, 3000);
+
+  function dismiss() {
+    localStorage.setItem(KEY, '1');
+    overlay.classList.add('nl-hidden');
+  }
+
+  closeBtn.addEventListener('click', dismiss);
+  skipBtn.addEventListener('click', dismiss);
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) dismiss();
+  });
+
+  submitBtn.addEventListener('click', function() {
+    var email = emailInput.value.trim();
+    if (!email || !email.includes('@')) {
+      emailInput.style.borderColor = '#c0392b';
+      emailInput.focus();
+      return;
+    }
+    emailInput.style.borderColor = '';
+    submitBtn.textContent = 'Signing up...';
+    submitBtn.disabled = true;
+
+    fetch('/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'form_type=customer&utf8=%E2%9C%93&contact[email]=' + encodeURIComponent(email) + '&contact[tags]=newsletter'
+    }).finally(function() {
+      document.getElementById('nl-form-state').style.display = 'none';
+      document.getElementById('nl-success-state').style.display = 'block';
+      localStorage.setItem(KEY, '1');
+    });
+  });
+
+  emailInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') submitBtn.click();
+  });
+
+  if (copyBtn) {
+    copyBtn.addEventListener('click', function() {
+      var code = document.getElementById('nl-code').textContent.trim();
+      navigator.clipboard.writeText(code).then(function() {
+        copyBtn.textContent = 'Copied!';
+        setTimeout(function() { copyBtn.textContent = 'Copy'; }, 2000);
+      });
+    });
+  }
+})();
+</script>
