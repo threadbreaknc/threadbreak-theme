@@ -7458,3 +7458,27 @@ footer .footer-logo {
   0% { background-position: 100% center; }
   100% { background-position: -100% center; }
 }
+
+/* ── FAN FAVORITES — SHIMMER + GLOW COMBINED ── */
+.fp-header h2 {
+  background: linear-gradient(90deg,
+    var(--black) 0%,
+    var(--black) 20%,
+    var(--purple) 45%,
+    var(--black) 70%,
+    var(--black) 100%
+  ) !important;
+  background-size: 300% auto !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  animation: shimmerGlow 5s linear infinite !important;
+  padding: 0 0.1em !important;
+}
+@keyframes shimmerGlow {
+  0%   { background-position: 100% center; filter: drop-shadow(0 0 8px rgba(80,40,170,0)); }
+  40%  { filter: drop-shadow(0 0 16px rgba(80,40,170,0.5)); }
+  50%  { background-position: 0% center; filter: drop-shadow(0 0 22px rgba(80,40,170,0.7)); }
+  60%  { filter: drop-shadow(0 0 16px rgba(80,40,170,0.5)); }
+  100% { background-position: -100% center; filter: drop-shadow(0 0 8px rgba(80,40,170,0)); }
+}
