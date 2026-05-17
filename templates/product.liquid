@@ -34,10 +34,10 @@
 
       <div class="product-price-row">
         <p class="product-price">{{ selected_variant.price | money }}</p>
-        <div class="product-stars-inline">
+        <a href="#product-reviews" class="product-stars-inline" style="text-decoration:none;">
           <span class="stars">★★★★★</span>
-          <span class="stars-label">5-Star Rated</span>
-        </div>
+          <span class="stars-label">5-Star Rated ↓</span>
+        </a>
       </div>
       {%- form 'product', product, id: 'product-form' -%}
         <input type="hidden" name="id" id="variant-id" value="{{ selected_variant.id }}">
@@ -149,24 +149,24 @@
   </section>
   {%- endif -%}
 
-  <section class="product-reviews-strip">
+  <section class="product-reviews-strip" id="product-reviews">
     <div class="prs-inner">
       <div class="prs-item reveal">
         <div class="prs-stars">★★★★★</div>
         <p class="prs-quote">"Great seller, really unique and great design, fast shipping!"</p>
-        <p class="prs-author">— Ryan &nbsp;·&nbsp; <span>Etsy</span></p>
+        <p class="prs-author">— Crystal &nbsp;·&nbsp; <span>Etsy</span></p>
       </div>
       <div class="prs-div"></div>
       <div class="prs-item reveal reveal-d1">
         <div class="prs-stars">★★★★★</div>
         <p class="prs-quote">"Absolutely amazing seller! USPS lost the original package but the seller quickly sent a replacement. I'd give 100 stars if I could."</p>
-        <p class="prs-author">— Ryan &nbsp;·&nbsp; <span>Etsy</span></p>
+        <p class="prs-author">— Crystal &nbsp;·&nbsp; <span>Etsy</span></p>
       </div>
       <div class="prs-div"></div>
       <div class="prs-item reveal reveal-d2">
         <div class="prs-stars">★★★★★</div>
         <p class="prs-quote">"Love the design and love to support local businesses. Great value for the cost and shipping. Go Canes!"</p>
-        <p class="prs-author">— Matt &nbsp;·&nbsp; <span>eBay</span></p>
+        <p class="prs-author">— Eric &nbsp;·&nbsp; <span>eBay</span></p>
       </div>
     </div>
   </section>

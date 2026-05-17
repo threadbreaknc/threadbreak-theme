@@ -7279,3 +7279,10 @@ footer .footer-logo {
 .product-actions { margin-bottom: 0.5rem !important; }
 .product-desc { margin-top: 0.75rem !important; font-size: 0.88rem !important; }
 .product-desc p { margin-bottom: 0 !important; }
+
+/* ── STARS LINK HOVER ── */
+.product-stars-inline:hover .stars-label {
+  color: var(--purple) !important;
+  text-decoration: underline;
+}
+.product-stars-inline { cursor: pointer; }
