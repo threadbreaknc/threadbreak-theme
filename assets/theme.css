@@ -7181,3 +7181,43 @@ footer .footer-logo {
 }
 .ptr-item svg { stroke: rgba(26,21,32,0.4); flex-shrink: 0; }
 .ptr-sep { opacity: 0.25; }
+
+/* ── PRODUCT PAGE SPACING TIGHTENED ── */
+.product-page { padding-top: 0; }
+.product-main {
+  padding: 5rem 6rem 3rem !important;
+  gap: 3.5rem !important;
+}
+.product-title { margin-bottom: 0.75rem !important; }
+.product-price-row { margin-bottom: 0.75rem !important; }
+.product-shipping-highlight { margin-bottom: 1rem !important; }
+.product-option { margin-bottom: 0.75rem !important; }
+.product-actions { margin-top: 0 !important; }
+.product-urgency { margin-bottom: 0.4rem !important; }
+.product-trust-row { margin-top: 0.5rem !important; }
+.product-desc { margin-top: 1rem !important; }
+.product-details { margin-top: 1rem !important; }
+.sticker-upsell { margin-top: 0.75rem !important; }
+
+/* Reviews strip tighter */
+.product-reviews-strip { padding: 2.5rem 6rem !important; }
+.prs-item { }
+.prs-stars { margin-bottom: 0.5rem !important; }
+.prs-quote { margin-bottom: 0.5rem !important; }
+
+/* Trust section tighter */
+.product-trust { padding: 2.5rem 6rem !important; }
+.trust-item { padding: 0 2rem !important; }
+.trust-stars { margin-bottom: 0.4rem !important; }
+.trust-desc { margin-top: 0.25rem !important; font-size: 0.78rem !important; }
+
+/* Related products tighter */
+.related-products { padding: 3rem 6rem !important; }
+.related-products h2 { margin-bottom: 1.5rem !important; }
+
+@media (max-width: 900px) {
+  .product-main { padding: 4rem 1.5rem 2rem !important; }
+  .product-reviews-strip { padding: 2rem 1.5rem !important; }
+  .product-trust { padding: 2rem 1.5rem !important; }
+  .related-products { padding: 2.5rem 1.5rem !important; }
+}
