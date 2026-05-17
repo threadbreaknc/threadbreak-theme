@@ -1,0 +1,75 @@
+<section class="featured-products" id="featured-products">
+
+  <div class="fp-header reveal">
+    <div>
+      <p class="eyebrow">Top Sellers</p>
+      <h2>Fan Favorites.</h2>
+    </div>
+    <a href="/collections/pre-made-hats" class="btn-shop-all">
+      Shop Entire Collection <span class="btn-arrow">→</span>
+    </a>
+  </div>
+
+  <div class="fp-grid">
+    {%- for product in collections['featured-hats'].products limit: 4 -%}
+      <a href="{{ product.url }}" class="fp-card reveal" style="--delay:{{ forloop.index0 | times: 0.1 }}s;">
+        <div class="fp-img-wrap">
+          {%- if product.featured_image -%}
+            <img src="{{ product.featured_image | img_url: '600x600', crop: 'center' }}"
+                 alt="{{ product.title | escape }}"
+                 loading="lazy">
+          {%- endif -%}
+          {%- unless product.available -%}
+            <span class="fp-sold-out">Sold Out</span>
+          {%- endunless -%}
+        </div>
+        <div class="fp-info">
+          <p class="fp-title">{{ product.title }}</p>
+          <p class="fp-price">{{ product.price | money }}</p>
+        </div>
+        {%- if product.available -%}
+          <button class="fp-atc" onclick="fpAddToCart(event, '{{ product.variants.first.id }}')">Add to Cart</button>
+        {%- else -%}
+          <button class="fp-atc fp-atc-disabled" disabled>Sold Out</button>
+        {%- endif -%}
+      </a>
+    {%- else -%}
+      <p class="fp-empty">
+        Create a collection called <strong>featured-hats</strong> in Shopify and add your top products to it.
+      </p>
+    {%- endfor -%}
+  </div>
+
+</section>
+
+<div id="fp-toast" class="fp-toast">Added to cart ✓</div>
+
+<script>
+async function fpAddToCart(e, variantId) {
+  e.preventDefault();
+  e.stopPropagation();
+  var btn = e.currentTarget;
+  var prev = btn.textContent;
+  btn.textContent = 'Adding...';
+  btn.disabled = true;
+  try {
+    await fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: variantId, quantity: 1 })
+    });
+    btn.textContent = 'Added ✓';
+    var toast = document.getElementById('fp-toast');
+    toast.classList.add('fp-toast-show');
+    setTimeout(function() { toast.classList.remove('fp-toast-show'); }, 2500);
+    setTimeout(function() { btn.textContent = prev; btn.disabled = false; }, 2000);
+    fetch('/cart.js').then(function(r){ return r.json(); }).then(function(cart) {
+      var el = document.querySelector('.cart-count');
+      if (el) el.textContent = cart.item_count;
+    });
+  } catch(err) {
+    btn.textContent = prev;
+    btn.disabled = false;
+  }
+}
+</script>
