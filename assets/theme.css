@@ -6905,3 +6905,24 @@ footer { background: var(--black) !important; border-top: 1px solid rgba(155,89,
   .fp-header { flex-direction: column !important; align-items: center !important; }
   .fp-header .btn-shop-all { width: auto !important; }
 }
+
+/* ── NAV CTA WHITE TEXT ── */
+.nav-cta,
+a.nav-cta { color: #ffffff !important; }
+
+/* ── FOOTER LOGO FIX — use logo-white, remove blend mode ── */
+.footer-logo {
+  height: 44px !important;
+  width: 44px !important;
+  object-fit: contain !important;
+  mix-blend-mode: normal !important;
+  filter: none !important;
+  opacity: 1 !important;
+}
+
+/* ── FOOTER LOGO — invert purple to white on dark bg ── */
+footer .footer-logo {
+  filter: brightness(10) !important;
+  opacity: 0.85 !important;
+  mix-blend-mode: normal !important;
+}
