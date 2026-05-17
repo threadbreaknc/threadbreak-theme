@@ -7286,3 +7286,32 @@ footer .footer-logo {
   text-decoration: underline;
 }
 .product-stars-inline { cursor: pointer; }
+
+/* ── PRODUCT GALLERY — BIGGER IMAGE, SMALL WHITE BORDER ── */
+.product-main {
+  grid-template-columns: 55% 45% !important;
+  gap: 3rem !important;
+  padding: 4rem 4rem 3rem !important;
+  max-width: 1300px !important;
+}
+.product-gallery-main {
+  background: #fff !important;
+  border: 6px solid #fff !important;
+  box-shadow: 0 0 0 1px rgba(26,21,32,0.07) !important;
+  aspect-ratio: 1/1 !important;
+  overflow: hidden !important;
+}
+.product-main-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  display: block !important;
+}
+@media (max-width: 900px) {
+  .product-main {
+    grid-template-columns: 1fr !important;
+    padding: 3rem 1.5rem 2rem !important;
+    gap: 2rem !important;
+  }
+}
