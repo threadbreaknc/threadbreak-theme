@@ -7354,3 +7354,24 @@ footer .footer-logo {
 @media (max-width: 900px) {
   .product-gallery-main { border-width: 4px !important; }
 }
+
+/* ── PRODUCT IMAGE — FULL SHOW, NO CROP, NO HEIGHT LIMIT ── */
+.product-gallery { overflow: visible !important; }
+.product-gallery-main {
+  aspect-ratio: unset !important;
+  width: 100% !important;
+  max-height: none !important;
+  height: auto !important;
+  overflow: visible !important;
+  background: #fff !important;
+  border: 6px solid #fff !important;
+  box-shadow: 0 0 0 1px rgba(26,21,32,0.08) !important;
+  display: block !important;
+}
+.product-main-img {
+  width: 100% !important;
+  height: auto !important;
+  max-height: none !important;
+  object-fit: unset !important;
+  display: block !important;
+}
