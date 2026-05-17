@@ -2,27 +2,48 @@
 <div class="product-page">
 
   <section class="product-main">
+
+    <!-- GALLERY -->
     <div class="product-gallery">
       <div class="product-gallery-main">
-        <img src="{{ selected_variant.featured_image | default: product.featured_image | img_url: '800x800', crop: 'center' }}" alt="{{ product.title | escape }}" id="product-main-img" class="product-main-img">
+        <img src="{{ selected_variant.featured_image | default: product.featured_image | img_url: '800x800', crop: 'center' }}"
+             alt="{{ product.title | escape }}"
+             id="product-main-img"
+             class="product-main-img">
       </div>
       <div class="product-thumbs">
         {%- for image in product.images limit: 6 -%}
-          <button class="product-thumb{% if forloop.first %} active{% endif %}" data-src="{{ image | img_url: '800x800', crop: 'center' }}">
+          <button class="product-thumb{% if forloop.first %} active{% endif %}"
+                  data-src="{{ image | img_url: '800x800', crop: 'center' }}">
             <img src="{{ image | img_url: '160x160', crop: 'center' }}" alt="{{ product.title | escape }}">
           </button>
         {%- endfor -%}
       </div>
     </div>
 
+    <!-- INFO -->
     <div class="product-info">
+
       <p class="product-collection">
         {%- for collection in product.collections limit: 1 -%}
           <a href="{{ collection.url }}">{{ collection.title }}</a>
         {%- endfor -%}
       </p>
+
       <h1 class="product-title">{{ product.title }}</h1>
-      <p class="product-price">{{ selected_variant.price | money }}</p>
+
+      <div class="product-price-row">
+        <p class="product-price">{{ selected_variant.price | money }}</p>
+        <div class="product-stars-inline">
+          <span class="stars">★★★★★</span>
+          <span class="stars-label">5-Star Rated</span>
+        </div>
+      </div>
+
+      <div class="product-shipping-highlight">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        <span><strong>Free Shipping</strong> — Ships in 2-4 business days from Burlington, NC</span>
+      </div>
 
       {%- form 'product', product, id: 'product-form' -%}
         <input type="hidden" name="id" id="variant-id" value="{{ selected_variant.id }}">
@@ -36,7 +57,8 @@
                   {%- assign opt_idx = forloop.parentloop.index0 -%}
                   {%- for variant in product.variants -%}
                     {%- if variant.option1 == value or variant.option2 == value -%}
-                      <button type="button" class="swatch{% if value == option.selected_value %} active{% endif %}"
+                      <button type="button"
+                        class="swatch{% if value == option.selected_value %} active{% endif %}"
                         data-value="{{ value | escape }}"
                         data-option-index="{{ opt_idx }}"
                         data-variant-id="{{ variant.id }}"
@@ -52,7 +74,6 @@
             </div>
           {%- endfor -%}
         {%- endunless -%}
-
         <div class="product-actions">
           <div class="qty-wrap">
             <button type="button" class="qty-btn" id="qty-minus">−</button>
@@ -64,32 +85,57 @@
           </button>
         </div>
 
-        <p class="product-shipping-badge">✦ Free shipping on all orders · Ships in 2-4 business days</p>
+        <div class="product-urgency">
+          <span class="urgency-dot"></span>
+          <span>Limited quantity available — order soon</span>
+        </div>
+
+        <div class="product-trust-row">
+          <span class="ptr-item">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Secure checkout
+          </span>
+          <span class="ptr-sep">·</span>
+          <span class="ptr-item">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            Free shipping
+          </span>
+          <span class="ptr-sep">·</span>
+          <span class="ptr-item">✦ Made in NC</span>
+        </div>
 
         {%- if product.metafields.custom.sticker_url != blank -%}
-        <a href="{{ product.metafields.custom.sticker_url }}" class="sticker-upsell">
-          <span class="sticker-upsell-icon">🔖</span>
-          <div>
-            <p class="sticker-upsell-title">Also available as a sticker pack</p>
-            <p class="sticker-upsell-sub">Get this design as a sticker. Tap to shop.</p>
-          </div>
-          <span class="sticker-upsell-arrow">→</span>
-        </a>
+          <a href="{{ product.metafields.custom.sticker_url }}" class="sticker-upsell">
+            <span class="sticker-upsell-icon">🔖</span>
+            <div>
+              <p class="sticker-upsell-title">Also available as a sticker pack</p>
+              <p class="sticker-upsell-sub">Get this design as a sticker. Tap to shop.</p>
+            </div>
+            <span class="sticker-upsell-arrow">→</span>
+          </a>
         {%- endif -%}
+
       {%- endform -%}
 
       <div class="product-desc">{{ product.description }}</div>
+
+      <div class="product-details">
+        <button class="product-details-toggle" onclick="this.classList.toggle('open');this.nextElementSibling.classList.toggle('open');">
+          Product Details <span class="pd-arrow">+</span>
+        </button>
+        <div class="product-details-body">
+          <ul>
+            <li>Embroidered in-house in Burlington, NC</li>
+            <li>Premium structured snapback</li>
+            <li>One size fits most</li>
+            <li>Ships in 2-4 business days</li>
+            <li>Free shipping on all orders</li>
+          </ul>
+        </div>
+      </div>
+
     </div>
   </section>
-
-  {%- comment -%}
-    IN THE WILD, only shows if the product has wild photos set via metafields.
-    To set up: Shopify Admin → Settings → Custom data → Products
-    Add these metafields:
-      - custom.wild_photo_1  (type: File)
-      - custom.wild_photo_2  (type: File, optional)
-      - custom.wild_location (type: Single line text, e.g. "Lenovo Center, Carolina Hurricanes")
-  {%- endcomment -%}
 
   {%- if product.metafields.custom.wild_photo_1 != blank -%}
   <section class="in-the-wild">
@@ -123,7 +169,28 @@
   </section>
   {%- endif -%}
 
-  <!-- TRUST SECTION -->
+  <section class="product-reviews-strip">
+    <div class="prs-inner">
+      <div class="prs-item reveal">
+        <div class="prs-stars">★★★★★</div>
+        <p class="prs-quote">"Seller was quick with response. Hat is amazing, great quality, really cool!"</p>
+        <p class="prs-author">— Diane &nbsp;·&nbsp; <span>Etsy</span></p>
+      </div>
+      <div class="prs-div"></div>
+      <div class="prs-item reveal reveal-d1">
+        <div class="prs-stars">★★★★★</div>
+        <p class="prs-quote">"Great looking ball cap, the logo is sweet. Probably gonna end up with a few of these in my wardrobe."</p>
+        <p class="prs-author">— Matt &nbsp;·&nbsp; <span>eBay</span></p>
+      </div>
+      <div class="prs-div"></div>
+      <div class="prs-item reveal reveal-d2">
+        <div class="prs-stars">★★★★★</div>
+        <p class="prs-quote">"This hat is awesome and my son loves it! Shipped quickly, perfect gift for a Hurricanes fan!"</p>
+        <p class="prs-author">— Brad &nbsp;·&nbsp; <span>eBay</span></p>
+      </div>
+    </div>
+  </section>
+
   <section class="product-trust">
     <div class="trust-inner">
       <div class="trust-item reveal">
@@ -148,7 +215,6 @@
       </div>
     </div>
   </section>
-
 
   {%- if product.collections.first.products.size > 1 -%}
   <section class="related-products">

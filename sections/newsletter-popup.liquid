@@ -5,12 +5,12 @@
 
     <div id="nl-form-state">
       <div class="nl-top">
-      <span class="nl-tag">Newsletter Signup</span>
+        <span class="nl-tag">Newsletter Signup</span>
         <h2 class="nl-title">
           <em>First order discount</em>
           10% Off
         </h2>
-        <span class="nl-badge">✦ Sign up · Get the code instantly</span>
+        <span class="nl-badge">Sign up · Get your code instantly</span>
       </div>
       <div class="nl-bottom">
         <input type="email" id="nl-email" class="nl-input" placeholder="Your email address" autocomplete="email">
@@ -123,10 +123,7 @@
   margin-top: 0.75rem;
   letter-spacing: 0.08em;
 }
-
-.nl-bottom {
-  padding: 1.5rem 1.75rem 2rem;
-}
+.nl-bottom { padding: 1.5rem 1.75rem 2rem; }
 .nl-input {
   width: 100%;
   border: 1.5px solid rgba(26,21,32,0.15);
@@ -160,7 +157,6 @@
   transition: background 0.2s;
 }
 .nl-btn:hover { background: var(--purple-mid, #6b3fc0); }
-.nl-btn:active { transform: scale(0.98); }
 .nl-skip {
   display: block;
   text-align: center;
@@ -172,6 +168,7 @@
   padding: 0;
   font-family: var(--font-body, 'DM Sans', sans-serif);
   width: 100%;
+  margin-bottom: 1rem;
   -webkit-appearance: none;
 }
 .nl-skip:hover { color: rgba(26,21,32,0.6); }
@@ -180,13 +177,8 @@
   color: rgba(26,21,32,0.28);
   line-height: 1.55;
   text-align: center;
-  margin-top: 0.85rem;
 }
-
-.nl-success {
-  padding: 2rem 1.75rem 2.5rem;
-  text-align: center;
-}
+.nl-success { padding: 2rem 1.75rem 2.5rem; text-align: center; }
 .nl-success-star { font-size: 2.5rem; color: var(--purple, #5028aa); margin-bottom: 0.75rem; display: block; }
 .nl-success-title { font-family: var(--font-display, 'Bebas Neue', sans-serif); font-size: 2.8rem; color: var(--black, #1a1520); margin-bottom: 0.5rem; }
 .nl-success-msg { font-size: 0.82rem; color: rgba(26,21,32,0.5); margin-bottom: 1.25rem; }
@@ -225,15 +217,27 @@
   var submitBtn = document.getElementById('nl-submit');
   var emailInput = document.getElementById('nl-email');
   var copyBtn = document.getElementById('nl-copy');
+  var shown = false;
 
-  setTimeout(function() {
+  function showPopup() {
+    if (shown) return;
+    shown = true;
     overlay.classList.remove('nl-hidden');
-  }, 3000);
+  }
 
   function dismiss() {
     localStorage.setItem(KEY, '1');
     overlay.classList.add('nl-hidden');
   }
+
+  // Show after 30-45 seconds (random)
+  var delay = Math.floor(Math.random() * 15000) + 30000;
+  setTimeout(showPopup, delay);
+
+  // Exit intent — mouse leaving toward top of page
+  document.addEventListener('mouseleave', function(e) {
+    if (e.clientY <= 10) showPopup();
+  });
 
   closeBtn.addEventListener('click', dismiss);
   skipBtn.addEventListener('click', dismiss);
