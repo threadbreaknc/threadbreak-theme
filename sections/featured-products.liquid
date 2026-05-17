@@ -51,25 +51,6 @@ async function fpAddToCart(e, btn) {
   e.stopPropagation();
   var variantId = btn.getAttribute('data-variant');
 
-  // Hat fly animation
-  var rect = btn.getBoundingClientRect();
-  var hat = document.createElement('div');
-  hat.className = 'hat-fly';
-  hat.textContent = '🧢';
-  hat.style.left = rect.left + rect.width / 2 + 'px';
-  hat.style.top = rect.top + 'px';
-  document.body.appendChild(hat);
-  setTimeout(function() { hat.remove(); }, 800);
-
-  // Pulse cart icon
-  var cartIcon = document.querySelector('.nav-cart');
-  if (cartIcon) {
-    cartIcon.classList.remove('cart-pulse');
-    void cartIcon.offsetWidth; // reflow
-    cartIcon.classList.add('cart-pulse');
-    setTimeout(function() { cartIcon.classList.remove('cart-pulse'); }, 600);
-  }
-
   // Button state
   var prev = btn.textContent;
   btn.textContent = 'Adding...';
@@ -84,19 +65,30 @@ async function fpAddToCart(e, btn) {
 
     btn.textContent = 'Added ✓';
 
+    // Update cart count and show with glow
+    var cartData = await fetch('/cart.js').then(function(r) { return r.json(); });
+    var cartLink = document.getElementById('nav-cart-link');
+    var countEl = document.getElementById('nav-cart-count');
+
+    if (countEl) countEl.textContent = cartData.item_count;
+
+    if (cartLink) {
+      // Make visible
+      cartLink.classList.remove('nav-cart-hidden');
+      cartLink.classList.add('nav-cart-visible');
+      // Glow animation
+      cartLink.classList.remove('cart-glow');
+      void cartLink.offsetWidth;
+      cartLink.classList.add('cart-glow');
+      setTimeout(function() { cartLink.classList.remove('cart-glow'); }, 900);
+    }
+
     // Show toast
     var toast = document.getElementById('fp-toast');
-    toast.classList.add('fp-toast-show');
-    setTimeout(function() { toast.classList.remove('fp-toast-show'); }, 2500);
-
-    // Update cart count
-    fetch('/cart.js').then(function(r) { return r.json(); }).then(function(cart) {
-      var countEl = document.querySelector('.nav-cart-count, .cart-count');
-      if (countEl) countEl.textContent = cart.item_count;
-      // Show cart link if it was hidden
-      var cartLink = document.querySelector('.nav-cart');
-      if (cartLink) cartLink.style.display = 'flex';
-    });
+    if (toast) {
+      toast.classList.add('fp-toast-show');
+      setTimeout(function() { toast.classList.remove('fp-toast-show'); }, 2500);
+    }
 
     setTimeout(function() { btn.textContent = prev; btn.disabled = false; }, 2200);
 
