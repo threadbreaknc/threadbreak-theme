@@ -7482,3 +7482,43 @@ footer .footer-logo {
   60%  { filter: drop-shadow(0 0 16px rgba(80,40,170,0.5)); }
   100% { background-position: -100% center; filter: drop-shadow(0 0 8px rgba(80,40,170,0)); }
 }
+
+/* ── FAN FAVORITES — PROPER GLOW ANIMATION ── */
+.fp-title-wrap {
+  position: relative;
+  display: inline-block;
+}
+.fp-title-glow {
+  position: absolute;
+  inset: -10px -20px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(80,40,170,0.5) 0%, transparent 70%);
+  animation: fpGlowPulse 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes fpGlowPulse {
+  0%,100% { opacity: 0.3; transform: scale(0.95); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+.fp-header h2 {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(90deg,
+    var(--black) 0%,
+    var(--black) 15%,
+    var(--purple-light, #8b60d0) 50%,
+    var(--black) 85%,
+    var(--black) 100%
+  ) !important;
+  background-size: 300% auto !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  filter: none !important;
+  animation: fpShimmer 4s ease-in-out infinite !important;
+}
+@keyframes fpShimmer {
+  0%,100% { background-position: 100% center; }
+  50% { background-position: 0% center; }
+}
