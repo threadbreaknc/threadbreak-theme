@@ -7375,3 +7375,39 @@ footer .footer-logo {
   object-fit: unset !important;
   display: block !important;
 }
+
+/* ── CART — NUDGE + FREE SHIPPING ── */
+.cart-nudge p {
+  font-size: 0.85rem !important;
+  color: rgba(26,21,32,0.55) !important;
+  font-style: italic !important;
+  line-height: 1.6 !important;
+  text-align: center !important;
+  margin-bottom: 1rem !important;
+}
+.cart-free-shipping {
+  margin-bottom: 1rem !important;
+}
+.cart-free-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.6rem !important;
+  background: rgba(80,40,170,0.06) !important;
+  border: 1.5px solid var(--purple) !important;
+  padding: 0.75rem 1rem !important;
+}
+.cart-free-row strong {
+  font-family: var(--font-display) !important;
+  font-size: 1.1rem !important;
+  letter-spacing: 0.2em !important;
+  color: var(--purple) !important;
+}
+.cart-free-icon { color: var(--purple) !important; }
+.cart-free-badge {
+  font-size: 0.62rem !important;
+  letter-spacing: 0.2em !important;
+  text-transform: uppercase !important;
+  color: rgba(26,21,32,0.35) !important;
+  margin-left: auto !important;
+}
