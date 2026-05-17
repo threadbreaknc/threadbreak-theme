@@ -107,5 +107,93 @@
 
 <script src="{{ 'theme.js' | asset_url }}"></script>
 {% section 'newsletter-popup' %}
+
+<!-- Floating Newsletter Button -->
+<button class="nl-fab" id="nl-fab" aria-label="Get 10% off">
+  <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+    <line x1="7" y1="7" x2="7.01" y2="7"/>
+  </svg>
+</button>
+
+<style>
+.nl-fab {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--purple, #5028aa);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  z-index: 9998;
+  box-shadow: 0 4px 20px rgba(80,40,170,0.45);
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: fabPulse 3s ease-in-out infinite;
+}
+.nl-fab:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 28px rgba(80,40,170,0.6);
+}
+.nl-fab.nl-fab-hidden { display: none !important; }
+@keyframes fabPulse {
+  0%,100% { box-shadow: 0 4px 20px rgba(80,40,170,0.45); }
+  50% { box-shadow: 0 4px 28px rgba(80,40,170,0.75), 0 0 0 6px rgba(80,40,170,0.12); }
+}
+@media (max-width: 600px) {
+  .nl-fab { bottom: 1.25rem; right: 1.25rem; width: 48px; height: 48px; }
+}
+</style>
+
+<script>
+(function() {
+  var fab = document.getElementById('nl-fab');
+  var overlay = document.getElementById('nl-overlay');
+  var KEY = 'tb_nl_v1';
+
+  if (!fab || !overlay) return;
+
+  // Hide FAB if already signed up
+  if (localStorage.getItem(KEY)) {
+    fab.classList.add('nl-fab-hidden');
+    return;
+  }
+
+  // FAB opens popup
+  fab.addEventListener('click', function() {
+    overlay.classList.remove('nl-hidden');
+    fab.classList.add('nl-fab-hidden');
+  });
+
+  // When popup closes, show FAB again (unless signed up)
+  var closeBtn = document.getElementById('nl-close');
+  var skipBtn = document.getElementById('nl-skip');
+  function onDismiss() {
+    if (!localStorage.getItem(KEY)) {
+      fab.classList.remove('nl-fab-hidden');
+    }
+  }
+  if (closeBtn) closeBtn.addEventListener('click', onDismiss);
+  if (skipBtn) skipBtn.addEventListener('click', onDismiss);
+  if (overlay) overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) onDismiss();
+  });
+
+  // Hide FAB on successful signup
+  var submitBtn = document.getElementById('nl-submit');
+  if (submitBtn) {
+    submitBtn.addEventListener('click', function() {
+      setTimeout(function() {
+        if (localStorage.getItem(KEY)) fab.classList.add('nl-fab-hidden');
+      }, 500);
+    });
+  }
+})();
+</script>
 </body>
 </html>

@@ -7430,3 +7430,9 @@ footer .footer-logo {
   color: var(--purple) !important;
   font-weight: 700 !important;
 }
+
+/* ── HOMEPAGE FAN FAVORITES SPACING ── */
+.featured-products { padding-top: 5rem !important; }
+@media (max-width: 900px) {
+  .featured-products { padding-top: 3.5rem !important; }
+}
