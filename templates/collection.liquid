@@ -46,42 +46,88 @@
   <!-- PRODUCT GRID -->
   <div class="collection-grid">
     {%- for product in collection.products -%}
-      <a href="{{ product.url }}" class="coll-card">
-        <div class="coll-img-wrap">
-          {%- if product.featured_image -%}
-            <img
-              src="{{ product.featured_image | img_url: '600x600', crop: 'center' }}"
-              alt="{{ product.title | escape }}"
-              class="coll-img"
-              loading="lazy"
-            >
-          {%- else -%}
-            <div class="coll-img-placeholder">🧢</div>
-          {%- endif -%}
-          <div class="coll-card-overlay">
-            <span class="coll-quick-view">View Product →</span>
-          </div>
-          {%- if product.compare_at_price > product.price -%}
-            <div class="coll-badge coll-badge-sale">Sale</div>
-          {%- endif -%}
-          {%- unless product.available -%}
-            <div class="coll-badge coll-badge-sold">Sold Out</div>
-          {%- endunless -%}
-        </div>
-        <div class="coll-info">
-          <h3 class="coll-name">{{ product.title }}</h3>
-          <div class="coll-meta">
-            <span class="coll-price">{{ product.price | money }}</span>
-            {%- if product.variants.size > 1 -%}
-              <span class="coll-variants">{{ product.variants.size }} styles</span>
+      <div class="coll-card">
+        <a href="{{ product.url }}" class="coll-card-link">
+          <div class="coll-img-wrap">
+            {%- if product.featured_image -%}
+              <img
+                src="{{ product.featured_image | img_url: '600x600', crop: 'center' }}"
+                alt="{{ product.title | escape }}"
+                class="coll-img"
+                loading="lazy"
+              >
+            {%- else -%}
+              <div class="coll-img-placeholder">🧢</div>
             {%- endif -%}
+            {%- if product.compare_at_price > product.price -%}
+              <div class="coll-badge coll-badge-sale">Sale</div>
+            {%- endif -%}
+            {%- unless product.available -%}
+              <div class="coll-badge coll-badge-sold">Sold Out</div>
+            {%- endunless -%}
           </div>
-        </div>
-      </a>
+          <div class="coll-info">
+            <h3 class="coll-name">{{ product.title }}</h3>
+            <div class="coll-meta">
+              <span class="coll-price">{{ product.price | money }}</span>
+              {%- if product.variants.size > 1 -%}
+                <span class="coll-variants">{{ product.variants.size }} styles</span>
+              {%- endif -%}
+            </div>
+          </div>
+        </a>
+        {%- if product.available -%}
+          <button class="coll-atc" data-variant="{{ product.variants.first.id }}" onclick="collAddToCart(event, this)">Add to Cart</button>
+        {%- else -%}
+          <button class="coll-atc coll-atc-disabled" disabled>Sold Out</button>
+        {%- endif -%}
+      </div>
     {%- else -%}
       <p class="collection-empty">No products found.</p>
     {%- endfor -%}
   </div>
+
+  <div id="coll-toast" class="fp-toast">Added to cart ✓</div>
+
+  <script>
+  async function collAddToCart(e, btn) {
+    e.preventDefault();
+    e.stopPropagation();
+    var variantId = btn.getAttribute('data-variant');
+    var prev = btn.textContent;
+    btn.textContent = 'Adding...';
+    btn.disabled = true;
+    try {
+      await fetch('/cart/add.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: variantId, quantity: 1 })
+      });
+      btn.textContent = 'Added ✓';
+      var cartData = await fetch('/cart.js').then(function(r) { return r.json(); });
+      var cartLink = document.getElementById('nav-cart-link');
+      var countEl = document.getElementById('nav-cart-count');
+      if (countEl) countEl.textContent = cartData.item_count;
+      if (cartLink) {
+        cartLink.classList.remove('nav-cart-hidden');
+        cartLink.classList.add('nav-cart-visible');
+        cartLink.classList.remove('cart-glow');
+        void cartLink.offsetWidth;
+        cartLink.classList.add('cart-glow');
+        setTimeout(function() { cartLink.classList.remove('cart-glow'); }, 900);
+      }
+      var toast = document.getElementById('coll-toast');
+      if (toast) {
+        toast.classList.add('fp-toast-show');
+        setTimeout(function() { toast.classList.remove('fp-toast-show'); }, 2500);
+      }
+      setTimeout(function() { btn.textContent = prev; btn.disabled = false; }, 2200);
+    } catch(err) {
+      btn.textContent = prev;
+      btn.disabled = false;
+    }
+  }
+  </script>
 
   <!-- CTA BAND -->
   <section class="collection-cta">

@@ -6955,3 +6955,37 @@ footer .footer-logo {
   animation: cartGlow 0.8s cubic-bezier(0.16,1,0.3,1) forwards !important;
   border-radius: 50%;
 }
+
+/* ── COLLECTION CARD ATC ── */
+.coll-card {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: var(--black);
+}
+.coll-card-link {
+  text-decoration: none;
+  color: var(--black);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.coll-atc {
+  width: 100%;
+  background: var(--purple);
+  color: #fff;
+  border: none;
+  padding: 0.75rem;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 0.5rem;
+}
+.coll-atc:hover { background: var(--purple-mid, #6b3fc0); }
+.coll-atc-disabled {
+  background: rgba(26,21,32,0.15) !important;
+  color: rgba(26,21,32,0.4) !important;
+  cursor: not-allowed;
+}
