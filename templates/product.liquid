@@ -23,13 +23,6 @@
 
     <!-- INFO -->
     <div class="product-info">
-
-      <p class="product-collection">
-        {%- for collection in product.collections limit: 1 -%}
-          <a href="{{ collection.url }}">{{ collection.title }}</a>
-        {%- endfor -%}
-      </p>
-
       <h1 class="product-title">{{ product.title }}</h1>
 
       <div class="product-price-row">
