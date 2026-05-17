@@ -7334,3 +7334,23 @@ footer .footer-logo {
   object-position: center !important;
   display: block !important;
 }
+
+/* ── PRODUCT IMAGE — FULL HEIGHT, NO CROP, NO ASPECT LOCK ── */
+.product-gallery-main {
+  aspect-ratio: unset !important;
+  width: 100% !important;
+  background: #fff !important;
+  border: 6px solid #fff !important;
+  box-shadow: 0 0 0 1px rgba(26,21,32,0.08) !important;
+  display: block !important;
+  overflow: hidden !important;
+}
+.product-main-img {
+  width: 100% !important;
+  height: auto !important;
+  object-fit: unset !important;
+  display: block !important;
+}
+@media (max-width: 900px) {
+  .product-gallery-main { border-width: 4px !important; }
+}
