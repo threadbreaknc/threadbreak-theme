@@ -6,11 +6,11 @@
     <div class="cart-hero-content">
       <p class="eyebrow">Almost There.</p>
       <h1>Your Cart.</h1>
+      <p class="cart-hero-nudge">You've already made it this far... And honestly? This hat is way better than whatever Fanatics would've charged you twice as much for.</p>
     </div>
     <div class="cart-progress-wrap">
       <p class="cart-progress-label">{{ cart.item_count }} item{% if cart.item_count > 1 %}s{% endif %} ready to ship</p>
       <div class="cart-progress-bar"><div class="cart-progress-fill"></div></div>
-      <p class="cart-progress-sub">Free shipping included ✦</p>
     </div>
   </section>
 
@@ -48,15 +48,9 @@
           <span>Subtotal</span>
           <span class="cart-total-price">{{ cart.total_price | money }}</span>
         </div>
-        <div class="cart-nudge">
-          <p>You've already made it this far... And honestly? This hat is way better than whatever Fanatics would've charged you twice as much for.</p>
-        </div>
-        <div class="cart-free-shipping">
-          <div class="cart-free-row">
-            <span class="cart-free-icon">✦</span>
-            <strong>FREE SHIPPING</strong>
-            <span class="cart-free-badge">Included</span>
-          </div>
+        <div class="cart-summary-row">
+          <span>Shipping</span>
+          <span class="cart-shipping-free">FREE</span>
         </div>
         <button type="submit" name="checkout" class="btn btn-fill cart-checkout-btn">Complete Order →</button>
         <a href="/collections/pre-made-hats" class="cart-continue">← Keep Shopping</a>

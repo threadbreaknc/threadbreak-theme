@@ -7411,3 +7411,22 @@ footer .footer-logo {
   color: rgba(26,21,32,0.35) !important;
   margin-left: auto !important;
 }
+
+/* ── CART HERO NUDGE ── */
+.cart-hero-nudge {
+  font-size: 0.82rem !important;
+  color: rgba(26,21,32,0.5) !important;
+  font-style: italic !important;
+  line-height: 1.6 !important;
+  margin-top: 0.75rem !important;
+  max-width: 460px !important;
+}
+
+/* ── CART SHIPPING ROW ── */
+.cart-shipping-free {
+  font-family: var(--font-display) !important;
+  font-size: 1rem !important;
+  letter-spacing: 0.15em !important;
+  color: var(--purple) !important;
+  font-weight: 700 !important;
+}
