@@ -7315,3 +7315,22 @@ footer .footer-logo {
     gap: 2rem !important;
   }
 }
+
+/* ── PRODUCT IMAGE — NO CROP ── */
+.product-gallery-main {
+  background: #fff !important;
+  border: 6px solid #fff !important;
+  box-shadow: 0 0 0 1px rgba(26,21,32,0.07) !important;
+  aspect-ratio: 1/1 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+.product-main-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  display: block !important;
+}
