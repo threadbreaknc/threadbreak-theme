@@ -7221,3 +7221,61 @@ footer .footer-logo {
   .product-trust { padding: 2rem 1.5rem !important; }
   .related-products { padding: 2.5rem 1.5rem !important; }
 }
+
+/* ── FREE SHIPPING BANNER ── */
+.shipping-banner {
+  background: var(--purple, #5028aa);
+  text-align: center;
+  padding: 0.5rem 1rem;
+  position: relative;
+  overflow: hidden;
+  z-index: 101;
+}
+.shipping-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255,255,255,0.12) 40%,
+    rgba(255,255,255,0.18) 50%,
+    rgba(255,255,255,0.12) 60%,
+    transparent 100%
+  );
+  animation: bannerGlow 3s ease-in-out infinite;
+}
+@keyframes bannerGlow {
+  0%,100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+.shipping-banner-text {
+  font-family: var(--font-display, 'Bebas Neue', sans-serif);
+  font-size: 0.85rem;
+  letter-spacing: 0.3em;
+  color: #fff;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 0 20px rgba(255,255,255,0.4);
+}
+
+/* Adjust nav top offset to account for banner */
+#main-nav { top: auto !important; }
+.nav-mobile-menu { top: auto !important; }
+
+/* Tighten product info area */
+.product-info { padding-top: 0 !important; }
+.product-shipping-highlight { display: none !important; }
+.product-details { display: none !important; }
+.product-trust-row { justify-content: center !important; }
+
+/* Tighten gaps between elements in product-info */
+.product-collection { margin-bottom: 0.3rem !important; }
+.product-title { margin-bottom: 0.5rem !important; font-size: clamp(1.6rem, 3vw, 2.5rem) !important; }
+.product-price-row { margin-bottom: 0.6rem !important; }
+.product-price { font-size: 1.8rem !important; }
+.product-option { margin-bottom: 0.6rem !important; }
+.leadtime-check-wrap { margin-bottom: 0.6rem !important; padding: 0.75rem 1rem !important; }
+.leadtime-hint { margin-bottom: 0.5rem !important; font-size: 0.7rem !important; }
+.product-actions { margin-bottom: 0.5rem !important; }
+.product-desc { margin-top: 0.75rem !important; font-size: 0.88rem !important; }
+.product-desc p { margin-bottom: 0 !important; }
