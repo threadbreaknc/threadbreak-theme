@@ -7259,8 +7259,6 @@ footer .footer-logo {
 }
 
 /* Adjust nav top offset to account for banner */
-#main-nav { top: auto !important; }
-.nav-mobile-menu { top: auto !important; }
 
 /* Tighten product info area */
 .product-info { padding-top: 0 !important; }
@@ -7521,4 +7519,27 @@ footer .footer-logo {
 @keyframes fpShimmer {
   0%,100% { background-position: 100% center; }
   50% { background-position: 0% center; }
+}
+
+/* ── NAV FIXED WITH SHIPPING BANNER ── */
+.shipping-banner {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 102 !important;
+}
+#main-nav {
+  position: fixed !important;
+  top: 32px !important; /* height of shipping banner */
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 101 !important;
+}
+/* Push page content down to account for banner + nav */
+body { padding-top: calc(32px + 70px) !important; }
+
+@media (max-width: 600px) {
+  body { padding-top: calc(28px + 60px) !important; }
+  #main-nav { top: 28px !important; }
 }
