@@ -7543,3 +7543,45 @@ body { padding-top: calc(32px + 70px) !important; }
   body { padding-top: calc(28px + 60px) !important; }
   #main-nav { top: 28px !important; }
 }
+
+/* ── SHIPPING BANNER — REMOVE HARD GLOW EDGE ── */
+.shipping-banner::before {
+  display: none !important;
+}
+.shipping-banner {
+  background: var(--purple, #5028aa) !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+.shipping-banner-text {
+  text-shadow: none !important;
+}
+
+/* ── NAV SPACING — REMOVE EXTRA WHITE GAP ── */
+body {
+  padding-top: 0 !important;
+}
+.product-page,
+.collection-page,
+.quote-page,
+section:first-of-type,
+.hero-mini,
+.featured-products {
+  scroll-margin-top: 0 !important;
+}
+/* Each page type gets correct top padding via its own first section */
+.featured-products { padding-top: 8rem !important; }
+.collection-page { padding-top: 7rem !important; }
+.product-page { padding-top: 7rem !important; }
+.quote-page { padding-top: 7rem !important; }
+.about-page { padding-top: 7rem !important; }
+.faq-page { padding-top: 7rem !important; }
+.cart-page { padding-top: 7rem !important; }
+.hero-mini { padding-top: 7rem !important; }
+
+@media (max-width: 900px) {
+  .featured-products { padding-top: 6.5rem !important; }
+  .collection-page { padding-top: 6rem !important; }
+  .product-page { padding-top: 6rem !important; }
+  .hero-mini { padding-top: 6rem !important; }
+}
