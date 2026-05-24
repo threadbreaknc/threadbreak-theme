@@ -68,18 +68,18 @@
   top: 1rem; right: 1rem;
   width: 36px; height: 36px;
   border-radius: 50%;
-  background: rgba(26,21,32,0.15);
+  background: rgba(255,255,255,0.2);
   border: none;
   font-size: 1rem;
   cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  color: var(--black, #1a1520);
+  color: #ffffff;
   z-index: 2;
   transition: background 0.2s;
   line-height: 1;
   -webkit-appearance: none;
 }
-.nl-close:hover { background: rgba(26,21,32,0.25); }
+.nl-close:hover { background: rgba(255,255,255,0.35); }
 
 .nl-top {
   background: var(--purple, #5028aa);
@@ -231,7 +231,7 @@
   }
 
   // Show after 30-45 seconds (random)
-  var delay = Math.floor(Math.random() * 15000) + 30000;
+  var delay = 12000;
   setTimeout(showPopup, delay);
 
   // Exit intent — mouse leaving toward top of page
