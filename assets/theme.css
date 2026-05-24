@@ -7598,3 +7598,18 @@ section:first-of-type,
 @media (max-width: 900px) {
   .collection-hero { padding: 1.5rem 1.5rem !important; }
 }
+
+/* ── FAN FAVORITES — JS ANIMATED GLOW ── */
+.fp-fan-title {
+  color: #1a1520 !important;
+  background: none !important;
+  -webkit-text-fill-color: unset !important;
+  -webkit-background-clip: unset !important;
+  background-clip: unset !important;
+  animation: none !important;
+  font-family: var(--font-display) !important;
+  font-size: clamp(2.5rem, 4vw, 4rem) !important;
+  line-height: 0.9 !important;
+  transition: color 0.05s, text-shadow 0.05s !important;
+}
+.fp-title-glow { display: none !important; }

@@ -1,7 +1,7 @@
 <section class="featured-products" id="featured-products">
 
   <div class="fp-header reveal">
-    <h2>Fan Favorites.</h2>
+    <h2 class="fp-fan-title" id="fp-fan-title">Fan Favorites.</h2>
     <a href="/collections/pre-made-hats" class="btn-shop-all">
       Shop Entire Collection <span class="btn-arrow">→</span>
     </a>
@@ -105,4 +105,25 @@ var observer = new IntersectionObserver(function(entries) {
 document.querySelectorAll('.fp-card.reveal, .fp-header.reveal').forEach(function(el) {
   observer.observe(el);
 });
+
+// Fan Favorites glow animation using JS
+(function() {
+  var el = document.getElementById('fp-fan-title');
+  if (!el) return;
+  var progress = 0;
+  var dir = 1;
+  function animate() {
+    progress += 0.012 * dir;
+    if (progress >= 1) { progress = 1; dir = -1; }
+    if (progress <= 0) { progress = 0; dir = 1; }
+    var glow = Math.round(progress * 255);
+    var glowStrength = progress;
+    el.style.color = 'rgb(' + Math.round(26 + (80-26)*progress) + ',' + Math.round(21 + (40-21)*progress) + ',' + Math.round(32 + (170-32)*progress) + ')';
+    el.style.textShadow = glowStrength > 0.05
+      ? '0 0 ' + Math.round(10 + 30*glowStrength) + 'px rgba(80,40,170,' + (glowStrength * 0.9).toFixed(2) + '), 0 0 ' + Math.round(30 + 60*glowStrength) + 'px rgba(80,40,170,' + (glowStrength * 0.5).toFixed(2) + ')'
+      : 'none';
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
 </script>
