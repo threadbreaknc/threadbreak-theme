@@ -7585,3 +7585,16 @@ section:first-of-type,
   .product-page { padding-top: 6rem !important; }
   .hero-mini { padding-top: 6rem !important; }
 }
+
+/* ── COLLECTION HERO — TIGHTER ── */
+.collection-hero {
+  min-height: unset !important;
+  padding: 2rem 6rem 2rem !important;
+}
+.collection-hero-content h1 {
+  font-size: clamp(2rem, 4vw, 3.5rem) !important;
+  margin-bottom: 0.4rem !important;
+}
+@media (max-width: 900px) {
+  .collection-hero { padding: 1.5rem 1.5rem !important; }
+}
