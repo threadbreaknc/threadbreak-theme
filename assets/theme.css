@@ -7613,3 +7613,32 @@ section:first-of-type,
   transition: color 0.05s, text-shadow 0.05s !important;
 }
 .fp-title-glow { display: none !important; }
+
+/* ── FAN FAVORITES — SIMPLE SIDE TO SIDE GRADIENT ── */
+.fp-fan-title {
+  font-family: var(--font-display) !important;
+  font-size: clamp(2.5rem, 4vw, 4rem) !important;
+  line-height: 0.9 !important;
+  background: linear-gradient(
+    90deg,
+    #1a1520 0%,
+    #5028aa 30%,
+    #9b5de5 50%,
+    #5028aa 70%,
+    #1a1520 100%
+  ) !important;
+  background-size: 200% auto !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  color: transparent !important;
+  animation: fanFavSlide 3s ease-in-out infinite alternate !important;
+  filter: none !important;
+  text-shadow: none !important;
+  transition: none !important;
+}
+@keyframes fanFavSlide {
+  0%   { background-position: 0% center; }
+  100% { background-position: 100% center; }
+}
+.fp-title-glow { display: none !important; }
