@@ -7676,3 +7676,30 @@ section:first-of-type,
   0%   { background-position: 0% center; }
   100% { background-position: 100% center; }
 }
+
+/* ── FAN FAVORITES — FIXED SWEEP ANIMATION ── */
+.fp-fan-span {
+  display: inline !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  letter-spacing: inherit !important;
+  background-image: linear-gradient(
+    90deg,
+    #1a1520 0%,
+    #5028aa 25%,
+    #9b5de5 50%,
+    #5028aa 75%,
+    #1a1520 100%
+  ) !important;
+  background-size: 400% 100% !important;
+  background-position: 0% 50% !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  animation: fanSweepNew 2.5s ease-in-out infinite alternate !important;
+}
+@keyframes fanSweepNew {
+  0%   { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
