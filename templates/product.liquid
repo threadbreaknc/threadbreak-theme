@@ -66,7 +66,6 @@
             <input type="checkbox" id="leadtime-cb" onchange="
               var checked = this.checked;
               var btn = document.getElementById('atc-btn');
-              btn.disabled = !checked;
               btn.style.opacity = checked ? '1' : '0.4';
               btn.style.cursor = checked ? 'pointer' : 'not-allowed';
               document.getElementById('leadtime-hint').style.display = 'none';
@@ -94,10 +93,16 @@
             <input type="number" name="quantity" value="1" min="1" id="qty-input" class="qty-input">
             <button type="button" class="qty-btn" id="qty-plus">+</button>
           </div>
-          <button type="submit" name="add" class="btn btn-fill product-atc" id="atc-btn"
-            disabled
+          <button type="button" class="btn btn-fill product-atc" id="atc-btn"
             style="opacity:0.4;cursor:not-allowed;"
-            onclick="if(!document.getElementById('leadtime-cb').checked){event.preventDefault();document.getElementById('leadtime-hint').style.display='block';document.getElementById('leadtime-cb').closest('.leadtime-check-wrap').scrollIntoView({behavior:'smooth',block:'center'});}">
+            onclick="
+              if (!document.getElementById('leadtime-cb').checked) {
+                document.getElementById('leadtime-hint').style.display = 'block';
+                document.getElementById('leadtime-cb').closest('.leadtime-check-wrap').scrollIntoView({behavior:'smooth', block:'center'});
+              } else {
+                this.closest('form').submit();
+              }
+            ">
             {%- if selected_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
           </button>
         </div>
