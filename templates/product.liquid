@@ -67,10 +67,36 @@
             <input type="number" name="quantity" value="1" min="1" id="qty-input" class="qty-input">
             <button type="button" class="qty-btn" id="qty-plus">+</button>
           </div>
-          <button type="submit" class="btn btn-fill product-atc" id="atc-btn">
+          <button type="button" class="btn btn-fill product-atc" id="atc-btn-proxy"
+            onclick="if(!document.getElementById('leadtime-cb').checked){document.getElementById('leadtime-hint').style.display='block';document.getElementById('leadtime-cb').closest('.leadtime-check-wrap').scrollIntoView({behavior:'smooth',block:'center'});}">
             {%- if selected_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
           </button>
         </div>
+
+        <p class="leadtime-hint" id="leadtime-hint" style="display:none;">⚠ The box below must be checked before adding to cart.</p>
+
+        <div class="leadtime-check-wrap">
+          <label class="leadtime-check-label" for="leadtime-cb">
+            <input type="checkbox" id="leadtime-cb" onchange="
+              var checked = this.checked;
+              if (checked) {
+                document.getElementById('leadtime-hint').style.display = 'none';
+                var noteInput = document.querySelector('input[name=note]');
+                if (!noteInput) {
+                  noteInput = document.createElement('input');
+                  noteInput.type = 'hidden';
+                  noteInput.name = 'note';
+                  this.closest('form').appendChild(noteInput);
+                }
+                noteInput.value = 'Customer acknowledged up to 5 business day lead time.';
+                document.getElementById('real-atc').click();
+              }
+            ">
+            <span class="leadtime-check-box"></span>
+            <span class="leadtime-check-text">I acknowledge this item may take up to <strong>5 business days</strong> to ship due to influx of orders.</span>
+          </label>
+        </div>
+        <button type="submit" name="add" id="real-atc" style="display:none;">Add to Cart</button>
 
         <div class="product-urgency">
           <span class="urgency-dot"></span>
