@@ -61,26 +61,16 @@
             </div>
           {%- endfor -%}
         {%- endunless -%}
-        <div class="product-actions">
-          <div class="qty-wrap">
-            <button type="button" class="qty-btn" id="qty-minus">−</button>
-            <input type="number" name="quantity" value="1" min="1" id="qty-input" class="qty-input">
-            <button type="button" class="qty-btn" id="qty-plus">+</button>
-          </div>
-          <button type="button" class="btn btn-fill product-atc" id="atc-btn-proxy"
-            onclick="if(!document.getElementById('leadtime-cb').checked){document.getElementById('leadtime-hint').style.display='block';document.getElementById('leadtime-cb').closest('.leadtime-check-wrap').scrollIntoView({behavior:'smooth',block:'center'});}">
-            {%- if selected_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
-          </button>
-        </div>
-
-        <p class="leadtime-hint" id="leadtime-hint" style="display:none;">⚠ The box below must be checked before adding to cart.</p>
-
         <div class="leadtime-check-wrap">
           <label class="leadtime-check-label" for="leadtime-cb">
             <input type="checkbox" id="leadtime-cb" onchange="
               var checked = this.checked;
+              var btn = document.getElementById('atc-btn');
+              btn.disabled = !checked;
+              btn.style.opacity = checked ? '1' : '0.4';
+              btn.style.cursor = checked ? 'pointer' : 'not-allowed';
+              document.getElementById('leadtime-hint').style.display = 'none';
               if (checked) {
-                document.getElementById('leadtime-hint').style.display = 'none';
                 var noteInput = document.querySelector('input[name=note]');
                 if (!noteInput) {
                   noteInput = document.createElement('input');
@@ -89,21 +79,30 @@
                   this.closest('form').appendChild(noteInput);
                 }
                 noteInput.value = 'Customer acknowledged up to 5 business day lead time.';
-                document.getElementById('real-atc').click();
               }
             ">
             <span class="leadtime-check-box"></span>
             <span class="leadtime-check-text">I acknowledge this item may take up to <strong>5 business days</strong> to ship due to influx of orders.</span>
           </label>
         </div>
-        <button type="submit" name="add" id="real-atc" style="display:none;">Add to Cart</button>
 
-        <div class="product-urgency">
-          <span class="urgency-dot"></span>
-          <span>Limited quantity available</span>
+        <p class="leadtime-hint" id="leadtime-hint" style="display:none;"><strong style="color:#c0392b;">⚠</strong> The box above must be checked before adding to cart.</p>
+
+        <div class="product-actions">
+          <div class="qty-wrap">
+            <button type="button" class="qty-btn" id="qty-minus">−</button>
+            <input type="number" name="quantity" value="1" min="1" id="qty-input" class="qty-input">
+            <button type="button" class="qty-btn" id="qty-plus">+</button>
+          </div>
+          <button type="submit" name="add" class="btn btn-fill product-atc" id="atc-btn"
+            disabled
+            style="opacity:0.4;cursor:not-allowed;"
+            onclick="if(!document.getElementById('leadtime-cb').checked){event.preventDefault();document.getElementById('leadtime-hint').style.display='block';document.getElementById('leadtime-cb').closest('.leadtime-check-wrap').scrollIntoView({behavior:'smooth',block:'center'});}">
+            {%- if selected_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
+          </button>
         </div>
 
-        <div class="product-trust-row" style="justify-content:center;">
+<div class="product-trust-row" style="justify-content:center;">
           <span class="ptr-item">
             <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
             Secure checkout
