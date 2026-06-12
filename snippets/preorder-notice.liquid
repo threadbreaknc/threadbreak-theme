@@ -1,0 +1,28 @@
+<div class="preorder-wrap">
+  <div class="preorder-badge">PRE-ORDER</div>
+  <div class="preorder-info">
+    <p>Orders close <strong>Friday, June 19th</strong>. Once orders close, shirts will go into production and should ship <strong>2–3 weeks</strong> after. Please note, once orders close, we are unable to cancel any orders.</p>
+  </div>
+  <label class="leadtime-check-label preorder-check-label" for="preorder-cb">
+    <input type="checkbox" id="preorder-cb" onchange="
+      var checked = this.checked;
+      var btn = document.getElementById('atc-btn');
+      btn.style.opacity = checked ? '1' : '0.4';
+      btn.style.cursor = checked ? 'pointer' : 'not-allowed';
+      document.getElementById('preorder-hint').style.display = 'none';
+      if (checked) {
+        var noteInput = document.querySelector('input[name=note]');
+        if (!noteInput) {
+          noteInput = document.createElement('input');
+          noteInput.type = 'hidden';
+          noteInput.name = 'note';
+          this.closest('form').appendChild(noteInput);
+        }
+        noteInput.value = 'PRE-ORDER: Customer acknowledged orders close 6/19 and cannot be cancelled after close.';
+      }
+    ">
+    <span class="leadtime-check-box"></span>
+    <span class="leadtime-check-text">I understand this is a pre-order. Orders close <strong>June 19th</strong> and cannot be cancelled after that date.</span>
+  </label>
+  <p class="leadtime-hint preorder-hint" id="preorder-hint" style="display:none;"><strong style="color:#c0392b;">⚠</strong> You must confirm the pre-order terms above before adding to cart.</p>
+</div>
