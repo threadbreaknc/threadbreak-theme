@@ -76,7 +76,7 @@ data-variant-image="{% if variant.featured_image %}{{ variant.featured_image | i
 style="opacity:0.4;cursor:not-allowed;"
 onclick="
 if (!document.getElementById('preorder-cb').checked) {
-document.getElementById('leadtime-hint').style.display = 'block';
+document.getElementById('preorder-hint').style.display = 'block';
 document.getElementById('preorder-cb').closest('.preorder-wrap').scrollIntoView({behavior:'smooth', block:'center'});
 } else {
 this.closest('form').submit();
@@ -291,7 +291,7 @@ document.querySelectorAll('.swatch').forEach(function(swatch) {
       } else {
         btn.textContent = 'Add to Cart';
         // Only restore if checkbox is checked
-        if (document.getElementById('leadtime-cb').checked) {
+        if (document.getElementById('preorder-cb').checked) {
           btn.style.opacity = '1';
           btn.style.cursor = 'pointer';
         }
