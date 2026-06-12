@@ -7533,3 +7533,33 @@ section:first-of-type,
   from { background-position: 0% 50%; }
   to   { background-position: 100% 50%; }
 }
+/* â”€â”€ PREORDER NOTICE â”€â”€ */
+.preorder-wrap {
+  background: rgba(80,40,170,0.05);
+  border: 1.5px solid var(--purple, #5028aa);
+  border-left: 4px solid var(--purple, #5028aa);
+  padding: 1.1rem 1.25rem;
+  margin-bottom: 1rem;
+}
+.preorder-badge {
+  display: inline-block;
+  background: var(--purple, #5028aa);
+  color: #fff;
+  font-family: var(--font-display, 'Bebas Neue', sans-serif);
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  padding: 0.2rem 0.65rem;
+  margin-bottom: 0.6rem;
+}
+.preorder-info p {
+  font-size: 0.82rem;
+  line-height: 1.65;
+  color: rgba(26,21,32,0.7);
+  margin-bottom: 0.9rem;
+}
+.preorder-info strong { color: var(--black, #1a1520); }
+.preorder-check-label {
+  font-size: 0.82rem;
+  color: var(--black, #1a1520);
+  margin-top: 0.25rem;
+}

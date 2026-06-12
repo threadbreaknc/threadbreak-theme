@@ -1,0 +1,308 @@
+{%- assign selected_variant = product.selected_or_first_available_variant -%}
+<div class="product-page">
+
+<section class="product-main">
+
+<!-- GALLERY -->
+<div class="product-gallery">
+<div class="product-gallery-main">
+<img src="{{ selected_variant.featured_image | default: product.featured_image | img_url: '800x800', crop: 'center' }}"
+alt="{{ product.title | escape }}"
+id="product-main-img"
+class="product-main-img">
+</div>
+<div class="product-thumbs">
+{%- for image in product.images limit: 6 -%}
+<button class="product-thumb{% if forloop.first %} active{% endif %}"
+data-src="{{ image | img_url: '800x800', crop: 'center' }}">
+<img src="{{ image | img_url: '160x160', crop: 'center' }}" alt="{{ product.title | escape }}">
+</button>
+{%- endfor -%}
+</div>
+</div>
+
+<!-- INFO -->
+<div class="product-info">
+<h1 class="product-title">{{ product.title }}</h1>
+
+<div class="product-price-row">
+<p class="product-price" id="product-price">{{ selected_variant.price | money }}</p>
+<a href="#product-reviews" class="product-stars-inline" style="text-decoration:none;">
+<span class="stars">★★★★★</span>
+<span class="stars-label">5-Star Rated ↓</span>
+</a>
+</div>
+
+{%- form 'product', product, id: 'product-form' -%}
+<input type="hidden" name="id" id="variant-id" value="{{ selected_variant.id }}">
+
+{%- unless product.has_only_default_variant -%}
+{%- for option in product.options_with_values -%}
+<div class="product-option">
+<p class="option-label">{{ option.name }}: <span class="option-selected" id="option-{{ forloop.index0 }}-label">{{ option.selected_value }}</span></p>
+<div class="option-swatches">
+{%- for value in option.values -%}
+{%- assign opt_idx = forloop.parentloop.index0 -%}
+{%- for variant in product.variants -%}
+{%- if variant.option1 == value or variant.option2 == value -%}
+<button type="button"
+class="swatch{% if value == option.selected_value %} active{% endif %}"
+data-value="{{ value | escape }}"
+data-option-index="{{ opt_idx }}"
+data-variant-id="{{ variant.id }}"
+data-variant-price="{{ variant.price }}"
+data-variant-available="{{ variant.available }}"
+data-variant-image="{% if variant.featured_image %}{{ variant.featured_image | img_url: '800x800', crop: 'center' }}{% endif %}">
+{{ value }}
+</button>
+{%- break -%}
+{%- endif -%}
+{%- endfor -%}
+{%- endfor -%}
+</div>
+</div>
+{%- endfor -%}
+{%- endunless -%}
+
+{% render 'preorder-notice' %}
+
+<div class="product-actions">
+<div class="qty-wrap">
+<button type="button" class="qty-btn" id="qty-minus">−</button>
+<input type="number" name="quantity" value="1" min="1" id="qty-input" class="qty-input">
+<button type="button" class="qty-btn" id="qty-plus">+</button>
+</div>
+<button type="button" class="btn btn-fill product-atc" id="atc-btn"
+style="opacity:0.4;cursor:not-allowed;"
+onclick="
+if (!document.getElementById('preorder-cb').checked) {
+document.getElementById('leadtime-hint').style.display = 'block';
+document.getElementById('preorder-cb').closest('.preorder-wrap').scrollIntoView({behavior:'smooth', block:'center'});
+} else {
+this.closest('form').submit();
+}
+">
+{%- if selected_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
+</button>
+</div>
+
+<div class="product-trust-row" style="justify-content:center;">
+<span class="ptr-item">
+<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+Secure checkout
+</span>
+<span class="ptr-sep">·</span>
+<span class="ptr-item">
+<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+Free shipping
+</span>
+<span class="ptr-sep">·</span>
+<span class="ptr-item">✦ Made in NC</span>
+</div>
+
+{%- if product.metafields.custom.sticker_url != blank -%}
+<a href="{{ product.metafields.custom.sticker_url }}" class="sticker-upsell">
+<span class="sticker-upsell-icon">🔖</span>
+<div>
+<p class="sticker-upsell-title">Also available as a sticker pack</p>
+<p class="sticker-upsell-sub">Get this design as a sticker. Tap to shop.</p>
+</div>
+<span class="sticker-upsell-arrow">→</span>
+</a>
+{%- endif -%}
+
+{%- endform -%}
+
+<div class="product-desc">{{ product.description }}</div>
+</div>
+
+</div>
+</section>
+
+{%- if product.metafields.custom.wild_photo_1 != blank -%}
+<section class="in-the-wild">
+<div class="wild-header">
+<p class="eyebrow reveal">
+{%- if product.metafields.custom.wild_location != blank -%}
+Spotted at {{ product.metafields.custom.wild_location }}
+{%- else -%}
+In The Wild
+{%- endif -%}
+</p>
+<h2 class="reveal reveal-d1">In The Wild.</h2>
+<p class="reveal reveal-d2">Real fans. Real games. Real hats.</p>
+</div>
+<div class="wild-photos{% if product.metafields.custom.wild_photo_2 == blank %} wild-photos--single{% endif %}">
+<div class="wild-photo reveal">
+<img src="{{ product.metafields.custom.wild_photo_1 | img_url: '800x800' }}" alt="{{ product.title | escape }} in the wild">
+{%- if product.metafields.custom.wild_location != blank -%}
+<div class="wild-tag">📍 {{ product.metafields.custom.wild_location }}</div>
+{%- endif -%}
+</div>
+{%- if product.metafields.custom.wild_photo_2 != blank -%}
+<div class="wild-photo reveal reveal-d1">
+<img src="{{ product.metafields.custom.wild_photo_2 | img_url: '800x800' }}" alt="{{ product.title | escape }} in the wild">
+{%- if product.metafields.custom.wild_location != blank -%}
+<div class="wild-tag">📍 {{ product.metafields.custom.wild_location }}</div>
+{%- endif -%}
+</div>
+{%- endif -%}
+</div>
+</section>
+{%- endif -%}
+
+<section class="product-reviews-strip" id="product-reviews">
+<div class="prs-inner">
+<div class="prs-item reveal">
+<div class="prs-stars">★★★★★</div>
+<p class="prs-quote">"Great seller, really unique and great design, fast shipping!"</p>
+<p class="prs-author">— Crystal &nbsp;·&nbsp; <span>Etsy</span></p>
+</div>
+<div class="prs-div"></div>
+<div class="prs-item reveal reveal-d1">
+<div class="prs-stars">★★★★★</div>
+<p class="prs-quote">"Absolutely amazing seller! USPS lost the original package but the seller quickly sent a replacement. I'd give 100 stars if I could."</p>
+<p class="prs-author">— Ryan &nbsp;·&nbsp; <span>Etsy</span></p>
+</div>
+<div class="prs-div"></div>
+<div class="prs-item reveal reveal-d2">
+<div class="prs-stars">★★★★★</div>
+<p class="prs-quote">"Love the design and love to support local businesses. Great value for the cost and shipping. Go Canes!"</p>
+<p class="prs-author">— Eric &nbsp;·&nbsp; <span>eBay</span></p>
+</div>
+</div>
+</section>
+
+<section class="product-trust">
+<div class="trust-inner">
+<div class="trust-item reveal">
+<div class="trust-stars">★★★★★</div>
+<p class="trust-platform">Etsy</p>
+<p class="trust-stat">5 Stars</p>
+<p class="trust-desc">Verified seller with 5-star ratings across all orders on Etsy.</p>
+</div>
+<div class="trust-divider"></div>
+<div class="trust-item reveal reveal-d1">
+<div class="trust-stars">★★★★★</div>
+<p class="trust-platform">eBay</p>
+<p class="trust-stat">100% Positive</p>
+<p class="trust-desc">100% positive feedback from every buyer on eBay. Not a single complaint.</p>
+</div>
+<div class="trust-divider"></div>
+<div class="trust-item reveal reveal-d2">
+<div class="trust-stars">✦ ✦ ✦</div>
+<p class="trust-platform">Our Promise</p>
+<p class="trust-stat">Made Right</p>
+<p class="trust-desc">Every hat is stitched in-house. If something's wrong on our end, we make it right. Period.</p>
+</div>
+</div>
+</section>
+
+{%- if product.collections.first.products.size > 1 -%}
+<section class="related-products">
+<p class="eyebrow reveal">Keep Browsing</p>
+<h2 class="reveal reveal-d1">You May Also Like</h2>
+<div class="related-grid">
+{%- for related in product.collections.first.products limit: 5 -%}
+{%- unless related.handle == product.handle -%}
+<a href="{{ related.url }}" class="hat-card reveal">
+<div class="hat-img-wrap">
+<img src="{{ related.featured_image | img_url: '600x600', crop: 'center' }}" alt="{{ related.title | escape }}" class="hat-img">
+</div>
+<div class="hat-info">
+<div class="hat-name">{{ related.title }}</div>
+<div class="hat-price">{{ related.price | money }}</div>
+</div>
+</a>
+{%- endunless -%}
+{%- endfor -%}
+</div>
+</section>
+{%- endif -%}
+
+</div>
+
+<script>
+// Qty buttons
+document.getElementById('qty-minus').addEventListener('click', function() {
+  var i = document.getElementById('qty-input');
+  i.value = Math.max(1, parseInt(i.value) - 1);
+});
+document.getElementById('qty-plus').addEventListener('click', function() {
+  var i = document.getElementById('qty-input');
+  i.value = parseInt(i.value) + 1;
+});
+
+// Thumbnail swap
+document.querySelectorAll('.product-thumb').forEach(function(thumb) {
+  thumb.addEventListener('click', function() {
+    var main = document.getElementById('product-main-img');
+    if (main) {
+      main.style.opacity = '0';
+      setTimeout(function() { main.src = thumb.dataset.src; main.style.opacity = '1'; }, 200);
+    }
+    document.querySelectorAll('.product-thumb').forEach(function(t) { t.classList.remove('active'); });
+    thumb.classList.add('active');
+  });
+});
+
+// Swatch click — update variant ID, image, label, AND PRICE
+document.querySelectorAll('.swatch').forEach(function(swatch) {
+  swatch.addEventListener('click', function() {
+    if (swatch.disabled) return;
+    var optIdx = swatch.dataset.optionIndex;
+    document.querySelectorAll('.swatch[data-option-index="' + optIdx + '"]').forEach(function(s) { s.classList.remove('active'); });
+    swatch.classList.add('active');
+
+    // Update hidden variant ID
+    var variantId = swatch.dataset.variantId;
+    if (variantId) document.getElementById('variant-id').value = variantId;
+
+    // Update image
+    var variantImg = swatch.dataset.variantImage;
+    if (variantImg) {
+      var main = document.getElementById('product-main-img');
+      if (main) {
+        main.style.opacity = '0';
+        setTimeout(function() { main.src = variantImg; main.style.opacity = '1'; }, 200);
+      }
+    }
+
+    // Update option label
+    var label = swatch.closest('.product-option').querySelector('.option-selected');
+    if (label) label.textContent = swatch.dataset.value;
+
+    // Update price
+    var price = swatch.dataset.variantPrice;
+    if (price) {
+      var dollars = (parseInt(price) / 100).toFixed(2);
+      var priceEl = document.getElementById('product-price');
+      if (priceEl) priceEl.textContent = '$' + dollars;
+    }
+
+    // Update ATC availability
+    var available = swatch.dataset.variantAvailable;
+    var btn = document.getElementById('atc-btn');
+    if (btn) {
+      if (available === 'false') {
+        btn.textContent = 'Sold Out';
+        btn.style.opacity = '0.4';
+        btn.style.cursor = 'not-allowed';
+      } else {
+        btn.textContent = 'Add to Cart';
+        // Only restore if checkbox is checked
+        if (document.getElementById('leadtime-cb').checked) {
+          btn.style.opacity = '1';
+          btn.style.cursor = 'pointer';
+        }
+      }
+    }
+  });
+});
+
+// Scroll reveal
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(function(el) { observer.observe(el); });
+</script>
