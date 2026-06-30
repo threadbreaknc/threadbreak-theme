@@ -1,0 +1,11 @@
+/* ── PRODUCT REVIEWS WRAP — PADDING ── */
+.product-reviews-wrap {
+  padding: 3rem 6rem;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+@media (max-width: 900px) {
+  .product-reviews-wrap {
+    padding: 2rem 1.5rem;
+  }
+}

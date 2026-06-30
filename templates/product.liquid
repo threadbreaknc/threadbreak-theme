@@ -25,12 +25,6 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
 <div class="product-info">
 <h1 class="product-title">{{ product.title }}</h1>
 
-<!-- Start of Judge.me code -->
-<div style='margin-bottom: 0.75rem;' class='jdgm-widget jdgm-preview-badge' data-id='{{ product.id }}' data-auto-install='false'>
-{{ product.metafields.judgeme.badge }}
-</div>
-<!-- End of Judge.me code -->
-
 <div class="product-price-row">
 <p class="product-price" id="product-price">{{ selected_variant.price | money }}</p>
 
@@ -146,6 +140,10 @@ Free shipping
 </div>
 </section>
 
+<section class="product-reviews-wrap">
+<!-- Start of Judge.me code -->{% assign has_legacy = false %}{% if product.metafields.judgeme.widget.size > 20 %}{% assign has_legacy = true %}{% endif %}<div style='clear:both'></div><div id='judgeme_product_reviews' class='jdgm-widget jdgm-review-widget' data-product-title='{{ product.title | escape }}' data-id='{{ product.id }}' data-product-id='{{ product.id }}' data-widget='review' data-auto-install='false' data-shop-reviews-count='{{ shop.metafields.judgeme.shop_reviews_count | default: 0 | escape }}' data-entry-point='review_widget.js' data-entry-key='review-widget/main.js'>{% if has_legacy %}<div class='jdgm-legacy-widget-content' style='display: none;'>{{ product.metafields.judgeme.widget }}</div>{% endif %}</div>{% if product.metafields.judgeme.review_widget_data %}<script>jdgm.data ||= {}; jdgm.data.reviewWidget ||= {}; jdgm.data.reviewWidget[{{ product.id }}] = {{ product.metafields.judgeme.review_widget_data }}</script>{% endif %}<!-- End of Judge.me code -->
+</section>
+
 {%- if product.metafields.custom.wild_photo_1 != blank -%}
 <section class="in-the-wild">
 <div class="wild-header">
@@ -182,9 +180,8 @@ In The Wild
 
 
 
-{%- if product.collections.first.products.size > 1 -%}
-<!-- Start of Judge.me code -->{% assign has_legacy = false %}{% if product.metafields.judgeme.widget.size > 20 %}{% assign has_legacy = true %}{% endif %}<div style='clear:both'></div><div id='judgeme_product_reviews' class='jdgm-widget jdgm-review-widget' data-product-title='{{ product.title | escape }}' data-id='{{ product.id }}' data-product-id='{{ product.id }}' data-widget='review' data-auto-install='false' data-shop-reviews-count='{{ shop.metafields.judgeme.shop_reviews_count | default: 0 | escape }}' data-entry-point='review_widget.js' data-entry-key='review-widget/main.js'>{% if has_legacy %}<div class='jdgm-legacy-widget-content' style='display: none;'>{{ product.metafields.judgeme.widget }}</div>{% endif %}</div>{% if product.metafields.judgeme.review_widget_data %}<script>jdgm.data ||= {}; jdgm.data.reviewWidget ||= {}; jdgm.data.reviewWidget[{{ product.id }}] = {{ product.metafields.judgeme.review_widget_data }}</script>{% endif %}<!-- End of Judge.me code -->
 
+{%- if product.collections.first.products.size > 1 -%}
 <section class="related-products">
 <p class="eyebrow reveal">Keep Browsing</p>
 <h2 class="reveal reveal-d1">You May Also Like</h2>
