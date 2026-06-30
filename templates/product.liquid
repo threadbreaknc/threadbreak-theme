@@ -27,10 +27,7 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
 
 <div class="product-price-row">
 <p class="product-price" id="product-price">{{ selected_variant.price | money }}</p>
-<a href="#product-reviews" class="product-stars-inline" style="text-decoration:none;">
-<span class="stars">★★★★★</span>
-<span class="stars-label">5-Star Rated ↓</span>
-</a>
+
 </div>
 
 {%- form 'product', product, id: 'product-form' -%}
@@ -175,54 +172,13 @@ In The Wild
 </section>
 {%- endif -%}
 
-<section class="product-reviews-strip" id="product-reviews">
-<div class="prs-inner">
-<div class="prs-item reveal">
-<div class="prs-stars">★★★★★</div>
-<p class="prs-quote">"Great seller, really unique and great design, fast shipping!"</p>
-<p class="prs-author">— Crystal &nbsp;·&nbsp; <span>Etsy</span></p>
-</div>
-<div class="prs-div"></div>
-<div class="prs-item reveal reveal-d1">
-<div class="prs-stars">★★★★★</div>
-<p class="prs-quote">"Absolutely amazing seller! USPS lost the original package but the seller quickly sent a replacement. I'd give 100 stars if I could."</p>
-<p class="prs-author">— Ryan &nbsp;·&nbsp; <span>Etsy</span></p>
-</div>
-<div class="prs-div"></div>
-<div class="prs-item reveal reveal-d2">
-<div class="prs-stars">★★★★★</div>
-<p class="prs-quote">"Love the design and love to support local businesses. Great value for the cost and shipping. Go Canes!"</p>
-<p class="prs-author">— Eric &nbsp;·&nbsp; <span>eBay</span></p>
-</div>
-</div>
-</section>
 
-<section class="product-trust">
-<div class="trust-inner">
-<div class="trust-item reveal">
-<div class="trust-stars">★★★★★</div>
-<p class="trust-platform">Etsy</p>
-<p class="trust-stat">5 Stars</p>
-<p class="trust-desc">Verified seller with 5-star ratings across all orders on Etsy.</p>
-</div>
-<div class="trust-divider"></div>
-<div class="trust-item reveal reveal-d1">
-<div class="trust-stars">★★★★★</div>
-<p class="trust-platform">eBay</p>
-<p class="trust-stat">100% Positive</p>
-<p class="trust-desc">100% positive feedback from every buyer on eBay. Not a single complaint.</p>
-</div>
-<div class="trust-divider"></div>
-<div class="trust-item reveal reveal-d2">
-<div class="trust-stars">✦ ✦ ✦</div>
-<p class="trust-platform">Our Promise</p>
-<p class="trust-stat">Made Right</p>
-<p class="trust-desc">Every hat is stitched in-house. If something's wrong on our end, we make it right. Period.</p>
-</div>
-</div>
-</section>
+
+
 
 {%- if product.collections.first.products.size > 1 -%}
+<!-- Start of Judge.me code -->{% assign has_legacy = false %}{% if product.metafields.judgeme.widget.size > 20 %}{% assign has_legacy = true %}{% endif %}<div style='clear:both'></div><div id='judgeme_product_reviews' class='jdgm-widget jdgm-review-widget' data-product-title='{{ product.title | escape }}' data-id='{{ product.id }}' data-product-id='{{ product.id }}' data-widget='review' data-auto-install='false' data-shop-reviews-count='{{ shop.metafields.judgeme.shop_reviews_count | default: 0 | escape }}' data-entry-point='review_widget.js' data-entry-key='review-widget/main.js'>{% if has_legacy %}<div class='jdgm-legacy-widget-content' style='display: none;'>{{ product.metafields.judgeme.widget }}</div>{% endif %}</div>{% if product.metafields.judgeme.review_widget_data %}<script>jdgm.data ||= {}; jdgm.data.reviewWidget ||= {}; jdgm.data.reviewWidget[{{ product.id }}] = {{ product.metafields.judgeme.review_widget_data }}</script>{% endif %}<!-- End of Judge.me code -->
+
 <section class="related-products">
 <p class="eyebrow reveal">Keep Browsing</p>
 <h2 class="reveal reveal-d1">You May Also Like</h2>
