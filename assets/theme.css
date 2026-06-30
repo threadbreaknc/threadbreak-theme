@@ -7563,3 +7563,20 @@ section:first-of-type,
   color: var(--black, #1a1520);
   margin-top: 0.25rem;
 }
+
+/* ── PRODUCT REVIEWS WRAP — PADDING (Judge.me widget) ── */
+.product-reviews-wrap {
+  padding: 3rem 6rem !important;
+  max-width: 1100px !important;
+  margin: 0 auto !important;
+  box-sizing: border-box !important;
+}
+.product-reviews-wrap .jdgm-widget,
+.product-reviews-wrap #judgeme_product_reviews {
+  max-width: 100% !important;
+}
+@media (max-width: 900px) {
+  .product-reviews-wrap {
+    padding: 2rem 1.5rem !important;
+  }
+}
