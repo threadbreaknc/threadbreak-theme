@@ -25,11 +25,16 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
 <div class="product-info">
 <h1 class="product-title">{{ product.title }}</h1>
 
+{%- unless product.collections contains 'apparel' -%}
+{%- for col in product.collections -%}{%- if col.handle == 'apparel' -%}{%- assign is_apparel = true -%}{%- endif -%}{%- endfor -%}
+{%- unless is_apparel -%}
 <!-- Start of Judge.me code -->
 <div style='margin-bottom: 0.75rem;' class='jdgm-widget jdgm-preview-badge' data-id='{{ product.id }}' data-auto-install='false'>
 {{ product.metafields.judgeme.badge }}
 </div>
 <!-- End of Judge.me code -->
+{%- endunless -%}
+{%- endunless -%}
 
 <div class="product-price-row">
 <p class="product-price" id="product-price">{{ selected_variant.price | money }}</p>
@@ -83,11 +88,11 @@ noteInput.type = 'hidden';
 noteInput.name = 'note';
 this.closest('form').appendChild(noteInput);
 }
-noteInput.value = 'Customer acknowledged 5 business day shipping lead time.';
+noteInput.value = 'Customer acknowledged up to 5 business day lead time.';
 }
 ">
 <span class="leadtime-check-box"></span>
-<span class="leadtime-check-text">I understand this item ships within <strong>5 business days</strong>.</span>
+<span class="leadtime-check-text">I understand most items are made to order and may take up to <strong>5 business days</strong> to ship.</span>
 </label>
 </div>
 

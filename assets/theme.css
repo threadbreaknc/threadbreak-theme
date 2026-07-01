@@ -7580,3 +7580,6 @@ section:first-of-type,
     padding: 2rem 1.5rem !important;
   }
 }
+
+/* ── HIDE STAR BADGE ON APPAREL PRODUCTS ── */
+body:has(.product-page) .jdgm-preview-badge { display: block; }
