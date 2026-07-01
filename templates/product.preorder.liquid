@@ -64,7 +64,7 @@ data-variant-image="{% if variant.featured_image %}{{ variant.featured_image | i
 {%- endfor -%}
 {%- endunless -%}
 
-{% render 'preorder-notice' %}
+
 
 <div class="product-actions">
 <div class="qty-wrap">
@@ -75,12 +75,7 @@ data-variant-image="{% if variant.featured_image %}{{ variant.featured_image | i
 <button type="button" class="btn btn-fill product-atc" id="atc-btn"
 style="opacity:0.4;cursor:not-allowed;"
 onclick="
-if (!document.getElementById('preorder-cb').checked) {
-document.getElementById('preorder-hint').style.display = 'block';
-document.getElementById('preorder-cb').closest('.preorder-wrap').scrollIntoView({behavior:'smooth', block:'center'});
-} else {
 this.closest('form').submit();
-}
 ">
 {%- if selected_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
 </button>
