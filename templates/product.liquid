@@ -73,6 +73,7 @@ data-variant-image="{% if variant.featured_image %}{{ variant.featured_image | i
 {%- endfor -%}
 {%- endunless -%}
 
+{%- unless is_apparel -%}
 <div class="leadtime-check-wrap">
 <label class="leadtime-check-label" for="leadtime-cb">
 <input type="checkbox" id="leadtime-cb" onchange="
@@ -98,6 +99,7 @@ noteInput.value = 'Customer acknowledged up to 5 business day lead time.';
 </div>
 
 <p class="leadtime-hint" id="leadtime-hint" style="display:none;"><strong style="color:#c0392b;">⚠</strong> The box above must be checked before adding to cart.</p>
+{%- endunless -%}
 
 <div class="product-actions">
 <div class="qty-wrap">
@@ -105,6 +107,11 @@ noteInput.value = 'Customer acknowledged up to 5 business day lead time.';
 <input type="number" name="quantity" value="1" min="1" id="qty-input" class="qty-input">
 <button type="button" class="qty-btn" id="qty-plus">+</button>
 </div>
+{%- if is_apparel -%}
+<button type="submit" name="add" class="btn btn-fill product-atc" id="atc-btn">
+{%- if selected_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
+</button>
+{%- else -%}
 <button type="button" class="btn btn-fill product-atc" id="atc-btn"
 style="opacity:0.4;cursor:not-allowed;"
 onclick="
@@ -117,6 +124,7 @@ this.closest('form').submit();
 ">
 {%- if selected_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
 </button>
+{%- endif -%}
 </div>
 
 <div class="product-trust-row" style="justify-content:center;">
