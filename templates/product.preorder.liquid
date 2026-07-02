@@ -281,16 +281,27 @@
     var wrap = document.getElementById('low-stock-msg');
     var text = document.getElementById('low-stock-text');
     if (!wrap || !text) return;
-    if (qty !== undefined && qty > 0 && qty < 5) {
+    if (qty !== undefined && qty === 0) {
+      text.textContent = 'This size is sold out.';
+      wrap.style.display = 'flex';
+      wrap.style.color = '#888';
+      wrap.querySelector('.low-stock-dot').style.background = '#888';
+      wrap.querySelector('.low-stock-dot').style.animation = 'none';
+    } else if (qty !== undefined && qty > 0 && qty < 5) {
       text.textContent = 'Only ' + qty + ' left in this size!';
       wrap.style.display = 'flex';
+      wrap.style.color = '#c0392b';
+      wrap.querySelector('.low-stock-dot').style.background = '#c0392b';
+      wrap.querySelector('.low-stock-dot').style.animation = '';
     } else {
       wrap.style.display = 'none';
     }
   }
 
   // Check on page load
-  updateLowStock('{{ product.selected_or_first_available_variant.id }}');
+  // Show inventory on load
+  var initialVariant = findMatchingVariant();
+  if (initialVariant) updateLowStock(initialVariant.id);
 
   // Qty buttons
   var qtyMinus = document.getElementById('qty-minus');
@@ -334,7 +345,6 @@
   document.querySelectorAll('.swatch').forEach(function(swatch) {
     swatch.addEventListener('click', function() {
       var optIdx = swatch.dataset.optionIndex;
-      updateLowStock(swatch.dataset.variantId);
 
       document.querySelectorAll('.swatch[data-option-index="' + optIdx + '"]').forEach(function(s) {
         s.classList.remove('active');
@@ -347,11 +357,14 @@
 
       var matchingVariant = findMatchingVariant();
       updateProductFromVariant(matchingVariant);
+      if (matchingVariant) updateLowStock(matchingVariant.id);
     });
   });
 
   // Initial button state
-  updateProductFromVariant(findMatchingVariant());
+  var startVariant = findMatchingVariant();
+  updateProductFromVariant(startVariant);
+  if (startVariant) updateLowStock(startVariant.id);
 
   // Scroll reveal
   if ('IntersectionObserver' in window) {
