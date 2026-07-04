@@ -135,8 +135,14 @@
           </div>
 
           <div class="qform-field">
-            <label for="q-notes">Additional Notes <span class="req">*</span></label>
-            <textarea id="q-notes" name="notes" rows="5" required placeholder="Deadline, specific brands, budget range, anything else we should know..."></textarea>
+            <label for="q-deadline">When Do You Need It By?</label>
+            <input type="date" id="q-deadline" name="deadline" style="max-width:220px;">
+            <p style="font-size:0.72rem;color:rgba(26,21,32,0.4);margin-top:0.4rem;">Leave blank if flexible. Note: custom orders typically take 2-3 weeks.</p>
+          </div>
+
+          <div class="qform-field">
+            <label for="q-notes">Additional Notes</label>
+            <textarea id="q-notes" name="notes" rows="5" placeholder="Specific brands, budget range, anything else we should know..."></textarea>
           </div>
 
           <div class="qform-field">
@@ -193,6 +199,7 @@ document.getElementById('quote-form').addEventListener('submit', async function(
       stitchType: form.stitchType ? (form.stitchType.value || '') : '',
       hatColor: form.hatColor.value,
       colors: form.colors.value,
+      deadline: form.deadline ? form.deadline.value : '',
       notes: form.notes.value,
       fileName: '',
       fileType: '',
