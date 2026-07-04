@@ -69,12 +69,12 @@
           </div>
           <div class="qform-row">
             <div class="qform-field">
-              <label for="q-company">Company / Brand</label>
-              <input type="text" id="q-company" name="company" placeholder="Optional">
+              <label for="q-phone">Phone <span style="font-weight:400;opacity:0.4;font-size:0.85em;">(optional)</span></label>
+              <input type="tel" id="q-phone" name="phone" placeholder="Optional">
             </div>
             <div class="qform-field">
-              <label for="q-phone">Phone</label>
-              <input type="tel" id="q-phone" name="phone" placeholder="Optional">
+              <label for="q-company">Company / Brand <span style="font-weight:400;opacity:0.4;font-size:0.85em;">(optional)</span></label>
+              <input type="text" id="q-company" name="company" placeholder="Optional">
             </div>
           </div>
         </div>
@@ -89,15 +89,9 @@
           </div>
 
           <div class="qform-field">
-            <label>Hat Style Preference</label>
-            <div class="qform-options">
-              <label class="qopt"><input type="radio" name="hatStyle" value="Snapback"><span>Snapback</span></label>
-              <label class="qopt"><input type="radio" name="hatStyle" value="Fitted"><span>Fitted</span></label>
-              <label class="qopt"><input type="radio" name="hatStyle" value="Dad Hat"><span>Dad Hat</span></label>
-              <label class="qopt"><input type="radio" name="hatStyle" value="Trucker"><span>Trucker</span></label>
-              <label class="qopt"><input type="radio" name="hatStyle" value="Beanie"><span>Beanie</span></label>
-              <label class="qopt"><input type="radio" name="hatStyle" value="Not sure"><span>Not sure</span></label>
-            </div>
+            <label for="q-hat-pref">Hat Preference</label>
+            <input type="text" id="q-hat-pref" name="hatPreference" placeholder="e.g. Otto snapback in black, Richardson 112 in navy, Yupoong trucker — or not sure">
+            <p style="font-size:0.72rem;color:rgba(26,21,32,0.4);margin-top:0.4rem;">Include brand, style, and color if you have a preference.</p>
           </div>
 
           <div class="qform-field">
@@ -125,28 +119,30 @@
           </div>
 
           <div class="qform-field">
-            <label for="q-hat-color">Preferred Hat Color(s)</label>
-            <input type="text" id="q-hat-color" name="hatColor" placeholder="e.g. Black, White, Natural, Navy, etc.">
+            <label>Embroidery Placement <span style="font-weight:400;opacity:0.4;font-size:0.85em;">— additional charge per location</span></label>
+            <div class="qform-options">
+              <label class="qopt"><input type="checkbox" name="placement" value="Front Center"><span>Front Center</span></label>
+              <label class="qopt"><input type="checkbox" name="placement" value="Front Left"><span>Front Left</span></label>
+              <label class="qopt"><input type="checkbox" name="placement" value="Front Right"><span>Front Right</span></label>
+              <label class="qopt"><input type="checkbox" name="placement" value="Left Side"><span>Left Side</span></label>
+              <label class="qopt"><input type="checkbox" name="placement" value="Right Side"><span>Right Side</span></label>
+              <label class="qopt"><input type="checkbox" name="placement" value="Not sure"><span>Not sure</span></label>
+            </div>
           </div>
 
           <div class="qform-field">
-            <label for="q-colors">Thread / Embroidery Colors</label>
-            <input type="text" id="q-colors" name="colors" placeholder="e.g. Red, White, Black, or match my logo colors">
-          </div>
-
-          <div class="qform-field">
-            <label for="q-deadline">When Do You Need It By?</label>
+            <label for="q-deadline">When Do You Need It By? <span style="font-weight:400;opacity:0.4;font-size:0.85em;">(optional)</span></label>
             <input type="date" id="q-deadline" name="deadline" style="max-width:220px;">
-            <p style="font-size:0.72rem;color:rgba(26,21,32,0.4);margin-top:0.4rem;">Leave blank if flexible. Note: custom orders typically take 2-3 weeks.</p>
+            <p style="font-size:0.72rem;color:rgba(26,21,32,0.4);margin-top:0.4rem;">Custom orders typically take 2-3 weeks.</p>
           </div>
 
           <div class="qform-field">
-            <label for="q-notes">Additional Notes</label>
-            <textarea id="q-notes" name="notes" rows="5" placeholder="Specific brands, budget range, anything else we should know..."></textarea>
+            <label for="q-notes">Anything Else? <span style="font-weight:400;opacity:0.4;font-size:0.85em;">(optional)</span></label>
+            <textarea id="q-notes" name="notes" rows="4" placeholder="Budget range, specific design ideas, questions..."></textarea>
           </div>
 
           <div class="qform-field">
-            <label for="q-file">Upload Your Logo / Design File</label>
+            <label for="q-file">Upload Your Logo / Design File <span style="font-weight:400;opacity:0.4;font-size:0.85em;">(optional)</span></label>
             <p style="font-size:0.75rem;color:rgba(26,21,32,0.45);margin-bottom:0.6rem;">PNG, JPG, PDF, AI, SVG, EPS accepted. Max 10MB.</p>
             <input type="file" id="q-file" name="logo" accept=".png,.jpg,.jpeg,.pdf,.ai,.svg,.eps" class="qform-file-input">
           </div>
@@ -195,10 +191,9 @@ document.getElementById('quote-form').addEventListener('submit', async function(
       company: form.company.value,
       phone: form.phone.value,
       quantity: form.quantity.value,
-      hatStyle: form.hatStyle ? (form.hatStyle.value || '') : '',
+      hatPreference: form.hatPreference ? form.hatPreference.value : '',
       stitchType: form.stitchType ? (form.stitchType.value || '') : '',
-      hatColor: form.hatColor.value,
-      colors: form.colors.value,
+      placement: [...document.querySelectorAll('input[name="placement"]:checked')].map(cb => cb.value).join(', ') || 'Not specified',
       deadline: form.deadline ? form.deadline.value : '',
       notes: form.notes.value,
       fileName: '',
