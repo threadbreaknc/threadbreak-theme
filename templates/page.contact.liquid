@@ -1,28 +1,67 @@
 <div class="quote-page">
 
   <!-- HERO -->
-  <section class="quote-hero">
-    <div class="quote-hero-bg"></div>
-    <div class="quote-hero-content">
-      <p class="eyebrow reveal">Custom & Wholesale</p>
-      <h1 class="reveal reveal-d1">Get a Quote.</h1>
-      <p class="quote-hero-sub reveal reveal-d2">Tell us what you need. We'll get back to you within 24 hours with pricing, timelines, and next steps.</p>
-      <div class="quote-stats reveal reveal-d3" style="display:flex;gap:2.5rem;margin-top:2rem;align-items:flex-start;">
-        <div class="qstat" style="display:flex;flex-direction:column;gap:0.15rem;">
-          <strong style="font-family:var(--font-display);font-size:2rem;color:var(--black);line-height:1;">10+</strong>
-          <span style="font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(26,21,32,0.4);">Hat Minimum</span>
-        </div>
-        <div style="width:1px;height:35px;background:rgba(26,21,32,0.1);margin-top:4px;"></div>
-        <div class="qstat" style="display:flex;flex-direction:column;gap:0.15rem;">
-          <strong style="font-family:var(--font-display);font-size:2rem;color:var(--black);line-height:1;">24hr</strong>
-          <span style="font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(26,21,32,0.4);">Response Time</span>
-        </div>
-        <div style="width:1px;height:35px;background:rgba(26,21,32,0.1);margin-top:4px;"></div>
-        <div class="qstat" style="display:flex;flex-direction:column;gap:0.15rem;">
-          <strong style="font-family:var(--font-display);font-size:2rem;color:var(--black);line-height:1;">Free</strong>
-          <span style="font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(26,21,32,0.4);">Shipping</span>
+  <section class="quote-hero-photo">
+    <!-- Scrolling photo strip -->
+    <div class="qhp-strip-wrap">
+      <div class="qhp-strip" id="qhp-strip">
+        {%- assign photos = "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_5393.jpg?v=1783192304,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4219.jpg?v=1783192609,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_2222.jpg?v=1783192609,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_2635.jpg?v=1783192608,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4060.jpg?v=1783192607,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_3791.jpg?v=1783192608,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4183.jpg?v=1783192608,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4311.jpg?v=1783192304,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/30E97845-C9BA-48A3-BD1E-6538E9193FE6_2.jpg?v=1783192304,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_5393.jpg?v=1783192304,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4219.jpg?v=1783192609,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_2222.jpg?v=1783192609,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_2635.jpg?v=1783192608,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4060.jpg?v=1783192607,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_3791.jpg?v=1783192608,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4183.jpg?v=1783192608,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4311.jpg?v=1783192304,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/30E97845-C9BA-48A3-BD1E-6538E9193FE6_2.jpg?v=1783192304" | split: "," -%}
+        {%- for photo in photos -%}
+          <div class="qhp-photo" style="background-image:url('{{ photo }}');"></div>
+        {%- endfor -%}
+      </div>
+    </div>
+    <!-- Fade overlay -->
+    <div class="qhp-fade"></div>
+    <!-- Text content -->
+    <div class="qhp-content">
+      <p class="qhp-eyebrow">Custom & Wholesale Embroidery</p>
+      <h1 class="qhp-h1">Get a Quote.</h1>
+      <p class="qhp-sub">Tell us what you need. We'll get back to you within 24 hours.</p>
+      <div class="qhp-pills">
+        <span class="qhp-pill">✦ Min. 10 hats</span>
+        <span class="qhp-pill">✦ 24hr response</span>
+        <span class="qhp-pill">✦ Free shipping</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOCATION + PROCESS -->
+  <section class="quote-info-strip">
+    <div class="qis-inner">
+
+      <div class="qis-block">
+        <h3 class="qis-title">Where We Are</h3>
+        <div class="qis-location-items">
+          <div class="qis-loc-item">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            <span>Burlington, NC</span>
+          </div>
+          <div class="qis-loc-item">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            <span>Local pickup by appointment</span>
+          </div>
+          <div class="qis-loc-item">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+            <span>Free shipping anywhere in the US</span>
+          </div>
         </div>
       </div>
+
+      <div class="qis-divider"></div>
+
+      <div class="qis-block qis-process">
+        <h3 class="qis-title">How It Works</h3>
+        <div class="qis-steps">
+          <div class="qis-step"><span class="qis-num">01</span><span>You submit a quote request</span></div>
+          <div class="qis-step"><span class="qis-num">02</span><span>We create a mockup and send for approval</span></div>
+          <div class="qis-step"><span class="qis-num">03</span><span>Design gets digitized for embroidery</span></div>
+          <div class="qis-step"><span class="qis-num">04</span><span>We stitch a test sample and send you a photo</span></div>
+          <div class="qis-step"><span class="qis-num">05</span><span>You approve — we run the full order</span></div>
+          <div class="qis-step"><span class="qis-num">06</span><span>Ships free to your door, or schedule local pickup in Burlington, NC</span></div>
+        </div>
+      </div>
+
     </div>
   </section>
 
