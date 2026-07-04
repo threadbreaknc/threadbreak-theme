@@ -105,6 +105,9 @@
     <p>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. Burlington, NC.</p>
     <a href="/policies/privacy-policy" style="font-size:0.68rem;color:rgba(247,244,240,0.2);text-decoration:none;">Privacy</a>
   </div>
+  <!-- Start of Judge.me code -->
+  <div style="text-align:center;padding:1rem 0 0.5rem;">{{ shop.metafields.judgeme.medals }}</div>
+  <!-- End of Judge.me code -->
 </footer>
 
 <script src="{{ 'theme.js' | asset_url }}"></script>
