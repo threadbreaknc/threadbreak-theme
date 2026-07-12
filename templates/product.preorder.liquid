@@ -67,6 +67,31 @@
           <span id="low-stock-text"></span>
         </div>
 
+        <div class="leadtime-check-wrap">
+          <label class="leadtime-check-label" for="leadtime-cb">
+            <input type="checkbox" id="leadtime-cb" onchange="
+              var checked = this.checked;
+              var btn = document.getElementById('atc-btn');
+              btn.style.opacity = checked ? '1' : '0.4';
+              btn.style.cursor = checked ? 'pointer' : 'not-allowed';
+              document.getElementById('leadtime-hint').style.display = 'none';
+              if (checked) {
+                var noteInput = document.querySelector('input[name=note]');
+                if (!noteInput) {
+                  noteInput = document.createElement('input');
+                  noteInput.type = 'hidden';
+                  noteInput.name = 'note';
+                  this.closest('form').appendChild(noteInput);
+                }
+                noteInput.value = 'Customer acknowledged up to 5 business day lead time.';
+              }
+            ">
+            <span class="leadtime-check-box"></span>
+            <span class="leadtime-check-text">I understand most items are made to order and may take up to <strong>5 business days</strong> to ship.</span>
+          </label>
+        </div>
+        <p class="leadtime-hint" id="leadtime-hint" style="display:none;"><strong style="color:#c0392b;">⚠</strong> The box above must be checked before adding to cart.</p>
+
         <div class="product-actions">
           <div class="qty-wrap">
             <button type="button" class="qty-btn" id="qty-minus">−</button>
@@ -75,9 +100,11 @@
           </div>
 
           <button
-            type="submit"
+            type="button"
             class="btn btn-fill product-atc"
             id="atc-btn"
+            style="opacity:0.4;cursor:not-allowed;"
+            onclick="if(!document.getElementById('leadtime-cb').checked){document.getElementById('leadtime-hint').style.display='block';document.getElementById('leadtime-cb').closest('.leadtime-check-wrap').scrollIntoView({behavior:'smooth',block:'center'});}else{this.closest('form').submit();}"
             {% unless selected_variant.available %}disabled{% endunless %}>
             {%- if selected_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
           </button>
@@ -214,14 +241,11 @@
 
   function getSelectedOptions() {
     var selected = [];
-
     document.querySelectorAll('.product-option').forEach(function(optionWrap) {
       var active = optionWrap.querySelector('.swatch.active');
-      // Fall back to first swatch if none active
-      if (!active) active = optionWrap.querySelector('.swatch');
+      if (!active) active = optionWrap.querySelector('.swatch'); // fallback to first
       if (active) selected.push(active.dataset.value);
     });
-
     return selected;
   }
 
@@ -300,7 +324,7 @@
     }
   }
 
-  // Ensure all option groups have an active swatch on load
+  // Ensure every option group has an active swatch
   document.querySelectorAll('.product-option').forEach(function(optionWrap) {
     if (!optionWrap.querySelector('.swatch.active')) {
       var first = optionWrap.querySelector('.swatch');
@@ -308,7 +332,7 @@
     }
   });
 
-  // Check on page load
+  // Show inventory on load
   var initialVariant = findMatchingVariant();
   updateProductFromVariant(initialVariant);
   if (initialVariant) updateLowStock(initialVariant.id);
