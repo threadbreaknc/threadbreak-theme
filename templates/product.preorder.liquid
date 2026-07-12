@@ -217,6 +217,8 @@
 
     document.querySelectorAll('.product-option').forEach(function(optionWrap) {
       var active = optionWrap.querySelector('.swatch.active');
+      // Fall back to first swatch if none active
+      if (!active) active = optionWrap.querySelector('.swatch');
       if (active) selected.push(active.dataset.value);
     });
 
@@ -298,9 +300,17 @@
     }
   }
 
+  // Ensure all option groups have an active swatch on load
+  document.querySelectorAll('.product-option').forEach(function(optionWrap) {
+    if (!optionWrap.querySelector('.swatch.active')) {
+      var first = optionWrap.querySelector('.swatch');
+      if (first) first.classList.add('active');
+    }
+  });
+
   // Check on page load
-  // Show inventory on load
   var initialVariant = findMatchingVariant();
+  updateProductFromVariant(initialVariant);
   if (initialVariant) updateLowStock(initialVariant.id);
 
   // Qty buttons
