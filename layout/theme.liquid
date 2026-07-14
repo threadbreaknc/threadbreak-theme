@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{ page_title }}, {{ shop.name }}</title>
+{%- assign pt = page_title | downcase -%}
+{%- assign sn = shop.name | downcase -%}
+<title>{{ page_title }}{% unless pt contains sn %} | {{ shop.name }}{% endunless %}</title>
 <meta name="description" content="{{ page_description | escape }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
