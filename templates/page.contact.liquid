@@ -12,6 +12,21 @@
 
 <style>
 
+/* ---- judge.me carousel fit ---- */
+#tbco .jdgm-carousel-wrapper{max-width:100%;margin:0 auto;overflow:hidden;}
+#tbco .jdgm-carousel-title-and-link{text-align:center;margin-bottom:1rem;}
+#tbco .jdgm-carousel{max-width:100%;}
+
+/* ---- theme-compatibility hardening ---- */
+#tbco{position:relative;z-index:1;padding-top:5.5rem;max-width:100%;overflow-x:hidden;font-family:'DM Sans',sans-serif;}
+#tbco *{box-sizing:border-box;}
+#tbco button{font-family:inherit;-webkit-appearance:none;appearance:none;}
+#tbco .tbco-hero{margin-top:0;}
+/* keep the sticky checkout bar above the newsletter FAB, and give the FAB room */
+#tbco .scoreboard{z-index:9999;}
+.nl-fab{bottom:6.5rem !important;}
+@media(max-width:560px){ .nl-fab{bottom:6rem !important;} }
+
   #tbco{
     --purple:#5028AA; --purple-dark:#3D1E85; --ink:#14121C; --ice:#F2F3F6;
     --white:#FFFFFF; --line:#DDDEE6; --muted:#6B6A78; --good:#1E9E5A;
@@ -742,8 +757,10 @@ async function submitCheckout(){
   }
 }
 
-$("submitBtn").addEventListener("click", () => quoteMode() ? submitQuote() : submitCheckout());
-
-render();
-
+function tbcoInit(){
+  $("submitBtn").addEventListener("click", () => quoteMode() ? submitQuote() : submitCheckout());
+  render();
+}
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", tbcoInit);
+else tbcoInit();
 </script>
