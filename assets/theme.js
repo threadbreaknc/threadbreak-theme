@@ -2,7 +2,8 @@
 const canvas = document.getElementById('needle-canvas');
 const isProductPage = document.querySelector('.product-page') !== null;
 const isCollectionPage = document.querySelector('.collection-page') !== null;
-if (canvas && !isProductPage && !isCollectionPage) {
+const isCustomOrderPage = document.getElementById('tbco') !== null;
+if (canvas && !isProductPage && !isCollectionPage && !isCustomOrderPage) {
   const ctx = canvas.getContext('2d');
   let W, H;
 
