@@ -1,4 +1,4 @@
-{%- comment -%} build: review-modal-2026-07-25-v6 {%- endcomment -%}
+{%- comment -%} build: review-modal-2026-07-25-v8 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -795,7 +795,7 @@ function render(){
       render();
     }));
 
-  $("submitBtn").textContent = quoteMode() ? "Request my quote" : "Checkout";
+  $("submitBtn").textContent = quoteMode() ? "Review request" : "Review order";
   updatePricingUI();
   renderUploads();
   accSummaries();
@@ -922,7 +922,7 @@ async function submitQuote(){
 }
 
 async function submitCheckout(){
-  const btn = $("submitBtn");
+  const btn = $("sbSummaryCheckout") || $("submitBtn");
   btn.disabled = true;
   $("cartErr").classList.remove("show");
 
