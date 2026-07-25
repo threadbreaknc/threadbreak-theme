@@ -69,6 +69,10 @@ html {scroll-behavior:smooth}
 #tbco .acc-wrap{max-height:0;overflow:hidden;transition:max-height .35s ease}
 #tbco .acc.open .acc-wrap{max-height:8000px;transition:max-height .6s ease}
 @media(max-width:560px){#tbco .acc-summary{margin-left:0}}
+#tbco .acc-continue{margin:20px 0 4px 42px;display:inline-flex;align-items:center;gap:8px;background:var(--purple);color:#fff;border:none;font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:.05em;padding:11px 26px;border-radius:10px;cursor:pointer;transition:background .15s,transform .15s}
+#tbco .acc-continue:hover{background:var(--purple-dark);transform:translateY(-1px)}
+#tbco .acc-continue svg{width:17px;height:17px}
+@media(max-width:560px){#tbco .acc-continue{margin-left:0;width:100%;justify-content:center}}
 #tbco .styles {display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
 #tbco .style-card {position:relative;border:2px solid var(--line);border-radius:12px;padding:10px;cursor:pointer;background:var(--white);transition:border-color .15s, box-shadow .15s;display:flex;gap:12px;align-items:center}
 #tbco .style-card:hover {border-color:#B7A6EE}
@@ -228,6 +232,7 @@ html {scroll-behavior:smooth}
           <label class="field-label">What style or brand do you want?</label>
           <input type="text" id="quoteStyle" placeholder="e.g. Flexfit fitted, Richardson 168, beanies, visors...">
         </div>
+        <button type="button" class="acc-continue" data-continue="1">Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
       </div>
     </div>
   </section>
@@ -252,6 +257,7 @@ html {scroll-behavior:smooth}
           <div class="savings" id="savings"></div>
         </div>
         <p class="hint quote-only">Same deal as our standard lineup: bigger runs, lower per-hat price. Your quote will show the exact breaks.</p>
+        <button type="button" class="acc-continue" data-continue="2">Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
       </div>
     </div>
   </section>
@@ -274,6 +280,7 @@ html {scroll-behavior:smooth}
           <label class="field-label">Sizing</label>
           <div class="chips" id="sizes"></div>
         </div>
+        <button type="button" class="acc-continue" data-continue="3">Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
       </div>
     </div>
   </section>
@@ -317,6 +324,7 @@ html {scroll-behavior:smooth}
         </div>
         <label class="field-label">Notes for us</label>
         <textarea id="notes" placeholder="Thread colors, text to add, deadline, anything else we should know..."></textarea>
+        <button type="button" class="acc-continue" data-continue="4">Continue to checkout <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
       </div>
     </div>
   </section>
@@ -594,7 +602,6 @@ function renderColors(){
       const i = state.colorSel.indexOf(c);
       if (i >= 0){ if (state.colorSel.length === 1) return; state.colorSel.splice(i,1); }
       else state.colorSel.push(c);
-      touched.color = true;
       evenSplit(); render();
     }));
   const more = $("moreColors"); if (more) more.addEventListener("click", () => { state.showAllColors = true; render(); });
@@ -687,7 +694,6 @@ function render(){
     $("tiers").querySelectorAll('.tier').forEach(el =>
       el.addEventListener('click', () => {
         state.qty = +el.dataset.q; $("qty").value = state.qty;
-        touched.qty = true;
         evenSplit(); render();
       }));
   }
@@ -711,7 +717,6 @@ function render(){
   updatePricingUI();
   renderUploads();
   accSummaries();
-  autoAdvance();
 }
 
 function activeUploadSlots(){
@@ -744,14 +749,12 @@ function renderUploads(){
 $("qty").addEventListener("input", e => {
   const v = Math.max(1, parseInt(e.target.value || "1", 10));
   state.qty = Math.max(10, v);
-  touched.qty = true;
   evenSplit();
   renderColors();
   updatePricingUI();
 });
 $("qty").addEventListener("blur", e => {
   if (parseInt(e.target.value || "0", 10) < 10) e.target.value = 10;
-  autoAdvance();
 });
 
 function fileToB64(file){
@@ -910,43 +913,24 @@ function setOpen(step, open){
 }
 
 function initAccordion(){
+  // header click toggles that step open/closed (multiple can be open)
   document.querySelectorAll('[data-acc-toggle]').forEach(head => {
     head.addEventListener("click", () => {
-      const sec = head.closest(".acc");
-      sec.classList.toggle("open");   // manual toggle allows multiple open
+      head.closest(".acc").classList.toggle("open");
     });
   });
-}
-
-// completion test per step
-function stepComplete(step){
-  switch(step){
-    case 1: return state.hasChosen;
-    case 2: return state.hasChosen && state.qty >= 10 && touched.qty;
-    case 3: return state.hasChosen && state.colorSel.length > 0 && touched.color;
-    default: return false;
-  }
-}
-
-// track which auto-advances have already fired, and which steps the user touched
-const advanced = {};
-const touched = { qty:false, color:false };
-function autoAdvance(){
-  // keep the green check state in sync every render
-  markDone(1, state.hasChosen);
-  markDone(2, state.hasChosen && touched.qty);
-  markDone(3, state.hasChosen && state.colorSel.length > 0 && touched.color);
-
-  // fire each advance once, when that step first completes AND it's the open one
-  for (let s = 1; s <= 3; s++){
-    const sec = document.querySelector(`.acc[data-step="${s}"]`);
-    const isOpen = sec && sec.classList.contains("open");
-    if (stepComplete(s) && !advanced[s] && isOpen){
-      advanced[s] = true;
-      setOpen(s, false);
-      setOpen(s + 1, true);
-    }
-  }
+  // Continue buttons: mark this step done, collapse it, open the next
+  document.querySelectorAll('[data-continue]').forEach(btn => {
+    btn.addEventListener("click", () => {
+      const step = +btn.getAttribute("data-continue");
+      markDone(step, true);
+      setOpen(step, false);
+      setOpen(step + 1, true);
+      // scroll the newly opened step into view
+      const next = document.querySelector(`.acc[data-step="${step+1}"]`);
+      if (next) next.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
 }
 
 function tbcoInit(){
