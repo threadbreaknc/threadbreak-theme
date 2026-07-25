@@ -1,0 +1,11 @@
+{%- comment -%}
+  Homepage rendered directly (custom-first). Using index.liquid instead of
+  index.json means Shopify renders these sections in this order and the
+  theme editor's saved layout cannot override it.
+{%- endcomment -%}
+{% section 'hero-custom' %}
+{% section 'ticker' %}
+{% section 'story' %}
+{% section 'featured-products' %}
+{% section 'overview' %}
+{% section 'photo-band' %}
