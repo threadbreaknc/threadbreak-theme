@@ -1,11 +1,76 @@
-{%- comment -%}
-  Homepage rendered directly (custom-first). Using index.liquid instead of
-  index.json means Shopify renders these sections in this order and the
-  theme editor's saved layout cannot override it.
-{%- endcomment -%}
-{% section 'hero-custom' %}
+{%- comment -%} Homepage: hero + story inlined so no separate section files are needed. {%- endcomment -%}
+
+<section class="hc-hero">
+  <div class="hc-hero-bg"></div>
+  <div class="hc-hero-overlay"></div>
+  <div class="hc-hero-inner">
+    <p class="hc-eyebrow">Custom &amp; Wholesale Embroidery</p>
+    <h1 class="hc-h1">Custom embroidered hats for your brand.</h1>
+    <p class="hc-sub">We stitch your logo onto premium blank hats, in-house in North Carolina, for businesses, teams, events, and brands. Wholesale pricing from just 10 hats.</p>
+    <div class="hc-cta-row">
+      <a href="/pages/quote" class="hc-cta-primary">Place a Custom Order</a>
+      <a href="/collections/pre-made-hats" class="hc-cta-secondary">Shop premade hats</a>
+    </div>
+    <div class="hc-props">
+      <span>Embroidered in Burlington, NC</span>
+      <span>Free shipping anywhere in the USA</span>
+      <span>10-hat minimum</span>
+      <span>Free digital mockup</span>
+    </div>
+  </div>
+</section>
+
 {% section 'ticker' %}
-{% section 'story' %}
+
+<section class="tb-story">
+  <div class="tb-story-inner">
+    <div class="tb-story-lead">
+      <h2>Your logo. Our stitches.</h2>
+      <p>Threadbreak is a one-person embroidery shop in Burlington, NC. We make custom embroidered hats for businesses, brands, teams, and events, plus our own lineup of Carolina hockey-inspired designs. Every hat is stitched, checked, and shipped by hand. Nothing mass-produced, nothing rushed.</p>
+      <a href="/pages/quote" class="tb-story-cta">Start a custom order <span>&rarr;</span></a>
+    </div>
+    <div class="tb-story-grid">
+      <div class="tb-story-item"><div class="tb-story-num">01</div><strong>Send your logo</strong><span>Any format works. We digitize it for embroidery, free, and send a mockup for approval.</span></div>
+      <div class="tb-story-item"><div class="tb-story-num">02</div><strong>Pick your blank</strong><span>Otto, Richardson, Yupoong, Atonal, and more. Snapbacks, trucker, camo, flat bill.</span></div>
+      <div class="tb-story-item"><div class="tb-story-num">03</div><strong>We stitch &amp; ship</strong><span>Every hat embroidered in-house in Burlington, NC. Nothing produced until you approve.</span></div>
+    </div>
+  </div>
+</section>
+
 {% section 'featured-products' %}
-{% section 'overview' %}
 {% section 'photo-band' %}
+
+<style>
+  .hc-hero{position:relative;min-height:80vh;display:flex;align-items:center;overflow:hidden;}
+  .hc-hero-bg{position:absolute;inset:0;background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/FullSizeRender_be19c307-51d6-4c89-b383-7b119c38a393.jpg?v=1769614391');background-size:cover;background-position:center;transform:scale(1.04);}
+  .hc-hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(16,14,22,.92) 0%,rgba(16,14,22,.78) 42%,rgba(16,14,22,.42) 100%);}
+  .hc-hero-inner{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:8rem 2rem 4rem;width:100%;color:#F7F4F0;}
+  .hc-eyebrow{font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:#B7A6EE;font-weight:700;margin:0 0 1rem;}
+  .hc-h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,7vw,6rem);line-height:.94;letter-spacing:.01em;margin:0 0 1.25rem;max-width:16ch;}
+  .hc-sub{font-size:clamp(1rem,1.6vw,1.2rem);line-height:1.6;color:#D6D3E0;max-width:44ch;margin:0 0 2rem;}
+  .hc-cta-row{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:2.25rem;}
+  .hc-cta-primary{display:inline-block;background:#5028AA;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:.05em;padding:.85rem 2rem;border-radius:12px;text-decoration:none;transition:background .18s,transform .18s;}
+  .hc-cta-primary:hover{background:#3D1E85;transform:translateY(-2px);}
+  .hc-cta-secondary{display:inline-flex;align-items:center;color:#F7F4F0;font-weight:700;font-size:1rem;padding:.85rem 1.25rem;border-radius:12px;border:1.5px solid rgba(247,244,240,.35);text-decoration:none;transition:border-color .18s,background .18s;}
+  .hc-cta-secondary:hover{border-color:#F7F4F0;background:rgba(247,244,240,.08);}
+  .hc-props{display:flex;flex-wrap:wrap;gap:.6rem 1.75rem;}
+  .hc-props span{font-size:.9rem;font-weight:500;color:#EDEAF7;}
+  .hc-props span::before{content:"\2726";color:#8FE3B4;margin-right:.5rem;}
+  @media(max-width:700px){
+    .hc-hero{min-height:78vh;}
+    .hc-hero-inner{padding:7rem 1.5rem 3rem;}
+    .hc-hero-overlay{background:linear-gradient(180deg,rgba(16,14,22,.72) 0%,rgba(16,14,22,.9) 100%);}
+    .hc-cta-primary,.hc-cta-secondary{flex:1;text-align:center;justify-content:center;}
+  }
+  .tb-story{background:#14121C;color:#F7F4F0;padding:5rem 2rem;}
+  .tb-story-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1.2fr;gap:3.5rem;align-items:center;}
+  .tb-story-lead h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.2rem,4vw,3.4rem);line-height:1.02;margin:0 0 1.25rem;}
+  .tb-story-lead p{color:#C9C8D4;font-size:1.05rem;line-height:1.65;margin:0 0 1.5rem;}
+  .tb-story-cta{color:#B7A6EE;font-weight:700;text-decoration:none;font-size:1rem;}
+  .tb-story-grid{display:grid;gap:1rem;}
+  .tb-story-item{background:rgba(247,244,240,.05);border:1px solid rgba(247,244,240,.1);border-radius:14px;padding:1.5rem 1.75rem;}
+  .tb-story-num{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:#B7A6EE;margin-bottom:.35rem;}
+  .tb-story-item strong{display:block;font-size:1.15rem;margin-bottom:.4rem;}
+  .tb-story-item span{color:#C9C8D4;font-size:.95rem;line-height:1.55;}
+  @media(max-width:800px){.tb-story{padding:3.5rem 1.5rem;}.tb-story-inner{grid-template-columns:1fr;gap:2rem;}}
+</style>
