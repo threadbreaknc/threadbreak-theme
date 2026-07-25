@@ -13,23 +13,9 @@
 <style>
 
 /* ---- judge.me carousel fit ---- */
-#tbco .jdgm-carousel-wrapper{max-width:100%;margin:0 auto;overflow:hidden;padding:0;background:none !important;border:none !important;box-shadow:none !important;}
-#tbco .jdgm-carousel-title-and-link{text-align:center;margin-bottom:1.25rem;display:block;}
-/* hide the odd rounded rating-summary box that renders under the title */
-#tbco .jdgm-all-reviews-rating-wrapper{display:none !important;}
-#tbco .jdgm-carousel{max-width:100%;padding:0 8px;background:none !important;border:none !important;box-shadow:none !important;}
-/* give each review card breathing room so they don't bunch on desktop */
-#tbco .jdgm-carousel .jdgm-carousel-item{padding:1.25rem 1.5rem;box-sizing:border-box;background:none !important;border:none !important;box-shadow:none !important;}
-#tbco .jdgm-carousel-item__review,
-#tbco .jdgm-carousel-item__body{line-height:1.55;}
-#tbco .jdgm-carousel .flickity-viewport{margin:0 auto;}
-/* kill the empty rounded box Judge.me renders below the carousel */
-#tbco .jdgm-carousel-wrapper + div:empty,
-#tbco .jdgm-carousel + div:empty,
-#tbco [class*="jdgm"]:empty{display:none !important;border:none !important;background:none !important;padding:0 !important;margin:0 !important;min-height:0 !important;}
-#tbco .jdgm-widget:empty,
-#tbco .jdgm-all-reviews-widget:empty,
-#tbco .jdgm-preview-badge{display:none !important;}
+#tbco .jdgm-carousel-wrapper{max-width:100%;margin:0 auto;overflow:hidden;}
+#tbco .jdgm-carousel-title-and-link{text-align:center;margin-bottom:1rem;}
+#tbco .jdgm-carousel{max-width:100%;}
 
 /* ---- theme-compatibility hardening ---- */
 #tbco{position:relative;z-index:1;padding-top:5.5rem;max-width:100%;overflow-x:hidden;font-family:'DM Sans',sans-serif;}
@@ -279,6 +265,14 @@ html {scroll-behavior:smooth}
     <!-- Start of Judge.me code -->
     <div class='jdgm-carousel-wrapper'>
       {% assign jm_metafields = shop.metafields.judgeme %}
+      <div class='jdgm-carousel-title-and-link'>
+        <span class='jdgm-all-reviews-rating-wrapper' href='javascript:void(0)'>
+          <span style='display:block' data-score='{{ jm_metafields.all_reviews_rating }}' class='jdgm-all-reviews-rating' aria-label='{{ jm_metafields.all_reviews_rating }} stars' tabindex='0' role='img'></span>
+          <span style='display: block' class='jdgm-carousel-number-of-reviews' data-number-of-reviews='{{ jm_metafields.all_reviews_count }}'>
+from {{ shop.metafields.judgeme.all_reviews_count }} reviews
+          </span>
+        </span>
+      </div>
       {{ jm_metafields.featured_carousel }}
     </div>
     <!-- End of Judge.me code -->
