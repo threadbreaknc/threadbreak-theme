@@ -1,357 +1,748 @@
-<div class="quote-page">
+{%- comment -%}
+  Custom Hats order page. Replaces the old quote form.
+  URL stays /pages/quote so existing links keep working.
+  Requires the two Shopify products (Custom Embroidered Hat + Custom Hat
+  Add-On) set to ACTIVE. Cart add uses /cart/add.js on the live domain.
+  Reviews use the Judge.me featured carousel (feature reviews in Judge.me).
+{%- endcomment -%}
 
-  <!-- HERO -->
-  <section class="quote-hero-photo">
-    <!-- Scrolling photo strip -->
-    <div class="qhp-strip-wrap">
-      <div class="qhp-strip" id="qhp-strip">
-        {%- assign photos = "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_5393.jpg?v=1783192304,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4219.jpg?v=1783192609,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_2222.jpg?v=1783192609,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_2635.jpg?v=1783192608,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4060.jpg?v=1783192607,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_3791.jpg?v=1783192608,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4183.jpg?v=1783192608,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4311.jpg?v=1783192304,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/30E97845-C9BA-48A3-BD1E-6538E9193FE6_2.jpg?v=1783192304,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_5393.jpg?v=1783192304,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4219.jpg?v=1783192609,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_2222.jpg?v=1783192609,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_2635.jpg?v=1783192608,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4060.jpg?v=1783192607,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_3791.jpg?v=1783192608,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4183.jpg?v=1783192608,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4311.jpg?v=1783192304,https://cdn.shopify.com/s/files/1/0974/8453/7988/files/30E97845-C9BA-48A3-BD1E-6538E9193FE6_2.jpg?v=1783192304" | split: "," -%}
-        {%- for photo in photos -%}
-          <div class="qhp-photo" style="background-image:url('{{ photo }}');"></div>
-        {%- endfor -%}
-      </div>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+<style>
+
+  #tbco{
+    --purple:#5028AA; --purple-dark:#3D1E85; --ink:#14121C; --ice:#F2F3F6;
+    --white:#FFFFFF; --line:#DDDEE6; --muted:#6B6A78; --good:#1E9E5A;
+  }
+#tbco * {box-sizing:border-box;margin:0;padding:0}
+html {scroll-behavior:smooth}
+#tbco {font-family:'DM Sans',sans-serif;background:var(--ice);color:var(--ink);line-height:1.55;padding-bottom:96px}
+#tbco .wrap {max-width:880px;margin:0 auto;padding:0 20px}
+#tbco header {background:var(--ink);color:var(--white);padding:56px 0 48px}
+#tbco .kicker {font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#B7A6EE;font-weight:700}
+#tbco h1 {font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,8vw,76px);line-height:.95;letter-spacing:.01em;margin:10px 0 14px}
+#tbco h1 em {font-style:normal;color:#B7A6EE}
+#tbco .sub {max-width:520px;color:#C9C8D4;font-size:16px}
+#tbco .props {display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:22px}
+#tbco .props span {font-size:14px;font-weight:500;color:#EDEAF7}
+#tbco .props span::before {content:"✓";color:#8FE3B4;font-weight:700;margin-right:7px}
+#tbco section {background:var(--white);border:1px solid var(--line);border-radius:14px;padding:26px 24px;margin-top:22px}
+#tbco section:first-of-type {margin-top:28px}
+#tbco .step-head {display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
+#tbco .step-num {font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--purple);min-width:26px}
+#tbco .step-head h2 {font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.02em}
+#tbco .step-sub {color:var(--muted);font-size:14px;margin:0 0 18px 38px}
+#tbco .step-body {margin-left:38px}
+
+  @media(max-width:560px){.step-sub,.step-body{margin-left:0}}
+#tbco .styles {display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
+#tbco .style-card {position:relative;border:2px solid var(--line);border-radius:12px;padding:10px;cursor:pointer;background:var(--white);transition:border-color .15s, box-shadow .15s;display:flex;gap:12px;align-items:center}
+#tbco .style-card:hover {border-color:#B7A6EE}
+#tbco .style-card input {position:absolute;opacity:0}
+#tbco .style-card.on {border-color:var(--purple);box-shadow:0 0 0 3px rgba(80,40,170,.12)}
+#tbco .style-thumb {width:62px;height:62px;flex:none;object-fit:cover;border-radius:9px;background:var(--ice);display:block}
+#tbco .style-thumb.ph {display:flex;align-items:center;justify-content:center;color:var(--purple);font-family:'Bebas Neue',sans-serif;font-size:26px}
+#tbco .style-info {min-width:0}
+#tbco .style-name {font-weight:700;font-size:15px;line-height:1.25}
+#tbco .style-brand {font-size:12px;color:var(--purple);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+#tbco .style-desc {font-size:13px;color:var(--muted);margin-top:3px}
+#tbco .style-price {margin-top:6px;font-size:13px;font-weight:700;color:var(--purple)}
+#tbco /* ---------- expanded card photo viewer ---------- */
+  .style-card.expanded {grid-column:1/-1;align-items:flex-start;gap:16px;padding:14px}
+#tbco .hero-wrap {flex:none;width:min(300px,44%)}
+#tbco .hero-img {width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;border:1px solid var(--line);background:var(--ice);display:block;transition:opacity .25s ease}
+#tbco .hero-dots {display:flex;gap:6px;margin-top:9px;justify-content:center}
+#tbco .hero-dots button {width:9px;height:9px;border-radius:50%;border:none;background:var(--line);cursor:pointer;padding:0;transition:background .15s}
+#tbco .hero-dots button.on {background:var(--purple)}
+
+  @media(max-width:560px){.style-card.expanded{flex-direction:column;align-items:stretch}.hero-wrap{width:100%}}
+#tbco .chips {display:flex;flex-wrap:wrap;gap:8px}
+#tbco .chip {border:1.5px solid var(--line);border-radius:999px;padding:8px 15px;font-size:14px;font-weight:500;cursor:pointer;background:var(--white);user-select:none;transition:all .12s;display:inline-flex;align-items:center;gap:7px}
+#tbco .chip:hover {border-color:#B7A6EE}
+#tbco .chip.on {background:var(--purple);border-color:var(--purple);color:var(--white)}
+#tbco .chip small {opacity:.75;font-weight:400}
+#tbco .chip.more {border-style:dashed;color:var(--purple);font-weight:700}
+#tbco .dot {width:13px;height:13px;border-radius:50%;border:1px solid rgba(0,0,0,.18);flex:none}
+#tbco .chip.on .dot {border-color:rgba(255,255,255,.6)}
+#tbco .field-label {display:block;font-weight:700;font-size:14px;margin:18px 0 8px}
+#tbco .hint {font-size:13px;color:var(--muted);margin-top:6px}
+#tbco .breakdown {margin-top:14px;border:1.5px solid var(--line);border-radius:12px;overflow:hidden}
+#tbco .bd-row {display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
+#tbco .bd-row:last-child {border-bottom:none}
+#tbco .bd-name {flex:1;font-size:14px;font-weight:500}
+#tbco .bd-qty {width:76px;border:1.5px solid var(--line);border-radius:8px;padding:7px 10px;font-size:15px;font-weight:700;font-family:'DM Sans',sans-serif;text-align:center}
+#tbco .bd-qty:focus {outline:2px solid var(--purple);border-color:var(--purple)}
+#tbco .bd-total {padding:10px 14px;background:var(--ice);font-size:13px;font-weight:700;text-align:right}
+#tbco .qty-row {display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#tbco .qty-input {width:110px;border:1.5px solid var(--line);border-radius:10px;padding:11px 14px;font-size:16px;font-weight:700;font-family:'DM Sans',sans-serif}
+#tbco .qty-input:focus {outline:2px solid var(--purple);border-color:var(--purple)}
+#tbco .tiers {display:grid;grid-template-columns:repeat(auto-fit,minmax(86px,1fr));gap:8px;margin-top:14px}
+#tbco .tier {border:1.5px solid var(--line);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .12s}
+#tbco .tier:hover {border-color:#B7A6EE}
+#tbco .tier.on {border-color:var(--purple);background:#F4F0FD}
+#tbco .tier .t-qty {font-size:12px;color:var(--muted)}
+#tbco .tier .t-price {font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--ink)}
+#tbco .tier.on .t-price {color:var(--purple)}
+#tbco .savings {margin-top:12px;font-size:14px;font-weight:500;color:var(--good);display:none}
+#tbco .savings.show {display:block}
+#tbco textarea, #tbco input[type=text] {width:100%;border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;font-size:15px;font-family:'DM Sans',sans-serif;background:var(--white)}
+#tbco textarea:focus, #tbco input[type=text]:focus {outline:2px solid var(--purple);border-color:var(--purple)}
+#tbco textarea {min-height:90px;resize:vertical}
+#tbco .uploads-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+#tbco .upload {border:2px dashed var(--line);border-radius:12px;padding:16px 12px;text-align:center;cursor:pointer;transition:border-color .15s;display:block}
+#tbco .upload:hover {border-color:var(--purple)}
+#tbco .upload input {display:none}
+#tbco .upload .u-title {font-weight:700;font-size:14px;word-break:break-word}
+#tbco .upload .u-sub {font-size:12px;color:var(--muted);margin-top:2px}
+#tbco .upload.has-file {border-style:solid;border-color:var(--good);background:#F1FAF5}
+#tbco .flow {list-style:none;margin:0}
+#tbco .flow li {display:flex;gap:12px;align-items:flex-start;padding:7px 0;font-size:15px}
+#tbco .flow .n {flex:none;width:26px;height:26px;border-radius:50%;background:#F4F0FD;color:var(--purple);font-family:'Bebas Neue',sans-serif;font-size:16px;display:flex;align-items:center;justify-content:center;margin-top:1px}
+#tbco .art-note {background:var(--ice);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--muted);margin-top:10px;line-height:1.55}
+#tbco .art-note strong {color:var(--ink)}
+#tbco .art-note p + p {margin-top:8px}
+#tbco .quote-only {display:none}
+#tbco body.quote-mode .quote-only {display:block}
+#tbco body.quote-mode .buy-only {display:none}
+#tbco .scoreboard {position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:var(--white);border-top:3px solid var(--purple);z-index:50}
+#tbco .sb-inner {max-width:880px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:18px}
+#tbco .sb-stat {line-height:1.1}
+#tbco .sb-label {font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#9A97AC}
+#tbco .sb-value {font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.03em}
+#tbco .sb-value.accent {color:#B7A6EE}
+#tbco .sb-divider {width:1px;height:34px;background:#312E44}
+#tbco .sb-cta {margin-left:auto;background:var(--purple);color:var(--white);border:none;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.06em;padding:12px 26px;border-radius:10px;cursor:pointer;transition:background .15s}
+#tbco .sb-cta:hover {background:var(--purple-dark)}
+#tbco .sb-cta:disabled {opacity:.7;cursor:wait}
+
+  @media(max-width:560px){
+    .sb-inner{gap:12px;padding:10px 14px}
+    .sb-value{font-size:21px}
+    .sb-cta{font-size:17px;padding:10px 18px}
+    .sb-hide-sm{display:none}
+  }
+#tbco .reviews {display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+#tbco .review {background:var(--ice);border-radius:12px;padding:16px 16px 14px}
+#tbco .stars {color:#E8A413;font-size:14px;letter-spacing:2px}
+#tbco .review p {font-size:14px;margin:8px 0 10px;line-height:1.5}
+#tbco .review .who {font-size:12px;color:var(--muted);font-weight:700}
+#tbco .confirm {display:none;background:#F1FAF5;border:1px solid #BFE8D2;border-radius:14px;padding:24px;margin-top:22px}
+#tbco .confirm.show {display:block}
+#tbco .confirm h3 {font-family:'Bebas Neue',sans-serif;font-size:26px;margin-bottom:8px}
+#tbco .confirm pre {background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px;font-size:13px;white-space:pre-wrap;font-family:'DM Sans',sans-serif;margin-top:12px}
+#tbco .err {color:#C22B3F;font-size:14px;margin-top:12px;display:none}
+#tbco .err.show {display:block}
+
+
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero-img{transition:none}}
+</style>
+
+<div id="tbco">
+
+
+<header class="tbco-hero">
+  <div class="wrap">
+    <h1>Your logo.<br>Our <em>stitches.</em></h1>
+    <p class="sub">Custom embroidered hats, stitched in-house on name-brand blanks. Pick a style, tell us the quantity, and check out. We send a free mockup for approval before anything hits a machine.</p>
+    <div class="props">
+      <span>Embroidered in Burlington, NC</span>
+      <span>Free shipping anywhere in the USA</span>
+      <span>Local pickup by appointment</span>
+      <span>Just a 10-hat minimum</span>
+      <span>Free digital mockup</span>
     </div>
-    <!-- Fade overlay -->
-    <div class="qhp-fade"></div>
-    <!-- Text content -->
-    <div class="qhp-content">
-      <p class="qhp-eyebrow">Custom & Wholesale Embroidery</p>
-      <h1 class="qhp-h1">Get a Quote.</h1>
-      <p class="qhp-sub">Tell us what you need. We'll get back to you within 24 hours.</p>
-      <div class="qhp-pills">
-        <span class="qhp-pill">✦ Min. 10 hats</span>
-        <span class="qhp-pill">✦ 24hr response</span>
-        <span class="qhp-pill">✦ Free shipping</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- STEP 1 -->
+  <section>
+    <div class="step-head"><div class="step-num">1</div><h2>Pick your hat</h2></div>
+    <p class="step-sub">The most popular blanks in the game, priced with front embroidery included. Want something else? Pick "Different style" and we'll quote it.</p>
+    <div class="step-body">
+      <div class="styles" id="styles"></div>
+      <div class="quote-only">
+        <label class="field-label">What style or brand do you want?</label>
+        <input type="text" id="quoteStyle" placeholder="e.g. Flexfit fitted, Richardson 168, beanies, visors...">
+      </div>
+      <label class="field-label">Hat color (pick as many as you like)</label>
+      <div class="chips" id="colors"></div>
+      <div id="breakdownWrap"></div>
+      <p class="hint" id="colorHint"></p>
+      <div id="sizingWrap" style="display:none">
+        <label class="field-label">Sizing</label>
+        <div class="chips" id="sizes"></div>
       </div>
     </div>
   </section>
 
-  <!-- LOCATION + PROCESS -->
-  <section class="quote-info-strip">
-    <div class="qis-inner">
-
-      <div class="qis-block">
-        <h3 class="qis-title">Where We Are</h3>
-        <div class="qis-location-items">
-          <div class="qis-loc-item">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
-            <span>Burlington, NC</span>
-          </div>
-          <div class="qis-loc-item">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-            <span>Local pickup by appointment</span>
-          </div>
-          <div class="qis-loc-item">
-            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
-            <span>Free shipping anywhere in the US</span>
-          </div>
-        </div>
+  <!-- STEP 2 -->
+  <section>
+    <div class="step-head"><div class="step-num">2</div><h2>How many?</h2></div>
+    <p class="step-sub buy-only">Starts at just 10 hats total. Price per hat drops as your total goes up, and mixing colors doesn't cost extra.</p>
+    <p class="step-sub quote-only">Quantity helps us quote your exact per-hat price.</p>
+    <div class="step-body">
+      <div class="qty-row">
+        <input class="qty-input" id="qty" type="number" min="10" value="24" inputmode="numeric" aria-label="Total quantity">
+        <span class="hint" style="margin-top:0">hats total</span>
       </div>
-
-      <div class="qis-divider"></div>
-
-      <div class="qis-block qis-process">
-        <h3 class="qis-title">How It Works</h3>
-        <div class="qis-steps">
-          <div class="qis-step"><span class="qis-num">01</span><span>Submit your quote request</span></div>
-          <div class="qis-step"><span class="qis-num">02</span><span>We create a mockup and send pricing for your approval</span></div>
-          <div class="qis-step"><span class="qis-num">03</span><span>Once approved, we send an invoice. 50% due before production starts.</span></div>
-          <div class="qis-step"><span class="qis-num">04</span><span>Design gets digitized, we stitch a test sample, and send you a photo for approval</span></div>
-          <div class="qis-step"><span class="qis-num">05</span><span>Once you approve the test stitch photo, we produce the rest of the order</span></div>
-          <div class="qis-step"><span class="qis-num">06</span><span>Remaining balance due before shipment or at time of pickup</span></div>
-          <div class="qis-step"><span class="qis-num">07</span><span>Ships free to your door, or schedule local pickup in Burlington, NC</span></div>
-        </div>
+      <div class="buy-only">
+        <div class="tiers" id="tiers"></div>
+        <div class="savings" id="savings"></div>
       </div>
-
+      <p class="hint quote-only">Same deal as our standard lineup: bigger runs, lower per-hat price. Your quote will show the exact breaks.</p>
     </div>
   </section>
 
-  <!-- QUOTE FORM -->
-  <section class="quote-form-section">
-    <div class="quote-form-header">
-      <p class="eyebrow reveal">Ready to Order?</p>
-      <h2 class="reveal reveal-d1">Request a Quote.</h2>
-    </div>
-
-    <div class="qform" id="quote-form-wrap">
-
-      <!-- SUCCESS STATE -->
-      <div class="quote-success" id="quote-success" style="display:none;text-align:center;padding:4rem 2rem;">
-        <div class="quote-success-stars" aria-hidden="true">
-          <span class="qstar" style="--tx:-70px;--ty:-50px;">✦</span>
-          <span class="qstar" style="--tx:70px;--ty:-60px;">✦</span>
-          <span class="qstar" style="--tx:-40px;--ty:-80px;">✦</span>
-          <span class="qstar" style="--tx:50px;--ty:-40px;">✦</span>
-          <span class="qstar" style="--tx:-90px;--ty:-25px;">✦</span>
-          <span class="qstar" style="--tx:90px;--ty:-35px;">✦</span>
-        </div>
-        <div class="quote-success-icon">✦</div>
-        <h3>Request Received.</h3>
-        <div class="quote-success-divider"></div>
-        <p>We'll get back to you within 24 hours.</p>
-        <p class="quote-success-sub">Check your inbox, we'll be in touch soon.</p>
+  <!-- STEP 3 -->
+  <section>
+    <div class="step-head"><div class="step-num">3</div><h2>Your design</h2></div>
+    <p class="step-sub">Front embroidery is included. Digitizing your artwork is always free.</p>
+    <div class="step-body">
+      <label class="field-label" style="margin-top:0">Decoration style</label>
+      <div class="chips" id="deco"></div>
+      <label class="field-label">Placement</label>
+      <div class="chips" id="placements"></div>
+      <p class="hint">Front is included. Extra locations add a small per-hat charge.</p>
+      <label class="field-label">Your logo / artwork</label>
+      <div class="uploads-grid" id="uploads"></div>
+      <p class="hint">One file per location: PNG, JPG, PDF, AI, or SVG, up to 10 MB each. Digitizing is free. No file handy? Skip it and email us after.</p>
+      <div class="art-note">
+        <p><strong>Thread colors:</strong> we match thread to your logo's colors as standard. Want something different, like tone-on-tone or matched to the hat color? Just tell us in the notes below.</p>
+        <p><strong>Heads up on fine detail:</strong> highly detailed designs don't embroider well at hat scale. For those we recommend DTF or patches instead. Email <strong>help@threadbreak.com</strong> and we'll walk you through it.</p>
       </div>
-
-      <!-- FORM -->
-      <form id="quote-form" enctype="multipart/form-data">
-
-        <div class="qform-section">
-          <h4 class="qform-section-title">Contact Info</h4>
-          <div class="qform-row">
-            <div class="qform-field">
-              <label for="q-name">Name <span class="req">*</span></label>
-              <input type="text" id="q-name" name="name" required placeholder="Your name">
-            </div>
-            <div class="qform-field">
-              <label for="q-email">Email <span class="req">*</span></label>
-              <input type="email" id="q-email" name="email" required placeholder="you@email.com">
-            </div>
-          </div>
-          <div class="qform-row">
-            <div class="qform-field">
-              <label for="q-phone">Phone <span style="font-weight:400;opacity:0.4;font-size:0.85em;">(optional)</span></label>
-              <input type="tel" id="q-phone" name="phone" placeholder="Optional">
-            </div>
-            <div class="qform-field">
-              <label for="q-company">Company / Brand <span style="font-weight:400;opacity:0.4;font-size:0.85em;">(optional)</span></label>
-              <input type="text" id="q-company" name="company" placeholder="Optional">
-            </div>
-          </div>
-        </div>
-
-        <div class="qform-section">
-          <h4 class="qform-section-title">Order Details</h4>
-
-          <div class="qform-field">
-            <label for="q-qty">How Many Hats? <span class="req">*</span></label>
-            <input type="number" id="q-qty" name="quantity" required min="10" placeholder="e.g. 24" style="max-width:200px;background:#ffffff;color:#1a1520;border:1px solid rgba(26,21,32,0.15);">
-            <p class="qform-hint" style="margin-top:0.4rem;color:rgba(26,21,32,0.5);font-size:0.78rem;">Minimum order is <strong style="color:var(--purple);">10 hats</strong>. The more you order, the better the price.</p>
-          </div>
-
-          <div class="qform-field">
-            <label for="q-hat-pref">Hat Preference</label>
-            <input type="text" id="q-hat-pref" name="hatPreference" placeholder="e.g. Otto snapback in black, Richardson 112 in navy, Yupoong trucker — or not sure">
-            <p style="font-size:0.72rem;color:rgba(26,21,32,0.4);margin-top:0.4rem;">Include brand, style, and color if you have a preference.</p>
-          </div>
-
-          <div class="qform-field">
-            <label style="display:flex;align-items:center;gap:0.5rem;">
-              Stitch Type
-              <button type="button" class="stitch-info-btn" id="stitch-info-btn" aria-label="What is this?">?</button>
-            </label>
-            <div class="stitch-tooltip" id="stitch-tooltip" style="display:none;">
-              <button type="button" class="stitch-tooltip-close" id="stitch-tooltip-close">✕</button>
-              <div class="stitch-tooltip-item">
-                <strong>Flat Embroidery</strong>
-                <p>The standard. Clean, sharp stitching that sits flat on the fabric. Works with any design, including fine detail and small text. No extra charge.</p>
-              </div>
-              <div class="stitch-tooltip-divider"></div>
-              <div class="stitch-tooltip-item">
-                <strong>3D Puff</strong>
-                <p>A foam layer under the stitching raises the design off the fabric for a bold, dimensional look. Best for block letters and simple shapes. Fine details and small text don't transfer well. <em style="color:var(--purple);">Additional charge applies.</em></p>
-              </div>
-            </div>
-            <div class="qform-options">
-              <label class="qopt"><input type="radio" name="stitchType" value="Flat Embroidery"><span>Flat Embroidery</span></label>
-              <label class="qopt"><input type="radio" name="stitchType" value="3D Puff"><span>3D Puff <em style="font-size:0.7em;opacity:0.7">(+ charge)</em></span></label>
-              <label class="qopt"><input type="radio" name="stitchType" value="Not sure"><span>Not sure</span></label>
-            </div>
-          </div>
-
-          <div class="qform-field">
-            <label>Embroidery Placement <span style="font-weight:400;opacity:0.4;font-size:0.85em;">— additional charge per location</span></label>
-            <div class="qform-options">
-              <label class="qopt"><input type="checkbox" name="placement" value="Front Center"><span>Front Center</span></label>
-              <label class="qopt"><input type="checkbox" name="placement" value="Front Left"><span>Front Left</span></label>
-              <label class="qopt"><input type="checkbox" name="placement" value="Front Right"><span>Front Right</span></label>
-              <label class="qopt"><input type="checkbox" name="placement" value="Left Side"><span>Left Side</span></label>
-              <label class="qopt"><input type="checkbox" name="placement" value="Right Side"><span>Right Side</span></label>
-              <label class="qopt"><input type="checkbox" name="placement" value="Not sure"><span>Not sure</span></label>
-            </div>
-          </div>
-
-          <div class="qform-field">
-            <label for="q-deadline">When Do You Need It By? <span style="font-weight:400;opacity:0.4;font-size:0.85em;">(optional)</span></label>
-            <input type="date" id="q-deadline" name="deadline" style="max-width:220px;">
-            <p style="font-size:0.72rem;color:rgba(26,21,32,0.4);margin-top:0.4rem;">Custom orders typically take 2-3 weeks.</p>
-          </div>
-
-          <div class="qform-field">
-            <label for="q-notes">Anything Else? <span style="font-weight:400;opacity:0.4;font-size:0.85em;">(optional)</span></label>
-            <textarea id="q-notes" name="notes" rows="4" placeholder="Budget range, specific design ideas, questions..."></textarea>
-          </div>
-
-          <div class="qform-field">
-            <label for="q-file">Upload Your Logo / Design File <span style="font-weight:400;opacity:0.4;font-size:0.85em;">(optional)</span></label>
-            <p style="font-size:0.75rem;color:rgba(26,21,32,0.45);margin-bottom:0.6rem;">PNG, JPG, PDF, AI, SVG, EPS accepted. Max 10MB.</p>
-            <input type="file" id="q-file" name="logo" accept=".png,.jpg,.jpeg,.pdf,.ai,.svg,.eps" class="qform-file-input">
-          </div>
-
-        </div>
-
-        <div class="qform-submit-row">
-          <button type="submit" class="btn btn-fill quote-submit" id="quote-submit-btn">
-            <span id="quote-btn-text">Send Quote Request →</span>
-            <span id="quote-btn-loading" style="display:none;">Sending...</span>
-          </button>
-          <p class="quote-privacy">We respond within 24 hours. No spam, ever.</p>
-        </div>
-
-        <p id="quote-error" style="display:none;color:#c0392b;font-size:0.82rem;margin-top:1rem;"></p>
-
-      </form>
+      <label class="field-label">Notes for us</label>
+      <textarea id="notes" placeholder="Thread colors, text to add, deadline, anything else we should know..."></textarea>
     </div>
   </section>
+
+  <!-- STEP 4 -->
+  <section>
+    <div class="step-head"><div class="step-num">4</div><h2 class="buy-only">Checkout, then we get stitching</h2><h2 class="quote-only">Send your quote request</h2></div>
+    <p class="step-sub buy-only">Secure Shopify checkout. Here's what happens after:</p>
+    <p class="step-sub quote-only">No payment now, we price it first.</p>
+    <div class="step-body">
+      <ol class="flow buy-only">
+        <li><span class="n">1</span><span>Your uploaded artwork comes straight to us with the order. Forgot it? Just reply to your confirmation email with the file.</span></li>
+        <li><span class="n">2</span><span>We email your free digital mockup within 1 business day.</span></li>
+        <li><span class="n">3</span><span>You approve it, then we stitch and ship. Nothing hits a machine until you sign off.</span></li>
+      </ol>
+      <ol class="flow quote-only">
+        <li><span class="n">1</span><span>Hit the button and your request, artwork included, comes straight to us.</span></li>
+        <li><span class="n">2</span><span>We reply within 1 business day with your exact per-hat price and a free mockup.</span></li>
+        <li><span class="n">3</span><span>You approve, then we stitch and ship.</span></li>
+      </ol>
+      <div class="art-note">
+        <p><strong>Lead time:</strong> most orders are shipped in 2 to 3 weeks. Need it faster? Email <strong>help@threadbreak.com</strong> directly before placing your order and we'll see what we can make happen.</p>
+      </div>
+      <div class="err" id="cartErr">Couldn't add to cart. This form talks to Shopify, so it only works when hosted on threadbreak.com. If you're seeing this on the live site, refresh and try again or email help@threadbreak.com.</div>
+    </div>
+  </section>
+
+  <!-- REVIEWS: Judge.me featured carousel -->
+  <section>
+    <div class="step-head"><h2>What buyers say</h2></div>
+    <!-- Start of Judge.me code -->
+    <div class='jdgm-carousel-wrapper'>
+      {% assign jm_metafields = shop.metafields.judgeme %}
+      <div class='jdgm-carousel-title-and-link'>
+        <span class='jdgm-all-reviews-rating-wrapper' href='javascript:void(0)'>
+          <span style='display:block' data-score='{{ jm_metafields.all_reviews_rating }}' class='jdgm-all-reviews-rating' aria-label='{{ jm_metafields.all_reviews_rating }} stars' tabindex='0' role='img'></span>
+          <span style='display: block' class='jdgm-carousel-number-of-reviews' data-number-of-reviews='{{ jm_metafields.all_reviews_count }}'>
+from {{ shop.metafields.judgeme.all_reviews_count }} reviews
+          </span>
+        </span>
+      </div>
+      {{ jm_metafields.featured_carousel }}
+    </div>
+    <!-- End of Judge.me code -->
+  </section>
+
+  <div class="confirm" id="confirm">
+    <h3 id="confTitle">Request sent ✓</h3>
+    <p id="confBody"></p>
+    <pre id="summary"></pre>
+  </div>
 
 </div>
 
+<!-- sticky scoreboard -->
+<div class="scoreboard" role="region" aria-label="Your quote">
+  <div class="sb-inner">
+    <div class="sb-stat"><div class="sb-label">Qty</div><div class="sb-value" id="sbQty">24</div></div>
+    <div class="sb-divider"></div>
+    <div class="sb-stat"><div class="sb-label">Per hat</div><div class="sb-value accent" id="sbPer">$0</div></div>
+    <div class="sb-divider sb-hide-sm"></div>
+    <div class="sb-stat sb-hide-sm"><div class="sb-label" id="sbTotalLabel">Estimated total</div><div class="sb-value" id="sbTotal">$0</div></div>
+    <button class="sb-cta" id="submitBtn" type="button">Checkout</button>
+  </div>
+</div>
+</div>
+
 <script>
-document.getElementById('quote-form').addEventListener('submit', async function(e) {
-  e.preventDefault();
 
-  const btn = document.getElementById('quote-submit-btn');
-  const btnText = document.getElementById('quote-btn-text');
-  const btnLoading = document.getElementById('quote-btn-loading');
-  const errorEl = document.getElementById('quote-error');
+/* =========================================================
+   Wired to live Shopify variants (product: Custom Embroidered Hat).
+   Tier format: [min qty, price per hat, Shopify variant ID]
+   If you change prices, change them BOTH here and in Shopify admin.
 
-  btn.disabled = true;
-  btnText.style.display = 'none';
-  btnLoading.style.display = 'inline';
-  errorEl.style.display = 'none';
+   IMAGES, each style rotates through its `imgs` array. Swap in
+   your colorway photos (Shopify admin > Content > Files, paste URLs).
+   COLORS, condensed to sourcing-friendly basics: Otto top 15,
+   Richardson top 20, Atonal 3 camos, YP 6006 full list (popular
+   controls how many chips show before the "+ more" toggle).
+   Add/remove names freely, swatches generate automatically.
+   ========================================================= */
+const STYLES = [
+  { id:"otto", name:"Otto 5-Panel Mid Profile", brand:"Otto Cap 31-069", desc:"Snapback · one size fits most · adult & youth", youth:true, popular:99,
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/31-069-0116-FB.medium.jpg?v=1784998582","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/31-069-0331-FB.medium.jpg?v=1784998582","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/31-069-003-FB.medium.jpg?v=1784998582","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/31-069-0203-FB.medium.jpg?v=1784998582"],
+    colors:["Black","Black/White","Black/Natural","Black/Khaki","Navy","Navy/White","Navy/Natural","Dark Green","Dark Green/Khaki","Dark Green/Natural","Khaki","Khaki/Black","Charcoal Grey","Red/Black","White"],
+    tiers:[[10,17,52559807807620],[24,15,52559807840388],[48,14,52559807873156],[96,13,52559807905924],[144,12,52559807938692]] },
+  { id:"atonal", name:"Atonal Camo A-Frame", brand:"Atonal A590P", desc:"Snapback · 100% cotton · one size fits most", popular:99,
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590p_NaturalFieldCamo001_jpg.webp?v=1784998602","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590p_FieldCamo001.webp?v=1784998603","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590P_BlackFieldCamp001_jpg.webp?v=1784998602"],
+    colors:["Natural/Field Camo","Field Camo","Black/Field Camo"],
+    tiers:[[10,18,52559807971460],[24,16,52559808004228],[48,15,52559808036996],[96,14,52559808069764],[144,13,52559808102532]] },
+  { id:"rich112", name:"Richardson 112 Trucker", brand:"Richardson 112", desc:"6-panel snapback · one size fits most · adult & youth", youth:true, popular:99,
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112_FINAL.pfs.jpg?v=1784998582","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112_FINAL.pfs1.jpg?v=1784998582","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112_FINAL.pfs-2.jpg?v=1784998602","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112_FINAL.pfs_23992de0-aa86-4bc8-87e6-34606538dd79.jpg?v=1784998602"],
+    colors:["Black","Black/White","Charcoal","Charcoal/Black","Charcoal/White","Navy","Navy/White","Navy/Khaki","Heather Grey/White","Heather Grey/Black","Loden","Loden/Black","Dark Green","Dark Green/White","Brown/Khaki","Khaki/Coffee","Khaki/White","White/Black","Red/Black","Cardinal/White"],
+    tiers:[[10,20,52559808135300],[24,18,52559808168068],[48,17,52559808200836],[96,16,52559808233604],[144,14,52559808266372]] },
+  { id:"yupoong", name:"Yupoong Classic 5-Panel Trucker", brand:"YP Classics 6006", desc:"Flat bill snapback · one size fits most", popular:12,
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/77759_f_fm-2.jpg?v=1784998725","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/68095_f_fm.jpg?v=1784998725","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/35926_f_fm.jpg?v=1784998725","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/64032_f_fm.jpg?v=1784998750"],
+    colors:["Black","Black/White","Black/White/Black","White","Charcoal","Charcoal/Black","Charcoal/White","Navy","Navy/White","Navy/White/Navy","Red","Red/Black","Red/White/Red","Brown/White","Brown/White/Brown","Carolina Blue/White/Carolina Blue","Green Camo/Black","Heather/Black","Heather/White","Kelly/White/Kelly","Multicam Alpine/White","Multicam Arid/Brown","Multicam Arid/Tan","Multicam Black/Black","Multicam Green/Black","Multicam Tropic/Green","Pink","Pink/White/Pink","Royal/White","Royal/White/Royal","Silver/Black"],
+    tiers:[[10,20,52559808299140],[24,18,52559808331908],[48,17,52559808364676],[96,16,52559808397444],[144,14,52559808430212]] },
+  { id:"other", name:"Different style?", brand:"You name it", desc:"Flexfit, fitted, beanies, visors, and more. We'll source it", quote:true, popular:99,
+    colors:["Black","Navy","Charcoal","White","Red","Khaki"] },
+];
+const SIZES = ["Adult (one size)","Youth","Mix of both"];
+const DECOS = [
+  { id:"flat",  label:"Flat embroidery", add:0 },
+  { id:"puff",  label:"3D puff", add:3, variantId:52543282741380 },
+];
+const PLACEMENTS = [
+  { id:"front", label:"Front", add:0, locked:true },
+  { id:"side",  label:"Side", add:5, variantId:52543282806916 },
+  { id:"back",  label:"Back", add:5, variantId:52543282839684 },
+];
+const QUOTE_EMAIL = "help@threadbreak.com";
+/* Paste your Apps Script web app URL (ends in /exec) here, see
+   threadbreak-apps-script.gs. Until set, uploads are skipped and
+   quote requests fall back to email. */
+const APPS_SCRIPT_URL = "PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+/* ========================================================= */
 
-  try {
-    const form = e.target;
-    const fileInput = document.getElementById('q-file');
-    const file = fileInput.files[0];
+const state = {
+  style: STYLES[0], colorSel: [STYLES[0].colors[0]], colorQty: { [STYLES[0].colors[0]]: 24 },
+  showAllColors: false, hasChosen: false, sizing: SIZES[0], qty: 24, deco: DECOS[0],
+  placements: new Set(["front"]), files: { front:null, side:null, back:null }
+};
+const $ = id => document.getElementById(id);
+const money = n => "$" + (Number.isInteger(n) ? n : n.toFixed(2));
+const quoteMode = () => !!state.style.quote;
 
-    // Build payload
-    const payload = {
-      name: form.name.value,
-      email: form.email.value,
-      company: form.company.value,
-      phone: form.phone.value,
-      quantity: form.quantity.value,
-      hatPreference: form.hatPreference ? form.hatPreference.value : '',
-      stitchType: form.stitchType ? (form.stitchType.value || '') : '',
-      placement: [...document.querySelectorAll('input[name="placement"]:checked')].map(cb => cb.value).join(', ') || 'Not specified',
-      deadline: form.deadline ? form.deadline.value : '',
-      notes: form.notes.value,
-      fileName: '',
-      fileType: '',
-      file: ''
-    };
-
-    // Encode file as base64 if provided
-    if (file) {
-      payload.fileName = file.name;
-      payload.fileType = file.type;
-      const base64 = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result.split(',')[1]);
-        reader.onerror = reject;
-        reader.readAsDataURL(file);
-      });
-      payload.file = base64;
+/* ---- auto swatches from manufacturer color names ---- */
+const HUES = { black:"#1B1B1F", white:"#F5F5F5", natural:"#E8E0CC", charcoal:"#4A4A52",
+  "charcoal grey":"#4A4A52", grey:"#8E8E96", gray:"#8E8E96", "light grey":"#C9CBD1",
+  "heather grey":"#A8A8B0", heather:"#A8A8B0", silver:"#C0C0C8", aluminum:"#C9CBD1",
+  navy:"#1E2A4A", royal:"#2A4FC7", "true blue":"#3A66B0", "columbia blue":"#7BAFD4",
+  "carolina blue":"#7BAFD4", "light blue":"#A8CBE8", "smoke blue":"#5E7A96",
+  "legion blue":"#1F4E6B", "blue teal":"#2E7F8F", cyan:"#57B8D8",
+  red:"#C0243A", cardinal:"#8C1D2F", maroon:"#6E2639", "hot pink":"#E24E9C", pink:"#F4A6C0",
+  orange:"#E07020", "dark orange":"#C4551F", yellow:"#F2D01E", gold:"#D4A93C",
+  "vegas gold":"#C5B358", "amber gold":"#C99435",
+  "kelly":"#349C55", "kelly green":"#349C55", "dark green":"#1F4A34", loden:"#4F5A43",
+  "loden green":"#4F5A43", "army olive":"#5A6234",
+  khaki:"#B9A583", biscuit:"#E4D5B0", cream:"#F0E9D8", birch:"#E8E2D4", tan:"#C2A878",
+  brown:"#6B4A2F", "grey brown":"#8A7A6A", coffee:"#4E3A2A", carmel:"#B87E3F",
+  "chocolate chip":"#6B5B4A", "mink beige":"#C7B29E", gunmetal:"#5A5F66",
+  purple:"#5D3A9B", quarry:"#8C9490",
+  "neon blue":"#2AB8E8", "neon green":"#7CE81E", "neon orange":"#FF7A1A",
+  "neon pink":"#FF5EC0", "neon yellow":"#E8F51E" };
+function camoCss(n){
+  let t = ["#4B5320","#6B8E23","#3B3B2F"];                       // field/green/army/tropic
+  if (/arid|tan|desert|duck/.test(n)) t = ["#C2B280","#A48A5F","#8B7355"];
+  else if (/black/.test(n))           t = ["#1B1B1F","#3C3C44","#55555E"];
+  else if (/alpine/.test(n))          t = ["#E8E8E8","#C9CBD1","#9DA1A8"];
+  return `repeating-linear-gradient(45deg,${t[0]} 0 4px,${t[1]} 4px 8px,${t[2]} 8px 12px)`;
+}
+function colorCss(name){
+  const clean = name.replace(/\s*CMB\s*$/i, "");
+  const parts = clean.split("/").map(s => s.trim());
+  const isCamo = s => /camo|multicam/i.test(s);
+  if (parts.length === 2 && (isCamo(parts[0]) || isCamo(parts[1]))){
+    const camo = camoCss(clean.toLowerCase());
+    if (isCamo(parts[0]) && isCamo(parts[1])) return camo;
+    if (isCamo(parts[1])){
+      const a = HUES[parts[0].toLowerCase()] || "#CFCFD8";
+      return `linear-gradient(90deg, ${a} 0 50%, rgba(0,0,0,0) 50% 100%), ${camo}`;
     }
-
-    // Use no-cors mode — we can't read the response but the data WILL be received
-    await fetch('https://script.google.com/macros/s/AKfycbxYr32UWH88iaImaMmd-GbPV9X-J2TDES2soBNUVCZWGj_xUinIMesdywh3Y4I0VgjM/exec', {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify(payload)
-    });
-
-    // Since no-cors means we can't read the response, we show success optimistically
-    document.getElementById('quote-form').style.display = 'none';
-    document.getElementById('quote-success').style.display = 'block';
-    document.querySelectorAll('.qstar').forEach((star, i) => {
-      star.style.animationDelay = (i * 0.1) + 's';
-    });
-
-  } catch (err) {
-    // Network error
-    errorEl.textContent = 'Connection error. Please email us directly at help@threadbreak.com';
-    errorEl.style.display = 'block';
-    btn.disabled = false;
-    btnText.style.display = 'inline';
-    btnLoading.style.display = 'none';
+    const b = HUES[parts[1].toLowerCase()] || "#CFCFD8";
+    return `linear-gradient(90deg, rgba(0,0,0,0) 0 50%, ${b} 50% 100%), ${camo}`;
   }
+  if (isCamo(clean)) return camoCss(clean.toLowerCase());
+  const hexes = parts.map(s => HUES[s.toLowerCase()] || "#CFCFD8");
+  if (hexes.length === 1) return hexes[0];
+  const step = 100 / hexes.length;
+  return "linear-gradient(90deg," + hexes.map((c,i)=>`${c} ${i*step}% ${(i+1)*step}%`).join(",") + ")";
+}
+
+function tierFor(style, qty){
+  let t = style.tiers[0];
+  for (const tier of style.tiers) if (qty >= tier[0]) t = tier;
+  return t;
+}
+function perHat(){
+  if (quoteMode()) return null;
+  const base = tierFor(state.style, state.qty)[1];
+  const extras = [...state.placements].reduce((s,p)=> s + PLACEMENTS.find(x=>x.id===p).add, 0);
+  return base + state.deco.add + extras;
+}
+function evenSplit(){
+  const n = state.colorSel.length;
+  const base = Math.floor(state.qty / n);
+  const rem = state.qty - base * n;
+  state.colorQty = {};
+  state.colorSel.forEach((c,i) => state.colorQty[c] = base + (i === 0 ? rem : 0));
+}
+function colorSummary(){
+  if (state.colorSel.length === 1) return state.colorSel[0];
+  return state.colorSel.map(c => `${c} ×${state.colorQty[c] || 0}`).join(", ");
+}
+
+let heroTimer = null, heroIdx = 0;
+function renderHero(){
+  clearInterval(heroTimer);
+  const img = $("heroImg");
+  if (!img) return; // selected style has no photos (quote card)
+  const imgs = state.style.imgs || [];
+  heroIdx = 0;
+  const dots = $("heroDots");
+  dots.innerHTML = imgs.map((_,i) =>
+    `<button type="button" class="${i===0?'on':''}" aria-label="Photo ${i+1}"></button>`).join("");
+  const show = i => {
+    heroIdx = i;
+    img.style.opacity = 0;
+    setTimeout(() => { img.src = imgs[heroIdx]; img.style.opacity = 1; }, 220);
+    dots.querySelectorAll("button").forEach((b,j) => b.classList.toggle("on", j === heroIdx));
+  };
+  const restart = () => {
+    clearInterval(heroTimer);
+    if (imgs.length > 1) heroTimer = setInterval(() => show((heroIdx + 1) % imgs.length), 3200);
+  };
+  dots.querySelectorAll("button").forEach((b,i) =>
+    b.addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); show(i); restart(); }));
+  restart();
+}
+
+function updatePricingUI(){
+  if (!quoteMode()){
+    const activeTier = tierFor(state.style, state.qty);
+    $("tiers").querySelectorAll(".tier").forEach(el =>
+      el.classList.toggle("on", +el.dataset.q === activeTier[0]));
+    const idx = state.style.tiers.indexOf(activeTier);
+    const next = state.style.tiers[idx+1];
+    const sv = $("savings");
+    sv.textContent = next
+      ? `Add ${next[0]-state.qty} more and your price drops to ${money(next[1])}/hat.`
+      : "You're at our best rate. Nice.";
+    sv.classList.add("show");
+  }
+  const per = perHat();
+  $("sbQty").textContent = state.qty;
+  $("sbPer").textContent = per === null ? "TBD" : money(per);
+  $("sbTotal").textContent = per === null ? "-" : money(per * state.qty);
+  $("sbTotalLabel").textContent = per === null ? "We'll quote it" : "Estimated total";
+  const bt = document.querySelector(".bd-total");
+  if (bt) bt.textContent = state.qty + " hats total";
+}
+
+function renderColors(){
+  const list = state.style.colors;
+  const cut = state.style.popular || list.length;
+  const visible = state.showAllColors ? list : list.slice(0, Math.min(cut, list.length));
+  const hidden = list.length - visible.length;
+  $("colors").innerHTML = visible.map(c =>
+    `<button type="button" class="chip ${state.colorSel.includes(c)?'on':''}" data-c="${c}"><span class="dot" style="background:${colorCss(c)}"></span>${c}</button>`
+  ).join("") + (hidden > 0
+    ? `<button type="button" class="chip more" id="moreColors">+ ${hidden} more colors</button>`
+    : (state.showAllColors && list.length > cut ? `<button type="button" class="chip more" id="lessColors">Show fewer</button>` : ""));
+  $("colors").querySelectorAll(".chip[data-c]").forEach(b =>
+    b.addEventListener("click", () => {
+      const c = b.dataset.c;
+      const i = state.colorSel.indexOf(c);
+      if (i >= 0){ if (state.colorSel.length === 1) return; state.colorSel.splice(i,1); }
+      else state.colorSel.push(c);
+      evenSplit(); render();
+    }));
+  const more = $("moreColors"); if (more) more.addEventListener("click", () => { state.showAllColors = true; render(); });
+  const less = $("lessColors"); if (less) less.addEventListener("click", () => { state.showAllColors = false; render(); });
+
+  // per-color quantity breakdown
+  const wrap = $("breakdownWrap");
+  if (state.colorSel.length > 1){
+    wrap.innerHTML = `<div class="breakdown">` + state.colorSel.map(c => `
+      <div class="bd-row">
+        <span class="dot" style="background:${colorCss(c)}"></span>
+        <span class="bd-name">${c}</span>
+        <input class="bd-qty" type="number" min="0" inputmode="numeric" value="${state.colorQty[c] || 0}" data-c="${c}" aria-label="Quantity for ${c}">
+      </div>`).join("") + `<div class="bd-total">${state.qty} hats total</div></div>`;
+    wrap.querySelectorAll(".bd-qty").forEach(inp =>
+      inp.addEventListener("input", e => {
+        state.colorQty[e.target.dataset.c] = Math.max(0, parseInt(e.target.value || "0", 10));
+        state.qty = Math.max(1, state.colorSel.reduce((s,c)=> s + (state.colorQty[c] || 0), 0));
+        $("qty").value = state.qty;
+        updatePricingUI();
+      }));
+  } else {
+    wrap.innerHTML = "";
+  }
+
+  $("colorHint").textContent = quoteMode()
+    ? "Rough color direction is fine. We'll confirm exact colorways in your quote."
+    : (state.colorSel.length > 1
+      ? "Set how many hats you want in each color. The total drives your price."
+      : "Tap more than one color to split your order across colorways. Don't see yours? Mention it in the notes.");
+}
+
+function render(){
+  document.body.classList.toggle("quote-mode", quoteMode());
+
+  $("styles").innerHTML = STYLES.map(s => {
+    const sel = s.id === state.style.id;
+    const expanded = sel && state.hasChosen && s.imgs && s.imgs.length;
+    const media = expanded
+      ? `<div class="hero-wrap">
+           <img class="hero-img" id="heroImg" src="${s.imgs[0]}" alt="${s.name}">
+           <div class="hero-dots" id="heroDots"></div>
+         </div>`
+      : (s.imgs && s.imgs.length
+        ? `<img class="style-thumb" src="${s.imgs[0]}" alt="${s.name}" loading="lazy" onerror="this.style.visibility='hidden'">`
+        : `<div class="style-thumb ph">?</div>`);
+    return `
+    <label class="style-card ${sel?'on':''} ${expanded?'expanded':''}">
+      <input type="radio" name="style" value="${s.id}" ${sel?'checked':''}>
+      ${media}
+      <div class="style-info">
+        <div class="style-name">${s.name}</div>
+        <div class="style-brand">${s.brand}</div>
+        <div class="style-desc">${s.desc}</div>
+        <div class="style-price">${s.quote ? "Custom quote" : "from " + money(s.tiers[s.tiers.length-1][1]) + "/hat"}</div>
+      </div>
+    </label>`;
+  }).join("");
+  document.querySelectorAll('input[name=style]').forEach(r =>
+    r.addEventListener('change', e => {
+      state.hasChosen = true;
+      state.style = STYLES.find(s=>s.id===e.target.value);
+      state.showAllColors = false;
+      state.colorSel = state.colorSel.filter(c => state.style.colors.includes(c));
+      if (!state.colorSel.length) state.colorSel = [state.style.colors[0]];
+      evenSplit(); render();
+    }));
+  document.querySelectorAll('.style-card').forEach(card =>
+    card.addEventListener('click', () => {
+      if (!state.hasChosen){ state.hasChosen = true; render(); }
+    }));
+  renderHero();
+
+  renderColors();
+
+  $("sizingWrap").style.display = state.style.youth ? "block" : "none";
+  if (state.style.youth){
+    $("sizes").innerHTML = SIZES.map(s =>
+      `<button type="button" class="chip ${s===state.sizing?'on':''}" data-s="${s}">${s}</button>`).join("");
+    $("sizes").querySelectorAll('.chip').forEach(b =>
+      b.addEventListener('click', () => { state.sizing = b.dataset.s; render(); }));
+  }
+
+  if (!quoteMode()){
+    $("tiers").innerHTML = state.style.tiers.map(t => `
+      <div class="tier" data-q="${t[0]}">
+        <div class="t-qty">${t[0]}+</div>
+        <div class="t-price">${money(t[1])}</div>
+      </div>`).join("");
+    $("tiers").querySelectorAll('.tier').forEach(el =>
+      el.addEventListener('click', () => {
+        state.qty = +el.dataset.q; $("qty").value = state.qty;
+        evenSplit(); render();
+      }));
+  }
+
+  $("deco").innerHTML = DECOS.map(d =>
+    `<button type="button" class="chip ${d.id===state.deco.id?'on':''}" data-d="${d.id}">${d.label}${d.add?` <small>+${money(d.add)}</small>`:''}</button>`).join("");
+  $("deco").querySelectorAll('.chip').forEach(b =>
+    b.addEventListener('click', () => { state.deco = DECOS.find(d=>d.id===b.dataset.d); render(); }));
+
+  $("placements").innerHTML = PLACEMENTS.map(p =>
+    `<button type="button" class="chip ${state.placements.has(p.id)?'on':''}" data-p="${p.id}">${p.label}${p.add?` <small>+${money(p.add)}</small>`:''}</button>`).join("");
+  $("placements").querySelectorAll('.chip').forEach(b =>
+    b.addEventListener('click', () => {
+      const p = b.dataset.p;
+      if (p === "front") return;
+      state.placements.has(p) ? state.placements.delete(p) : state.placements.add(p);
+      render();
+    }));
+
+  $("submitBtn").textContent = quoteMode() ? "Request my quote" : "Checkout";
+  updatePricingUI();
+  renderUploads();
+}
+
+function activeUploadSlots(){
+  return ["front","side","back"].filter(p => p === "front" || state.placements.has(p));
+}
+function renderUploads(){
+  const slots = activeUploadSlots();
+  $("uploads").innerHTML = slots.map(p => {
+    const f = state.files[p];
+    const label = PLACEMENTS.find(x=>x.id===p).label;
+    return `<label class="upload ${f?'has-file':''}">
+      <input type="file" data-slot="${p}" accept="image/*,.pdf,.ai,.eps,.svg">
+      <div class="u-title">${f ? f.name : label + " logo"}</div>
+      <div class="u-sub">${f ? "✓ attached, tap to swap" : "Tap to upload"}</div>
+    </label>`;
+  }).join("");
+  $("uploads").querySelectorAll("input[type=file]").forEach(inp =>
+    inp.addEventListener("change", e => {
+      const f = e.target.files[0];
+      if (f && f.size > 10 * 1024 * 1024){
+        alert("That file is over 10 MB. Try a smaller export, or email it to help@threadbreak.com after checkout.");
+        e.target.value = "";
+        return;
+      }
+      state.files[e.target.dataset.slot] = f || null;
+      renderUploads();
+    }));
+}
+
+$("qty").addEventListener("input", e => {
+  const v = Math.max(1, parseInt(e.target.value || "1", 10));
+  state.qty = Math.max(10, v);
+  evenSplit();
+  renderColors();
+  updatePricingUI();
+});
+$("qty").addEventListener("blur", e => {
+  if (parseInt(e.target.value || "0", 10) < 10) e.target.value = 10;
 });
 
-// Stitch type tooltip
-const infoBtn = document.getElementById('stitch-info-btn');
-const tooltip = document.getElementById('stitch-tooltip');
-const closeBtn = document.getElementById('stitch-tooltip-close');
-if (infoBtn) {
-  infoBtn.addEventListener('click', () => {
-    tooltip.style.display = tooltip.style.display === 'none' ? 'block' : 'none';
+function fileToB64(file){
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(",")[1]);
+    r.onerror = () => rej(new Error("read failed"));
+    r.readAsDataURL(file);
   });
 }
-if (closeBtn) {
-  closeBtn.addEventListener('click', () => {
-    tooltip.style.display = 'none';
-  });
+function orderMeta(){
+  const per = perHat();
+  const meta = {
+    style: state.style.name,
+    requestedStyle: quoteMode() ? ($("quoteStyle").value.trim() || "Not specified, see notes") : "",
+    color: colorSummary(),
+    qty: state.qty,
+    deco: state.deco.label,
+    placements: [...state.placements].map(p=>PLACEMENTS.find(x=>x.id===p).label).join(", "),
+    notes: $("notes").value.trim() || "-",
+    estimate: per === null ? "quote" : money(per) + "/hat, " + money(per*state.qty) + " total"
+  };
+  if (state.style.youth) meta.sizing = state.sizing;
+  return meta;
 }
-</script>
+function scriptConfigured(){ return APPS_SCRIPT_URL && !APPS_SCRIPT_URL.startsWith("PASTE"); }
+async function sendToDrive(type){
+  if (!scriptConfigured()) return { ok:false, skipped:true, uploaded:[] };
+  const uploaded = [];
+  const files = [];
+  for (const p of activeUploadSlots()){
+    const f = state.files[p];
+    if (!f) continue;
+    files.push({ placement: PLACEMENTS.find(x=>x.id===p).label, name: f.name, mimeType: f.type || "application/octet-stream", data: await fileToB64(f) });
+    uploaded.push(PLACEMENTS.find(x=>x.id===p).label);
+  }
+  try {
+    const res = await fetch(APPS_SCRIPT_URL, { method:"POST", body: JSON.stringify({ type, meta: orderMeta(), files }) });
+    const out = await res.json().catch(() => ({}));
+    return { ok: res.ok && out.ok !== false, uploaded };
+  } catch (e) {
+    return { ok:false, uploaded };
+  }
+}
 
-<style>
-.stitch-info-btn {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 1px solid var(--purple);
-  background: transparent;
-  color: var(--purple);
-  font-size: 0.65rem;
-  font-weight: 700;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-  padding: 0;
-  flex-shrink: 0;
+async function submitQuote(){
+  const btn = $("submitBtn");
+  btn.disabled = true; btn.textContent = "Sending…";
+  const meta = orderMeta();
+  const summary = [
+    `Requested style/brand: ${meta.requestedStyle}`,
+    `Color(s): ${meta.color}`, `Quantity: ${meta.qty}`,
+    `Decoration: ${meta.deco}`, `Placements: ${meta.placements}`,
+    `Notes: ${meta.notes}`
+  ].join("\n");
+
+  const sent = await sendToDrive("quote");
+  btn.disabled = false; btn.textContent = "Request my quote";
+
+  if (sent.ok){
+    $("confTitle").textContent = "Request sent ✓";
+    $("confBody").innerHTML = "We've got it" + (sent.uploaded.length ? ", artwork and all" : "") + ". We'll reply from <strong>help@threadbreak.com</strong> with your exact price and free mockup within 1 business day. Watch your inbox.";
+  } else {
+    $("confTitle").textContent = "Almost there, hit send";
+    $("confBody").innerHTML = "Your quote request just opened in your email app. Press send and we'll reply within 1 business day. Please attach your logo file(s) to that email too. Or copy the summary below to <strong>help@threadbreak.com</strong>.";
+    window.location.href = `mailto:${QUOTE_EMAIL}?subject=${encodeURIComponent("Custom Hat Quote Request")}&body=${encodeURIComponent("CUSTOM HAT QUOTE REQUEST (threadbreak.com)\n\n" + summary)}`;
+  }
+  $("summary").textContent = summary;
+  $("confirm").classList.add("show");
+  $("confirm").scrollIntoView({ behavior:"smooth", block:"start" });
 }
-.stitch-info-btn:hover { background: var(--purple); color: #fff; }
-.stitch-tooltip {
-  background: #fff;
-  border: 1px solid rgba(112,80,200,0.2);
-  border-left: 3px solid var(--purple);
-  padding: 1.25rem 1.25rem 1.25rem 1.5rem;
-  margin-bottom: 1rem;
-  position: relative;
-  max-width: 520px;
+
+async function submitCheckout(){
+  const btn = $("submitBtn");
+  btn.disabled = true;
+  $("cartErr").classList.remove("show");
+
+  const hasFiles = activeUploadSlots().some(p => state.files[p]);
+  let artNote = "Will email after checkout";
+  if (hasFiles){
+    btn.textContent = "Sending art…";
+    const up = await sendToDrive("order-artwork");
+    artNote = up.ok ? "Uploaded ✓ (" + up.uploaded.join(", ") + ")" : "Upload hiccup, will email";
+  }
+
+  btn.textContent = "Adding…";
+  const meta = orderMeta();
+  const tier = tierFor(state.style, state.qty);
+  const props = { "Hat Color(s)": meta.color, "Decoration": meta.deco, "Placements": meta.placements, "Artwork": artNote };
+  if (meta.sizing) props["Sizing"] = meta.sizing;
+  if (meta.notes !== "-") props["Notes"] = meta.notes;
+
+  const items = [{ id: tier[2], quantity: state.qty, properties: props }];
+  if (state.deco.variantId)
+    items.push({ id: state.deco.variantId, quantity: state.qty, properties: { "Applies to": state.style.name } });
+  for (const p of state.placements) {
+    const pl = PLACEMENTS.find(x=>x.id===p);
+    if (pl.variantId)
+      items.push({ id: pl.variantId, quantity: state.qty, properties: { "Applies to": state.style.name } });
+  }
+
+  try {
+    const res = await fetch("/cart/add.js", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items })
+    });
+    if (!res.ok) throw new Error("cart add failed");
+    window.location.href = "/checkout";
+  } catch (e) {
+    btn.disabled = false; btn.textContent = "Checkout";
+    $("cartErr").classList.add("show");
+    $("cartErr").scrollIntoView({ behavior:"smooth", block:"center" });
+  }
 }
-.stitch-tooltip-close {
-  position: absolute;
-  top: 0.6rem;
-  right: 0.75rem;
-  background: none;
-  border: none;
-  font-size: 0.7rem;
-  color: rgba(26,21,32,0.3);
-  cursor: pointer;
-  padding: 0;
-}
-.stitch-tooltip-close:hover { color: var(--black); }
-.stitch-tooltip-item strong {
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  color: var(--black);
-  display: block;
-  margin-bottom: 0.4rem;
-}
-.stitch-tooltip-item p {
-  font-size: 0.8rem;
-  line-height: 1.65;
-  color: rgba(26,21,32,0.6);
-  margin: 0;
-}
-.stitch-tooltip-divider {
-  height: 1px;
-  background: rgba(26,21,32,0.08);
-  margin: 1rem 0;
-}
-</style>
+
+$("submitBtn").addEventListener("click", () => quoteMode() ? submitQuote() : submitCheckout());
+
+render();
+
+</script>

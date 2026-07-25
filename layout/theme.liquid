@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{{ page_title }}, {{ shop.name }}</title>
+{%- assign pt = page_title | downcase -%}
+{%- assign sn = shop.name | downcase -%}
+<title>{{ page_title }}{% unless pt contains sn %} | {{ shop.name }}{% endunless %}</title>
 <meta name="description" content="{{ page_description | escape }}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +33,7 @@
   <a href="/collections/apparel" onclick="closeMobileMenu()">Apparel</a>
   <a href="/pages/about" onclick="closeMobileMenu()">About</a>
   <a href="/pages/faq" onclick="closeMobileMenu()">FAQ</a>
-  <a href="/pages/quote" class="nav-cta" onclick="closeMobileMenu()">Get a Quote</a>
+  <a href="/pages/quote" class="nav-cta" onclick="closeMobileMenu()">Place a Custom Order</a>
 </div>
 
 <div class="shipping-banner">
@@ -50,7 +52,7 @@
     <li><a href="/collections/apparel">Apparel</a></li>
     <li><a href="/pages/about">About</a></li>
     <li><a href="/pages/faq">FAQ</a></li>
-    <li><a href="/pages/quote" class="nav-cta">Get a Quote</a></li>
+    <li><a href="/pages/quote" class="nav-cta">Place a Custom Order</a></li>
   </ul>
   <div class="nav-right">
     <a href="/cart" class="nav-cart{% if cart.item_count == 0 %} nav-cart-hidden{% endif %}" aria-label="Cart" id="nav-cart-link">
@@ -83,7 +85,7 @@
       <li><a href="/collections/pre-made-hats">Hats</a></li>
       <li><a href="/pages/about">About</a></li>
       <li><a href="/pages/faq">FAQ</a></li>
-      <li><a href="/pages/quote">Get a Quote</a></li>
+      <li><a href="/pages/quote">Custom Hats</a></li>
     </ul>
     <div class="footer-contact">
       <p class="footer-contact-label">Questions?</p>
