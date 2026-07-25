@@ -170,6 +170,30 @@ html {scroll-behavior:smooth}
 #tbco .sb-cta {margin-left:auto;background:var(--purple);color:var(--white);border:none;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.06em;padding:12px 26px;border-radius:10px;cursor:pointer;transition:background .15s}
 #tbco .sb-cta:hover {background:var(--purple-dark)}
 #tbco .sb-cta:disabled {opacity:.7;cursor:wait}
+/* price change flash + direction arrow */
+#tbco .sb-value{position:relative;transition:color .3s}
+#tbco .sb-value.flash-up{animation:sbUp .6s ease}
+#tbco .sb-value.flash-down{animation:sbDown .6s ease}
+@keyframes sbUp{0%{color:#F0685E;transform:translateY(3px)}100%{color:inherit;transform:none}}
+@keyframes sbDown{0%{color:#4FD48A;transform:translateY(-3px)}100%{color:inherit;transform:none}}
+#tbco .sb-arrow{display:inline-block;margin-left:5px;font-size:14px;font-weight:700;opacity:0;transition:opacity .2s}
+#tbco .sb-arrow.up{color:#F0685E;opacity:1}
+#tbco .sb-arrow.down{color:#4FD48A;opacity:1}
+/* expandable order summary above the bar */
+#tbco .sb-summary{max-height:0;overflow:hidden;transition:max-height .35s ease;background:#1B1826;border-top:1px solid #312E44}
+#tbco .sb-summary:not([hidden]){max-height:60vh}
+#tbco .sb-summary-inner{max-width:880px;margin:0 auto;padding:18px 20px}
+#tbco .sb-summary-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+#tbco .sb-summary-head h3{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#fff;letter-spacing:.02em}
+#tbco .sb-summary-close{background:none;border:none;color:#9A97AC;font-size:15px;cursor:pointer;padding:4px 8px}
+#tbco .sb-summary-close:hover{color:#fff}
+#tbco .sb-summary-rows{display:flex;flex-direction:column;gap:9px}
+#tbco .sb-sum-row{display:flex;justify-content:space-between;gap:16px;font-size:14px;color:#D6D3E0;padding-bottom:9px;border-bottom:1px solid #29263A}
+#tbco .sb-sum-row:last-child{border-bottom:none}
+#tbco .sb-sum-row .sb-sum-label{color:#9A97AC}
+#tbco .sb-sum-row .sb-sum-val{color:#fff;font-weight:500;text-align:right}
+#tbco .sb-sum-row.sb-sum-total{font-family:'Bebas Neue',sans-serif;font-size:20px;color:#fff;border-bottom:none;padding-top:4px}
+#tbco .sb-sum-row.sb-sum-total .sb-sum-val{color:#B7A6EE;font-weight:400}
 
   @media(max-width:560px){
     .sb-inner{gap:12px;padding:10px 14px}
@@ -252,7 +276,7 @@ html {scroll-behavior:smooth}
       <p class="step-sub quote-only">Quantity helps us quote your exact per-hat price.</p>
       <div class="step-body">
         <div class="qty-row">
-          <input class="qty-input" id="qty" type="number" min="10" value="24" inputmode="numeric" aria-label="Total quantity">
+          <input class="qty-input" id="qty" type="number" min="10" value="10" inputmode="numeric" aria-label="Total quantity">
           <span class="hint" style="margin-top:0">hats total</span>
         </div>
         <div class="buy-only">
@@ -381,12 +405,21 @@ from {{ shop.metafields.judgeme.all_reviews_count }} reviews
 
 <!-- sticky scoreboard -->
 <div class="scoreboard" role="region" aria-label="Your quote">
+  <div class="sb-summary" id="sbSummary" hidden>
+    <div class="sb-summary-inner">
+      <div class="sb-summary-head">
+        <h3>Review your order</h3>
+        <button type="button" class="sb-summary-close" id="sbSummaryClose" aria-label="Collapse">▼</button>
+      </div>
+      <div class="sb-summary-rows" id="sbSummaryRows"></div>
+    </div>
+  </div>
   <div class="sb-inner">
-    <div class="sb-stat"><div class="sb-label">Qty</div><div class="sb-value" id="sbQty">24</div></div>
+    <div class="sb-stat"><div class="sb-label">Qty</div><div class="sb-value" id="sbQty">10</div></div>
     <div class="sb-divider"></div>
     <div class="sb-stat"><div class="sb-label">Per hat</div><div class="sb-value accent" id="sbPer">$0</div></div>
     <div class="sb-divider sb-hide-sm"></div>
-    <div class="sb-stat sb-hide-sm"><div class="sb-label" id="sbTotalLabel">Estimated total</div><div class="sb-value" id="sbTotal">$0</div></div>
+    <div class="sb-stat sb-hide-sm"><div class="sb-label" id="sbTotalLabel">Estimated total</div><div class="sb-value" id="sbTotal">$0<span class="sb-arrow" id="sbArrow"></span></div></div>
     <button class="sb-cta" id="submitBtn" type="button">Checkout</button>
   </div>
 </div>
@@ -445,7 +478,7 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0-rO8Y8fqsyAG
 
 const state = {
   style: STYLES[0], colorSel: [STYLES[0].colors[0]], colorQty: { [STYLES[0].colors[0]]: 24 },
-  showAllColors: false, hasChosen: false, sizing: SIZES[0], qty: 24, deco: DECOS[0],
+  showAllColors: false, hasChosen: false, sizing: SIZES[0], qty: 10, deco: DECOS[0],
   placements: new Set(["front"]), files: { front:null, side:null, back:null }
 };
 const $ = id => document.getElementById(id);
@@ -521,6 +554,34 @@ function colorSummary(){
   return state.colorSel.map(c => `${c} ×${state.colorQty[c] || 0}`).join(", ");
 }
 
+function buildOrderSummary(){
+  const rows = $("sbSummaryRows");
+  if (!rows) return;
+  const per = perHat();
+  const places = [...state.placements].map(p => (PLACEMENTS.find(x=>x.id===p)||{}).label || p);
+  const lines = [
+    ["Hat", state.style.quote ? "Different style (custom quote)" : `${state.style.name} (${state.style.brand})`],
+    ["Quantity", `${state.qty} hats`],
+    ["Colors", colorSummary()],
+    ["Decoration", state.deco.label],
+    ["Placement", places.join(", ") || "Front"],
+  ];
+  if (state.style.youth) lines.push(["Sizing", state.sizing]);
+  let html = lines.map(([l,v]) =>
+    `<div class="sb-sum-row"><span class="sb-sum-label">${l}</span><span class="sb-sum-val">${v}</span></div>`).join("");
+  if (per !== null){
+    html += `<div class="sb-sum-row"><span class="sb-sum-label">Per hat</span><span class="sb-sum-val">${money(per)}</span></div>`;
+    html += `<div class="sb-sum-row sb-sum-total"><span class="sb-sum-label">Estimated total</span><span class="sb-sum-val">${money(per*state.qty)}</span></div>`;
+    html += `<div class="sb-continue-row" style="margin-top:14px;display:flex;justify-content:flex-end"><button type="button" class="sb-cta" id="sbSummaryCheckout">Checkout</button></div>`;
+  } else {
+    html += `<div class="sb-sum-row sb-sum-total"><span class="sb-sum-label">Total</span><span class="sb-sum-val">We'll quote it</span></div>`;
+    html += `<div class="sb-continue-row" style="margin-top:14px;display:flex;justify-content:flex-end"><button type="button" class="sb-cta" id="sbSummaryCheckout">Request my quote</button></div>`;
+  }
+  rows.innerHTML = html;
+  const co = $("sbSummaryCheckout");
+  if (co) co.addEventListener("click", () => quoteMode() ? submitQuote() : submitCheckout());
+}
+
 let heroTimer = null, heroIdx = 0, heroTop = "A";
 function renderHero(){
   clearInterval(heroTimer);
@@ -572,9 +633,28 @@ function updatePricingUI(){
     sv.classList.add("show");
   }
   const per = perHat();
+  const newTotal = per === null ? null : per * state.qty;
   $("sbQty").textContent = state.qty;
   $("sbPer").textContent = per === null ? "TBD" : money(per);
-  $("sbTotal").textContent = per === null ? "-" : money(per * state.qty);
+
+  const totalEl = $("sbTotal");
+  const arrow = $("sbArrow");
+  // animate direction if the total changed
+  if (newTotal !== null && window._tbPrevTotal != null && newTotal !== window._tbPrevTotal){
+    const up = newTotal > window._tbPrevTotal;
+    totalEl.classList.remove("flash-up","flash-down");
+    void totalEl.offsetWidth;  // restart animation
+    totalEl.classList.add(up ? "flash-up" : "flash-down");
+    if (arrow){
+      arrow.textContent = up ? "▲" : "▼";
+      arrow.className = "sb-arrow " + (up ? "up" : "down");
+      clearTimeout(window._tbArrowT);
+      window._tbArrowT = setTimeout(() => { arrow.className = "sb-arrow"; }, 1200);
+    }
+  }
+  window._tbPrevTotal = newTotal;
+
+  totalEl.childNodes[0].nodeValue = per === null ? "-" : money(newTotal);
   $("sbTotalLabel").textContent = per === null ? "We'll quote it" : "Estimated total";
   const bt = document.querySelector(".bd-total");
   if (bt) bt.textContent = state.qty + " hats total";
@@ -930,13 +1010,18 @@ function initAccordion(){
       }
     });
   });
-  // Step 4's button checks out directly (same as the scoreboard button)
+  // Step 4's button expands the order-summary panel above the bar
   document.querySelectorAll('[data-checkout]').forEach(btn => {
     btn.addEventListener("click", () => {
       markDone(4, true);
-      quoteMode() ? submitQuote() : submitCheckout();
+      buildOrderSummary();
+      const sum = $("sbSummary");
+      sum.hidden = false;
+      sum.scrollIntoView({ behavior: "smooth", block: "end" });
     });
   });
+  const sc = $("sbSummaryClose");
+  if (sc) sc.addEventListener("click", () => { $("sbSummary").hidden = true; });
 }
 
 function tbcoInit(){
@@ -947,7 +1032,12 @@ function tbcoInit(){
     else { pi.setAttribute("hidden",""); pib.setAttribute("aria-expanded","false"); pib.textContent = "What is 3D puff?"; }
   });
   initAccordion();
-  $("submitBtn").addEventListener("click", () => quoteMode() ? submitQuote() : submitCheckout());
+  $("submitBtn").addEventListener("click", () => {
+    buildOrderSummary();
+    const sum = $("sbSummary");
+    sum.hidden = false;
+    sum.scrollIntoView({ behavior: "smooth", block: "end" });
+  });
   render();
 }
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", tbcoInit);
