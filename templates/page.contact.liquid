@@ -235,13 +235,13 @@ html {scroll-behavior:smooth}
   <!-- STEP 2 -->
   <section class="acc" data-step="2">
     <div class="step-head" data-acc-toggle>
-      <div class="step-num"><span>2</span></div><h2>How many, and what colors?</h2>
+      <div class="step-num"><span>2</span></div><h2>How many?</h2>
       <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
     </div>
     <div class="acc-summary" id="sum2"></div>
     <div class="acc-wrap">
-      <p class="step-sub buy-only">Starts at just 10 hats total. Price per hat drops as your total goes up, and mixing colors doesn't cost extra. Set your total first, then split it across colors below.</p>
-      <p class="step-sub quote-only">Quantity helps us quote your exact per-hat price. Set your total first, then split it across colors below.</p>
+      <p class="step-sub buy-only">Starts at just 10 hats total. Price per hat drops as your total goes up. Pick a tier or type your own number.</p>
+      <p class="step-sub quote-only">Quantity helps us quote your exact per-hat price.</p>
       <div class="step-body">
         <div class="qty-row">
           <input class="qty-input" id="qty" type="number" min="10" value="24" inputmode="numeric" aria-label="Total quantity">
@@ -252,7 +252,21 @@ html {scroll-behavior:smooth}
           <div class="savings" id="savings"></div>
         </div>
         <p class="hint quote-only">Same deal as our standard lineup: bigger runs, lower per-hat price. Your quote will show the exact breaks.</p>
-        <label class="field-label" style="margin-top:1.25rem">Hat color (pick as many as you like)</label>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 3: COLORS -->
+  <section class="acc" data-step="3">
+    <div class="step-head" data-acc-toggle>
+      <div class="step-num"><span>3</span></div><h2>What colors?</h2>
+      <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="acc-summary" id="sum3"></div>
+    <div class="acc-wrap">
+      <p class="step-sub">Pick as many as you like. Mixing colors doesn't cost extra. Split your total across them below.</p>
+      <div class="step-body">
+        <label class="field-label" style="margin-top:0">Hat color (pick as many as you like)</label>
         <div class="chips" id="colors"></div>
         <div id="breakdownWrap"></div>
         <p class="hint" id="colorHint"></p>
@@ -264,13 +278,13 @@ html {scroll-behavior:smooth}
     </div>
   </section>
 
-  <!-- STEP 3 -->
-  <section class="acc" data-step="3">
+  <!-- STEP 4: DESIGN -->
+  <section class="acc" data-step="4">
     <div class="step-head" data-acc-toggle>
-      <div class="step-num"><span>3</span></div><h2>Your design</h2>
+      <div class="step-num"><span>4</span></div><h2>Your design</h2>
       <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
     </div>
-    <div class="acc-summary" id="sum3"></div>
+    <div class="acc-summary" id="sum4"></div>
     <div class="acc-wrap">
       <p class="step-sub">Front embroidery is included. Digitizing your artwork is always free.</p>
       <div class="step-body">
@@ -307,13 +321,13 @@ html {scroll-behavior:smooth}
     </div>
   </section>
 
-  <!-- STEP 4 -->
-  <section class="acc" data-step="4">
+  <!-- STEP 5: CHECKOUT -->
+  <section class="acc" data-step="5">
     <div class="step-head" data-acc-toggle>
-      <div class="step-num"><span>4</span></div><h2 class="buy-only">Checkout, then we get stitching</h2><h2 class="quote-only">Send your quote request</h2>
+      <div class="step-num"><span>5</span></div><h2 class="buy-only">Checkout, then we get stitching</h2><h2 class="quote-only">Send your quote request</h2>
       <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
     </div>
-    <div class="acc-summary" id="sum4"></div>
+    <div class="acc-summary" id="sum5"></div>
     <div class="acc-wrap">
       <p class="step-sub buy-only">Secure Shopify checkout. Here's what happens after:</p>
       <p class="step-sub quote-only">No payment now, we price it first.</p>
@@ -867,14 +881,17 @@ function accSummaries(){
   // Step 1: chosen hat
   const s1 = $("sum1");
   if (s1) s1.textContent = state.hasChosen ? (state.style.quote ? "Different style (custom quote)" : state.style.name) : "";
-  // Step 2: qty + colors
+  // Step 2: quantity
   const s2 = $("sum2");
-  if (s2) s2.textContent = state.hasChosen ? `${state.qty} hats · ${colorSummary()}` : "";
-  // Step 3: decoration + placements
+  if (s2) s2.textContent = state.hasChosen ? `${state.qty} hats total` : "";
+  // Step 3: colors
   const s3 = $("sum3");
-  if (s3){
+  if (s3) s3.textContent = state.hasChosen ? colorSummary() : "";
+  // Step 4: decoration + placements
+  const s4 = $("sum4");
+  if (s4){
     const places = [...state.placements].map(p => (PLACEMENTS.find(x=>x.id===p)||{}).label || p);
-    s3.textContent = state.hasChosen ? `${state.deco.label}${places.length?" · "+places.join(", "):""}` : "";
+    s4.textContent = state.hasChosen ? `${state.deco.label}${places.length?" · "+places.join(", "):""}` : "";
   }
 }
 
