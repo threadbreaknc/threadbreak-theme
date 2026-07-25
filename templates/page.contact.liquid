@@ -1,4 +1,4 @@
-{%- comment -%} build: reviews-clean-2026-07-25-v9 {%- endcomment -%}
+{%- comment -%} build: reviews-bare-2026-07-25-v10 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -12,10 +12,6 @@
 
 <style>
 
-/* ---- judge.me carousel fit ---- */
-#tbco .jdgm-carousel-wrapper{max-width:100%;margin:0 auto;overflow:hidden;}
-#tbco .jdgm-carousel-title-and-link{text-align:center;margin-bottom:1rem;}
-#tbco .jdgm-carousel{max-width:100%;}
 
 /* ---- theme-compatibility hardening ---- */
 #tbco{position:relative;z-index:1;padding-top:5.5rem;max-width:100%;overflow-x:hidden;font-family:'DM Sans',sans-serif;}
@@ -206,11 +202,6 @@ html {scroll-behavior:smooth}
     .sb-cta{font-size:17px;padding:10px 18px}
     .sb-hide-sm{display:none}
   }
-#tbco .reviews {display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
-#tbco .review {background:var(--ice);border-radius:12px;padding:16px 16px 14px}
-#tbco .stars {color:#E8A413;font-size:14px;letter-spacing:2px}
-#tbco .review p {font-size:14px;margin:8px 0 10px;line-height:1.5}
-#tbco .review .who {font-size:12px;color:var(--muted);font-weight:700}
 #tbco .confirm {display:none;background:#F1FAF5;border:1px solid #BFE8D2;border-radius:14px;padding:24px;margin-top:22px}
 #tbco .confirm.show {display:block}
 #tbco .confirm h3 {font-family:'Bebas Neue',sans-serif;font-size:26px;margin-bottom:8px}
@@ -381,7 +372,7 @@ html {scroll-behavior:smooth}
     <div class="err" id="cartErr">Couldn't add to cart. This form talks to Shopify, so it only works when hosted on threadbreak.com. If you're seeing this on the live site, refresh and try again or email help@threadbreak.com.</div>
   </section>
 
-  <!-- REVIEWS: Judge.me featured carousel (Judge.me renders its own title, stars, and reviews) -->
+  <!-- REVIEWS -->
   <section>
     {{ shop.metafields.judgeme.featured_carousel }}
   </section>
@@ -781,7 +772,7 @@ function render(){
       render();
     }));
 
-  $("submitBtn").textContent = quoteMode() ? "Review request" : "Review order";
+  $("submitBtn").textContent = quoteMode() ? "Request my quote" : "Checkout";
   updatePricingUI();
   renderUploads();
   accSummaries();
@@ -908,7 +899,7 @@ async function submitQuote(){
 }
 
 async function submitCheckout(){
-  const btn = $("sbSummaryCheckout") || $("submitBtn");
+  const btn = $("submitBtn");
   btn.disabled = true;
   $("cartErr").classList.remove("show");
 
