@@ -35,7 +35,12 @@
 html {scroll-behavior:smooth}
 #tbco {font-family:'DM Sans',sans-serif;background:var(--ice);color:var(--ink);line-height:1.55;padding-bottom:96px}
 #tbco .wrap {max-width:880px;margin:0 auto;padding:0 20px}
-#tbco header {background:var(--ink);color:var(--white);padding:56px 0 48px}
+#tbco header {position:relative;overflow:hidden;background:var(--ink);color:var(--white);padding:56px 0 48px}
+#tbco .hero-photos{position:absolute;inset:0;display:flex;z-index:0;opacity:.28}
+#tbco .hero-photos div{flex:1;background-size:cover;background-position:center;min-width:0}
+#tbco header::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,var(--ink) 0%,rgba(20,18,28,.82) 45%,rgba(20,18,28,.55) 100%)}
+#tbco header .wrap{position:relative;z-index:2}
+@media(max-width:640px){#tbco .hero-photos div:nth-child(n+4){display:none}#tbco header::after{background:linear-gradient(180deg,rgba(20,18,28,.72),rgba(20,18,28,.9))}}
 #tbco .kicker {font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#B7A6EE;font-weight:700}
 #tbco h1 {font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,8vw,76px);line-height:.95;letter-spacing:.01em;margin:10px 0 14px}
 #tbco h1 em {font-style:normal;color:#B7A6EE}
@@ -160,6 +165,14 @@ html {scroll-behavior:smooth}
 
 
 <header class="tbco-hero">
+  <div class="hero-photos" aria-hidden="true">
+    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_5393.jpg?v=1783192304')"></div>
+    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_2635.jpg?v=1783192608')"></div>
+    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_3791.jpg?v=1783192608')"></div>
+    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_2222.jpg?v=1783192609')"></div>
+    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4219.jpg?v=1783192609')"></div>
+    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4183.jpg?v=1783192608')"></div>
+  </div>
   <div class="wrap">
     <h1>Your logo.<br>Our <em>stitches.</em></h1>
     <p class="sub">Custom embroidered hats, stitched in-house on name-brand blanks. Pick a style, tell us the quantity, and check out. We send a free mockup for approval before anything hits a machine.</p>
