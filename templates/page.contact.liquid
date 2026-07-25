@@ -89,6 +89,19 @@ html {scroll-behavior:smooth}
 #tbco .dot {width:13px;height:13px;border-radius:50%;border:1px solid rgba(0,0,0,.18);flex:none}
 #tbco .chip.on .dot {border-color:rgba(255,255,255,.6)}
 #tbco .field-label {display:block;font-weight:700;font-size:14px;margin:18px 0 8px}
+#tbco .info-btn{font:inherit;font-size:12px;font-weight:700;color:var(--purple);background:none;border:none;cursor:pointer;padding:0;margin-left:8px;text-decoration:underline;text-underline-offset:2px}
+#tbco .info-btn:hover{color:var(--purple-dark)}
+#tbco .info-panel{margin:10px 0 4px;border:1.5px solid var(--line);border-radius:12px;padding:16px;background:var(--ice)}
+#tbco .info-panel[hidden]{display:none}
+#tbco .info-compare{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+#tbco .info-col{text-align:center;background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px 12px}
+#tbco .info-col strong{display:block;font-size:14px;margin:10px 0 4px}
+#tbco .info-col span{font-size:12.5px;color:var(--muted);line-height:1.45;display:block}
+#tbco .info-swatch{height:52px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:.08em;color:var(--ink);background:#E4E2EC}
+#tbco .flat-swatch{color:#4A4A52;text-shadow:none}
+#tbco .puff-swatch{color:#2E2A3A;text-shadow:0 2px 0 #B7A6EE,0 3px 3px rgba(0,0,0,.28);transform:scaleY(1.06)}
+#tbco .info-note{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:12px}
+@media(max-width:420px){#tbco .info-compare{grid-template-columns:1fr}}
 #tbco .hint {font-size:13px;color:var(--muted);margin-top:6px}
 #tbco .breakdown {margin-top:14px;border:1.5px solid var(--line);border-radius:12px;overflow:hidden}
 #tbco .bd-row {display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
@@ -232,8 +245,23 @@ html {scroll-behavior:smooth}
     <div class="step-head"><div class="step-num">3</div><h2>Your design</h2></div>
     <p class="step-sub">Front embroidery is included. Digitizing your artwork is always free.</p>
     <div class="step-body">
-      <label class="field-label" style="margin-top:0">Decoration style</label>
+      <label class="field-label" style="margin-top:0">Decoration style <button type="button" class="info-btn" id="puffInfoBtn" aria-expanded="false" aria-controls="puffInfo">What is 3D puff?</button></label>
       <div class="chips" id="deco"></div>
+      <div class="info-panel" id="puffInfo" hidden>
+        <div class="info-compare">
+          <div class="info-col">
+            <div class="info-swatch flat-swatch">ABC</div>
+            <strong>Flat embroidery</strong>
+            <span>Stitched flush to the hat. Handles fine detail, small text, and intricate logos.</span>
+          </div>
+          <div class="info-col">
+            <div class="info-swatch puff-swatch">ABC</div>
+            <strong>3D puff</strong>
+            <span>Foam under the stitching lifts the design off the hat for a bold, raised look.</span>
+          </div>
+        </div>
+        <p class="info-note">Puff works best with blocky letters and simple, bold shapes. It is not a fit for small text, thin lines, or fine detail, since the foam rounds those out. Not sure if your logo works? Leave it on flat and mention puff in the notes, and we will tell you honestly.</p>
+      </div>
       <label class="field-label">Placement</label>
       <div class="chips" id="placements"></div>
       <p class="hint">Front is included. Extra locations add a small per-hat charge.</p>
@@ -798,6 +826,12 @@ async function submitCheckout(){
 }
 
 function tbcoInit(){
+  const pib = $("puffInfoBtn"), pi = $("puffInfo");
+  if (pib && pi) pib.addEventListener("click", () => {
+    const open = pi.hasAttribute("hidden");
+    if (open){ pi.removeAttribute("hidden"); pib.setAttribute("aria-expanded","true"); pib.textContent = "Hide"; }
+    else { pi.setAttribute("hidden",""); pib.setAttribute("aria-expanded","false"); pib.textContent = "What is 3D puff?"; }
+  });
   $("submitBtn").addEventListener("click", () => quoteMode() ? submitQuote() : submitCheckout());
   render();
 }
