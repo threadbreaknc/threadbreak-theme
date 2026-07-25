@@ -913,7 +913,7 @@ function initAccordion(){
       head.closest(".acc").classList.toggle("open");
     });
   });
-  // Continue buttons: mark this step done, collapse it, open the next, gently scroll to it
+  // Continue buttons: mark done, collapse this step, open next, then gently scroll after collapse settles
   document.querySelectorAll('[data-continue]').forEach(btn => {
     btn.addEventListener("click", () => {
       const step = +btn.getAttribute("data-continue");
@@ -922,12 +922,15 @@ function initAccordion(){
       setOpen(step + 1, true);
       const next = document.querySelector(`.acc[data-step="${step+1}"]`);
       if (next){
-        const y = next.getBoundingClientRect().top + window.pageYOffset - 90;
-        window.scrollTo({ top: y, behavior: "smooth" });
+        // wait for the collapse transition (0.35s) so the target position is final, then scroll
+        setTimeout(() => {
+          const y = next.getBoundingClientRect().top + window.pageYOffset - 90;
+          window.scrollTo({ top: y, behavior: "smooth" });
+        }, 380);
       }
     });
   });
-  // Step 4's button goes straight to checkout (same as the scoreboard button)
+  // Step 4's button checks out directly (same as the scoreboard button)
   document.querySelectorAll('[data-checkout]').forEach(btn => {
     btn.addEventListener("click", () => {
       markDone(4, true);
