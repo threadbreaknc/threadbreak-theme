@@ -67,7 +67,9 @@ html {scroll-behavior:smooth}
 #tbco /* ---------- expanded card photo viewer ---------- */
   .style-card.expanded {grid-column:1/-1;align-items:flex-start;gap:16px;padding:14px}
 #tbco .hero-wrap {flex:none;width:min(300px,44%)}
-#tbco .hero-img {width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:10px;border:1px solid var(--line);background:var(--ice);display:block;transition:opacity .25s ease}
+#tbco .hero-stage {position:relative;width:100%;aspect-ratio:1/1;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:var(--ice)}
+#tbco .hero-img {position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .5s ease}
+#tbco .hero-img.on {opacity:1}
 #tbco .hero-dots {display:flex;gap:6px;margin-top:9px;justify-content:center}
 #tbco .hero-dots button {width:9px;height:9px;border-radius:50%;border:none;background:var(--line);cursor:pointer;padding:0;transition:background .15s}
 #tbco .hero-dots button.on {background:var(--purple)}
@@ -345,7 +347,7 @@ const QUOTE_EMAIL = "help@threadbreak.com";
 /* Paste your Apps Script web app URL (ends in /exec) here, see
    threadbreak-apps-script.gs. Until set, uploads are skipped and
    quote requests fall back to email. */
-const APPS_SCRIPT_URL = "PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0-rO8Y8fqsyAGPM1WLd_Q48GiOGKHxUYxq-UCT4a6ONXWLW6fIo2feCzDOcjmuAPE/exec";
 /* ========================================================= */
 
 const state = {
@@ -426,28 +428,40 @@ function colorSummary(){
   return state.colorSel.map(c => `${c} ×${state.colorQty[c] || 0}`).join(", ");
 }
 
-let heroTimer = null, heroIdx = 0;
+let heroTimer = null, heroIdx = 0, heroTop = "A";
 function renderHero(){
   clearInterval(heroTimer);
-  const img = $("heroImg");
-  if (!img) return; // selected style has no photos (quote card)
+  const a = $("heroImgA"), b = $("heroImgB");
+  if (!a || !b) return; // selected style has no photos (quote card)
   const imgs = state.style.imgs || [];
-  heroIdx = 0;
+  heroIdx = 0; heroTop = "A";
+  a.src = imgs[0]; a.classList.add("on"); b.classList.remove("on");
   const dots = $("heroDots");
   dots.innerHTML = imgs.map((_,i) =>
     `<button type="button" class="${i===0?'on':''}" aria-label="Photo ${i+1}"></button>`).join("");
   const show = i => {
+    if (i === heroIdx) return;
     heroIdx = i;
-    img.style.opacity = 0;
-    setTimeout(() => { img.src = imgs[heroIdx]; img.style.opacity = 1; }, 220);
-    dots.querySelectorAll("button").forEach((b,j) => b.classList.toggle("on", j === heroIdx));
+    const top = heroTop === "A" ? a : b;   // currently visible
+    const bottom = heroTop === "A" ? b : a; // will become visible
+    const swap = () => {
+      bottom.classList.add("on");
+      top.classList.remove("on");
+      heroTop = heroTop === "A" ? "B" : "A";
+    };
+    if (bottom.src === imgs[i]) swap();
+    else {
+      bottom.onload = swap;
+      bottom.src = imgs[i];
+    }
+    dots.querySelectorAll("button").forEach((btn,j) => btn.classList.toggle("on", j === i));
   };
   const restart = () => {
     clearInterval(heroTimer);
-    if (imgs.length > 1) heroTimer = setInterval(() => show((heroIdx + 1) % imgs.length), 3200);
+    if (imgs.length > 1) heroTimer = setInterval(() => show((heroIdx + 1) % imgs.length), 2600);
   };
-  dots.querySelectorAll("button").forEach((b,i) =>
-    b.addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); show(i); restart(); }));
+  dots.querySelectorAll("button").forEach((btn,i) =>
+    btn.addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); show(i); restart(); }));
   restart();
 }
 
@@ -529,7 +543,10 @@ function render(){
     const expanded = sel && state.hasChosen && s.imgs && s.imgs.length;
     const media = expanded
       ? `<div class="hero-wrap">
-           <img class="hero-img" id="heroImg" src="${s.imgs[0]}" alt="${s.name}">
+           <div class="hero-stage">
+             <img class="hero-img hero-a on" id="heroImgA" src="${s.imgs[0]}" alt="${s.name}">
+             <img class="hero-img hero-b" id="heroImgB" alt="">
+           </div>
            <div class="hero-dots" id="heroDots"></div>
          </div>`
       : (s.imgs && s.imgs.length
@@ -674,14 +691,27 @@ async function sendToDrive(type){
   for (const p of activeUploadSlots()){
     const f = state.files[p];
     if (!f) continue;
-    files.push({ placement: PLACEMENTS.find(x=>x.id===p).label, name: f.name, mimeType: f.type || "application/octet-stream", data: await fileToB64(f) });
+    files.push({
+      placement: PLACEMENTS.find(x=>x.id===p).label,
+      name: f.name,
+      mimeType: f.type || "application/octet-stream",
+      data: await fileToB64(f)
+    });
     uploaded.push(PLACEMENTS.find(x=>x.id===p).label);
   }
   try {
-    const res = await fetch(APPS_SCRIPT_URL, { method:"POST", body: JSON.stringify({ type, meta: orderMeta(), files }) });
-    const out = await res.json().catch(() => ({}));
+    const res = await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify({ type, meta: orderMeta(), files })
+    });
+    const text = await res.text();
+    console.log("[Threadbreak upload] status", res.status, "response:", text);
+    let out = {};
+    try { out = JSON.parse(text); } catch(e) {}
     return { ok: res.ok && out.ok !== false, uploaded };
   } catch (e) {
+    console.error("[Threadbreak upload] fetch failed:", e);
     return { ok:false, uploaded };
   }
 }
@@ -719,11 +749,12 @@ async function submitCheckout(){
   $("cartErr").classList.remove("show");
 
   const hasFiles = activeUploadSlots().some(p => state.files[p]);
-  let artNote = "Will email after checkout";
+  let artNote = "Customer will email logo to help@threadbreak.com";
   if (hasFiles){
     btn.textContent = "Sending art…";
     const up = await sendToDrive("order-artwork");
-    artNote = up.ok ? "Uploaded ✓ (" + up.uploaded.join(", ") + ")" : "Upload hiccup, will email";
+    if (up.ok) artNote = "Uploaded ✓ (" + up.uploaded.join(", ") + ")";
+    else artNote = "ACTION: email customer for logo (upload not received)";
   }
 
   btn.textContent = "Adding…";
