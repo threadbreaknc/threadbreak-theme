@@ -185,22 +185,14 @@ html {scroll-behavior:smooth}
         <label class="field-label">What style or brand do you want?</label>
         <input type="text" id="quoteStyle" placeholder="e.g. Flexfit fitted, Richardson 168, beanies, visors...">
       </div>
-      <label class="field-label">Hat color (pick as many as you like)</label>
-      <div class="chips" id="colors"></div>
-      <div id="breakdownWrap"></div>
-      <p class="hint" id="colorHint"></p>
-      <div id="sizingWrap" style="display:none">
-        <label class="field-label">Sizing</label>
-        <div class="chips" id="sizes"></div>
-      </div>
     </div>
   </section>
 
   <!-- STEP 2 -->
   <section>
-    <div class="step-head"><div class="step-num">2</div><h2>How many?</h2></div>
-    <p class="step-sub buy-only">Starts at just 10 hats total. Price per hat drops as your total goes up, and mixing colors doesn't cost extra.</p>
-    <p class="step-sub quote-only">Quantity helps us quote your exact per-hat price.</p>
+    <div class="step-head"><div class="step-num">2</div><h2>How many, and what colors?</h2></div>
+    <p class="step-sub buy-only">Starts at just 10 hats total. Price per hat drops as your total goes up, and mixing colors doesn't cost extra. Set your total first, then split it across colors below.</p>
+    <p class="step-sub quote-only">Quantity helps us quote your exact per-hat price. Set your total first, then split it across colors below.</p>
     <div class="step-body">
       <div class="qty-row">
         <input class="qty-input" id="qty" type="number" min="10" value="24" inputmode="numeric" aria-label="Total quantity">
@@ -211,6 +203,14 @@ html {scroll-behavior:smooth}
         <div class="savings" id="savings"></div>
       </div>
       <p class="hint quote-only">Same deal as our standard lineup: bigger runs, lower per-hat price. Your quote will show the exact breaks.</p>
+      <label class="field-label" style="margin-top:1.25rem">Hat color (pick as many as you like)</label>
+      <div class="chips" id="colors"></div>
+      <div id="breakdownWrap"></div>
+      <p class="hint" id="colorHint"></p>
+      <div id="sizingWrap" style="display:none">
+        <label class="field-label">Sizing</label>
+        <div class="chips" id="sizes"></div>
+      </div>
     </div>
   </section>
 
@@ -539,8 +539,8 @@ function render(){
   document.body.classList.toggle("quote-mode", quoteMode());
 
   $("styles").innerHTML = STYLES.map(s => {
-    const sel = s.id === state.style.id;
-    const expanded = sel && state.hasChosen && s.imgs && s.imgs.length;
+    const sel = state.hasChosen && s.id === state.style.id;
+    const expanded = sel && s.imgs && s.imgs.length;
     const media = expanded
       ? `<div class="hero-wrap">
            <div class="hero-stage">
@@ -573,10 +573,7 @@ function render(){
       if (!state.colorSel.length) state.colorSel = [state.style.colors[0]];
       evenSplit(); render();
     }));
-  document.querySelectorAll('.style-card').forEach(card =>
-    card.addEventListener('click', () => {
-      if (!state.hasChosen){ state.hasChosen = true; render(); }
-    }));
+  // (selection handled entirely by the radio 'change' handler above)
   renderHero();
 
   renderColors();
