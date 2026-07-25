@@ -20,8 +20,6 @@
   </div>
 </section>
 
-{% section 'ticker' %}
-
 <section class="tb-story">
   <div class="tb-story-inner">
     <div class="tb-story-lead">
@@ -38,15 +36,14 @@
 </section>
 
 {% section 'featured-products' %}
-{% section 'photo-band' %}
 
 <style>
-  .hc-hero{position:relative;min-height:80vh;display:flex;align-items:center;overflow:hidden;}
-  .hc-hero-bg{position:absolute;inset:0;background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/FullSizeRender_be19c307-51d6-4c89-b383-7b119c38a393.jpg?v=1769614391');background-size:cover;background-position:center;transform:scale(1.04);}
+  .hc-hero{position:relative;min-height:88vh;display:flex;align-items:center;overflow:hidden;padding-top:5rem;}
+  .hc-hero-bg{position:absolute;inset:0;background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/hat-hero.jpg?v=1785008565');background-size:cover;background-position:center;transform:scale(1.04);}
   .hc-hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(16,14,22,.92) 0%,rgba(16,14,22,.78) 42%,rgba(16,14,22,.42) 100%);}
-  .hc-hero-inner{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:8rem 2rem 4rem;width:100%;color:#F7F4F0;}
+  .hc-hero-inner{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:2rem 2rem 4rem;width:100%;color:#F7F4F0;}
   .hc-eyebrow{font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:#B7A6EE;font-weight:700;margin:0 0 1rem;}
-  .hc-h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,7vw,6rem);line-height:.94;letter-spacing:.01em;margin:0 0 1.25rem;max-width:16ch;}
+  .hc-h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.6rem,6.5vw,5.4rem);line-height:.94;letter-spacing:.01em;margin:0 0 1.25rem;max-width:16ch;}
   .hc-sub{font-size:clamp(1rem,1.6vw,1.2rem);line-height:1.6;color:#D6D3E0;max-width:44ch;margin:0 0 2rem;}
   .hc-cta-row{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:2.25rem;}
   .hc-cta-primary{display:inline-block;background:#5028AA;color:#fff;font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:.05em;padding:.85rem 2rem;border-radius:12px;text-decoration:none;transition:background .18s,transform .18s;}
@@ -57,8 +54,8 @@
   .hc-props span{font-size:.9rem;font-weight:500;color:#EDEAF7;}
   .hc-props span::before{content:"\2726";color:#8FE3B4;margin-right:.5rem;}
   @media(max-width:700px){
-    .hc-hero{min-height:78vh;}
-    .hc-hero-inner{padding:7rem 1.5rem 3rem;}
+    .hc-hero{min-height:82vh;padding-top:4rem;}
+    .hc-hero-inner{padding:1.5rem 1.5rem 3rem;}
     .hc-hero-overlay{background:linear-gradient(180deg,rgba(16,14,22,.72) 0%,rgba(16,14,22,.9) 100%);}
     .hc-cta-primary,.hc-cta-secondary{flex:1;text-align:center;justify-content:center;}
   }
