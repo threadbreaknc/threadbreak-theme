@@ -1,4 +1,4 @@
-{%- comment -%} build: reviews-bare-2026-07-25-v10 {%- endcomment -%}
+{%- comment -%} build: v11 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -374,7 +374,21 @@ html {scroll-behavior:smooth}
 
   <!-- REVIEWS -->
   <section>
-    {{ shop.metafields.judgeme.featured_carousel }}
+<!-- Start of Judge.me code -->
+  <div class='jdgm-carousel-wrapper'>
+    {% assign jm_metafields = shop.metafields.judgeme %}
+    <div class='jdgm-carousel-title-and-link'>
+      <h2 class='jdgm-carousel-title'>Let customers speak for us</h2>
+      <span class='jdgm-all-reviews-rating-wrapper' href='javascript:void(0)'>
+        <span style='display:block' data-score='{{ jm_metafields.all_reviews_rating }}' class='jdgm-all-reviews-rating' aria-label='{{ jm_metafields.all_reviews_rating }} stars' tabindex='0' role='img'></span>
+        <span style='display: block' class='jdgm-carousel-number-of-reviews' data-number-of-reviews='{{ jm_metafields.all_reviews_count }}'>
+from {{ shop.metafields.judgeme.all_reviews_count }} reviews
+        </span>
+      </span>
+    </div>
+    {{ jm_metafields.featured_carousel }}
+  </div>
+<!-- End of Judge.me code -->
   </section>
 
   <div class="confirm" id="confirm">
@@ -622,14 +636,18 @@ function updatePricingUI(){
   $("sbQty").textContent = state.qty;
   $("sbPer").textContent = per === null ? "TBD" : money(per);
 
+  const perEl = $("sbPer");
   const totalEl = $("sbTotal");
   const arrow = $("sbArrow");
-  // animate direction if the total changed
+  // animate direction if the total changed (flash both per-hat and total so it shows on mobile)
   if (newTotal !== null && window._tbPrevTotal != null && newTotal !== window._tbPrevTotal){
     const up = newTotal > window._tbPrevTotal;
-    totalEl.classList.remove("flash-up","flash-down");
-    void totalEl.offsetWidth;  // restart animation
-    totalEl.classList.add(up ? "flash-up" : "flash-down");
+    [perEl, totalEl].forEach(el => {
+      if (!el) return;
+      el.classList.remove("flash-up","flash-down");
+      void el.offsetWidth;  // restart animation
+      el.classList.add(up ? "flash-up" : "flash-down");
+    });
     if (arrow){
       arrow.textContent = up ? "▲" : "▼";
       arrow.className = "sb-arrow " + (up ? "up" : "down");
@@ -772,7 +790,7 @@ function render(){
       render();
     }));
 
-  $("submitBtn").textContent = quoteMode() ? "Request my quote" : "Checkout";
+  $("submitBtn").textContent = quoteMode() ? "Review request" : "Review order";
   updatePricingUI();
   renderUploads();
   accSummaries();
@@ -899,7 +917,7 @@ async function submitQuote(){
 }
 
 async function submitCheckout(){
-  const btn = $("submitBtn");
+  const btn = $("sbSummaryCheckout") || $("submitBtn");
   btn.disabled = true;
   $("cartErr").classList.remove("show");
 
