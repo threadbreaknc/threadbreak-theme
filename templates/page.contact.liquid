@@ -1,4 +1,4 @@
-{%- comment -%} build: bar-summary-2026-07-25-v3 {%- endcomment -%}
+{%- comment -%} build: review-modal-2026-07-25-v5 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -180,20 +180,25 @@ html {scroll-behavior:smooth}
 #tbco .sb-arrow.up{color:#F0685E;opacity:1}
 #tbco .sb-arrow.down{color:#4FD48A;opacity:1}
 /* expandable order summary above the bar */
-#tbco .sb-summary{max-height:0;overflow:hidden;transition:max-height .35s ease;background:#1B1826;border-top:1px solid #312E44}
-#tbco .sb-summary:not([hidden]){max-height:60vh}
-#tbco .sb-summary-inner{max-width:880px;margin:0 auto;padding:18px 20px}
-#tbco .sb-summary-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-#tbco .sb-summary-head h3{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#fff;letter-spacing:.02em}
-#tbco .sb-summary-close{background:none;border:none;color:#9A97AC;font-size:15px;cursor:pointer;padding:4px 8px}
+/* order review modal + dimmed overlay */
+#tbco .sb-overlay{position:fixed;inset:0;background:rgba(10,8,16,.72);opacity:0;visibility:hidden;transition:opacity .3s;z-index:9998}
+#tbco .sb-overlay.open{opacity:1;visibility:visible}
+#tbco .sb-summary{position:fixed;left:50%;top:50%;transform:translate(-50%,-46%) scale(.96);width:min(520px,92vw);max-height:86vh;overflow-y:auto;background:#1B1826;border:1px solid #312E44;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.5);opacity:0;visibility:hidden;transition:opacity .3s,transform .3s;z-index:9999}
+#tbco .sb-summary.open{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
+#tbco .sb-summary-inner{padding:26px 26px 24px}
+#tbco .sb-summary-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
+#tbco .sb-summary-head h3{font-family:'Bebas Neue',sans-serif;font-size:26px;color:#fff;letter-spacing:.02em}
+#tbco .sb-summary-close{background:none;border:none;color:#9A97AC;font-size:22px;line-height:1;cursor:pointer;padding:2px 6px}
 #tbco .sb-summary-close:hover{color:#fff}
-#tbco .sb-summary-rows{display:flex;flex-direction:column;gap:9px}
-#tbco .sb-sum-row{display:flex;justify-content:space-between;gap:16px;font-size:14px;color:#D6D3E0;padding-bottom:9px;border-bottom:1px solid #29263A}
-#tbco .sb-sum-row:last-child{border-bottom:none}
-#tbco .sb-sum-row .sb-sum-label{color:#9A97AC}
+#tbco .sb-summary-rows{display:flex;flex-direction:column;gap:0}
+#tbco .sb-sum-row{display:flex;justify-content:space-between;gap:16px;font-size:14px;color:#D6D3E0;padding:11px 0;border-bottom:1px solid #29263A}
+#tbco .sb-sum-row .sb-sum-label{color:#9A97AC;flex:none}
 #tbco .sb-sum-row .sb-sum-val{color:#fff;font-weight:500;text-align:right}
-#tbco .sb-sum-row.sb-sum-total{font-family:'Bebas Neue',sans-serif;font-size:20px;color:#fff;border-bottom:none;padding-top:4px}
+#tbco .sb-sum-row.sb-sum-total{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#fff;border-bottom:none;padding-top:14px}
 #tbco .sb-sum-row.sb-sum-total .sb-sum-val{color:#B7A6EE;font-weight:400}
+#tbco .sb-summary-cta{margin-top:20px;text-align:center}
+#tbco .sb-summary-cta p{color:#C9C8D4;font-size:14px;margin-bottom:12px}
+#tbco .sb-summary-cta .sb-cta{width:100%;justify-content:center;font-size:22px;padding:14px}
 
   @media(max-width:560px){
     .sb-inner{gap:12px;padding:10px 14px}
@@ -351,7 +356,7 @@ html {scroll-behavior:smooth}
         </div>
         <label class="field-label">Notes for us</label>
         <textarea id="notes" placeholder="Thread colors, text to add, deadline, anything else we should know..."></textarea>
-        <div class="acc-continue-row"><button type="button" class="acc-continue acc-checkout" data-checkout="1">Checkout <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+        <div class="acc-continue-row"><button type="button" class="acc-continue acc-checkout" data-checkout="1">Review order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
       </div>
     </div>
   </section>
@@ -403,17 +408,20 @@ from {{ shop.metafields.judgeme.all_reviews_count }} reviews
 
 </div>
 
+<!-- order review modal -->
+<div class="sb-overlay" id="sbOverlay"></div>
+<div class="sb-summary" id="sbSummary" role="dialog" aria-modal="true" aria-label="Review your order">
+  <div class="sb-summary-inner">
+    <div class="sb-summary-head">
+      <h3>Review your order</h3>
+      <button type="button" class="sb-summary-close" id="sbSummaryClose" aria-label="Close">&times;</button>
+    </div>
+    <div class="sb-summary-rows" id="sbSummaryRows"></div>
+  </div>
+</div>
+
 <!-- sticky scoreboard -->
 <div class="scoreboard" role="region" aria-label="Your quote">
-  <div class="sb-summary" id="sbSummary" hidden>
-    <div class="sb-summary-inner">
-      <div class="sb-summary-head">
-        <h3>Review your order</h3>
-        <button type="button" class="sb-summary-close" id="sbSummaryClose" aria-label="Collapse">▼</button>
-      </div>
-      <div class="sb-summary-rows" id="sbSummaryRows"></div>
-    </div>
-  </div>
   <div class="sb-inner">
     <div class="sb-stat"><div class="sb-label">Qty</div><div class="sb-value" id="sbQty">10</div></div>
     <div class="sb-divider"></div>
@@ -572,10 +580,10 @@ function buildOrderSummary(){
   if (per !== null){
     html += `<div class="sb-sum-row"><span class="sb-sum-label">Per hat</span><span class="sb-sum-val">${money(per)}</span></div>`;
     html += `<div class="sb-sum-row sb-sum-total"><span class="sb-sum-label">Estimated total</span><span class="sb-sum-val">${money(per*state.qty)}</span></div>`;
-    html += `<div class="sb-continue-row" style="margin-top:14px;display:flex;justify-content:flex-end"><button type="button" class="sb-cta" id="sbSummaryCheckout">Checkout</button></div>`;
+    html += `<div class="sb-summary-cta"><p>Look good? Complete your purchase.</p><button type="button" class="sb-cta" id="sbSummaryCheckout">Checkout</button></div>`;
   } else {
     html += `<div class="sb-sum-row sb-sum-total"><span class="sb-sum-label">Total</span><span class="sb-sum-val">We'll quote it</span></div>`;
-    html += `<div class="sb-continue-row" style="margin-top:14px;display:flex;justify-content:flex-end"><button type="button" class="sb-cta" id="sbSummaryCheckout">Request my quote</button></div>`;
+    html += `<div class="sb-summary-cta"><p>Look good? We'll send your exact pricing.</p><button type="button" class="sb-cta" id="sbSummaryCheckout">Request my quote</button></div>`;
   }
   rows.innerHTML = html;
   const co = $("sbSummaryCheckout");
@@ -1010,18 +1018,25 @@ function initAccordion(){
       }
     });
   });
-  // Step 4's button expands the order-summary panel above the bar
+  // Step 4's button opens the order-review modal
   document.querySelectorAll('[data-checkout]').forEach(btn => {
-    btn.addEventListener("click", () => {
-      markDone(4, true);
-      buildOrderSummary();
-      const sum = $("sbSummary");
-      sum.hidden = false;
-      sum.scrollIntoView({ behavior: "smooth", block: "end" });
-    });
+    btn.addEventListener("click", () => { markDone(4, true); openSummary(); });
   });
   const sc = $("sbSummaryClose");
-  if (sc) sc.addEventListener("click", () => { $("sbSummary").hidden = true; });
+  if (sc) sc.addEventListener("click", closeSummary);
+  const ov = $("sbOverlay");
+  if (ov) ov.addEventListener("click", closeSummary);
+  document.addEventListener("keydown", e => { if (e.key === "Escape") closeSummary(); });
+}
+
+function openSummary(){
+  buildOrderSummary();
+  $("sbSummary").classList.add("open");
+  const ov = $("sbOverlay"); if (ov) ov.classList.add("open");
+}
+function closeSummary(){
+  $("sbSummary").classList.remove("open");
+  const ov = $("sbOverlay"); if (ov) ov.classList.remove("open");
 }
 
 function tbcoInit(){
@@ -1032,12 +1047,7 @@ function tbcoInit(){
     else { pi.setAttribute("hidden",""); pib.setAttribute("aria-expanded","false"); pib.textContent = "What is 3D puff?"; }
   });
   initAccordion();
-  $("submitBtn").addEventListener("click", () => {
-    buildOrderSummary();
-    const sum = $("sbSummary");
-    sum.hidden = false;
-    sum.scrollIntoView({ behavior: "smooth", block: "end" });
-  });
+  $("submitBtn").addEventListener("click", openSummary);
   render();
 }
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", tbcoInit);
