@@ -1,4 +1,4 @@
-{%- comment -%} build: v15 {%- endcomment -%}
+{%- comment -%} build: v17 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -156,7 +156,8 @@ html {scroll-behavior:smooth}
 #tbco .quote-only {display:none}
 #tbco body.quote-mode .quote-only {display:block}
 #tbco body.quote-mode .buy-only {display:none}
-#tbco .scoreboard {position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:var(--white);border-top:3px solid var(--purple);z-index:50}
+#tbco .scoreboard {position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:var(--white);border-top:3px solid var(--purple);z-index:50;transition:transform .35s ease}
+#tbco .scoreboard.sb-hidden{transform:translateY(110%)}
 #tbco .sb-inner {max-width:880px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:18px}
 #tbco .sb-stat {line-height:1.1}
 #tbco .sb-label {font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#9A97AC}
@@ -166,15 +167,10 @@ html {scroll-behavior:smooth}
 #tbco .sb-cta {margin-left:auto;background:var(--purple);color:var(--white);border:none;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.06em;padding:12px 26px;border-radius:10px;cursor:pointer;transition:background .15s}
 #tbco .sb-cta:hover {background:var(--purple-dark)}
 #tbco .sb-cta:disabled {opacity:.7;cursor:wait}
-/* price change flash + direction arrow */
+/* price change flash */
 #tbco .sb-value{position:relative;transition:color .3s}
-#tbco .sb-value.flash-up{animation:sbUp .6s ease}
-#tbco .sb-value.flash-down{animation:sbDown .6s ease}
-@keyframes sbUp{0%{color:#F0685E;transform:translateY(3px)}100%{color:inherit;transform:none}}
-@keyframes sbDown{0%{color:#4FD48A;transform:translateY(-3px)}100%{color:inherit;transform:none}}
-#tbco .sb-arrow{display:inline-block;margin-left:5px;font-size:14px;font-weight:700;opacity:0;transition:opacity .2s}
-#tbco .sb-arrow.up{color:#F0685E;opacity:1}
-#tbco .sb-arrow.down{color:#4FD48A;opacity:1}
+#tbco .sb-value.flash{animation:sbPulse .55s ease}
+@keyframes sbPulse{0%{color:#B7A6EE;transform:scale(1.12)}100%{color:inherit;transform:none}}
 /* expandable order summary above the bar */
 /* order review modal + dimmed overlay */
 #tbco .sb-overlay{position:fixed;inset:0;background:rgba(10,8,16,.72);opacity:0;visibility:hidden;transition:opacity .3s;z-index:9998}
@@ -427,14 +423,14 @@ from {{ shop.metafields.judgeme.all_reviews_count }} reviews
 </div>
 
 <!-- sticky scoreboard -->
-<div class="scoreboard" role="region" aria-label="Your quote">
+<div class="scoreboard sb-hidden" id="scoreboard" role="region" aria-label="Your quote">
   <div class="sb-inner">
     <div class="sb-stat"><div class="sb-label">Qty</div><div class="sb-value" id="sbQty">10</div></div>
     <div class="sb-divider"></div>
     <div class="sb-stat"><div class="sb-label">Per hat</div><div class="sb-value accent" id="sbPer">$0</div></div>
     <div class="sb-divider sb-hide-sm"></div>
-    <div class="sb-stat sb-hide-sm"><div class="sb-label" id="sbTotalLabel">Estimated total</div><div class="sb-value" id="sbTotal">$0<span class="sb-arrow" id="sbArrow"></span></div></div>
-    <button class="sb-cta" id="submitBtn" type="button">Review order</button>
+    <div class="sb-stat sb-hide-sm"><div class="sb-label" id="sbTotalLabel">Estimated total</div><div class="sb-value" id="sbTotal">$0</div></div>
+    <button class="sb-cta" id="submitBtn" type="button">Finish order</button>
   </div>
 </div>
 </div>
@@ -653,26 +649,18 @@ function updatePricingUI(){
 
   const perEl = $("sbPer");
   const totalEl = $("sbTotal");
-  const arrow = $("sbArrow");
-  // animate direction if the total changed (flash both per-hat and total so it shows on mobile)
+  // pulse both per-hat and total purple whenever the price changes (no up/down direction)
   if (newTotal !== null && window._tbPrevTotal != null && newTotal !== window._tbPrevTotal){
-    const up = newTotal > window._tbPrevTotal;
     [perEl, totalEl].forEach(el => {
       if (!el) return;
-      el.classList.remove("flash-up","flash-down");
+      el.classList.remove("flash");
       void el.offsetWidth;  // restart animation
-      el.classList.add(up ? "flash-up" : "flash-down");
+      el.classList.add("flash");
     });
-    if (arrow){
-      arrow.textContent = up ? "▲" : "▼";
-      arrow.className = "sb-arrow " + (up ? "up" : "down");
-      clearTimeout(window._tbArrowT);
-      window._tbArrowT = setTimeout(() => { arrow.className = "sb-arrow"; }, 1200);
-    }
   }
   window._tbPrevTotal = newTotal;
 
-  totalEl.childNodes[0].nodeValue = per === null ? "-" : money(newTotal);
+  totalEl.textContent = per === null ? "-" : money(newTotal);
   $("sbTotalLabel").textContent = per === null ? "We'll quote it" : "Estimated total";
   const bt = document.querySelector(".bd-total");
   if (bt) bt.textContent = state.qty + " hats total";
@@ -805,10 +793,13 @@ function render(){
       render();
     }));
 
-  $("submitBtn").textContent = quoteMode() ? "Review request" : "Review order";
+  $("submitBtn").textContent = quoteMode() ? "Finish request" : "Finish order";
   updatePricingUI();
   renderUploads();
   accSummaries();
+  // reveal the bottom bar only after they've started selecting
+  const sb = $("scoreboard");
+  if (sb) sb.classList.toggle("sb-hidden", !state.hasChosen);
 }
 
 function activeUploadSlots(){
@@ -1057,7 +1048,15 @@ function tbcoInit(){
     else { pi.setAttribute("hidden",""); pib.setAttribute("aria-expanded","false"); pib.textContent = "What is 3D puff?"; }
   });
   initAccordion();
-  $("submitBtn").addEventListener("click", openSummary);
+  $("submitBtn").addEventListener("click", () => {
+    // take them to the final step to review and continue from there
+    setOpen(4, true);
+    const s4 = document.querySelector('.acc[data-step="4"]');
+    if (s4){
+      const y = s4.getBoundingClientRect().top + window.pageYOffset - 90;
+      window.scrollTo({ top: y, behavior: "smooth" });
+    }
+  });
   render();
   cleanupReviews();
 }
