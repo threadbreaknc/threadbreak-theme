@@ -1,7 +1,15 @@
 {
   "sections": {
+    "hero-custom": {
+      "type": "hero-custom",
+      "settings": {}
+    },
     "ticker": {
       "type": "ticker",
+      "settings": {}
+    },
+    "story": {
+      "type": "story",
       "settings": {}
     },
     "featured-products": {
@@ -17,5 +25,5 @@
       "settings": {}
     }
   },
-  "order": ["ticker","featured-products","overview","photo-band"]
+  "order": ["hero-custom","ticker","story","featured-products","overview","photo-band"]
 }

@@ -1,0 +1,62 @@
+<section class="hc-hero">
+  <div class="hc-hero-bg" style="background-image:url('{{ section.settings.image }}');"></div>
+  <div class="hc-hero-overlay"></div>
+  <div class="hc-hero-inner">
+    <p class="hc-eyebrow">{{ section.settings.eyebrow }}</p>
+    <h1 class="hc-h1">{{ section.settings.heading }}</h1>
+    <p class="hc-sub">{{ section.settings.subheading }}</p>
+    <div class="hc-cta-row">
+      <a href="{{ section.settings.cta_link }}" class="hc-cta-primary">{{ section.settings.cta_text }}</a>
+      <a href="{{ section.settings.cta2_link }}" class="hc-cta-secondary">{{ section.settings.cta2_text }}</a>
+    </div>
+    <div class="hc-props">
+      <span>Embroidered in Burlington, NC</span>
+      <span>Free shipping anywhere in the USA</span>
+      <span>10-hat minimum</span>
+      <span>Free digital mockup</span>
+    </div>
+  </div>
+</section>
+
+{% style %}
+  .hc-hero{position:relative;min-height:82vh;display:flex;align-items:center;overflow:hidden;margin-top:0;}
+  .hc-hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;transform:scale(1.04);}
+  .hc-hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(16,14,22,.92) 0%,rgba(16,14,22,.78) 42%,rgba(16,14,22,.42) 100%);}
+  .hc-hero-inner{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:8rem 2rem 4rem;width:100%;color:#F7F4F0;}
+  .hc-eyebrow{font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:#B7A6EE;font-weight:700;margin:0 0 1rem;}
+  .hc-h1{font-family:var(--font-display,'Bebas Neue',sans-serif);font-size:clamp(3rem,7vw,6rem);line-height:.94;letter-spacing:.01em;margin:0 0 1.25rem;max-width:16ch;}
+  .hc-h1 em{font-style:normal;color:#B7A6EE;}
+  .hc-sub{font-size:clamp(1rem,1.6vw,1.2rem);line-height:1.6;color:#D6D3E0;max-width:44ch;margin:0 0 2rem;}
+  .hc-cta-row{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:2.25rem;}
+  .hc-cta-primary{display:inline-block;background:var(--purple,#5028AA);color:#fff;font-family:var(--font-display,'Bebas Neue',sans-serif);font-size:1.35rem;letter-spacing:.05em;padding:.85rem 2rem;border-radius:12px;text-decoration:none;transition:background .18s,transform .18s;}
+  .hc-cta-primary:hover{background:#3D1E85;transform:translateY(-2px);}
+  .hc-cta-secondary{display:inline-flex;align-items:center;color:#F7F4F0;font-weight:700;font-size:1rem;padding:.85rem 1.25rem;border-radius:12px;border:1.5px solid rgba(247,244,240,.35);text-decoration:none;transition:border-color .18s,background .18s;}
+  .hc-cta-secondary:hover{border-color:#F7F4F0;background:rgba(247,244,240,.08);}
+  .hc-props{display:flex;flex-wrap:wrap;gap:.6rem 1.75rem;}
+  .hc-props span{font-size:.9rem;font-weight:500;color:#EDEAF7;}
+  .hc-props span::before{content:"✦";color:#8FE3B4;margin-right:.5rem;}
+  @media(max-width:700px){
+    .hc-hero{min-height:78vh;}
+    .hc-hero-inner{padding:7rem 1.5rem 3rem;}
+    .hc-hero-overlay{background:linear-gradient(180deg,rgba(16,14,22,.72) 0%,rgba(16,14,22,.9) 100%);}
+    .hc-cta-primary,.hc-cta-secondary{flex:1;text-align:center;justify-content:center;}
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Custom Hero",
+  "settings": [
+    { "type": "image_picker", "id": "image_pick", "label": "Background image (or paste URL below)" },
+    { "type": "text", "id": "image", "label": "Background image URL", "default": "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/FullSizeRender_be19c307-51d6-4c89-b383-7b119c38a393.jpg?v=1769614391" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Custom & Wholesale Embroidery" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Custom embroidered hats for your brand." },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "We stitch your logo onto premium blank hats, in-house in North Carolina, for businesses, teams, events, and brands. Wholesale pricing from just 10 hats." },
+    { "type": "text", "id": "cta_text", "label": "Primary button text", "default": "Place a Custom Order" },
+    { "type": "url", "id": "cta_link", "label": "Primary button link", "default": "/pages/quote" },
+    { "type": "text", "id": "cta2_text", "label": "Secondary button text", "default": "Shop premade hats" },
+    { "type": "url", "id": "cta2_link", "label": "Secondary button link", "default": "/collections/pre-made-hats" }
+  ],
+  "presets": [{ "name": "Custom Hero" }]
+}
+{% endschema %}
