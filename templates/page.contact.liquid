@@ -1,4 +1,4 @@
-{%- comment -%} build: v18 {%- endcomment -%}
+{%- comment -%} build: v19 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -430,7 +430,7 @@ from {{ shop.metafields.judgeme.all_reviews_count }} reviews
     <div class="sb-stat"><div class="sb-label">Per hat</div><div class="sb-value accent" id="sbPer">$0</div></div>
     <div class="sb-divider sb-hide-sm"></div>
     <div class="sb-stat sb-hide-sm"><div class="sb-label" id="sbTotalLabel">Estimated total</div><div class="sb-value" id="sbTotal">$0</div></div>
-    <button class="sb-cta" id="submitBtn" type="button">Finish order</button>
+    <button class="sb-cta" id="submitBtn" type="button" style="display:none">Review order</button>
   </div>
 </div>
 </div>
@@ -793,7 +793,7 @@ function render(){
       render();
     }));
 
-  updateBarLabel();
+  updateBarBtn();
   updatePricingUI();
   renderUploads();
   accSummaries();
@@ -995,11 +995,13 @@ function setOpen(step, open){
   if (sec) sec.classList.toggle("open", open);
 }
 
-function updateBarLabel(){
+function updateBarBtn(){
   const btn = $("submitBtn");
   if (!btn) return;
   const step4Open = document.querySelector('.acc[data-step="4"]')?.classList.contains("open");
-  btn.textContent = step4Open ? (quoteMode() ? "Review request" : "Review order") : (quoteMode() ? "Finish request" : "Finish order");
+  // only show the button once they've opened the final step
+  btn.style.display = step4Open ? "" : "none";
+  btn.textContent = quoteMode() ? "Review request" : "Review order";
 }
 
 function initAccordion(){
@@ -1007,7 +1009,7 @@ function initAccordion(){
   document.querySelectorAll('[data-acc-toggle]').forEach(head => {
     head.addEventListener("click", () => {
       head.closest(".acc").classList.toggle("open");
-      updateBarLabel();
+      updateBarBtn();
     });
   });
   // Continue buttons: mark done, collapse this step, open next, then gently scroll after collapse settles
@@ -1017,7 +1019,7 @@ function initAccordion(){
       markDone(step, true);
       setOpen(step, false);
       setOpen(step + 1, true);
-      updateBarLabel();
+      updateBarBtn();
       const next = document.querySelector(`.acc[data-step="${step+1}"]`);
       if (next){
         // wait for the collapse transition (0.35s) so the target position is final, then scroll
@@ -1057,21 +1059,7 @@ function tbcoInit(){
     else { pi.setAttribute("hidden",""); pib.setAttribute("aria-expanded","false"); pib.textContent = "What is 3D puff?"; }
   });
   initAccordion();
-  $("submitBtn").addEventListener("click", () => {
-    const s4 = document.querySelector('.acc[data-step="4"]');
-    if (s4 && s4.classList.contains("open")){
-      // already on the final step, open the review popup
-      openSummary();
-    } else {
-      // take them to the final step first
-      setOpen(4, true);
-      render();
-      if (s4){
-        const y = s4.getBoundingClientRect().top + window.pageYOffset - 90;
-        window.scrollTo({ top: y, behavior: "smooth" });
-      }
-    }
-  });
+  $("submitBtn").addEventListener("click", openSummary);
   render();
   cleanupReviews();
 }
