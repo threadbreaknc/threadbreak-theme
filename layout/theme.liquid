@@ -16,9 +16,10 @@
 <style>
   html, body { margin: 0 !important; padding: 0 !important; }
   /* full threadbreak wordmark logo */
-  .nav-logo-full{height:38px;width:auto;display:block;}
-  .footer-logo-full{height:44px;width:auto;display:block;}
-  @media(max-width:700px){ .nav-logo-full{height:32px;} }
+  .nav-brand{display:flex;align-items:center;}
+  .nav-logo-full{height:52px;width:auto;display:block;object-fit:contain;}
+  .footer-logo-full{height:60px;width:auto;display:block;object-fit:contain;}
+  @media(max-width:700px){ .nav-logo-full{height:44px;} }
   #shopify-section-header,
   .shopify-section-header,
   header[role="banner"],
@@ -46,7 +47,7 @@
 </div>
 <nav id="main-nav">
   <a href="/" class="nav-brand">
-    <img src="{{ 'tb-logo-black.png' | asset_url }}" alt="{{ shop.name }}" class="nav-logo-img nav-logo-full">
+    <img src="{{ 'tb-logo-dark.png' | asset_url }}" alt="{{ shop.name }}" class="nav-logo-img nav-logo-full">
   </a>
   <ul class="nav-links">
     <li><a href="/">Home</a></li>
@@ -80,7 +81,7 @@
 <footer>
   <div class="footer-grid">
     <div class="footer-brand-row">
-      <img src="{{ 'tb-logo-black.png' | asset_url }}" alt="{{ shop.name }}" class="footer-logo footer-logo-full">
+      <img src="{{ 'tb-logo-light.png' | asset_url }}" alt="{{ shop.name }}" class="footer-logo footer-logo-full">
     </div>
     <ul class="footer-links">
       <li><a href="/collections/pre-made-hats">Hats</a></li>
