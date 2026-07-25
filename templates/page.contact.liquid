@@ -50,13 +50,25 @@ html {scroll-behavior:smooth}
 #tbco .props span::before {content:"✓";color:#8FE3B4;font-weight:700;margin-right:7px}
 #tbco section {background:var(--white);border:1px solid var(--line);border-radius:14px;padding:26px 24px;margin-top:22px}
 #tbco section:first-of-type {margin-top:28px}
-#tbco .step-head {display:flex;align-items:baseline;gap:12px;margin-bottom:6px}
-#tbco .step-num {font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--purple);min-width:26px}
-#tbco .step-head h2 {font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.02em}
-#tbco .step-sub {color:var(--muted);font-size:14px;margin:0 0 18px 38px}
-#tbco .step-body {margin-left:38px}
+#tbco .step-head {display:flex;align-items:center;gap:12px;margin-bottom:6px}
+#tbco .step-num {font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--purple);min-width:30px;width:30px;height:30px;border-radius:50%;background:var(--ice);display:flex;align-items:center;justify-content:center;transition:background .2s,color .2s}
+#tbco .step-head h2 {font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.02em}
+#tbco .step-sub {color:var(--muted);font-size:14px;margin:0 0 18px 42px}
+#tbco .step-body {margin-left:42px}
 
   @media(max-width:560px){.step-sub,.step-body{margin-left:0}}
+
+/* ---- accordion steps ---- */
+#tbco .acc .step-head{cursor:pointer;user-select:none;margin-bottom:0}
+#tbco .acc.done .step-num{background:var(--good);color:#fff}
+#tbco .acc-arrow{margin-left:auto;width:20px;height:20px;flex:none;color:var(--muted);transition:transform .25s}
+#tbco .acc.open .acc-arrow{transform:rotate(180deg)}
+#tbco .acc-summary{font-size:13px;color:var(--purple);font-weight:600;margin:6px 0 0 42px}
+#tbco .acc.open .acc-summary{display:none}
+#tbco .acc:not(.open) .step-sub{display:none}
+#tbco .acc-wrap{max-height:0;overflow:hidden;transition:max-height .35s ease}
+#tbco .acc.open .acc-wrap{max-height:8000px;transition:max-height .6s ease}
+@media(max-width:560px){#tbco .acc-summary{margin-left:0}}
 #tbco .styles {display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
 #tbco .style-card {position:relative;border:2px solid var(--line);border-radius:12px;padding:10px;cursor:pointer;background:var(--white);transition:border-color .15s, box-shadow .15s;display:flex;gap:12px;align-items:center}
 #tbco .style-card:hover {border-color:#B7A6EE}
@@ -202,101 +214,125 @@ html {scroll-behavior:smooth}
 <div class="wrap">
 
   <!-- STEP 1 -->
-  <section>
-    <div class="step-head"><div class="step-num">1</div><h2>Pick your hat</h2></div>
-    <p class="step-sub">The most popular blanks in the game, priced with front embroidery included. Want something else? Pick "Different style" and we'll quote it.</p>
-    <div class="step-body">
-      <div class="styles" id="styles"></div>
-      <div class="quote-only">
-        <label class="field-label">What style or brand do you want?</label>
-        <input type="text" id="quoteStyle" placeholder="e.g. Flexfit fitted, Richardson 168, beanies, visors...">
+  <section class="acc open" data-step="1">
+    <div class="step-head" data-acc-toggle>
+      <div class="step-num"><span>1</span></div><h2>Pick your hat</h2>
+      <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="acc-summary" id="sum1"></div>
+    <div class="acc-wrap">
+      <p class="step-sub">The most popular blanks in the game, priced with front embroidery included. Want something else? Pick "Different style" and we'll quote it.</p>
+      <div class="step-body">
+        <div class="styles" id="styles"></div>
+        <div class="quote-only">
+          <label class="field-label">What style or brand do you want?</label>
+          <input type="text" id="quoteStyle" placeholder="e.g. Flexfit fitted, Richardson 168, beanies, visors...">
+        </div>
       </div>
     </div>
   </section>
 
   <!-- STEP 2 -->
-  <section>
-    <div class="step-head"><div class="step-num">2</div><h2>How many, and what colors?</h2></div>
-    <p class="step-sub buy-only">Starts at just 10 hats total. Price per hat drops as your total goes up, and mixing colors doesn't cost extra. Set your total first, then split it across colors below.</p>
-    <p class="step-sub quote-only">Quantity helps us quote your exact per-hat price. Set your total first, then split it across colors below.</p>
-    <div class="step-body">
-      <div class="qty-row">
-        <input class="qty-input" id="qty" type="number" min="10" value="24" inputmode="numeric" aria-label="Total quantity">
-        <span class="hint" style="margin-top:0">hats total</span>
-      </div>
-      <div class="buy-only">
-        <div class="tiers" id="tiers"></div>
-        <div class="savings" id="savings"></div>
-      </div>
-      <p class="hint quote-only">Same deal as our standard lineup: bigger runs, lower per-hat price. Your quote will show the exact breaks.</p>
-      <label class="field-label" style="margin-top:1.25rem">Hat color (pick as many as you like)</label>
-      <div class="chips" id="colors"></div>
-      <div id="breakdownWrap"></div>
-      <p class="hint" id="colorHint"></p>
-      <div id="sizingWrap" style="display:none">
-        <label class="field-label">Sizing</label>
-        <div class="chips" id="sizes"></div>
+  <section class="acc" data-step="2">
+    <div class="step-head" data-acc-toggle>
+      <div class="step-num"><span>2</span></div><h2>How many, and what colors?</h2>
+      <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="acc-summary" id="sum2"></div>
+    <div class="acc-wrap">
+      <p class="step-sub buy-only">Starts at just 10 hats total. Price per hat drops as your total goes up, and mixing colors doesn't cost extra. Set your total first, then split it across colors below.</p>
+      <p class="step-sub quote-only">Quantity helps us quote your exact per-hat price. Set your total first, then split it across colors below.</p>
+      <div class="step-body">
+        <div class="qty-row">
+          <input class="qty-input" id="qty" type="number" min="10" value="24" inputmode="numeric" aria-label="Total quantity">
+          <span class="hint" style="margin-top:0">hats total</span>
+        </div>
+        <div class="buy-only">
+          <div class="tiers" id="tiers"></div>
+          <div class="savings" id="savings"></div>
+        </div>
+        <p class="hint quote-only">Same deal as our standard lineup: bigger runs, lower per-hat price. Your quote will show the exact breaks.</p>
+        <label class="field-label" style="margin-top:1.25rem">Hat color (pick as many as you like)</label>
+        <div class="chips" id="colors"></div>
+        <div id="breakdownWrap"></div>
+        <p class="hint" id="colorHint"></p>
+        <div id="sizingWrap" style="display:none">
+          <label class="field-label">Sizing</label>
+          <div class="chips" id="sizes"></div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- STEP 3 -->
-  <section>
-    <div class="step-head"><div class="step-num">3</div><h2>Your design</h2></div>
-    <p class="step-sub">Front embroidery is included. Digitizing your artwork is always free.</p>
-    <div class="step-body">
-      <label class="field-label" style="margin-top:0">Decoration style <button type="button" class="info-btn" id="puffInfoBtn" aria-expanded="false" aria-controls="puffInfo">What is 3D puff?</button></label>
-      <div class="chips" id="deco"></div>
-      <div class="info-panel" id="puffInfo" hidden>
-        <div class="info-compare">
-          <div class="info-col">
-            <div class="info-swatch flat-swatch">ABC</div>
-            <strong>Flat embroidery</strong>
-            <span>Stitched flush to the hat. Handles fine detail, small text, and intricate logos.</span>
+  <section class="acc" data-step="3">
+    <div class="step-head" data-acc-toggle>
+      <div class="step-num"><span>3</span></div><h2>Your design</h2>
+      <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="acc-summary" id="sum3"></div>
+    <div class="acc-wrap">
+      <p class="step-sub">Front embroidery is included. Digitizing your artwork is always free.</p>
+      <div class="step-body">
+        <label class="field-label" style="margin-top:0">Decoration style <button type="button" class="info-btn" id="puffInfoBtn" aria-expanded="false" aria-controls="puffInfo">What is 3D puff?</button></label>
+        <div class="chips" id="deco"></div>
+        <div class="info-panel" id="puffInfo" hidden>
+          <div class="info-compare">
+            <div class="info-col">
+              <div class="info-swatch flat-swatch">ABC</div>
+              <strong>Flat embroidery</strong>
+              <span>Stitched flush to the hat. Handles fine detail, small text, and intricate logos.</span>
+            </div>
+            <div class="info-col">
+              <div class="info-swatch puff-swatch">ABC</div>
+              <strong>3D puff</strong>
+              <span>Foam under the stitching lifts the design off the hat for a bold, raised look.</span>
+            </div>
           </div>
-          <div class="info-col">
-            <div class="info-swatch puff-swatch">ABC</div>
-            <strong>3D puff</strong>
-            <span>Foam under the stitching lifts the design off the hat for a bold, raised look.</span>
-          </div>
+          <p class="info-note">Puff works best with blocky letters and simple, bold shapes. It is not a fit for small text, thin lines, or fine detail, since the foam rounds those out. Not sure if your logo works? Leave it on flat and mention puff in the notes, and we will tell you honestly.</p>
         </div>
-        <p class="info-note">Puff works best with blocky letters and simple, bold shapes. It is not a fit for small text, thin lines, or fine detail, since the foam rounds those out. Not sure if your logo works? Leave it on flat and mention puff in the notes, and we will tell you honestly.</p>
+        <label class="field-label">Placement</label>
+        <div class="chips" id="placements"></div>
+        <p class="hint">Front is included. Extra locations add a small per-hat charge.</p>
+        <label class="field-label">Your logo / artwork</label>
+        <div class="uploads-grid" id="uploads"></div>
+        <p class="hint">One file per location: PNG, JPG, PDF, AI, or SVG, up to 10 MB each. Digitizing is free. No file handy? Skip it and email us after.</p>
+        <div class="art-note">
+          <p><strong>Thread colors:</strong> Unless you tell us otherwise, we match thread colors to your logo. Want something different, like tone-on-tone or matched to the hat? Just mention it in the notes.</p>
+          <p><strong>Highly detailed designs:</strong> Some artwork is too fine to embroider cleanly at hat scale. If yours is on the detailed side, email <strong>help@threadbreak.com</strong> and we'll talk through the best option, whether that's DTF or patches, along with pricing.</p>
+        </div>
+        <label class="field-label">Notes for us</label>
+        <textarea id="notes" placeholder="Thread colors, text to add, deadline, anything else we should know..."></textarea>
       </div>
-      <label class="field-label">Placement</label>
-      <div class="chips" id="placements"></div>
-      <p class="hint">Front is included. Extra locations add a small per-hat charge.</p>
-      <label class="field-label">Your logo / artwork</label>
-      <div class="uploads-grid" id="uploads"></div>
-      <p class="hint">One file per location: PNG, JPG, PDF, AI, or SVG, up to 10 MB each. Digitizing is free. No file handy? Skip it and email us after.</p>
-      <div class="art-note">
-        <p><strong>Thread colors:</strong> Unless you tell us otherwise, we match thread colors to your logo. Want something different, like tone-on-tone or matched to the hat? Just mention it in the notes.</p>
-        <p><strong>Highly detailed designs:</strong> Some artwork is too fine to embroider cleanly at hat scale. If yours is on the detailed side, email <strong>help@threadbreak.com</strong> and we'll talk through the best option, whether that's DTF or patches, along with pricing.</p>
-      </div>
-      <label class="field-label">Notes for us</label>
-      <textarea id="notes" placeholder="Thread colors, text to add, deadline, anything else we should know..."></textarea>
     </div>
   </section>
 
   <!-- STEP 4 -->
-  <section>
-    <div class="step-head"><div class="step-num">4</div><h2 class="buy-only">Checkout, then we get stitching</h2><h2 class="quote-only">Send your quote request</h2></div>
-    <p class="step-sub buy-only">Secure Shopify checkout. Here's what happens after:</p>
-    <p class="step-sub quote-only">No payment now, we price it first.</p>
-    <div class="step-body">
-      <ol class="flow buy-only">
-        <li><span class="n">1</span><span>Your uploaded artwork comes straight to us with the order. Forgot it? Just reply to your confirmation email with the file.</span></li>
-        <li><span class="n">2</span><span>We email your free digital mockup within 1 business day.</span></li>
-        <li><span class="n">3</span><span>You approve it, then we stitch and ship. Nothing hits a machine until you sign off.</span></li>
-      </ol>
-      <ol class="flow quote-only">
-        <li><span class="n">1</span><span>Hit the button and your request, artwork included, comes straight to us.</span></li>
-        <li><span class="n">2</span><span>We reply within 1 business day with your exact per-hat price and a free mockup.</span></li>
-        <li><span class="n">3</span><span>You approve, then we stitch and ship.</span></li>
-      </ol>
-      <div class="art-note">
-        <p><strong>Lead time:</strong> most orders are shipped in 2 to 3 weeks. Need it faster? Email <strong>help@threadbreak.com</strong> directly before placing your order and we'll see what we can make happen.</p>
+  <section class="acc" data-step="4">
+    <div class="step-head" data-acc-toggle>
+      <div class="step-num"><span>4</span></div><h2 class="buy-only">Checkout, then we get stitching</h2><h2 class="quote-only">Send your quote request</h2>
+      <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="acc-summary" id="sum4"></div>
+    <div class="acc-wrap">
+      <p class="step-sub buy-only">Secure Shopify checkout. Here's what happens after:</p>
+      <p class="step-sub quote-only">No payment now, we price it first.</p>
+      <div class="step-body">
+        <ol class="flow buy-only">
+          <li><span class="n">1</span><span>Your uploaded artwork comes straight to us with the order. Forgot it? Just reply to your confirmation email with the file.</span></li>
+          <li><span class="n">2</span><span>We email your free digital mockup within 1 business day.</span></li>
+          <li><span class="n">3</span><span>You approve it, then we stitch and ship. Nothing hits a machine until you sign off.</span></li>
+        </ol>
+        <ol class="flow quote-only">
+          <li><span class="n">1</span><span>Hit the button and your request, artwork included, comes straight to us.</span></li>
+          <li><span class="n">2</span><span>We reply within 1 business day with your exact per-hat price and a free mockup.</span></li>
+          <li><span class="n">3</span><span>You approve, then we stitch and ship.</span></li>
+        </ol>
+        <div class="art-note">
+          <p><strong>Lead time:</strong> most orders are shipped in 2 to 3 weeks. Need it faster? Email <strong>help@threadbreak.com</strong> directly before placing your order and we'll see what we can make happen.</p>
+        </div>
+        <div class="err" id="cartErr">Couldn't add to cart. This form talks to Shopify, so it only works when hosted on threadbreak.com. If you're seeing this on the live site, refresh and try again or email help@threadbreak.com.</div>
       </div>
-      <div class="err" id="cartErr">Couldn't add to cart. This form talks to Shopify, so it only works when hosted on threadbreak.com. If you're seeing this on the live site, refresh and try again or email help@threadbreak.com.</div>
     </div>
   </section>
 
@@ -658,6 +694,8 @@ function render(){
   $("submitBtn").textContent = quoteMode() ? "Request my quote" : "Checkout";
   updatePricingUI();
   renderUploads();
+  accSummaries();
+  autoAdvance();
 }
 
 function activeUploadSlots(){
@@ -825,6 +863,53 @@ async function submitCheckout(){
   }
 }
 
+function accSummaries(){
+  // Step 1: chosen hat
+  const s1 = $("sum1");
+  if (s1) s1.textContent = state.hasChosen ? (state.style.quote ? "Different style (custom quote)" : state.style.name) : "";
+  // Step 2: qty + colors
+  const s2 = $("sum2");
+  if (s2) s2.textContent = state.hasChosen ? `${state.qty} hats · ${colorSummary()}` : "";
+  // Step 3: decoration + placements
+  const s3 = $("sum3");
+  if (s3){
+    const places = [...state.placements].map(p => (PLACEMENTS.find(x=>x.id===p)||{}).label || p);
+    s3.textContent = state.hasChosen ? `${state.deco.label}${places.length?" · "+places.join(", "):""}` : "";
+  }
+}
+
+function markDone(step, done){
+  const sec = document.querySelector(`.acc[data-step="${step}"]`);
+  if (sec) sec.classList.toggle("done", !!done);
+}
+
+function openStep(step){
+  document.querySelectorAll('.acc').forEach(sec => {
+    sec.classList.toggle("open", +sec.dataset.step === step);
+  });
+}
+
+function initAccordion(){
+  document.querySelectorAll('[data-acc-toggle]').forEach(head => {
+    head.addEventListener("click", () => {
+      const sec = head.closest(".acc");
+      sec.classList.toggle("open");   // manual toggle allows multiple open
+    });
+  });
+}
+
+// auto-advance: when the user first picks a hat, mark step 1 done and open step 2
+let advancedPast1 = false;
+function autoAdvance(){
+  if (state.hasChosen && !advancedPast1){
+    advancedPast1 = true;
+    markDone(1, true);
+    openStep(2);
+  }
+  // keep step-1 done state in sync with whether a hat is chosen
+  markDone(1, state.hasChosen);
+}
+
 function tbcoInit(){
   const pib = $("puffInfoBtn"), pi = $("puffInfo");
   if (pib && pi) pib.addEventListener("click", () => {
@@ -832,6 +917,7 @@ function tbcoInit(){
     if (open){ pi.removeAttribute("hidden"); pib.setAttribute("aria-expanded","true"); pib.textContent = "Hide"; }
     else { pi.setAttribute("hidden",""); pib.setAttribute("aria-expanded","false"); pib.textContent = "What is 3D puff?"; }
   });
+  initAccordion();
   $("submitBtn").addEventListener("click", () => quoteMode() ? submitQuote() : submitCheckout());
   render();
 }
