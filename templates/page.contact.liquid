@@ -1,4 +1,4 @@
-{%- comment -%} build: review-modal-2026-07-25-v8 {%- endcomment -%}
+{%- comment -%} build: reviews-clean-2026-07-25-v9 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -381,23 +381,9 @@ html {scroll-behavior:smooth}
     <div class="err" id="cartErr">Couldn't add to cart. This form talks to Shopify, so it only works when hosted on threadbreak.com. If you're seeing this on the live site, refresh and try again or email help@threadbreak.com.</div>
   </section>
 
-  <!-- REVIEWS: Judge.me featured carousel -->
+  <!-- REVIEWS: Judge.me featured carousel (Judge.me renders its own title, stars, and reviews) -->
   <section>
-    <div class="step-head"><h2>What buyers say</h2></div>
-    <!-- Start of Judge.me code -->
-    <div class='jdgm-carousel-wrapper'>
-      {% assign jm_metafields = shop.metafields.judgeme %}
-      <div class='jdgm-carousel-title-and-link'>
-        <span class='jdgm-all-reviews-rating-wrapper' href='javascript:void(0)'>
-          <span style='display:block' data-score='{{ jm_metafields.all_reviews_rating }}' class='jdgm-all-reviews-rating' aria-label='{{ jm_metafields.all_reviews_rating }} stars' tabindex='0' role='img'></span>
-          <span style='display: block' class='jdgm-carousel-number-of-reviews' data-number-of-reviews='{{ jm_metafields.all_reviews_count }}'>
-from {{ shop.metafields.judgeme.all_reviews_count }} reviews
-          </span>
-        </span>
-      </div>
-      {{ jm_metafields.featured_carousel }}
-    </div>
-    <!-- End of Judge.me code -->
+    {{ shop.metafields.judgeme.featured_carousel }}
   </section>
 
   <div class="confirm" id="confirm">
