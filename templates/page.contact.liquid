@@ -594,6 +594,7 @@ function renderColors(){
       const i = state.colorSel.indexOf(c);
       if (i >= 0){ if (state.colorSel.length === 1) return; state.colorSel.splice(i,1); }
       else state.colorSel.push(c);
+      touched.color = true;
       evenSplit(); render();
     }));
   const more = $("moreColors"); if (more) more.addEventListener("click", () => { state.showAllColors = true; render(); });
@@ -686,6 +687,7 @@ function render(){
     $("tiers").querySelectorAll('.tier').forEach(el =>
       el.addEventListener('click', () => {
         state.qty = +el.dataset.q; $("qty").value = state.qty;
+        touched.qty = true;
         evenSplit(); render();
       }));
   }
@@ -742,12 +744,14 @@ function renderUploads(){
 $("qty").addEventListener("input", e => {
   const v = Math.max(1, parseInt(e.target.value || "1", 10));
   state.qty = Math.max(10, v);
+  touched.qty = true;
   evenSplit();
   renderColors();
   updatePricingUI();
 });
 $("qty").addEventListener("blur", e => {
   if (parseInt(e.target.value || "0", 10) < 10) e.target.value = 10;
+  autoAdvance();
 });
 
 function fileToB64(file){
@@ -900,10 +904,9 @@ function markDone(step, done){
   if (sec) sec.classList.toggle("done", !!done);
 }
 
-function openStep(step){
-  document.querySelectorAll('.acc').forEach(sec => {
-    sec.classList.toggle("open", +sec.dataset.step === step);
-  });
+function setOpen(step, open){
+  const sec = document.querySelector(`.acc[data-step="${step}"]`);
+  if (sec) sec.classList.toggle("open", open);
 }
 
 function initAccordion(){
@@ -915,16 +918,35 @@ function initAccordion(){
   });
 }
 
-// auto-advance: when the user first picks a hat, mark step 1 done and open step 2
-let advancedPast1 = false;
-function autoAdvance(){
-  if (state.hasChosen && !advancedPast1){
-    advancedPast1 = true;
-    markDone(1, true);
-    openStep(2);
+// completion test per step
+function stepComplete(step){
+  switch(step){
+    case 1: return state.hasChosen;
+    case 2: return state.hasChosen && state.qty >= 10 && touched.qty;
+    case 3: return state.hasChosen && state.colorSel.length > 0 && touched.color;
+    default: return false;
   }
-  // keep step-1 done state in sync with whether a hat is chosen
+}
+
+// track which auto-advances have already fired, and which steps the user touched
+const advanced = {};
+const touched = { qty:false, color:false };
+function autoAdvance(){
+  // keep the green check state in sync every render
   markDone(1, state.hasChosen);
+  markDone(2, state.hasChosen && touched.qty);
+  markDone(3, state.hasChosen && state.colorSel.length > 0 && touched.color);
+
+  // fire each advance once, when that step first completes AND it's the open one
+  for (let s = 1; s <= 3; s++){
+    const sec = document.querySelector(`.acc[data-step="${s}"]`);
+    const isOpen = sec && sec.classList.contains("open");
+    if (stepComplete(s) && !advanced[s] && isOpen){
+      advanced[s] = true;
+      setOpen(s, false);
+      setOpen(s + 1, true);
+    }
+  }
 }
 
 function tbcoInit(){
