@@ -700,18 +700,17 @@ async function sendToDrive(type){
     uploaded.push(PLACEMENTS.find(x=>x.id===p).label);
   }
   try {
-    const res = await fetch(APPS_SCRIPT_URL, {
+    // Fire-and-forget (no-cors): the combined Apps Script saves every file in
+    // the `files` array. We cannot read the response in no-cors mode, so we
+    // report success optimistically once the POST is sent.
+    await fetch(APPS_SCRIPT_URL, {
       method: "POST",
-      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain" },
       body: JSON.stringify({ type, meta: orderMeta(), files })
     });
-    const text = await res.text();
-    console.log("[Threadbreak upload] status", res.status, "response:", text);
-    let out = {};
-    try { out = JSON.parse(text); } catch(e) {}
-    return { ok: res.ok && out.ok !== false, uploaded };
+    return { ok:true, uploaded };
   } catch (e) {
-    console.error("[Threadbreak upload] fetch failed:", e);
     return { ok:false, uploaded };
   }
 }
