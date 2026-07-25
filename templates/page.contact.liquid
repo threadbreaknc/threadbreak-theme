@@ -1,4 +1,4 @@
-{%- comment -%} build: v11 {%- endcomment -%}
+{%- comment -%} build: v12 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -207,6 +207,17 @@ html {scroll-behavior:smooth}
 #tbco .confirm h3 {font-family:'Bebas Neue',sans-serif;font-size:26px;margin-bottom:8px}
 #tbco .confirm pre {background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px;font-size:13px;white-space:pre-wrap;font-family:'DM Sans',sans-serif;margin-top:12px}
 #tbco .err {color:#C22B3F;font-size:14px;margin-top:12px;display:none}
+/* judge.me carousel: center, space review cards, hide empty trailing box */
+#tbco .jdgm-carousel-wrapper{text-align:center}
+#tbco .jdgm-carousel-title-and-link{text-align:center;margin-bottom:1.25rem}
+#tbco .jdgm-carousel-item{padding:0 16px !important}
+#tbco .jdgm-carousel-item__review{text-align:center}
+#tbco .jdgm-carousel-item__reviewer-name-wrapper,
+#tbco .jdgm-carousel-item__reviewer-name{text-align:center}
+#tbco .jdgm-carousel-item:empty{display:none !important}
+#tbco .jdgm-carousel__pagination:empty,
+#tbco .jdgm-carousel-wrapper > div:empty,
+#tbco .jdgm-carousel > div:empty{display:none !important}
 #tbco .err.show {display:block}
 
 
