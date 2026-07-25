@@ -1,7 +1,3 @@
-<style>
-  #featured-products .fp-subtitle{max-width:640px;margin:-0.5rem 0 2rem;color:#6B6A78;font-size:1rem;line-height:1.5;}
-  @media(max-width:700px){#featured-products .fp-subtitle{margin-top:0.25rem;}}
-</style>
 <section class="featured-products" id="featured-products">
 
   <div class="fp-header reveal">
@@ -10,7 +6,6 @@
       Shop Entire Collection <span class="btn-arrow">→</span>
     </a>
   </div>
-  <p class="fp-subtitle reveal">Not ready for a custom run? Grab one of our ready-to-ship Carolina hockey designs.</p>
 
   <div class="fp-grid">
     {%- for product in collections['featured-hats'].products limit: 4 -%}
