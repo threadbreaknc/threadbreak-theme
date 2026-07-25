@@ -69,10 +69,11 @@ html {scroll-behavior:smooth}
 #tbco .acc-wrap{max-height:0;overflow:hidden;transition:max-height .35s ease}
 #tbco .acc.open .acc-wrap{max-height:8000px;transition:max-height .6s ease}
 @media(max-width:560px){#tbco .acc-summary{margin-left:0}}
-#tbco .acc-continue{margin:20px 0 4px 42px;display:inline-flex;align-items:center;gap:8px;background:var(--purple);color:#fff;border:none;font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:.05em;padding:11px 26px;border-radius:10px;cursor:pointer;transition:background .15s,transform .15s}
+#tbco .acc-continue-row{display:flex;justify-content:flex-end;margin-top:22px}
+#tbco .acc-continue{display:inline-flex;align-items:center;gap:8px;background:var(--purple);color:#fff;border:none;font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:.05em;padding:11px 28px;border-radius:10px;cursor:pointer;transition:background .15s,transform .15s}
 #tbco .acc-continue:hover{background:var(--purple-dark);transform:translateY(-1px)}
 #tbco .acc-continue svg{width:17px;height:17px}
-@media(max-width:560px){#tbco .acc-continue{margin-left:0;width:100%;justify-content:center}}
+@media(max-width:560px){#tbco .acc-continue{width:100%;justify-content:center}}
 #tbco .styles {display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
 #tbco .style-card {position:relative;border:2px solid var(--line);border-radius:12px;padding:10px;cursor:pointer;background:var(--white);transition:border-color .15s, box-shadow .15s;display:flex;gap:12px;align-items:center}
 #tbco .style-card:hover {border-color:#B7A6EE}
@@ -232,7 +233,7 @@ html {scroll-behavior:smooth}
           <label class="field-label">What style or brand do you want?</label>
           <input type="text" id="quoteStyle" placeholder="e.g. Flexfit fitted, Richardson 168, beanies, visors...">
         </div>
-        <button type="button" class="acc-continue" data-continue="1">Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <div class="acc-continue-row"><button type="button" class="acc-continue" data-continue="1">Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
       </div>
     </div>
   </section>
@@ -257,7 +258,7 @@ html {scroll-behavior:smooth}
           <div class="savings" id="savings"></div>
         </div>
         <p class="hint quote-only">Same deal as our standard lineup: bigger runs, lower per-hat price. Your quote will show the exact breaks.</p>
-        <button type="button" class="acc-continue" data-continue="2">Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <div class="acc-continue-row"><button type="button" class="acc-continue" data-continue="2">Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
       </div>
     </div>
   </section>
@@ -280,7 +281,7 @@ html {scroll-behavior:smooth}
           <label class="field-label">Sizing</label>
           <div class="chips" id="sizes"></div>
         </div>
-        <button type="button" class="acc-continue" data-continue="3">Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <div class="acc-continue-row"><button type="button" class="acc-continue" data-continue="3">Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
       </div>
     </div>
   </section>
@@ -324,7 +325,7 @@ html {scroll-behavior:smooth}
         </div>
         <label class="field-label">Notes for us</label>
         <textarea id="notes" placeholder="Thread colors, text to add, deadline, anything else we should know..."></textarea>
-        <button type="button" class="acc-continue" data-continue="4">Continue to checkout <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        <div class="acc-continue-row"><button type="button" class="acc-continue" data-continue="4">Continue to checkout <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
       </div>
     </div>
   </section>
@@ -926,9 +927,6 @@ function initAccordion(){
       markDone(step, true);
       setOpen(step, false);
       setOpen(step + 1, true);
-      // scroll the newly opened step into view
-      const next = document.querySelector(`.acc[data-step="${step+1}"]`);
-      if (next) next.scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
 }
