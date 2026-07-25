@@ -74,6 +74,8 @@ html {scroll-behavior:smooth}
 #tbco .acc-continue:hover{background:var(--purple-dark);transform:translateY(-1px)}
 #tbco .acc-continue svg{width:17px;height:17px}
 @media(max-width:560px){#tbco .acc-continue{width:100%;justify-content:center}}
+#tbco .info-block{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:26px 24px;margin-top:22px}
+#tbco .info-block h3{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.02em;margin-bottom:14px}
 #tbco .styles {display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
 #tbco .style-card {position:relative;border:2px solid var(--line);border-radius:12px;padding:10px;cursor:pointer;background:var(--white);transition:border-color .15s, box-shadow .15s;display:flex;gap:12px;align-items:center}
 #tbco .style-card:hover {border-color:#B7A6EE}
@@ -325,38 +327,29 @@ html {scroll-behavior:smooth}
         </div>
         <label class="field-label">Notes for us</label>
         <textarea id="notes" placeholder="Thread colors, text to add, deadline, anything else we should know..."></textarea>
-        <div class="acc-continue-row"><button type="button" class="acc-continue" data-continue="4">Continue to checkout <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+        <div class="acc-continue-row"><button type="button" class="acc-continue acc-checkout" data-checkout="1">Checkout <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
       </div>
     </div>
   </section>
 
-  <!-- STEP 5: CHECKOUT -->
-  <section class="acc" data-step="5">
-    <div class="step-head" data-acc-toggle>
-      <div class="step-num"><span>5</span></div><h2 class="buy-only">Checkout, then we get stitching</h2><h2 class="quote-only">Send your quote request</h2>
-      <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+  <!-- WHAT HAPPENS NEXT (info, not a step) -->
+  <section class="info-block">
+    <h3 class="buy-only">What happens after checkout</h3>
+    <h3 class="quote-only">What happens after you send your request</h3>
+    <ol class="flow buy-only">
+      <li><span class="n">1</span><span>Your uploaded artwork comes straight to us with the order. Forgot it? Just reply to your confirmation email with the file.</span></li>
+      <li><span class="n">2</span><span>We email your free digital mockup within 1 business day.</span></li>
+      <li><span class="n">3</span><span>You approve it, then we stitch and ship. Nothing hits a machine until you sign off.</span></li>
+    </ol>
+    <ol class="flow quote-only">
+      <li><span class="n">1</span><span>Hit the button and your request, artwork included, comes straight to us.</span></li>
+      <li><span class="n">2</span><span>We reply within 1 business day with your exact per-hat price and a free mockup.</span></li>
+      <li><span class="n">3</span><span>You approve, then we stitch and ship.</span></li>
+    </ol>
+    <div class="art-note">
+      <p><strong>Lead time:</strong> most orders are shipped in 2 to 3 weeks. Need it faster? Email <strong>help@threadbreak.com</strong> directly before placing your order and we'll see what we can make happen.</p>
     </div>
-    <div class="acc-summary" id="sum5"></div>
-    <div class="acc-wrap">
-      <p class="step-sub buy-only">Secure Shopify checkout. Here's what happens after:</p>
-      <p class="step-sub quote-only">No payment now, we price it first.</p>
-      <div class="step-body">
-        <ol class="flow buy-only">
-          <li><span class="n">1</span><span>Your uploaded artwork comes straight to us with the order. Forgot it? Just reply to your confirmation email with the file.</span></li>
-          <li><span class="n">2</span><span>We email your free digital mockup within 1 business day.</span></li>
-          <li><span class="n">3</span><span>You approve it, then we stitch and ship. Nothing hits a machine until you sign off.</span></li>
-        </ol>
-        <ol class="flow quote-only">
-          <li><span class="n">1</span><span>Hit the button and your request, artwork included, comes straight to us.</span></li>
-          <li><span class="n">2</span><span>We reply within 1 business day with your exact per-hat price and a free mockup.</span></li>
-          <li><span class="n">3</span><span>You approve, then we stitch and ship.</span></li>
-        </ol>
-        <div class="art-note">
-          <p><strong>Lead time:</strong> most orders are shipped in 2 to 3 weeks. Need it faster? Email <strong>help@threadbreak.com</strong> directly before placing your order and we'll see what we can make happen.</p>
-        </div>
-        <div class="err" id="cartErr">Couldn't add to cart. This form talks to Shopify, so it only works when hosted on threadbreak.com. If you're seeing this on the live site, refresh and try again or email help@threadbreak.com.</div>
-      </div>
-    </div>
+    <div class="err" id="cartErr">Couldn't add to cart. This form talks to Shopify, so it only works when hosted on threadbreak.com. If you're seeing this on the live site, refresh and try again or email help@threadbreak.com.</div>
   </section>
 
   <!-- REVIEWS: Judge.me featured carousel -->
@@ -920,13 +913,25 @@ function initAccordion(){
       head.closest(".acc").classList.toggle("open");
     });
   });
-  // Continue buttons: mark this step done, collapse it, open the next
+  // Continue buttons: mark this step done, collapse it, open the next, gently scroll to it
   document.querySelectorAll('[data-continue]').forEach(btn => {
     btn.addEventListener("click", () => {
       const step = +btn.getAttribute("data-continue");
       markDone(step, true);
       setOpen(step, false);
       setOpen(step + 1, true);
+      const next = document.querySelector(`.acc[data-step="${step+1}"]`);
+      if (next){
+        const y = next.getBoundingClientRect().top + window.pageYOffset - 90;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+    });
+  });
+  // Step 4's button goes straight to checkout (same as the scoreboard button)
+  document.querySelectorAll('[data-checkout]').forEach(btn => {
+    btn.addEventListener("click", () => {
+      markDone(4, true);
+      quoteMode() ? submitQuote() : submitCheckout();
     });
   });
 }
