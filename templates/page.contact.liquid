@@ -1,4 +1,4 @@
-{%- comment -%} build: v17 {%- endcomment -%}
+{%- comment -%} build: v18 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -793,7 +793,7 @@ function render(){
       render();
     }));
 
-  $("submitBtn").textContent = quoteMode() ? "Finish request" : "Finish order";
+  updateBarLabel();
   updatePricingUI();
   renderUploads();
   accSummaries();
@@ -995,11 +995,19 @@ function setOpen(step, open){
   if (sec) sec.classList.toggle("open", open);
 }
 
+function updateBarLabel(){
+  const btn = $("submitBtn");
+  if (!btn) return;
+  const step4Open = document.querySelector('.acc[data-step="4"]')?.classList.contains("open");
+  btn.textContent = step4Open ? (quoteMode() ? "Review request" : "Review order") : (quoteMode() ? "Finish request" : "Finish order");
+}
+
 function initAccordion(){
   // header click toggles that step open/closed (multiple can be open)
   document.querySelectorAll('[data-acc-toggle]').forEach(head => {
     head.addEventListener("click", () => {
       head.closest(".acc").classList.toggle("open");
+      updateBarLabel();
     });
   });
   // Continue buttons: mark done, collapse this step, open next, then gently scroll after collapse settles
@@ -1009,6 +1017,7 @@ function initAccordion(){
       markDone(step, true);
       setOpen(step, false);
       setOpen(step + 1, true);
+      updateBarLabel();
       const next = document.querySelector(`.acc[data-step="${step+1}"]`);
       if (next){
         // wait for the collapse transition (0.35s) so the target position is final, then scroll
@@ -1049,12 +1058,18 @@ function tbcoInit(){
   });
   initAccordion();
   $("submitBtn").addEventListener("click", () => {
-    // take them to the final step to review and continue from there
-    setOpen(4, true);
     const s4 = document.querySelector('.acc[data-step="4"]');
-    if (s4){
-      const y = s4.getBoundingClientRect().top + window.pageYOffset - 90;
-      window.scrollTo({ top: y, behavior: "smooth" });
+    if (s4 && s4.classList.contains("open")){
+      // already on the final step, open the review popup
+      openSummary();
+    } else {
+      // take them to the final step first
+      setOpen(4, true);
+      render();
+      if (s4){
+        const y = s4.getBoundingClientRect().top + window.pageYOffset - 90;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
     }
   });
   render();
