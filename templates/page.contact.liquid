@@ -1,4 +1,4 @@
-{%- comment -%} build: v19 {%- endcomment -%}
+{%- comment -%} build: v20 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -32,9 +32,10 @@ html {scroll-behavior:smooth}
 #tbco {font-family:'DM Sans',sans-serif;background:var(--ice);color:var(--ink);line-height:1.55;padding-bottom:96px}
 #tbco .wrap {max-width:880px;margin:0 auto;padding:0 20px}
 #tbco header {position:relative;overflow:hidden;background:var(--ink);color:var(--white);padding:56px 0 48px}
-#tbco .hero-photos{position:absolute;inset:0;display:flex;z-index:0;opacity:.28}
+#tbco .hero-photos{position:absolute;inset:0;display:flex;z-index:0;opacity:.5}
 #tbco .hero-photos div{flex:1;background-size:cover;background-position:center;min-width:0}
-#tbco header::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,var(--ink) 0%,rgba(20,18,28,.82) 45%,rgba(20,18,28,.55) 100%)}
+#tbco .hero-photos div:not(:first-child){-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%);mask-image:linear-gradient(90deg,transparent,#000 12%);margin-left:-6%}
+#tbco header::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,var(--ink) 0%,rgba(20,18,28,.7) 42%,rgba(20,18,28,.32) 100%)}
 #tbco header .wrap{position:relative;z-index:2}
 @media(max-width:640px){#tbco .hero-photos div:nth-child(n+4){display:none}#tbco header::after{background:linear-gradient(180deg,rgba(20,18,28,.72),rgba(20,18,28,.9))}}
 #tbco .kicker {font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#B7A6EE;font-weight:700}
@@ -43,7 +44,7 @@ html {scroll-behavior:smooth}
 #tbco .sub {max-width:520px;color:#C9C8D4;font-size:16px}
 #tbco .props {display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:22px}
 #tbco .props span {font-size:14px;font-weight:500;color:#EDEAF7}
-#tbco .props span::before {content:"✓";color:#8FE3B4;font-weight:700;margin-right:7px}
+#tbco .props span::before {content:"✓";color:#B7A6EE;font-weight:700;margin-right:7px}
 #tbco section {background:var(--white);border:1px solid var(--line);border-radius:14px;padding:26px 24px;margin-top:22px}
 #tbco section:first-of-type {margin-top:28px}
 #tbco .step-head {display:flex;align-items:center;gap:12px;margin-bottom:6px}
@@ -229,11 +230,11 @@ html {scroll-behavior:smooth}
 <header class="tbco-hero">
   <div class="hero-photos" aria-hidden="true">
     <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_5393.jpg?v=1783192304')"></div>
-    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_2635.jpg?v=1783192608')"></div>
     <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_3791.jpg?v=1783192608')"></div>
-    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_2222.jpg?v=1783192609')"></div>
     <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4219.jpg?v=1783192609')"></div>
     <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_4183.jpg?v=1783192608')"></div>
+    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_2635.jpg?v=1783192608')"></div>
+    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_2222.jpg?v=1783192609')"></div>
   </div>
   <div class="wrap">
     <h1>Your logo.<br>Our <em>stitches.</em></h1>
@@ -242,8 +243,6 @@ html {scroll-behavior:smooth}
       <span>Embroidered in Burlington, NC</span>
       <span>Free shipping anywhere in the USA</span>
       <span>Local pickup by appointment</span>
-      <span>Just a 10-hat minimum</span>
-      <span>Free digital mockup</span>
     </div>
   </div>
 </header>
