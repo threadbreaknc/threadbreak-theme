@@ -30,7 +30,7 @@
         "type": "shopify://apps/inbox/blocks/chat/841fc607-4181-4ad1-842d-e24d7f8bad6b",
         "disabled": false,
         "settings": {
-          "greeting_message": "",
+          "greeting_message": "Have a question? Leave a message and we will respond as soon as possible.",
           "show_featured_products": false,
           "featured_products": [],
           "background_color": "#ffffff",
