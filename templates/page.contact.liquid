@@ -1,4 +1,4 @@
-{%- comment -%} build: v23 {%- endcomment -%}
+{%- comment -%} build: v24 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -155,8 +155,8 @@ html {scroll-behavior:smooth}
 #tbco .art-note strong {color:var(--ink)}
 #tbco .art-note p + p {margin-top:8px}
 #tbco .quote-only {display:none}
-#tbco body.quote-mode .quote-only {display:block}
-#tbco body.quote-mode .buy-only {display:none}
+body.quote-mode #tbco .quote-only {display:block}
+body.quote-mode #tbco .buy-only {display:none}
 #tbco .scoreboard {position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:var(--white);border-top:3px solid var(--purple);z-index:50;transition:transform .35s ease}
 #tbco .scoreboard.sb-hidden{transform:translateY(110%)}
 #tbco .sb-inner {max-width:880px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:18px}
@@ -288,7 +288,7 @@ html {scroll-behavior:smooth}
           <div class="tiers" id="tiers"></div>
           <div class="savings" id="savings"></div>
         </div>
-        <p class="hint quote-only">Same deal as our standard lineup: bigger runs, lower per-hat price. Your quote will show the exact breaks.</p>
+        <p class="hint quote-only">No set pricing on this one. Tell us how many and we'll quote it.</p>
         <div class="acc-continue-row"><button type="button" class="acc-continue" data-continue="2">Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
       </div>
     </div>
@@ -659,7 +659,7 @@ function updatePricingUI(){
   }
   window._tbPrevTotal = newTotal;
 
-  totalEl.textContent = per === null ? "-" : money(newTotal);
+  totalEl.textContent = per === null ? "TBD" : money(newTotal);
   $("sbTotalLabel").textContent = per === null ? "We'll quote it" : "Estimated total";
   const bt = document.querySelector(".bd-total");
   if (bt) bt.textContent = state.qty + " hats total";
