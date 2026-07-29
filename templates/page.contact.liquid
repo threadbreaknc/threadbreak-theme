@@ -1,4 +1,4 @@
-{%- comment -%} build: v24 {%- endcomment -%}
+{%- comment -%} build: v25 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -347,6 +347,10 @@ body.quote-mode #tbco .buy-only {display:none}
         </div>
         <label class="field-label">Placement</label>
         <div class="chips" id="placements"></div>
+        <div id="frontPosWrap">
+          <label class="field-label" style="font-size:13px;margin-top:14px">Front logo position</label>
+          <div class="chips" id="frontPos"></div>
+        </div>
         <p class="hint">Front is included. Extra locations add a small per-hat charge. 3D puff applies to the front only; side and back are stitched flat.</p>
         <label class="field-label">Your logo / artwork</label>
         <div class="uploads-grid" id="uploads"></div>
@@ -478,6 +482,7 @@ const PLACEMENTS = [
   { id:"side",  label:"Side", add:5, variantId:52543282806916 },
   { id:"back",  label:"Back", add:5, variantId:52543282839684 },
 ];
+const FRONT_POSITIONS = ["Left front","Center front","Right front"];
 const QUOTE_EMAIL = "help@threadbreak.com";
 /* Paste your Apps Script web app URL (ends in /exec) here, see
    threadbreak-apps-script.gs. Until set, uploads are skipped and
@@ -488,7 +493,7 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0-rO8Y8fqsyAG
 const state = {
   style: STYLES[0], colorSel: [STYLES[0].colors[0]], colorQty: { [STYLES[0].colors[0]]: 24 },
   showAllColors: false, hasChosen: false, sizing: SIZES[0], qty: 10, deco: DECOS[0],
-  placements: new Set(["front"]), files: { front:null, side:null, back:null }
+  placements: new Set(["front"]), frontPos: "Center front", files: { front:null, side:null, back:null }
 };
 const $ = id => document.getElementById(id);
 const money = n => "$" + (Number.isInteger(n) ? n : n.toFixed(2));
@@ -567,7 +572,7 @@ function buildOrderSummary(){
   const rows = $("sbSummaryRows");
   if (!rows) return;
   const per = perHat();
-  const places = [...state.placements].map(p => (PLACEMENTS.find(x=>x.id===p)||{}).label || p);
+  const places = [...state.placements].map(p => p==="front" ? `Front (${state.frontPos})` : ((PLACEMENTS.find(x=>x.id===p)||{}).label || p));
   const lines = [
     ["Hat", state.style.quote ? "Different style (custom quote)" : `${state.style.name} (${state.style.brand})`],
     ["Quantity", `${state.qty} hats`],
@@ -792,6 +797,17 @@ function render(){
       render();
     }));
 
+  // front logo position (left/center/right)
+  const fpWrap = $("frontPosWrap");
+  if (fpWrap) fpWrap.style.display = state.placements.has("front") ? "" : "none";
+  const fp = $("frontPos");
+  if (fp){
+    fp.innerHTML = FRONT_POSITIONS.map(pos =>
+      `<button type="button" class="chip ${state.frontPos===pos?'on':''}" data-fp="${pos}">${pos}</button>`).join("");
+    fp.querySelectorAll('.chip').forEach(b =>
+      b.addEventListener('click', () => { state.frontPos = b.dataset.fp; render(); }));
+  }
+
   updateBarBtn();
   updatePricingUI();
   renderUploads();
@@ -855,7 +871,7 @@ function orderMeta(){
     color: colorSummary(),
     qty: state.qty,
     deco: state.deco.label,
-    placements: [...state.placements].map(p=>PLACEMENTS.find(x=>x.id===p).label).join(", "),
+    placements: [...state.placements].map(p=> p==="front" ? `Front (${state.frontPos})` : PLACEMENTS.find(x=>x.id===p).label).join(", "),
     notes: $("notes").value.trim() || "-",
     estimate: per === null ? "quote" : money(per) + "/hat, " + money(per*state.qty) + " total"
   };
@@ -979,7 +995,7 @@ function accSummaries(){
   // Step 4: decoration + placements
   const s4 = $("sum4");
   if (s4){
-    const places = [...state.placements].map(p => (PLACEMENTS.find(x=>x.id===p)||{}).label || p);
+    const places = [...state.placements].map(p => p==="front" ? `Front (${state.frontPos})` : ((PLACEMENTS.find(x=>x.id===p)||{}).label || p));
     s4.textContent = state.hasChosen ? `${state.deco.label}${places.length?" · "+places.join(", "):""}` : "";
   }
 }
@@ -995,12 +1011,20 @@ function setOpen(step, open){
 }
 
 function updateBarBtn(){
+  const label = quoteMode() ? "Review quote" : "Review order";
   const btn = $("submitBtn");
-  if (!btn) return;
-  const step4Open = document.querySelector('.acc[data-step="4"]')?.classList.contains("open");
-  // only show the button once they've opened the final step
-  btn.style.display = step4Open ? "" : "none";
-  btn.textContent = quoteMode() ? "Review request" : "Review order";
+  if (btn){
+    const step4Open = document.querySelector('.acc[data-step="4"]')?.classList.contains("open");
+    // only show the bar button once they've opened the final step
+    btn.style.display = step4Open ? "" : "none";
+    btn.textContent = label;
+  }
+  // keep the step-4 button in sync (preserve its arrow icon)
+  document.querySelectorAll('[data-checkout]').forEach(b => {
+    const svg = b.querySelector("svg");
+    b.textContent = label + " ";
+    if (svg) b.appendChild(svg);
+  });
 }
 
 function initAccordion(){
