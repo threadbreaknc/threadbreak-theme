@@ -33,18 +33,18 @@
           "greeting_message": "Have a question? Leave a message and we will respond as soon as possible.",
           "show_featured_products": false,
           "featured_products": [],
-          "background_color": "#ffffff",
-          "font_color": "#000000",
-          "button_color": "#5028aa",
+          "background_color": "#5028AA",
+          "font_color": "#FFFFFF",
+          "button_color": "#5028AA",
           "secondary_color": "#ffffff",
           "ternary_color": "#6a6a6a",
           "button_icon": "chat_bubble",
-          "button_text": "message_us",
+          "button_text": "ask_anything",
           "button_horizontal_position": "bottom_left",
           "button_vertical_position": "lowest",
           "agent_inherit_fonts": true,
           "agent_font": "system_ui_n4",
-          "agent_border_radius": 16
+          "agent_border_radius": 10
         }
       }
     }
