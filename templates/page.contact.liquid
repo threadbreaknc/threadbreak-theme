@@ -1,4 +1,4 @@
-{%- comment -%} build: v25 {%- endcomment -%}
+{%- comment -%} build: v26 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -141,6 +141,10 @@ html {scroll-behavior:smooth}
 #tbco textarea, #tbco input[type=text] {width:100%;border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;font-size:15px;font-family:'DM Sans',sans-serif;background:var(--white)}
 #tbco textarea:focus, #tbco input[type=text]:focus {outline:2px solid var(--purple);border-color:var(--purple)}
 #tbco textarea {min-height:90px;resize:vertical}
+#tbco .social-optout{display:flex;align-items:flex-start;gap:10px;margin-top:16px;padding:14px 16px;background:var(--ice);border:1px solid var(--line);border-radius:12px;cursor:pointer}
+#tbco .social-optout input{margin-top:3px;width:18px;height:18px;flex:none;accent-color:var(--purple);cursor:pointer}
+#tbco .social-optout span{font-size:14px;font-weight:600;color:var(--ink);line-height:1.4}
+#tbco .social-optout small{display:block;font-weight:400;font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.45}
 #tbco .uploads-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
 #tbco .upload {border:2px dashed var(--line);border-radius:12px;padding:16px 12px;text-align:center;cursor:pointer;transition:border-color .15s;display:block}
 #tbco .upload:hover {border-color:var(--purple)}
@@ -361,6 +365,10 @@ body.quote-mode #tbco .buy-only {display:none}
         </div>
         <label class="field-label">Notes for us</label>
         <textarea id="notes" placeholder="Thread colors, text to add, deadline, anything else we should know..."></textarea>
+        <label class="social-optout">
+          <input type="checkbox" id="noSocial">
+          <span>Please don't share my hats on social media. <small>We love showing off finished customer hats on our channels. Check this if you'd rather we keep yours private.</small></span>
+        </label>
         <div class="acc-continue-row"><button type="button" class="acc-continue acc-checkout" data-checkout="1">Review order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
       </div>
     </div>
@@ -873,6 +881,7 @@ function orderMeta(){
     deco: state.deco.label,
     placements: [...state.placements].map(p=> p==="front" ? `Front (${state.frontPos})` : PLACEMENTS.find(x=>x.id===p).label).join(", "),
     notes: $("notes").value.trim() || "-",
+    social: $("noSocial")?.checked ? "Do NOT share on social" : "OK to share on social",
     estimate: per === null ? "quote" : money(per) + "/hat, " + money(per*state.qty) + " total"
   };
   if (state.style.youth) meta.sizing = state.sizing;
@@ -918,7 +927,7 @@ async function submitQuote(){
     `Requested style/brand: ${meta.requestedStyle}`,
     `Color(s): ${meta.color}`, `Quantity: ${meta.qty}`,
     `Decoration: ${meta.deco}`, `Placements: ${meta.placements}`,
-    `Notes: ${meta.notes}`
+    `Notes: ${meta.notes}`, `Social: ${meta.social}`
   ].join("\n");
 
   const sent = await sendToDrive("quote");
@@ -957,6 +966,7 @@ async function submitCheckout(){
   const props = { "Hat Color(s)": meta.color, "Decoration": meta.deco, "Placements": meta.placements, "Artwork": artNote };
   if (meta.sizing) props["Sizing"] = meta.sizing;
   if (meta.notes !== "-") props["Notes"] = meta.notes;
+  props["Social sharing"] = meta.social;
 
   const items = [{ id: tier[2], quantity: state.qty, properties: props }];
   if (state.deco.variantId)
