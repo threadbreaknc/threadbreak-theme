@@ -1,4 +1,4 @@
-{%- comment -%} build: v26 {%- endcomment -%}
+{%- comment -%} build: v27 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -97,6 +97,9 @@ html {scroll-behavior:smooth}
 
   @media(max-width:560px){.style-card.expanded{flex-direction:column;align-items:stretch}.hero-wrap{width:100%}}
 #tbco .chips {display:flex;flex-wrap:wrap;gap:8px}
+#tbco .color-preview{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:14px;padding:16px;background:var(--ice);border:1px solid var(--line);border-radius:14px}
+#tbco .color-preview img{width:100%;max-width:280px;height:auto;border-radius:10px;display:block}
+#tbco .color-preview span{font-size:14px;font-weight:700;color:var(--ink)}
 #tbco .chip {border:1.5px solid var(--line);border-radius:999px;padding:8px 15px;font-size:14px;font-weight:500;cursor:pointer;background:var(--white);user-select:none;transition:all .12s;display:inline-flex;align-items:center;gap:7px}
 #tbco .chip:hover {border-color:#B7A6EE}
 #tbco .chip.on {background:var(--purple);border-color:var(--purple);color:var(--white)}
@@ -309,6 +312,10 @@ body.quote-mode #tbco .buy-only {display:none}
       <p class="step-sub">Pick as many as you like. Mixing colors doesn't cost extra. Split your total across them below.</p>
       <div class="step-body">
         <label class="field-label" style="margin-top:0">Hat color (pick as many as you like)</label>
+        <div class="color-preview" id="colorPreview" style="display:none">
+          <img id="colorPreviewImg" alt="" />
+          <span id="colorPreviewName"></span>
+        </div>
         <div class="chips" id="colors"></div>
         <div id="breakdownWrap"></div>
         <p class="hint" id="colorHint"></p>
@@ -470,9 +477,46 @@ const STYLES = [
     colors:["Natural/Field Camo","Field Camo","Black/Field Camo"],
     tiers:[[10,18,52559807971460],[24,16,52559808004228],[48,15,52559808036996],[96,14,52559808069764],[144,13,52559808102532]] },
   { id:"rich112", name:"Richardson 112 Trucker", brand:"Richardson 112", desc:"6-panel snapback · one size fits most · adult & youth", youth:true, popular:99,
-    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112_FINAL.pfs.jpg?v=1784998582","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112_FINAL.pfs1.jpg?v=1784998582","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112_FINAL.pfs-2.jpg?v=1784998602","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112_FINAL.pfs_23992de0-aa86-4bc8-87e6-34606538dd79.jpg?v=1784998602"],
-    colors:["Black","Black/White","Charcoal","Charcoal/Black","Charcoal/White","Navy","Navy/White","Navy/Khaki","Heather Grey/White","Heather Grey/Black","Loden","Loden/Black","Dark Green","Dark Green/White","Brown/Khaki","Khaki/Coffee","Khaki/White","White/Black","Red/Black","Cardinal/White"],
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-white-red.jpg?v=1785626680","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/all-black.jpg?v=1785626679","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-neon-yellow.jpg?v=1785626679","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue-white.jpg?v=1785626680"],
+    colors:["Black/White/Red","All Black","All White","Black/White","Black/Charcoal","Charcoal/Black","Charcoal/Neon Blue","Charcoal/Neon Green","Charcoal/Neon Yellow","Charcoal/Neon Orange","Heather Grey/White","Heather Grey/Black","Loden/Black","Red/Black","Red/White","Royal Blue/Black","Royal Blue/White","Orange/Black","Purple/White","Hot Pink/White","Hot Pink/Black","White/Navy","White/Black"],
+    colorImgs:{
+      "Black/White/Red":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-white-red.jpg?v=1785626680",
+      "All Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/all-black.jpg?v=1785626679",
+      "All White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/all-white.jpg?v=1785626680",
+      "Black/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-white.jpg?v=1785626680",
+      "Black/Charcoal":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-charcoal.jpg?v=1785626679",
+      "Charcoal/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-black.jpg?v=1785626679",
+      "Charcoal/Neon Blue":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-neon-blue.jpg?v=1785626680",
+      "Charcoal/Neon Green":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-neon-green.jpg?v=1785626680",
+      "Charcoal/Neon Yellow":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-neon-yellow.jpg?v=1785626679",
+      "Charcoal/Neon Orange":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-neon-orange.jpg?v=1785626680",
+      "Heather Grey/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/heather-grey-white.jpg?v=1785626680",
+      "Heather Grey/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/heather-grey-black.jpg?v=1785626680",
+      "Loden/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/loden-black.jpg?v=1785626679",
+      "Red/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/red-black.jpg?v=1785626680",
+      "Red/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/red-white.jpg?v=1785626680",
+      "Royal Blue/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue-black.jpg?v=1785626680",
+      "Royal Blue/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue-white.jpg?v=1785626680",
+      "Orange/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/orange-black.jpg?v=1785626680",
+      "Purple/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/purple-white.jpg?v=1785626680",
+      "Hot Pink/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/hot-pink-white.jpg?v=1785626680",
+      "Hot Pink/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/hot-pink-black.jpg?v=1785626680",
+      "White/Navy":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/white-navy.jpg?v=1785626680",
+      "White/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/white-black.jpg?v=1785626680"
+    },
     tiers:[[10,20,52559808135300],[24,18,52559808168068],[48,17,52559808200836],[96,16,52559808233604],[144,14,52559808266372]] },
+  { id:"rich112p", name:"Richardson 112 Printed 5-Panel", brand:"Richardson 112P", desc:"Printed camo 5-panel trucker · one size fits most", popular:99,
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-realtree-neon-yellow.jpg?v=1785626680","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-green-camo.jpg?v=1785626679","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-mossy-oak-habitat-brown.jpg?v=1785626680","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-realtree-neon-pink.jpg?v=1785626680"],
+    colors:["Realtree/Neon Yellow","Green Camo/White","Green Camo","Mossy Oak Habitat/Brown","Realtree/Neon Pink","Admiral Duck Camo/Blue"],
+    colorImgs:{
+      "Realtree/Neon Yellow":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-realtree-neon-yellow.jpg?v=1785626680",
+      "Green Camo/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-green-camo-white.jpg?v=1785626680",
+      "Green Camo":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-green-camo.jpg?v=1785626679",
+      "Mossy Oak Habitat/Brown":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-mossy-oak-habitat-brown.jpg?v=1785626680",
+      "Realtree/Neon Pink":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-realtree-neon-pink.jpg?v=1785626680",
+      "Admiral Duck Camo/Blue":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-adirmal-duck-camo-blue.jpg?v=1785626680"
+    },
+    tiers:[[10,21,52582676103300],[24,19,52582676136068],[48,18,52582676168836],[96,17,52582676201604],[144,15,52582676234372]] },
   { id:"yupoong", name:"Yupoong Classic 5-Panel Trucker", brand:"YP Classics 6006", desc:"Flat bill snapback · one size fits most", popular:12,
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/77759_f_fm-2.jpg?v=1784998725","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/68095_f_fm.jpg?v=1784998725","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/35926_f_fm.jpg?v=1784998725","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/64032_f_fm.jpg?v=1784998750"],
     colors:["Black","Black/White","Black/White/Black","White","Charcoal","Charcoal/Black","Charcoal/White","Navy","Navy/White","Navy/White/Navy","Red","Red/Black","Red/White/Red","Brown/White","Brown/White/Brown","Carolina Blue/White/Carolina Blue","Green Camo/Black","Heather/Black","Heather/White","Kelly/White/Kelly","Multicam Alpine/White","Multicam Arid/Brown","Multicam Arid/Tan","Multicam Black/Black","Multicam Green/Black","Multicam Tropic/Green","Pink","Pink/White/Pink","Royal/White","Royal/White/Royal","Silver/Black"],
@@ -499,7 +543,7 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0-rO8Y8fqsyAG
 /* ========================================================= */
 
 const state = {
-  style: STYLES[0], colorSel: [STYLES[0].colors[0]], colorQty: { [STYLES[0].colors[0]]: 24 },
+  style: STYLES[0], colorSel: [STYLES[0].colors[0]], lastColor: STYLES[0].colors[0], colorQty: { [STYLES[0].colors[0]]: 24 },
   showAllColors: false, hasChosen: false, sizing: SIZES[0], qty: 10, deco: DECOS[0],
   placements: new Set(["front"]), frontPos: "Center front", files: { front:null, side:null, back:null }
 };
@@ -693,11 +737,12 @@ function renderColors(){
       const c = b.dataset.c;
       const i = state.colorSel.indexOf(c);
       if (i >= 0){ if (state.colorSel.length === 1) return; state.colorSel.splice(i,1); }
-      else state.colorSel.push(c);
+      else { state.colorSel.push(c); state.lastColor = c; }
       evenSplit(); render();
     }));
   const more = $("moreColors"); if (more) more.addEventListener("click", () => { state.showAllColors = true; render(); });
   const less = $("lessColors"); if (less) less.addEventListener("click", () => { state.showAllColors = false; render(); });
+  updateColorPreview();
 
   // per-color quantity breakdown
   const wrap = $("breakdownWrap");
@@ -724,6 +769,26 @@ function renderColors(){
     : (state.colorSel.length > 1
       ? "Set how many hats you want in each color. The total drives your price."
       : "Tap more than one color to split your order across colorways. Don't see yours? Mention it in the notes.");
+}
+
+// show a photo of the most recently tapped color, if this style has photos
+function updateColorPreview(){
+  const panel = $("colorPreview"), img = $("colorPreviewImg"), name = $("colorPreviewName");
+  if (!panel) return;
+  const map = state.style.colorImgs;
+  let show = null;
+  if (map){
+    if (state.lastColor && state.colorSel.includes(state.lastColor) && map[state.lastColor]) show = state.lastColor;
+    else show = state.colorSel.find(c => map[c]) || null;
+  }
+  if (show){
+    img.src = map[show];
+    img.alt = show;
+    name.textContent = show;
+    panel.style.display = "";
+  } else {
+    panel.style.display = "none";
+  }
 }
 
 function render(){
@@ -762,6 +827,7 @@ function render(){
       state.showAllColors = false;
       state.colorSel = state.colorSel.filter(c => state.style.colors.includes(c));
       if (!state.colorSel.length) state.colorSel = [state.style.colors[0]];
+      state.lastColor = state.colorSel[0];
       evenSplit(); render();
     }));
   // (selection handled entirely by the radio 'change' handler above)
