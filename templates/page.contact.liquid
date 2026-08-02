@@ -1,4 +1,4 @@
-{%- comment -%} build: v28 {%- endcomment -%}
+{%- comment -%} build: v29 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -97,9 +97,26 @@ html {scroll-behavior:smooth}
 
   @media(max-width:560px){.style-card.expanded{flex-direction:column;align-items:stretch}.hero-wrap{width:100%}}
 #tbco .chips {display:flex;flex-wrap:wrap;gap:8px}
-#tbco .color-preview{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:14px;padding:16px;background:var(--ice);border:1px solid var(--line);border-radius:14px}
-#tbco .color-preview img{width:100%;max-width:280px;height:auto;border-radius:10px;display:block}
-#tbco .color-preview span{font-size:14px;font-weight:700;color:var(--ink)}
+#tbco .color-preview{display:flex;flex-direction:column;align-items:center;gap:8px;margin:4px 0 14px;padding:18px;background:var(--ice);border:1px solid var(--line);border-radius:14px}
+#tbco .color-preview img{width:100%;max-width:320px;height:auto;border-radius:12px;display:block}
+#tbco .color-preview span{font-size:15px;font-weight:700;color:var(--ink)}
+/* color dropdown */
+#tbco .cdd{position:relative;margin-bottom:4px}
+#tbco .cdd-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:#fff;border:1.5px solid var(--line);border-radius:12px;font-size:15px;font-weight:600;color:var(--ink);cursor:pointer}
+#tbco .cdd-trigger:hover{border-color:var(--purple)}
+#tbco .cdd-trigger.ph #cddLabel,#tbco .cdd-trigger .ph{color:var(--muted);font-weight:500}
+#tbco .cdd-arrow{transition:transform .2s;color:var(--muted);font-size:12px}
+#tbco .cdd-trigger.open{border-color:var(--purple);border-radius:12px 12px 0 0}
+#tbco .cdd-trigger.open .cdd-arrow{transform:rotate(180deg)}
+#tbco .cdd-list{position:absolute;left:0;right:0;z-index:20;background:#fff;border:1.5px solid var(--purple);border-top:none;border-radius:0 0 12px 12px;max-height:320px;overflow-y:auto;box-shadow:0 12px 30px rgba(0,0,0,.12)}
+#tbco .cdd-list.hidden{display:none}
+#tbco .cdd-row{display:flex;align-items:center;gap:12px;padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--ice)}
+#tbco .cdd-row:hover{background:var(--ice)}
+#tbco .cdd-row img{width:46px;height:46px;border-radius:8px;object-fit:cover;flex:none;background:var(--ice)}
+#tbco .cdd-row .cdd-nm{flex:1;font-size:14px;font-weight:500;color:var(--ink)}
+#tbco .cdd-row .cdd-chk{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px}
+#tbco .cdd-row.sel .cdd-chk{background:var(--purple);border-color:var(--purple)}
+#tbco .cdd-dot{width:14px;height:14px;border-radius:50%;flex:none;border:1px solid rgba(0,0,0,.15)}
 #tbco .chip {border:1.5px solid var(--line);border-radius:999px;padding:8px 15px;font-size:14px;font-weight:500;cursor:pointer;background:var(--white);user-select:none;transition:all .12s;display:inline-flex;align-items:center;gap:7px}
 #tbco .chip:hover {border-color:#B7A6EE}
 #tbco .chip.on {background:var(--purple);border-color:var(--purple);color:var(--white)}
@@ -128,6 +145,9 @@ html {scroll-behavior:smooth}
 #tbco .bd-name {flex:1;font-size:14px;font-weight:500}
 #tbco .bd-qty {width:76px;border:1.5px solid var(--line);border-radius:8px;padding:7px 10px;font-size:15px;font-weight:700;font-family:'DM Sans',sans-serif;text-align:center}
 #tbco .bd-qty:focus {outline:2px solid var(--purple);border-color:var(--purple)}
+#tbco .bd-thumb{width:38px;height:38px;border-radius:8px;object-fit:cover;flex:none}
+#tbco .bd-remove{background:none;border:none;color:var(--muted);font-size:20px;line-height:1;cursor:pointer;padding:0 2px;flex:none}
+#tbco .bd-remove:hover{color:#C22B3F}
 #tbco .bd-total {padding:10px 14px;background:var(--ice);font-size:13px;font-weight:700;text-align:right}
 #tbco .qty-row {display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 #tbco .qty-input {width:110px;border:1.5px solid var(--line);border-radius:10px;padding:11px 14px;font-size:16px;font-weight:700;font-family:'DM Sans',sans-serif}
@@ -312,11 +332,17 @@ body.quote-mode #tbco .buy-only {display:none}
       <p class="step-sub">Pick as many as you like. Mixing colors doesn't cost extra. Split your total across them below.</p>
       <div class="step-body">
         <label class="field-label" style="margin-top:0">Hat color (pick as many as you like)</label>
+        <div class="cdd" id="colorDD">
+          <button type="button" class="cdd-trigger" id="cddTrigger" aria-haspopup="listbox" aria-expanded="false">
+            <span id="cddLabel">Select colors</span>
+            <span class="cdd-arrow">▼</span>
+          </button>
+          <div class="cdd-list hidden" id="cddList" role="listbox"></div>
+        </div>
         <div class="color-preview" id="colorPreview" style="display:none">
           <img id="colorPreviewImg" alt="" />
           <span id="colorPreviewName"></span>
         </div>
-        <div class="chips" id="colors"></div>
         <div id="breakdownWrap"></div>
         <p class="hint" id="colorHint"></p>
         <div id="sizingWrap" style="display:none">
@@ -748,34 +774,46 @@ function updatePricingUI(){
 
 function renderColors(){
   const list = state.style.colors;
-  const cut = state.style.popular || list.length;
-  const visible = state.showAllColors ? list : list.slice(0, Math.min(cut, list.length));
-  const hidden = list.length - visible.length;
-  $("colors").innerHTML = visible.map(c =>
-    `<button type="button" class="chip ${state.colorSel.includes(c)?'on':''}" data-c="${c}"><span class="dot" style="background:${colorCss(c)}"></span>${c}</button>`
-  ).join("") + (hidden > 0
-    ? `<button type="button" class="chip more" id="moreColors">+ ${hidden} more colors</button>`
-    : (state.showAllColors && list.length > cut ? `<button type="button" class="chip more" id="lessColors">Show fewer</button>` : ""));
-  $("colors").querySelectorAll(".chip[data-c]").forEach(b =>
-    b.addEventListener("click", () => {
-      const c = b.dataset.c;
+  const map = state.style.colorImgs || {};
+  const dot = c => map[c]
+    ? `<img src="${map[c]}" alt="${c}">`
+    : `<span class="cdd-dot" style="background:${colorCss(c)}"></span>`;
+
+  // build the dropdown list rows
+  $("cddList").innerHTML = list.map(c =>
+    `<div class="cdd-row ${state.colorSel.includes(c)?'sel':''}" data-c="${c}" role="option">
+       ${dot(c)}<span class="cdd-nm">${c}</span><span class="cdd-chk">${state.colorSel.includes(c)?'✓':''}</span>
+     </div>`).join("");
+  $("cddList").querySelectorAll(".cdd-row").forEach(r =>
+    r.addEventListener("click", () => {
+      const c = r.dataset.c;
       const i = state.colorSel.indexOf(c);
       if (i >= 0){ if (state.colorSel.length === 1) return; state.colorSel.splice(i,1); }
       else { state.colorSel.push(c); state.lastColor = c; }
       evenSplit(); render();
     }));
-  const more = $("moreColors"); if (more) more.addEventListener("click", () => { state.showAllColors = true; render(); });
-  const less = $("lessColors"); if (less) less.addEventListener("click", () => { state.showAllColors = false; render(); });
+
+  // trigger label
+  const trig = $("cddTrigger"), lbl = $("cddLabel");
+  if (state.colorSel.length){
+    lbl.textContent = `${state.colorSel.length} color${state.colorSel.length>1?'s':''} selected`;
+    trig.classList.remove("ph");
+  } else {
+    lbl.textContent = "Select colors";
+    trig.classList.add("ph");
+  }
+
   updateColorPreview();
 
-  // per-color quantity breakdown
+  // per-color quantity list (always shown, one row per selected color)
   const wrap = $("breakdownWrap");
-  if (state.colorSel.length > 1){
+  if (state.colorSel.length){
     wrap.innerHTML = `<div class="breakdown">` + state.colorSel.map(c => `
       <div class="bd-row">
-        <span class="dot" style="background:${colorCss(c)}"></span>
+        ${map[c] ? `<img class="bd-thumb" src="${map[c]}" alt="${c}">` : `<span class="dot" style="background:${colorCss(c)}"></span>`}
         <span class="bd-name">${c}</span>
         <input class="bd-qty" type="number" min="0" inputmode="numeric" value="${state.colorQty[c] || 0}" data-c="${c}" aria-label="Quantity for ${c}">
+        <button type="button" class="bd-remove" data-rm="${c}" aria-label="Remove ${c}">&times;</button>
       </div>`).join("") + `<div class="bd-total">${state.qty} hats total</div></div>`;
     wrap.querySelectorAll(".bd-qty").forEach(inp =>
       inp.addEventListener("input", e => {
@@ -783,6 +821,14 @@ function renderColors(){
         state.qty = Math.max(1, state.colorSel.reduce((s,c)=> s + (state.colorQty[c] || 0), 0));
         $("qty").value = state.qty;
         updatePricingUI();
+      }));
+    wrap.querySelectorAll(".bd-remove").forEach(b =>
+      b.addEventListener("click", () => {
+        const c = b.dataset.rm;
+        if (state.colorSel.length === 1) return;
+        const i = state.colorSel.indexOf(c);
+        if (i >= 0) state.colorSel.splice(i,1);
+        evenSplit(); render();
       }));
   } else {
     wrap.innerHTML = "";
@@ -792,7 +838,7 @@ function renderColors(){
     ? "Rough color direction is fine. We'll confirm exact colorways in your quote."
     : (state.colorSel.length > 1
       ? "Set how many hats you want in each color. The total drives your price."
-      : "Tap more than one color to split your order across colorways. Don't see yours? Mention it in the notes.");
+      : "Add more colors from the dropdown to split your order across colorways. Don't see yours? Mention it in the notes.");
 }
 
 // show a photo of the most recently tapped color, if this style has photos
@@ -1182,6 +1228,18 @@ function tbcoInit(){
     else { pi.setAttribute("hidden",""); pib.setAttribute("aria-expanded","false"); pib.textContent = "What is 3D puff?"; }
   });
   initAccordion();
+  // color dropdown open/close
+  const cddT = $("cddTrigger"), cddL = $("cddList");
+  if (cddT && cddL){
+    cddT.addEventListener("click", () => {
+      const open = cddL.classList.toggle("hidden") === false;
+      cddT.classList.toggle("open", open);
+      cddT.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    document.addEventListener("click", e => {
+      if (!e.target.closest("#colorDD")){ cddL.classList.add("hidden"); cddT.classList.remove("open"); cddT.setAttribute("aria-expanded","false"); }
+    });
+  }
   $("submitBtn").addEventListener("click", openSummary);
   render();
   cleanupReviews();
