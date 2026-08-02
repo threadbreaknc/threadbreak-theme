@@ -1,4 +1,4 @@
-{%- comment -%} build: v35 {%- endcomment -%}
+{%- comment -%} build: v36 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -79,7 +79,7 @@ html {scroll-behavior:smooth}
 #tbco .style-card {position:relative;border:2px solid var(--line);border-radius:12px;padding:10px;cursor:pointer;background:var(--white);transition:border-color .15s, box-shadow .15s;display:flex;gap:12px;align-items:center}
 #tbco .style-card:hover {border-color:#B7A6EE}
 #tbco .style-card input {position:absolute;opacity:0}
-#tbco .style-card.on {border-color:var(--purple);box-shadow:0 0 0 3px rgba(80,40,170,.12)}
+#tbco .style-card.on {border-color:var(--purple);box-shadow:0 0 0 3px rgba(80,40,170,.18);background:#FAF8FE}
 #tbco .style-thumb {width:62px;height:62px;flex:none;object-fit:cover;border-radius:9px;background:var(--ice);display:block}
 #tbco .style-thumb.ph {display:flex;align-items:center;justify-content:center;color:var(--purple);font-family:'Bebas Neue',sans-serif;font-size:26px}
 #tbco .style-info {min-width:0}
@@ -914,20 +914,11 @@ function render(){
 
   $("styles").innerHTML = STYLES.map(s => {
     const sel = state.hasChosen && s.id === state.style.id;
-    const expanded = sel && s.imgs && s.imgs.length;
-    const media = expanded
-      ? `<div class="hero-wrap">
-           <div class="hero-stage">
-             <img class="hero-img hero-a on" id="heroImgA" src="${s.imgs[0]}" alt="${s.name}">
-             <img class="hero-img hero-b" id="heroImgB" alt="">
-           </div>
-           <div class="hero-dots" id="heroDots"></div>
-         </div>`
-      : (s.imgs && s.imgs.length
-        ? `<img class="style-thumb" src="${s.imgs[0]}" alt="${s.name}" loading="lazy" onerror="this.style.visibility='hidden'">`
-        : `<div class="style-thumb ph">?</div>`);
+    const media = s.imgs && s.imgs.length
+      ? `<img class="style-thumb" src="${s.imgs[0]}" alt="${s.name}" loading="lazy" onerror="this.style.visibility='hidden'">`
+      : `<div class="style-thumb ph">?</div>`;
     return `
-    <label class="style-card ${sel?'on':''} ${expanded?'expanded':''}">
+    <label class="style-card ${sel?'on':''}">
       <input type="radio" name="style" value="${s.id}" ${sel?'checked':''}>
       ${media}
       <div class="style-info">
@@ -1245,14 +1236,29 @@ function initAccordion(){
       updateBarBtn();
       const next = document.querySelector(`.acc[data-step="${step+1}"]`);
       if (next){
-        // let the collapse + fade settle first, then glide to the next step
+        // let the collapse + fade settle first, then gently ease to the next step
         setTimeout(() => {
           const y = next.getBoundingClientRect().top + window.pageYOffset - 90;
-          window.scrollTo({ top: y, behavior: "smooth" });
-        }, 520);
+          easeScrollTo(y, 700);
+        }, 480);
       }
     });
   });
+
+  // gentle eased scroll (consistent speed, softer than native smooth)
+  function easeScrollTo(targetY, duration){
+    const startY = window.pageYOffset;
+    const dist = targetY - startY;
+    if (Math.abs(dist) < 4) return;
+    const start = performance.now();
+    const ease = t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; // easeInOutCubic
+    function step(now){
+      const p = Math.min(1, (now - start) / duration);
+      window.scrollTo(0, startY + dist * ease(p));
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
   // Step 4's button opens the order-review modal
   document.querySelectorAll('[data-checkout]').forEach(btn => {
     btn.addEventListener("click", () => { markDone(4, true); openSummary(); });
