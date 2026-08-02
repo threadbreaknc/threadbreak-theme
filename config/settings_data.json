@@ -26,16 +26,22 @@
         "disabled": false,
         "settings": {}
       },
+      "2567389343055140935": {
+        "type": "shopify://apps/microsoft-clarity/blocks/clarity_js/31c3d126-8116-4b4a-8ba1-baeda7c4aeea",
+        "disabled": false,
+        "settings": {}
+      },
       "15683396631634586217": {
         "type": "shopify://apps/inbox/blocks/chat/841fc607-4181-4ad1-842d-e24d7f8bad6b",
-        "disabled": false,
+        "disabled": true,
         "settings": {
           "greeting_message": "Have a question? Leave a message and we will respond as soon as possible.",
           "show_featured_products": false,
           "featured_products": [],
-          "background_color": "#5028AA",
-          "font_color": "#FFFFFF",
-          "button_color": "#5028AA",
+          "background_color": "#5028aa",
+          "font_color": "#ffffff",
+          "agent_invert_activator_colors": false,
+          "button_color": "#5028aa",
           "secondary_color": "#ffffff",
           "ternary_color": "#6a6a6a",
           "button_icon": "chat_bubble",
@@ -46,11 +52,6 @@
           "agent_font": "system_ui_n4",
           "agent_border_radius": 10
         }
-      },
-      "2567389343055140935": {
-        "type": "shopify://apps/microsoft-clarity/blocks/clarity_js/31c3d126-8116-4b4a-8ba1-baeda7c4aeea",
-        "disabled": false,
-        "settings": {}
       }
     }
   },
