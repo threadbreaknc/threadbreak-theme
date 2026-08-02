@@ -1,4 +1,4 @@
-{%- comment -%} build: v39 {%- endcomment -%}
+{%- comment -%} build: v41 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -591,11 +591,11 @@ const STYLES = [
     tiers:[[10,20,52559808135300],[24,18,52559808168068],[48,17,52559808200836],[96,16,52559808233604],[144,14,52559808266372]] },
   { id:"rich112p", name:"Richardson 112 Printed 5-Panel", brand:"Richardson 112P", desc:"Printed camo 5-panel trucker · adult · one size fits most", popular:99,
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-realtree-neon-yellow.jpg?v=1785626680","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-green-camo.jpg?v=1785626679","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-mossy-oak-habitat-brown.jpg?v=1785626680","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-realtree-neon-pink.jpg?v=1785626680"],
-    colors:["Realtree/Neon Yellow","Green Camo/White","Green Camo","Mossy Oak Habitat/Brown","Realtree/Neon Pink","Admiral Duck Camo/Blue"],
+    colors:["Realtree/Neon Yellow","Green Camo/White","Green Camo/Black","Mossy Oak Habitat/Brown","Realtree/Neon Pink","Admiral Duck Camo/Blue"],
     colorImgs:{
       "Realtree/Neon Yellow":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-realtree-neon-yellow.jpg?v=1785626680",
       "Green Camo/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-green-camo-white.jpg?v=1785626680",
-      "Green Camo":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-green-camo.jpg?v=1785626679",
+      "Green Camo/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-green-camo.jpg?v=1785626679",
       "Mossy Oak Habitat/Brown":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-mossy-oak-habitat-brown.jpg?v=1785626680",
       "Realtree/Neon Pink":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-realtree-neon-pink.jpg?v=1785626680",
       "Admiral Duck Camo/Blue":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-adirmal-duck-camo-blue.jpg?v=1785626680"
@@ -1107,36 +1107,47 @@ async function sendToDrive(type){
   }
   const body = JSON.stringify({ type, meta: orderMeta(), files });
 
-  // show the progress UI
+  // show the progress UI, start animated immediately so there's always motion
   const box = $("uploadProgress"), fill = $("upFill"), label = $("upLabel");
-  if (box){ box.style.display = "block"; }
-  if (fill){ fill.classList.remove("indeterminate"); fill.style.width = "0%"; }
+  if (box) box.style.display = "block";
   if (label) label.textContent = "Sending your logo…";
+  // simulated steady climb so the bar always moves, even if the browser
+  // fires no upload-progress events (common for cross-origin Apps Script).
+  let simPct = 8;
+  if (fill){ fill.classList.remove("indeterminate"); fill.style.width = simPct + "%"; }
+  const simTimer = setInterval(() => {
+    // ease toward 90% and hold there until the request resolves
+    if (simPct < 90){ simPct += Math.max(1, (90 - simPct) * 0.08); if (fill) fill.style.width = simPct + "%"; }
+  }, 200);
 
   return new Promise(resolve => {
+    const finish = (result) => {
+      clearInterval(simTimer);
+      if (fill){ fill.classList.remove("indeterminate"); fill.style.width = "100%"; }
+      if (label) label.textContent = "Logo sent ✓";
+      setTimeout(() => resolve(result), 300);
+    };
     try {
       const xhr = new XMLHttpRequest();
       xhr.open("POST", APPS_SCRIPT_URL, true);
       xhr.setRequestHeader("Content-Type", "text/plain");
-      // real upload progress
+      // real upload progress overrides the simulation when available
       xhr.upload.onprogress = e => {
         if (e.lengthComputable && fill){
           const pct = Math.round((e.loaded / e.total) * 100);
-          fill.classList.remove("indeterminate");
-          fill.style.width = pct + "%";
+          // only let real progress push the bar forward, capped at 90 until done
+          const capped = Math.min(90, pct);
+          if (capped > simPct){ simPct = capped; fill.style.width = simPct + "%"; }
           if (label) label.textContent = pct < 100 ? `Sending your logo… ${pct}%` : "Almost done…";
-        } else if (fill){
-          // length not computable: show an indeterminate animation
-          fill.classList.add("indeterminate");
         }
       };
-      // no-cors equivalent: we can't read the response, so treat send-complete as success
-      xhr.onload = () => { if (fill){ fill.classList.remove("indeterminate"); fill.style.width = "100%"; } if (label) label.textContent = "Logo sent ✓"; resolve({ ok:true, uploaded }); };
-      xhr.onerror = () => { resolve({ ok:true, uploaded }); }; // opaque/cross-origin still sends; assume ok
-      xhr.ontimeout = () => resolve({ ok:false, uploaded });
+      xhr.onload = () => finish({ ok:true, uploaded });
+      xhr.onerror = () => finish({ ok:true, uploaded }); // opaque/cross-origin still sends; assume ok
+      xhr.ontimeout = () => { clearInterval(simTimer); resolve({ ok:false, uploaded }); };
       xhr.timeout = 120000;
       xhr.send(body);
     } catch (e) {
+      clearInterval(simTimer);
       resolve({ ok:false, uploaded });
     }
   });
