@@ -1,4 +1,4 @@
-{%- comment -%} build: v31 {%- endcomment -%}
+{%- comment -%} build: v32 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -183,6 +183,10 @@ html {scroll-behavior:smooth}
 #tbco .art-note {background:var(--ice);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--muted);margin-top:10px;line-height:1.55}
 #tbco .art-note strong {color:var(--ink)}
 #tbco .art-note p + p {margin-top:8px}
+#tbco .embroidery-notice{display:flex;gap:12px;align-items:flex-start;background:#F3EFFC;border:1.5px solid var(--purple);border-left:5px solid var(--purple);border-radius:12px;padding:14px 16px;margin-top:12px}
+#tbco .embroidery-notice p{font-size:13px;color:var(--ink);line-height:1.55;margin:0}
+#tbco .embroidery-notice strong{color:var(--purple)}
+#tbco .en-icon{flex:none;width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;line-height:1}
 #tbco .quote-only {display:none}
 body.quote-mode #tbco .quote-only {display:block}
 body.quote-mode #tbco .buy-only {display:none}
@@ -396,7 +400,10 @@ body.quote-mode #tbco .buy-only {display:none}
         <p class="hint">One file per location: PNG, JPG, PDF, AI, or SVG, up to 10 MB each. Digitizing is free. No file handy? Skip it and email us after.</p>
         <div class="art-note">
           <p><strong>Thread colors:</strong> Unless you tell us otherwise, we match thread colors to your logo. Want something different, like tone-on-tone or matched to the hat? Just mention it in the notes.</p>
-          <p><strong>Highly detailed designs:</strong> Some artwork is too fine to embroider cleanly at hat scale. If yours is on the detailed side, email <strong>help@threadbreak.com</strong> and we'll talk through the best option, whether that's DTF or patches, along with pricing.</p>
+        </div>
+        <div class="embroidery-notice">
+          <span class="en-icon" aria-hidden="true">!</span>
+          <p><strong>Embroidery Notice:</strong> AI-generated and highly detailed logos don't always translate well to embroidery. If your design isn't suitable, we'll recommend the best solution, such as simplifying the artwork, using a DTF transfer, or a patch to ensure the best possible result.</p>
         </div>
         <label class="field-label">Notes for us</label>
         <textarea id="notes" placeholder="Thread colors, text to add, deadline, anything else we should know..."></textarea>
