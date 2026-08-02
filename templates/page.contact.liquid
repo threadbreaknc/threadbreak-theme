@@ -1,4 +1,4 @@
-{%- comment -%} build: v32 {%- endcomment -%}
+{%- comment -%} build: v34 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -295,7 +295,7 @@ body.quote-mode #tbco .buy-only {display:none}
         <div class="styles" id="styles"></div>
         <div class="quote-only">
           <label class="field-label">What style or brand do you want?</label>
-          <input type="text" id="quoteStyle" placeholder="e.g. Flexfit fitted, Richardson 168, beanies, visors...">
+          <input type="text" id="quoteStyle" placeholder="e.g. dad cap, Flexfit fitted, Richardson 168, 5-panel...">
         </div>
         <div class="acc-continue-row"><button type="button" class="acc-continue" data-continue="1">Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
       </div>
@@ -398,12 +398,12 @@ body.quote-mode #tbco .buy-only {display:none}
         <label class="field-label">Your logo / artwork</label>
         <div class="uploads-grid" id="uploads"></div>
         <p class="hint">One file per location: PNG, JPG, PDF, AI, or SVG, up to 10 MB each. Digitizing is free. No file handy? Skip it and email us after.</p>
-        <div class="art-note">
-          <p><strong>Thread colors:</strong> Unless you tell us otherwise, we match thread colors to your logo. Want something different, like tone-on-tone or matched to the hat? Just mention it in the notes.</p>
-        </div>
         <div class="embroidery-notice">
           <span class="en-icon" aria-hidden="true">!</span>
           <p><strong>Embroidery Notice:</strong> AI-generated and highly detailed logos don't always translate well to embroidery. If your design isn't suitable, we'll recommend the best solution, such as simplifying the artwork, using a DTF transfer, or a patch to ensure the best possible result.</p>
+        </div>
+        <div class="art-note">
+          <p><strong>Thread colors:</strong> Unless you tell us otherwise, we match thread colors to your logo. Want something different, like tone-on-tone or matched to the hat? Just mention it in the notes.</p>
         </div>
         <label class="field-label">Notes for us</label>
         <textarea id="notes" placeholder="Thread colors, text to add, deadline, anything else we should know..."></textarea>
@@ -580,7 +580,7 @@ const STYLES = [
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/77759_f_fm-2.jpg?v=1784998725","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/68095_f_fm.jpg?v=1784998725","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/35926_f_fm.jpg?v=1784998725","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/64032_f_fm.jpg?v=1784998750"],
     colors:["Black","Black/White","Black/White/Black","White","Charcoal","Charcoal/Black","Charcoal/White","Navy","Navy/White","Navy/White/Navy","Red","Red/Black","Red/White/Red","Brown/White","Brown/White/Brown","Carolina Blue/White/Carolina Blue","Green Camo/Black","Heather/Black","Heather/White","Kelly/White/Kelly","Multicam Alpine/White","Multicam Arid/Brown","Multicam Arid/Tan","Multicam Black/Black","Multicam Green/Black","Multicam Tropic/Green","Pink","Pink/White/Pink","Royal/White","Royal/White/Royal","Silver/Black"],
     tiers:[[10,20,52559808299140],[24,18,52559808331908],[48,17,52559808364676],[96,16,52559808397444],[144,14,52559808430212]] },
-  { id:"other", name:"Different style?", brand:"You name it", desc:"Flexfit, fitted, beanies, visors, and more. We'll source it", quote:true, popular:99,
+  { id:"other", name:"Different style?", brand:"You name it", desc:"Dad caps, Flexfit, fitted, structured, and more. We'll source it", quote:true, popular:99,
     colors:["Black","Navy","Charcoal","White","Red","Khaki"] },
 ];
 const SIZES = ["Adult (one size)","Youth","Mix of both"];
