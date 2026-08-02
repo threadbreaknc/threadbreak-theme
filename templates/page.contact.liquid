@@ -1,4 +1,4 @@
-{%- comment -%} build: v29 {%- endcomment -%}
+{%- comment -%} build: v30 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -100,12 +100,14 @@ html {scroll-behavior:smooth}
 #tbco .color-preview{display:flex;flex-direction:column;align-items:center;gap:8px;margin:4px 0 14px;padding:18px;background:var(--ice);border:1px solid var(--line);border-radius:14px}
 #tbco .color-preview img{width:100%;max-width:320px;height:auto;border-radius:12px;display:block}
 #tbco .color-preview span{font-size:15px;font-weight:700;color:var(--ink)}
+#tbco .color-preview.empty{padding:26px 18px}
+#tbco .color-preview.empty span{font-weight:500;color:var(--muted);text-align:center}
 /* color dropdown */
 #tbco .cdd{position:relative;margin-bottom:4px}
-#tbco .cdd-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:#fff;border:1.5px solid var(--line);border-radius:12px;font-size:15px;font-weight:600;color:var(--ink);cursor:pointer}
-#tbco .cdd-trigger:hover{border-color:var(--purple)}
+#tbco .cdd-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:#fff;border:2px solid var(--purple);border-radius:12px;font-size:15px;font-weight:700;color:var(--purple);cursor:pointer;box-shadow:0 2px 8px rgba(80,40,170,.1)}
+#tbco .cdd-trigger:hover{background:#F7F4FF}
 #tbco .cdd-trigger.ph #cddLabel,#tbco .cdd-trigger .ph{color:var(--muted);font-weight:500}
-#tbco .cdd-arrow{transition:transform .2s;color:var(--muted);font-size:12px}
+#tbco .cdd-arrow{transition:transform .2s;color:var(--purple);font-size:12px}
 #tbco .cdd-trigger.open{border-color:var(--purple);border-radius:12px 12px 0 0}
 #tbco .cdd-trigger.open .cdd-arrow{transform:rotate(180deg)}
 #tbco .cdd-list{position:absolute;left:0;right:0;z-index:20;background:#fff;border:1.5px solid var(--purple);border-top:none;border-radius:0 0 12px 12px;max-height:320px;overflow-y:auto;box-shadow:0 12px 30px rgba(0,0,0,.12)}
@@ -660,6 +662,7 @@ function perHat(){
 }
 function evenSplit(){
   const n = state.colorSel.length;
+  if (n === 0){ state.colorQty = {}; return; }
   const base = Math.floor(state.qty / n);
   const rem = state.qty - base * n;
   state.colorQty = {};
@@ -788,7 +791,7 @@ function renderColors(){
     r.addEventListener("click", () => {
       const c = r.dataset.c;
       const i = state.colorSel.indexOf(c);
-      if (i >= 0){ if (state.colorSel.length === 1) return; state.colorSel.splice(i,1); }
+      if (i >= 0){ state.colorSel.splice(i,1); }
       else { state.colorSel.push(c); state.lastColor = c; }
       evenSplit(); render();
     }));
@@ -825,7 +828,6 @@ function renderColors(){
     wrap.querySelectorAll(".bd-remove").forEach(b =>
       b.addEventListener("click", () => {
         const c = b.dataset.rm;
-        if (state.colorSel.length === 1) return;
         const i = state.colorSel.indexOf(c);
         if (i >= 0) state.colorSel.splice(i,1);
         evenSplit(); render();
@@ -834,9 +836,13 @@ function renderColors(){
     wrap.innerHTML = "";
   }
 
-  $("colorHint").textContent = quoteMode()
+  const hint = $("colorHint");
+  hint.style.color = "";
+  hint.textContent = quoteMode()
     ? "Rough color direction is fine. We'll confirm exact colorways in your quote."
-    : (state.colorSel.length > 1
+    : (state.colorSel.length === 0
+      ? "Open the dropdown to pick your hat color(s)."
+      : state.colorSel.length > 1
       ? "Set how many hats you want in each color. The total drives your price."
       : "Add more colors from the dropdown to split your order across colorways. Don't see yours? Mention it in the notes.");
 }
@@ -852,9 +858,18 @@ function updateColorPreview(){
     else show = state.colorSel.find(c => map[c]) || null;
   }
   if (show){
+    img.style.display = "";
     img.src = map[show];
     img.alt = show;
     name.textContent = show;
+    panel.classList.remove("empty");
+    panel.style.display = "";
+  } else if (state.colorSel.length === 0){
+    // nothing picked yet, prompt them
+    img.style.display = "none";
+    img.removeAttribute("src");
+    name.textContent = "Select your hat color(s) using the dropdown menu above.";
+    panel.classList.add("empty");
     panel.style.display = "";
   } else {
     panel.style.display = "none";
@@ -1185,6 +1200,13 @@ function initAccordion(){
   document.querySelectorAll('[data-continue]').forEach(btn => {
     btn.addEventListener("click", () => {
       const step = +btn.getAttribute("data-continue");
+      // step 3 (colors) requires at least one color before moving on
+      if (step === 3 && state.colorSel.length === 0){
+        const hint = $("colorHint");
+        if (hint){ hint.textContent = "Please pick at least one color to continue."; hint.style.color = "#C22B3F"; }
+        const dd = $("cddTrigger"); if (dd) dd.scrollIntoView({ behavior:"smooth", block:"center" });
+        return;
+      }
       markDone(step, true);
       setOpen(step, false);
       setOpen(step + 1, true);
