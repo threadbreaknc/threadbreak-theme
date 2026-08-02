@@ -1,4 +1,4 @@
-{%- comment -%} build: v30 {%- endcomment -%}
+{%- comment -%} build: v31 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -497,7 +497,7 @@ from {{ shop.metafields.judgeme.all_reviews_count }} reviews
    ========================================================= */
 const STYLES = [
   { id:"otto", name:"Otto 5-Panel Mid Profile", brand:"Otto Cap 31-069", desc:"Snapback · adult · one size fits most", popular:99,
-    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black.jpg?v=1785628632","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-red-otto.jpg?v=1785628631","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue-white-otto.jpg?v=1785628631","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/camo.jpg?v=1785628632"],
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-natural.jpg?v=1785628631","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black.jpg?v=1785628632","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-red-otto.jpg?v=1785628631","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/camo.jpg?v=1785628632"],
     colors:["Black","White","Grey","Red","Pink","Camo","Neon Orange","Neon Yellow","Royal Blue","Black/White","Black/Red","Red/Black","Black/Grey","Black/Khaki","Black/Natural","Black/Royal Blue","Red/White","Red/Natural","Royal Blue/Natural","Royal Blue/White","Dark Green/Natural","Charcoal Grey/Black"],
     colorImgs:{
       "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black.jpg?v=1785628632",
@@ -595,7 +595,7 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0-rO8Y8fqsyAG
 /* ========================================================= */
 
 const state = {
-  style: STYLES[0], colorSel: [STYLES[0].colors[0]], lastColor: STYLES[0].colors[0], colorQty: { [STYLES[0].colors[0]]: 24 },
+  style: STYLES[0], colorSel: [], lastColor: null, colorQty: {},
   showAllColors: false, hasChosen: false, sizing: SIZES[0], qty: 10, deco: DECOS[0],
   placements: new Set(["front"]), frontPos: "Center front", files: { front:null, side:null, back:null }
 };
@@ -911,8 +911,7 @@ function render(){
       state.style = STYLES.find(s=>s.id===e.target.value);
       state.showAllColors = false;
       state.colorSel = state.colorSel.filter(c => state.style.colors.includes(c));
-      if (!state.colorSel.length) state.colorSel = [state.style.colors[0]];
-      state.lastColor = state.colorSel[0];
+      state.lastColor = state.colorSel.includes(state.lastColor) ? state.lastColor : (state.colorSel[0] || null);
       evenSplit(); render();
     }));
   // (selection handled entirely by the radio 'change' handler above)
