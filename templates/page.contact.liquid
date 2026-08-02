@@ -1,4 +1,4 @@
-{%- comment -%} build: v36 {%- endcomment -%}
+{%- comment -%} build: v37 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -112,7 +112,10 @@ html {scroll-behavior:smooth}
 #tbco .cdd-arrow{transition:transform .2s;color:var(--purple);font-size:12px}
 #tbco .cdd-trigger.open{border-color:var(--purple);border-radius:12px 12px 0 0}
 #tbco .cdd-trigger.open .cdd-arrow{transform:rotate(180deg)}
-#tbco .cdd-list{position:absolute;left:0;right:0;z-index:20;background:#fff;border:1.5px solid var(--purple);border-top:none;border-radius:0 0 12px 12px;max-height:320px;overflow-y:auto;box-shadow:0 12px 30px rgba(0,0,0,.12)}
+#tbco .cdd-list{position:relative;z-index:20;background:#fff;border:1.5px solid var(--purple);border-top:none;border-radius:0 0 12px 12px;max-height:300px;overflow-y:auto;box-shadow:0 12px 30px rgba(0,0,0,.12);-webkit-overflow-scrolling:touch}
+#tbco .cdd-list.scrollable{border-bottom:none;border-radius:0}
+#tbco .cdd-scrollcue{display:none;text-align:center;font-size:12px;font-weight:600;color:var(--purple);background:#F3EFFC;border:1.5px solid var(--purple);border-top:none;border-radius:0 0 12px 12px;padding:6px}
+#tbco .cdd-scrollcue.show{display:block}
 #tbco .cdd-list.hidden{display:none}
 #tbco .cdd-row{display:flex;align-items:center;gap:12px;padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--ice)}
 #tbco .cdd-row:hover{background:var(--ice)}
@@ -346,6 +349,7 @@ body.quote-mode #tbco .buy-only {display:none}
             <span class="cdd-arrow">▼</span>
           </button>
           <div class="cdd-list hidden" id="cddList" role="listbox"></div>
+          <div class="cdd-scrollcue" id="cddScrollCue">Scroll for more colors ▼</div>
         </div>
         <div class="color-preview" id="colorPreview" style="display:none">
           <img id="colorPreviewImg" alt="" />
@@ -1251,7 +1255,7 @@ function initAccordion(){
     const dist = targetY - startY;
     if (Math.abs(dist) < 4) return;
     const start = performance.now();
-    const ease = t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; // easeInOutCubic
+    const ease = t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
     function step(now){
       const p = Math.min(1, (now - start) / duration);
       window.scrollTo(0, startY + dist * ease(p));
@@ -1289,15 +1293,25 @@ function tbcoInit(){
   });
   initAccordion();
   // color dropdown open/close
-  const cddT = $("cddTrigger"), cddL = $("cddList");
+  const cddT = $("cddTrigger"), cddL = $("cddList"), cddCue = $("cddScrollCue");
+  function updateScrollCue(){
+    if (!cddCue || !cddL) return;
+    const canScroll = cddL.scrollHeight > cddL.clientHeight + 4;
+    const atBottom = cddL.scrollTop + cddL.clientHeight >= cddL.scrollHeight - 6;
+    const show = !cddL.classList.contains("hidden") && canScroll && !atBottom;
+    cddCue.classList.toggle("show", show);
+    cddL.classList.toggle("scrollable", show);
+  }
   if (cddT && cddL){
     cddT.addEventListener("click", () => {
       const open = cddL.classList.toggle("hidden") === false;
       cddT.classList.toggle("open", open);
       cddT.setAttribute("aria-expanded", open ? "true" : "false");
+      updateScrollCue();
     });
+    cddL.addEventListener("scroll", updateScrollCue, { passive: true });
     document.addEventListener("click", e => {
-      if (!e.target.closest("#colorDD")){ cddL.classList.add("hidden"); cddT.classList.remove("open"); cddT.setAttribute("aria-expanded","false"); }
+      if (!e.target.closest("#colorDD")){ cddL.classList.add("hidden"); cddT.classList.remove("open"); cddT.setAttribute("aria-expanded","false"); if (cddCue) cddCue.classList.remove("show"); cddL.classList.remove("scrollable"); }
     });
   }
   $("submitBtn").addEventListener("click", openSummary);
