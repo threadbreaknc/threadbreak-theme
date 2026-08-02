@@ -1,4 +1,4 @@
-{%- comment -%} build: v38 {%- endcomment -%}
+{%- comment -%} build: v39 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -153,6 +153,10 @@ html {scroll-behavior:smooth}
 #tbco .bd-qty {width:76px;border:1.5px solid var(--line);border-radius:8px;padding:7px 10px;font-size:15px;font-weight:700;font-family:'DM Sans',sans-serif;text-align:center}
 #tbco .bd-qty:focus {outline:2px solid var(--purple);border-color:var(--purple)}
 #tbco .bd-thumb{width:38px;height:38px;border-radius:8px;object-fit:cover;flex:none}
+#tbco .bd-pick{display:flex;align-items:center;gap:10px;flex:1;background:none;border:none;padding:0;cursor:pointer;text-align:left;min-width:0}
+#tbco .bd-pick .bd-name{font-family:'DM Sans',sans-serif}
+#tbco .bd-row.previewing{background:#F3EFFC}
+#tbco .bd-row.previewing .bd-name{color:var(--purple);font-weight:700}
 #tbco .bd-remove{background:none;border:none;color:var(--muted);font-size:20px;line-height:1;cursor:pointer;padding:0 2px;flex:none}
 #tbco .bd-remove:hover{color:#C22B3F}
 #tbco .bd-total {padding:10px 14px;background:var(--ice);font-size:13px;font-weight:700;text-align:right}
@@ -859,12 +863,22 @@ function renderColors(){
   const wrap = $("breakdownWrap");
   if (state.colorSel.length){
     wrap.innerHTML = `<div class="breakdown">` + state.colorSel.map(c => `
-      <div class="bd-row">
-        ${map[c] ? `<img class="bd-thumb" src="${map[c]}" alt="${c}">` : `<span class="dot" style="background:${colorCss(c)}"></span>`}
-        <span class="bd-name">${c}</span>
+      <div class="bd-row ${state.lastColor===c?'previewing':''}">
+        <button type="button" class="bd-pick" data-pick="${c}" aria-label="Preview ${c}">
+          ${map[c] ? `<img class="bd-thumb" src="${map[c]}" alt="${c}">` : `<span class="dot" style="background:${colorCss(c)}"></span>`}
+          <span class="bd-name">${c}</span>
+        </button>
         <input class="bd-qty" type="number" min="0" inputmode="numeric" value="${state.colorQty[c] || 0}" data-c="${c}" aria-label="Quantity for ${c}">
         <button type="button" class="bd-remove" data-rm="${c}" aria-label="Remove ${c}">&times;</button>
       </div>`).join("") + `<div class="bd-total">${state.qty} hats total</div></div>`;
+    wrap.querySelectorAll(".bd-pick").forEach(b =>
+      b.addEventListener("click", () => {
+        state.lastColor = b.dataset.pick;
+        updateColorPreview();
+        // reflect which row is previewing
+        wrap.querySelectorAll(".bd-row").forEach(r => r.classList.remove("previewing"));
+        b.closest(".bd-row").classList.add("previewing");
+      }));
     wrap.querySelectorAll(".bd-qty").forEach(inp =>
       inp.addEventListener("input", e => {
         state.colorQty[e.target.dataset.c] = Math.max(0, parseInt(e.target.value || "0", 10));
@@ -1266,16 +1280,16 @@ function initAccordion(){
         return;
       }
       markDone(step, true);
-      setOpen(step, false);
       setOpen(step + 1, true);
       updateBarBtn();
       const next = document.querySelector(`.acc[data-step="${step+1}"]`);
       if (next){
-        // let the collapse + fade settle first, then gently ease to the next step
+        // no collapse of the current step, so the page doesn't jump.
+        // wait briefly for the next step to expand, then glide to it.
         setTimeout(() => {
           const y = next.getBoundingClientRect().top + window.pageYOffset - 90;
-          easeScrollTo(y, 700);
-        }, 480);
+          easeScrollTo(y, 650);
+        }, 120);
       }
     });
   });
