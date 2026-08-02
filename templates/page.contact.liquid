@@ -1,4 +1,4 @@
-{%- comment -%} build: v27 {%- endcomment -%}
+{%- comment -%} build: v28 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -468,15 +468,39 @@ from {{ shop.metafields.judgeme.all_reviews_count }} reviews
    Add/remove names freely, swatches generate automatically.
    ========================================================= */
 const STYLES = [
-  { id:"otto", name:"Otto 5-Panel Mid Profile", brand:"Otto Cap 31-069", desc:"Snapback · one size fits most · adult & youth", youth:true, popular:99,
-    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/31-069-0116-FB.medium.jpg?v=1784998582","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/31-069-0331-FB.medium.jpg?v=1784998582","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/31-069-003-FB.medium.jpg?v=1784998582","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/31-069-0203-FB.medium.jpg?v=1784998582"],
-    colors:["Black","Black/White","Black/Natural","Black/Khaki","Navy","Navy/White","Navy/Natural","Dark Green","Dark Green/Khaki","Dark Green/Natural","Khaki","Khaki/Black","Charcoal Grey","Red/Black","White"],
+  { id:"otto", name:"Otto 5-Panel Mid Profile", brand:"Otto Cap 31-069", desc:"Snapback · adult · one size fits most", popular:99,
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black.jpg?v=1785628632","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-red-otto.jpg?v=1785628631","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue-white-otto.jpg?v=1785628631","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/camo.jpg?v=1785628632"],
+    colors:["Black","White","Grey","Red","Pink","Camo","Neon Orange","Neon Yellow","Royal Blue","Black/White","Black/Red","Red/Black","Black/Grey","Black/Khaki","Black/Natural","Black/Royal Blue","Red/White","Red/Natural","Royal Blue/Natural","Royal Blue/White","Dark Green/Natural","Charcoal Grey/Black"],
+    colorImgs:{
+      "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black.jpg?v=1785628632",
+      "White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/white.jpg?v=1785628631",
+      "Grey":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/grey.jpg?v=1785628631",
+      "Red":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/red.jpg?v=1785628631",
+      "Pink":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/pink.jpg?v=1785628631",
+      "Camo":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/camo.jpg?v=1785628632",
+      "Neon Orange":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/neon-orange.jpg?v=1785628632",
+      "Neon Yellow":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/neon-yello.jpg?v=1785628631",
+      "Royal Blue":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue.jpg?v=1785628631",
+      "Black/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-white-otto.jpg?v=1785628632",
+      "Black/Red":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-red-otto.jpg?v=1785628631",
+      "Red/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-red.jpg?v=1785628632",
+      "Black/Grey":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-grey.jpg?v=1785628631",
+      "Black/Khaki":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-khaki.jpg?v=1785628631",
+      "Black/Natural":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-natural.jpg?v=1785628631",
+      "Black/Royal Blue":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-royal-blue.jpg?v=1785628632",
+      "Red/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/red-white-otto.jpg?v=1785628631",
+      "Red/Natural":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/red-natural.jpg?v=1785628631",
+      "Royal Blue/Natural":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue-natural.jpg?v=1785628631",
+      "Royal Blue/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue-white-otto.jpg?v=1785628631",
+      "Dark Green/Natural":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/dark_green-natural.jpg?v=1785628631",
+      "Charcoal Grey/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-grey-black.jpg?v=1785628631"
+    },
     tiers:[[10,17,52559807807620],[24,15,52559807840388],[48,14,52559807873156],[96,13,52559807905924],[144,12,52559807938692]] },
-  { id:"atonal", name:"Atonal Camo A-Frame", brand:"Atonal A590P", desc:"Snapback · 100% cotton · one size fits most", popular:99,
+  { id:"atonal", name:"Atonal Camo A-Frame", brand:"Atonal A590P", desc:"Snapback · 100% cotton · adult · one size fits most", popular:99,
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590p_NaturalFieldCamo001_jpg.webp?v=1784998602","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590p_FieldCamo001.webp?v=1784998603","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590P_BlackFieldCamp001_jpg.webp?v=1784998602"],
     colors:["Natural/Field Camo","Field Camo","Black/Field Camo"],
     tiers:[[10,18,52559807971460],[24,16,52559808004228],[48,15,52559808036996],[96,14,52559808069764],[144,13,52559808102532]] },
-  { id:"rich112", name:"Richardson 112 Trucker", brand:"Richardson 112", desc:"6-panel snapback · one size fits most · adult & youth", youth:true, popular:99,
+  { id:"rich112", name:"Richardson 112 Trucker", brand:"Richardson 112", desc:"6-panel snapback · adult · one size fits most", popular:99,
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-white-red.jpg?v=1785626680","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/all-black.jpg?v=1785626679","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-neon-yellow.jpg?v=1785626679","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue-white.jpg?v=1785626680"],
     colors:["Black/White/Red","All Black","All White","Black/White","Black/Charcoal","Charcoal/Black","Charcoal/Neon Blue","Charcoal/Neon Green","Charcoal/Neon Yellow","Charcoal/Neon Orange","Heather Grey/White","Heather Grey/Black","Loden/Black","Red/Black","Red/White","Royal Blue/Black","Royal Blue/White","Orange/Black","Purple/White","Hot Pink/White","Hot Pink/Black","White/Navy","White/Black"],
     colorImgs:{
@@ -505,7 +529,7 @@ const STYLES = [
       "White/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/white-black.jpg?v=1785626680"
     },
     tiers:[[10,20,52559808135300],[24,18,52559808168068],[48,17,52559808200836],[96,16,52559808233604],[144,14,52559808266372]] },
-  { id:"rich112p", name:"Richardson 112 Printed 5-Panel", brand:"Richardson 112P", desc:"Printed camo 5-panel trucker · one size fits most", popular:99,
+  { id:"rich112p", name:"Richardson 112 Printed 5-Panel", brand:"Richardson 112P", desc:"Printed camo 5-panel trucker · adult · one size fits most", popular:99,
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-realtree-neon-yellow.jpg?v=1785626680","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-green-camo.jpg?v=1785626679","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-mossy-oak-habitat-brown.jpg?v=1785626680","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-realtree-neon-pink.jpg?v=1785626680"],
     colors:["Realtree/Neon Yellow","Green Camo/White","Green Camo","Mossy Oak Habitat/Brown","Realtree/Neon Pink","Admiral Duck Camo/Blue"],
     colorImgs:{
@@ -517,7 +541,7 @@ const STYLES = [
       "Admiral Duck Camo/Blue":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-adirmal-duck-camo-blue.jpg?v=1785626680"
     },
     tiers:[[10,21,52582676103300],[24,19,52582676136068],[48,18,52582676168836],[96,17,52582676201604],[144,15,52582676234372]] },
-  { id:"yupoong", name:"Yupoong Classic 5-Panel Trucker", brand:"YP Classics 6006", desc:"Flat bill snapback · one size fits most", popular:12,
+  { id:"yupoong", name:"Yupoong Classic 5-Panel Trucker", brand:"YP Classics 6006", desc:"Flat bill snapback · adult · one size fits most", popular:12,
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/77759_f_fm-2.jpg?v=1784998725","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/68095_f_fm.jpg?v=1784998725","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/35926_f_fm.jpg?v=1784998725","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/64032_f_fm.jpg?v=1784998750"],
     colors:["Black","Black/White","Black/White/Black","White","Charcoal","Charcoal/Black","Charcoal/White","Navy","Navy/White","Navy/White/Navy","Red","Red/Black","Red/White/Red","Brown/White","Brown/White/Brown","Carolina Blue/White/Carolina Blue","Green Camo/Black","Heather/Black","Heather/White","Kelly/White/Kelly","Multicam Alpine/White","Multicam Arid/Brown","Multicam Arid/Tan","Multicam Black/Black","Multicam Green/Black","Multicam Tropic/Green","Pink","Pink/White/Pink","Royal/White","Royal/White/Royal","Silver/Black"],
     tiers:[[10,20,52559808299140],[24,18,52559808331908],[48,17,52559808364676],[96,16,52559808397444],[144,14,52559808430212]] },
