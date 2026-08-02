@@ -23,6 +23,12 @@
   /* keep the Place a Custom Order button text white on hover */
   .nav-links a.nav-cta,
   .nav-links a.nav-cta:hover{color:#ffffff !important;}
+  /* shrink the nav on scroll */
+  #main-nav{transition:padding .3s ease, box-shadow .3s ease;}
+  #main-nav.nav-shrink{padding-top:.4rem !important;padding-bottom:.4rem !important;box-shadow:0 2px 12px rgba(0,0,0,.08);}
+  .nav-logo-full.nav-logo-img{transition:height .3s ease;}
+  #main-nav.nav-shrink .nav-logo-full.nav-logo-img{height:40px !important;}
+  @media(max-width:700px){ #main-nav.nav-shrink .nav-logo-full.nav-logo-img{height:36px !important;} }
   #shopify-section-header,
   .shopify-section-header,
   header[role="banner"],
@@ -205,6 +211,22 @@
       }, 500);
     });
   }
+})();
+</script>
+<script>
+(function(){
+  var nav = document.getElementById('main-nav');
+  if (!nav) return;
+  var ticking = false;
+  function update(){
+    if (window.pageYOffset > 40) nav.classList.add('nav-shrink');
+    else nav.classList.remove('nav-shrink');
+    ticking = false;
+  }
+  window.addEventListener('scroll', function(){
+    if (!ticking){ window.requestAnimationFrame(update); ticking = true; }
+  }, { passive: true });
+  update();
 })();
 </script>
 </body>

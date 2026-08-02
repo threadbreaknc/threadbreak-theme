@@ -1,4 +1,4 @@
-{%- comment -%} build: v34 {%- endcomment -%}
+{%- comment -%} build: v35 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -63,8 +63,10 @@ html {scroll-behavior:smooth}
 #tbco .acc-summary{font-size:13px;color:var(--purple);font-weight:600;margin:6px 0 0 42px}
 #tbco .acc.open .acc-summary{display:none}
 #tbco .acc:not(.open) .step-sub{display:none}
-#tbco .acc-wrap{max-height:0;overflow:hidden;transition:max-height .35s ease}
-#tbco .acc.open .acc-wrap{max-height:8000px;transition:max-height .6s ease}
+#tbco .acc-wrap{max-height:0;overflow:hidden;transition:max-height .45s ease}
+#tbco .acc.open .acc-wrap{max-height:8000px;transition:max-height .7s ease}
+#tbco .acc-wrap > *{opacity:0;transition:opacity .45s ease}
+#tbco .acc.open .acc-wrap > *{opacity:1;transition:opacity .5s ease .15s}
 @media(max-width:560px){#tbco .acc-summary{margin-left:0}}
 #tbco .acc-continue-row{display:flex;justify-content:flex-end;margin-top:22px}
 #tbco .acc-continue{display:inline-flex;align-items:center;gap:8px;background:var(--purple);color:#fff;border:none;font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:.05em;padding:11px 28px;border-radius:10px;cursor:pointer;transition:background .15s,transform .15s}
@@ -532,8 +534,13 @@ const STYLES = [
     },
     tiers:[[10,17,52559807807620],[24,15,52559807840388],[48,14,52559807873156],[96,13,52559807905924],[144,12,52559807938692]] },
   { id:"atonal", name:"Atonal Camo A-Frame", brand:"Atonal A590P", desc:"Snapback · 100% cotton · adult · one size fits most", popular:99,
-    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590p_NaturalFieldCamo001_jpg.webp?v=1784998602","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590p_FieldCamo001.webp?v=1784998603","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590P_BlackFieldCamp001_jpg.webp?v=1784998602"],
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590p_NaturalFieldCamo001_jpg_02583279-95d6-49dd-8bc8-36bb3e0e8aff.webp?v=1785629359","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590p_FieldCamo001_webp.jpg?v=1785629359","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590P_BlackFieldCamp001_jpg_b9bafb49-b972-4b12-ab31-f6af5ff99e53.webp?v=1785629359"],
     colors:["Natural/Field Camo","Field Camo","Black/Field Camo"],
+    colorImgs:{
+      "Natural/Field Camo":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590p_NaturalFieldCamo001_jpg_02583279-95d6-49dd-8bc8-36bb3e0e8aff.webp?v=1785629359",
+      "Field Camo":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590p_FieldCamo001_webp.jpg?v=1785629359",
+      "Black/Field Camo":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590P_BlackFieldCamp001_jpg_b9bafb49-b972-4b12-ab31-f6af5ff99e53.webp?v=1785629359"
+    },
     tiers:[[10,18,52559807971460],[24,16,52559808004228],[48,15,52559808036996],[96,14,52559808069764],[144,13,52559808102532]] },
   { id:"rich112", name:"Richardson 112 Trucker", brand:"Richardson 112", desc:"6-panel snapback · adult · one size fits most", popular:99,
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-white-red.jpg?v=1785626680","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/all-black.jpg?v=1785626679","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-neon-yellow.jpg?v=1785626679","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue-white.jpg?v=1785626680"],
@@ -576,9 +583,28 @@ const STYLES = [
       "Admiral Duck Camo/Blue":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-adirmal-duck-camo-blue.jpg?v=1785626680"
     },
     tiers:[[10,21,52582676103300],[24,19,52582676136068],[48,18,52582676168836],[96,17,52582676201604],[144,15,52582676234372]] },
-  { id:"yupoong", name:"Yupoong Classic 5-Panel Trucker", brand:"YP Classics 6006", desc:"Flat bill snapback · adult · one size fits most", popular:12,
-    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/77759_f_fm-2.jpg?v=1784998725","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/68095_f_fm.jpg?v=1784998725","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/35926_f_fm.jpg?v=1784998725","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/64032_f_fm.jpg?v=1784998750"],
-    colors:["Black","Black/White","Black/White/Black","White","Charcoal","Charcoal/Black","Charcoal/White","Navy","Navy/White","Navy/White/Navy","Red","Red/Black","Red/White/Red","Brown/White","Brown/White/Brown","Carolina Blue/White/Carolina Blue","Green Camo/Black","Heather/Black","Heather/White","Kelly/White/Kelly","Multicam Alpine/White","Multicam Arid/Brown","Multicam Arid/Tan","Multicam Black/Black","Multicam Green/Black","Multicam Tropic/Green","Pink","Pink/White/Pink","Royal/White","Royal/White/Royal","Silver/Black"],
+  { id:"yupoong", name:"Yupoong Classic 5-Panel Trucker", brand:"YP Classics 6006", desc:"Flat bill snapback · adult · one size fits most", popular:99,
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black_e6045cde-21cd-4a15-928d-9d8a8f3b5edc.jpg?v=1785629360","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/red_black.jpg?v=1785629359","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/carolina_blue_white.jpg?v=1785629359","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/green_camo_black.jpg?v=1785629359"],
+    colors:["Black","White","Red","Pink","Navy Blue","Charcoal/Black","Charcoal/White","Black/White","Black/White/Black","Heather Grey/Black","Heather Grey/White","Carolina Blue/White","Green Camo/Black","Red/Black","Red/White","Royal/White","Silver/Black"],
+    colorImgs:{
+      "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black_e6045cde-21cd-4a15-928d-9d8a8f3b5edc.jpg?v=1785629360",
+      "White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/white_45b10869-34dd-4c87-b82b-eda4870acea3.jpg?v=1785629359",
+      "Red":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/red_6229c61a-98f9-4e8d-bc2f-e4e9fa153675.jpg?v=1785629359",
+      "Pink":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/pink_6e906a97-f2ec-49a7-9016-f194afffb3cb.jpg?v=1785629359",
+      "Navy Blue":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/navy_blue.jpg?v=1785629359",
+      "Charcoal/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal_black.jpg?v=1785629359",
+      "Charcoal/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal_white.jpg?v=1785629359",
+      "Black/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black_white.jpg?v=1785629359",
+      "Black/White/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black_white_black.jpg?v=1785629359",
+      "Heather Grey/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/heather_grey_black.jpg?v=1785629359",
+      "Heather Grey/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/heather_grey_white.jpg?v=1785629359",
+      "Carolina Blue/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/carolina_blue_white.jpg?v=1785629359",
+      "Green Camo/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/green_camo_black.jpg?v=1785629359",
+      "Red/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/red_black.jpg?v=1785629359",
+      "Red/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/red_white.jpg?v=1785629359",
+      "Royal/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal_white.jpg?v=1785629359",
+      "Silver/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/silver_black.jpg?v=1785629359"
+    },
     tiers:[[10,20,52559808299140],[24,18,52559808331908],[48,17,52559808364676],[96,16,52559808397444],[144,14,52559808430212]] },
   { id:"other", name:"Different style?", brand:"You name it", desc:"Dad caps, Flexfit, fitted, structured, and more. We'll source it", quote:true, popular:99,
     colors:["Black","Navy","Charcoal","White","Red","Khaki"] },
@@ -1219,11 +1245,11 @@ function initAccordion(){
       updateBarBtn();
       const next = document.querySelector(`.acc[data-step="${step+1}"]`);
       if (next){
-        // wait for the collapse transition (0.35s) so the target position is final, then scroll
+        // let the collapse + fade settle first, then glide to the next step
         setTimeout(() => {
           const y = next.getBoundingClientRect().top + window.pageYOffset - 90;
           window.scrollTo({ top: y, behavior: "smooth" });
-        }, 380);
+        }, 520);
       }
     });
   });
