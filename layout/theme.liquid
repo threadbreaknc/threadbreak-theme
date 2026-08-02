@@ -30,6 +30,12 @@
   /* collapse the free-shipping banner when scrolled down */
   .shipping-banner{transition:max-height .3s ease, padding .3s ease, opacity .3s ease;max-height:60px;}
   body.tb-scrolled .shipping-banner{max-height:0 !important;padding-top:0 !important;padding-bottom:0 !important;opacity:0;}
+  /* nav is offset below the banner; pull it up and reclaim the space when collapsed */
+  #main-nav{transition:top .3s ease, padding .3s ease;}
+  body{transition:padding-top .3s ease;}
+  body.tb-scrolled #main-nav{top:0 !important;}
+  body.tb-scrolled{padding-top:70px !important;}
+  @media(max-width:600px){ body.tb-scrolled{padding-top:60px !important;} }
   #shopify-section-header,
   .shopify-section-header,
   header[role="banner"],
