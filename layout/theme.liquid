@@ -17,14 +17,13 @@
   html, body { margin: 0 !important; padding: 0 !important; }
   /* full threadbreak wordmark logo — override theme's square/black-filter rules */
   .nav-brand{display:flex;align-items:center;height:100%;}
-  .nav-logo-full.nav-logo-img{height:56px !important;width:auto !important;display:block;object-fit:contain;align-self:center;filter:none !important;animation:none !important;}
+  .nav-logo-full.nav-logo-img{height:56px !important;width:auto !important;display:block;object-fit:contain;align-self:center;filter:none !important;animation:none !important;position:relative;top:2px;}
   .footer-logo-full.footer-logo{height:80px !important;width:auto !important;display:block;object-fit:contain;filter:none !important;}
   @media(max-width:700px){ .nav-logo-full.nav-logo-img{height:50px !important;} .footer-logo-full.footer-logo{height:64px !important;} }
   /* keep the Place a Custom Order button text white on hover */
   .nav-links a.nav-cta,
   .nav-links a.nav-cta:hover{color:#ffffff !important;}
-  /* shrink the nav on scroll */
-  /* shrink the logo when the theme's existing .scrolled class is active (added by theme.js at 60px) */
+  /* shrink the logo when the theme's existing .scrolled class is active (theme.js adds it at 60px) */
   .nav-logo-full.nav-logo-img{transition:height .3s ease;}
   #main-nav.scrolled .nav-logo-full.nav-logo-img{height:42px !important;}
   @media(max-width:700px){ #main-nav.scrolled .nav-logo-full.nav-logo-img{height:38px !important;} }
