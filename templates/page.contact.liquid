@@ -1,4 +1,4 @@
-{%- comment -%} build: v46 {%- endcomment -%}
+{%- comment -%} build: v47 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -431,13 +431,15 @@ body.quote-mode #tbco .buy-only {display:none}
         <div class="art-note">
           <p><strong>Thread colors:</strong> Unless you tell us otherwise, we match thread colors to your logo. Want something different, like tone-on-tone or matched to the hat? Just mention it in the notes.</p>
         </div>
-        <label class="field-label">Your name</label>
-        <input type="text" id="custName" class="txt-input" placeholder="First and last name" autocomplete="name">
-        <label class="field-label">Your email</label>
-        <input type="email" id="custEmail" class="txt-input" placeholder="you@example.com" autocomplete="email">
-        <label class="field-label">Phone <span class="opt">(optional)</span></label>
-        <input type="tel" id="custPhone" class="txt-input" placeholder="(555) 555-5555" autocomplete="tel">
-        <p class="err" id="contactErr">Please add your name and a valid email so we can send your mockup and reply.</p>
+        <div class="quote-only" id="contactWrap">
+          <label class="field-label">Your name</label>
+          <input type="text" id="custName" class="txt-input" placeholder="First and last name" autocomplete="name">
+          <label class="field-label">Your email</label>
+          <input type="email" id="custEmail" class="txt-input" placeholder="you@example.com" autocomplete="email">
+          <label class="field-label">Phone <span class="opt">(optional)</span></label>
+          <input type="tel" id="custPhone" class="txt-input" placeholder="(555) 555-5555" autocomplete="tel">
+          <p class="err" id="contactErr">Please add your name and a valid email so we can send your quote.</p>
+        </div>
         <label class="field-label">Notes for us</label>
         <textarea id="notes" placeholder="Thread colors, text to add, deadline, anything else we should know..."></textarea>
         <label class="social-optout">
@@ -785,9 +787,11 @@ function buildOrderSummary(){
     ["Decoration", state.deco.label],
     ["Placement", places.join(", ") || "Front"],
   ];
-  const cName = $("custName")?.value.trim(), cEmail = $("custEmail")?.value.trim();
-  if (cName) lines.push(["Name", cName]);
-  if (cEmail) lines.push(["Email", cEmail]);
+  if (quoteMode()){
+    const cName = $("custName")?.value.trim(), cEmail = $("custEmail")?.value.trim();
+    if (cName) lines.push(["Name", cName]);
+    if (cEmail) lines.push(["Email", cEmail]);
+  }
   if (state.style.youth) lines.push(["Sizing", state.sizing]);
   let html = lines.map(([l,v]) =>
     `<div class="sb-sum-row"><span class="sb-sum-label">${l}</span><span class="sb-sum-val">${v}</span></div>`).join("");
@@ -879,7 +883,7 @@ function updatePricingUI(){
 }
 
 function renderColors(){
-  const list = state.style.colors;
+  const list = [...state.style.colors].sort((a,b) => a.localeCompare(b));
   const map = state.style.colorImgs || {};
   const dot = c => map[c]
     ? `<img src="${map[c]}" alt="${c}">`
@@ -1255,8 +1259,7 @@ async function submitCheckout(){
   btn.textContent = "Adding…";
   const meta = orderMeta();
   const tier = tierFor(state.style, state.qty);
-  const props = { "Customer name": meta.name, "Customer email": meta.email, "Hat Color(s)": meta.color, "Decoration": meta.deco, "Placements": meta.placements, "Artwork": artNote };
-  if (meta.phone) props["Customer phone"] = meta.phone;
+  const props = { "Hat Color(s)": meta.color, "Decoration": meta.deco, "Placements": meta.placements, "Artwork": artNote };
   if (meta.sizing) props["Sizing"] = meta.sizing;
   if (meta.notes !== "-") props["Notes"] = meta.notes;
   props["Social sharing"] = meta.social;
@@ -1400,6 +1403,8 @@ function initAccordion(){
 }
 
 function validateContact(){
+  // contact fields only exist / matter in quote mode; buy mode uses Shopify checkout
+  if (!quoteMode()) return true;
   const name = $("custName")?.value.trim() || "";
   const email = $("custEmail")?.value.trim() || "";
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
