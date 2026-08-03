@@ -1,4 +1,4 @@
-{%- comment -%} build: v44 {%- endcomment -%}
+{%- comment -%} build: v46 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -329,7 +329,7 @@ body.quote-mode #tbco .buy-only {display:none}
     <div class="acc-summary" id="sum2"></div>
     <div class="acc-wrap">
       <p class="step-sub buy-only">Starts at just 10 hats total. Price per hat drops as your total goes up. Pick a tier or type your own number.</p>
-      <p class="step-sub quote-only">Quantity helps us quote your exact per-hat price.</p>
+      <p class="step-sub quote-only">Quantity helps us put together your quote.</p>
       <div class="step-body">
         <div class="qty-row">
           <input class="qty-input" id="qty" type="number" min="10" value="10" inputmode="numeric" aria-label="Total quantity">
@@ -460,7 +460,7 @@ body.quote-mode #tbco .buy-only {display:none}
     </ol>
     <ol class="flow quote-only">
       <li><span class="n">1</span><span>Hit the button and your request, artwork included, comes straight to us.</span></li>
-      <li><span class="n">2</span><span>We reply within 1 business day with your exact per-hat price and a free mockup.</span></li>
+      <li><span class="n">2</span><span>We'll review your request and follow up with next steps and pricing.</span></li>
       <li><span class="n">3</span><span>You approve, then we stitch and ship.</span></li>
     </ol>
     <div class="art-note">
@@ -578,9 +578,25 @@ const STYLES = [
       "Black/Field Camo":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590P_BlackFieldCamp001_jpg_b9bafb49-b972-4b12-ab31-f6af5ff99e53.webp?v=1785629359"
     },
     tiers:[[10,18,52559807971460],[24,16,52559808004228],[48,15,52559808036996],[96,14,52559808069764],[144,13,52559808102532]] },
-  { id:"rich112", name:"Richardson 112 Trucker", brand:"Richardson 112", desc:"6-panel snapback · adult · one size fits most", popular:99,
+  { id:"atonal_a500r", name:"Atonal A500R Rope Snapback", brand:"Atonal A500R", desc:"Pinch-front rope snapback · adult · one size fits most", popular:99,
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black.webp?v=1785794799","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/gold-black.jpg?v=1785794799","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/cardinal-white.jpg?v=1785794799","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/sage-white.jpg?v=1785794799"],
+    colors:["Black","Black/White","Black/Red","Gold/Black","Charcoal/Gold","Cardinal/White","Sage/White","Bone/Medium Blue/Gold","Cream/Copper/Black","Bone/Seafoam/Black"],
+    colorImgs:{
+      "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black.webp?v=1785794799",
+      "Black/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-white.webp?v=1785794799",
+      "Black/Red":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-red.webp?v=1785794799",
+      "Gold/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/gold-black.jpg?v=1785794799",
+      "Charcoal/Gold":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-gold.jpg?v=1785794799",
+      "Cardinal/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/cardinal-white.jpg?v=1785794799",
+      "Sage/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/sage-white.jpg?v=1785794799",
+      "Bone/Medium Blue/Gold":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/bone-medium_blue-gold.webp?v=1785794799",
+      "Cream/Copper/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/cream-copper-black.webp?v=1785794799",
+      "Bone/Seafoam/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/bone-seafoam-black.jpg?v=1785794799"
+    },
+    tiers:[[10,18,52589230063748],[24,16,52589230096516],[48,15,52589230129284],[96,14,52589230162052],[144,13,52589230194820]] },
+  { id:"rich112", name:"Richardson 112 6-Panel Trucker", brand:"Richardson 112", desc:"6-panel snapback · adult · one size fits most", popular:99,
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-white-red.jpg?v=1785626680","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/all-black.jpg?v=1785626679","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-neon-yellow.jpg?v=1785626679","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue-white.jpg?v=1785626680"],
-    colors:["Black/White/Red","Black","White","Black/White","Black/Charcoal","Charcoal/Black","Charcoal/Neon Blue","Charcoal/Neon Green","Charcoal/Neon Yellow","Charcoal/Neon Orange","Heather Grey/White","Heather Grey/Black","Loden/Black","Red/Black","Red/White","Royal Blue/Black","Royal Blue/White","Orange/Black","Purple/White","Hot Pink/White","Hot Pink/Black","White/Navy","White/Black"],
+    colors:["Black/White/Red","Black","White","Black/White","Black/Charcoal","Charcoal/Black","Charcoal/Neon Blue","Charcoal/Neon Green","Charcoal/Neon Yellow","Charcoal/Neon Orange","Heather Grey/White","Heather Grey/Black","Loden/Black","Red/Black","Red/White","Royal Blue/Black","Royal Blue/White","Orange/Black","Purple/White","Hot Pink/White","Hot Pink/Black","White/Navy","White/Black","Charcoal/White"],
     colorImgs:{
       "Black/White/Red":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-white-red.jpg?v=1785626680",
       "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/all-black.jpg?v=1785626679",
@@ -604,9 +620,24 @@ const STYLES = [
       "Hot Pink/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/hot-pink-white.jpg?v=1785626680",
       "Hot Pink/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/hot-pink-black.jpg?v=1785626680",
       "White/Navy":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/white-navy.jpg?v=1785626680",
-      "White/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/white-black.jpg?v=1785626680"
+      "White/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/white-black.jpg?v=1785626680",
+      "Charcoal/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-charcoal_white.jpg?v=1785794877"
     },
     tiers:[[10,20,52559808135300],[24,18,52559808168068],[48,17,52559808200836],[96,16,52559808233604],[144,14,52559808266372]] },
+  { id:"rich112_5p", name:"Richardson 112 5-Panel Trucker", brand:"Richardson 112", desc:"5-panel snapback · adult · one size fits most", popular:99,
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-black.jpg?v=1785794828","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-charcoal-white.jpg?v=1785794828","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-loden_green-black.jpg?v=1785794828","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-cobaltblue-gray.jpg?v=1785794828"],
+    colors:["Black","Black/White","Charcoal/Black","Charcoal/White","Heather Grey/Black","Loden Green/Black","Cobalt Blue/Gray","Khaki/Coffee"],
+    colorImgs:{
+      "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-black.jpg?v=1785794828",
+      "Black/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-black-white.jpg?v=1785794828",
+      "Charcoal/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-charcoal-black.jpg?v=1785794828",
+      "Charcoal/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-charcoal-white.jpg?v=1785794828",
+      "Heather Grey/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-heathergrey-black.jpg?v=1785794828",
+      "Loden Green/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-loden_green-black.jpg?v=1785794828",
+      "Cobalt Blue/Gray":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-cobaltblue-gray.jpg?v=1785794828",
+      "Khaki/Coffee":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-khaki-coffee.jpg?v=1785794828"
+    },
+    tiers:[[10,20,52589229801604],[24,18,52589229834372],[48,17,52589229867140],[96,16,52589229899908],[144,14,52589229932676]] },
   { id:"rich112p", name:"Richardson 112 Printed 5-Panel", brand:"Richardson 112P", desc:"Printed camo 5-panel trucker · adult · one size fits most", popular:99,
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-realtree-neon-yellow.jpg?v=1785626680","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-green-camo.jpg?v=1785626679","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-mossy-oak-habitat-brown.jpg?v=1785626680","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-realtree-neon-pink.jpg?v=1785626680"],
     colors:["Realtree/Neon Yellow","Green Camo/White","Green Camo/Black","Mossy Oak Habitat/Brown","Realtree/Neon Pink","Admiral Duck Camo/Blue"],
@@ -1192,10 +1223,10 @@ async function submitQuote(){
 
   if (sent.ok){
     $("confTitle").textContent = "Request sent ✓";
-    $("confBody").innerHTML = "Thanks " + (meta.name ? meta.name.split(" ")[0] : "") + "! We've got your request" + (sent.uploaded.length ? ", logo and all" : "") + ". We'll reply from <strong>help@threadbreak.com</strong> with your exact price and a free mockup within 1 business day. Here's a copy of what you sent:";
+    $("confBody").innerHTML = "Thanks " + (meta.name ? meta.name.split(" ")[0] : "") + "! We've got your request" + (sent.uploaded.length ? ", logo and all" : "") + ". We'll follow up from <strong>help@threadbreak.com</strong> once we've reviewed your request. Here's a copy of what you sent:";
   } else {
     $("confTitle").textContent = "Almost there, hit send";
-    $("confBody").innerHTML = "Your quote request just opened in your email app. Press send and we'll reply within 1 business day. If you have a logo, attach it to that email too. Here's your summary:";
+    $("confBody").innerHTML = "Your quote request just opened in your email app. Press send and we'll follow up once we've reviewed it. If you have a logo, attach it to that email too. Here's your summary:";
     window.location.href = `mailto:${QUOTE_EMAIL}?subject=${encodeURIComponent("Custom Hat Quote Request")}&body=${encodeURIComponent("CUSTOM HAT QUOTE REQUEST (threadbreak.com)\n\n" + summary)}`;
   }
   $("summary").textContent = summary;
