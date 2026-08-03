@@ -1,4 +1,4 @@
-{%- comment -%} build: v42 {%- endcomment -%}
+{%- comment -%} build: v43 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -172,8 +172,10 @@ html {scroll-behavior:smooth}
 #tbco .tier.on .t-price {color:var(--purple)}
 #tbco .savings {margin-top:12px;font-size:14px;font-weight:500;color:var(--good);display:none}
 #tbco .savings.show {display:block}
-#tbco textarea, #tbco input[type=text] {width:100%;border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;font-size:15px;font-family:'DM Sans',sans-serif;background:var(--white)}
-#tbco textarea:focus, #tbco input[type=text]:focus {outline:2px solid var(--purple);border-color:var(--purple)}
+#tbco textarea, #tbco input[type=text], #tbco input[type=email], #tbco input[type=tel] {width:100%;border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;font-size:15px;font-family:'DM Sans',sans-serif;background:var(--white)}
+#tbco textarea:focus, #tbco input[type=text]:focus, #tbco input[type=email]:focus, #tbco input[type=tel]:focus {outline:2px solid var(--purple);border-color:var(--purple)}
+#tbco .txt-input{margin-bottom:6px}
+#tbco .opt{color:var(--muted);font-weight:400;font-size:13px}
 #tbco textarea {min-height:90px;resize:vertical}
 #tbco .social-optout{display:flex;align-items:flex-start;gap:10px;margin-top:16px;padding:14px 16px;background:var(--ice);border:1px solid var(--line);border-radius:12px;cursor:pointer}
 #tbco .social-optout input{margin-top:3px;width:18px;height:18px;flex:none;accent-color:var(--purple);cursor:pointer}
@@ -421,6 +423,13 @@ body.quote-mode #tbco .buy-only {display:none}
         <div class="art-note">
           <p><strong>Thread colors:</strong> Unless you tell us otherwise, we match thread colors to your logo. Want something different, like tone-on-tone or matched to the hat? Just mention it in the notes.</p>
         </div>
+        <label class="field-label">Your name</label>
+        <input type="text" id="custName" class="txt-input" placeholder="First and last name" autocomplete="name">
+        <label class="field-label">Your email</label>
+        <input type="email" id="custEmail" class="txt-input" placeholder="you@example.com" autocomplete="email">
+        <label class="field-label">Phone <span class="opt">(optional)</span></label>
+        <input type="tel" id="custPhone" class="txt-input" placeholder="(555) 555-5555" autocomplete="tel">
+        <p class="err" id="contactErr">Please add your name and a valid email so we can send your mockup and reply.</p>
         <label class="field-label">Notes for us</label>
         <textarea id="notes" placeholder="Thread colors, text to add, deadline, anything else we should know..."></textarea>
         <label class="social-optout">
@@ -736,6 +745,9 @@ function buildOrderSummary(){
     ["Decoration", state.deco.label],
     ["Placement", places.join(", ") || "Front"],
   ];
+  const cName = $("custName")?.value.trim(), cEmail = $("custEmail")?.value.trim();
+  if (cName) lines.push(["Name", cName]);
+  if (cEmail) lines.push(["Email", cEmail]);
   if (state.style.youth) lines.push(["Sizing", state.sizing]);
   let html = lines.map(([l,v]) =>
     `<div class="sb-sum-row"><span class="sb-sum-label">${l}</span><span class="sb-sum-val">${v}</span></div>`).join("");
@@ -1076,6 +1088,9 @@ function fileToB64(file){
 function orderMeta(){
   const per = perHat();
   const meta = {
+    name: $("custName")?.value.trim() || "",
+    email: $("custEmail")?.value.trim() || "",
+    phone: $("custPhone")?.value.trim() || "",
     style: state.style.name,
     requestedStyle: quoteMode() ? ($("quoteStyle").value.trim() || "Not specified, see notes") : "",
     color: colorSummary(),
@@ -1146,6 +1161,7 @@ async function submitQuote(){
   btn.disabled = true; btn.textContent = "Sending…";
   const meta = orderMeta();
   const summary = [
+    `Name: ${meta.name}`, `Email: ${meta.email}`, `Phone: ${meta.phone || "-"}`,
     `Requested style/brand: ${meta.requestedStyle}`,
     `Color(s): ${meta.color}`, `Quantity: ${meta.qty}`,
     `Decoration: ${meta.deco}`, `Placements: ${meta.placements}`,
@@ -1185,7 +1201,8 @@ async function submitCheckout(){
   btn.textContent = "Adding…";
   const meta = orderMeta();
   const tier = tierFor(state.style, state.qty);
-  const props = { "Hat Color(s)": meta.color, "Decoration": meta.deco, "Placements": meta.placements, "Artwork": artNote };
+  const props = { "Customer name": meta.name, "Customer email": meta.email, "Hat Color(s)": meta.color, "Decoration": meta.deco, "Placements": meta.placements, "Artwork": artNote };
+  if (meta.phone) props["Customer phone"] = meta.phone;
   if (meta.sizing) props["Sizing"] = meta.sizing;
   if (meta.notes !== "-") props["Notes"] = meta.notes;
   props["Social sharing"] = meta.social;
@@ -1318,7 +1335,21 @@ function initAccordion(){
   document.addEventListener("keydown", e => { if (e.key === "Escape") closeSummary(); });
 }
 
+function validateContact(){
+  const name = $("custName")?.value.trim() || "";
+  const email = $("custEmail")?.value.trim() || "";
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const ok = name.length > 0 && emailOk;
+  const err = $("contactErr");
+  if (err) err.classList.toggle("show", !ok);
+  if (!ok){
+    const target = name.length === 0 ? $("custName") : $("custEmail");
+    if (target){ target.focus(); target.scrollIntoView({ behavior:"smooth", block:"center" }); }
+  }
+  return ok;
+}
 function openSummary(){
+  if (!validateContact()) return;
   buildOrderSummary();
   $("sbSummary").classList.add("open");
   const ov = $("sbOverlay"); if (ov) ov.classList.add("open");
