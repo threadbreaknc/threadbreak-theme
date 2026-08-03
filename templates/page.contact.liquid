@@ -1,4 +1,4 @@
-{%- comment -%} build: v41 {%- endcomment -%}
+{%- comment -%} build: v42 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -1127,29 +1127,17 @@ async function sendToDrive(type){
       if (label) label.textContent = "Logo sent ✓";
       setTimeout(() => resolve(result), 300);
     };
-    try {
-      const xhr = new XMLHttpRequest();
-      xhr.open("POST", APPS_SCRIPT_URL, true);
-      xhr.setRequestHeader("Content-Type", "text/plain");
-      // real upload progress overrides the simulation when available
-      xhr.upload.onprogress = e => {
-        if (e.lengthComputable && fill){
-          const pct = Math.round((e.loaded / e.total) * 100);
-          // only let real progress push the bar forward, capped at 90 until done
-          const capped = Math.min(90, pct);
-          if (capped > simPct){ simPct = capped; fill.style.width = simPct + "%"; }
-          if (label) label.textContent = pct < 100 ? `Sending your logo… ${pct}%` : "Almost done…";
-        }
-      };
-      xhr.onload = () => finish({ ok:true, uploaded });
-      xhr.onerror = () => finish({ ok:true, uploaded }); // opaque/cross-origin still sends; assume ok
-      xhr.ontimeout = () => { clearInterval(simTimer); resolve({ ok:false, uploaded }); };
-      xhr.timeout = 120000;
-      xhr.send(body);
-    } catch (e) {
-      clearInterval(simTimer);
-      resolve({ ok:false, uploaded });
-    }
+    // no-cors fetch actually delivers to Apps Script (a cross-origin XHR gets
+    // blocked following Apps Script's 302 redirect). We can't read the response
+    // in no-cors mode, so we treat a completed send as success.
+    fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: body
+    })
+    .then(() => finish({ ok:true, uploaded }))
+    .catch(() => { clearInterval(simTimer); resolve({ ok:false, uploaded }); });
   });
 }
 
