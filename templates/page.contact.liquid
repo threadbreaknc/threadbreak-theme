@@ -1,4 +1,4 @@
-{%- comment -%} build: v43 {%- endcomment -%}
+{%- comment -%} build: v44 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -299,6 +299,7 @@ body.quote-mode #tbco .buy-only {display:none}
 
 <div class="wrap">
 
+  <div id="tbFormSteps">
   <!-- STEP 1 -->
   <section class="acc open" data-step="1">
     <div class="step-head" data-acc-toggle>
@@ -354,20 +355,27 @@ body.quote-mode #tbco .buy-only {display:none}
     <div class="acc-wrap">
       <p class="step-sub">Pick as many as you like. Mixing colors doesn't cost extra. Split your total across them below.</p>
       <div class="step-body">
-        <label class="field-label" style="margin-top:0">Hat color (pick as many as you like)</label>
-        <div class="cdd" id="colorDD">
-          <button type="button" class="cdd-trigger" id="cddTrigger" aria-haspopup="listbox" aria-expanded="false">
-            <span id="cddLabel">Select colors</span>
-            <span class="cdd-arrow">▼</span>
-          </button>
-          <div class="cdd-list hidden" id="cddList" role="listbox"></div>
-          <div class="cdd-scrollcue" id="cddScrollCue">Scroll for more colors ▼</div>
+        <label class="field-label buy-only" style="margin-top:0">Hat color (pick as many as you like)</label>
+        <label class="field-label quote-only" style="margin-top:0">Hat color(s)</label>
+        <div class="buy-only" id="colorBuyWrap">
+          <div class="cdd" id="colorDD">
+            <button type="button" class="cdd-trigger" id="cddTrigger" aria-haspopup="listbox" aria-expanded="false">
+              <span id="cddLabel">Select colors</span>
+              <span class="cdd-arrow">▼</span>
+            </button>
+            <div class="cdd-list hidden" id="cddList" role="listbox"></div>
+            <div class="cdd-scrollcue" id="cddScrollCue">Scroll for more colors ▼</div>
+          </div>
+          <div class="color-preview" id="colorPreview" style="display:none">
+            <img id="colorPreviewImg" alt="" />
+            <span id="colorPreviewName"></span>
+          </div>
+          <div id="breakdownWrap"></div>
         </div>
-        <div class="color-preview" id="colorPreview" style="display:none">
-          <img id="colorPreviewImg" alt="" />
-          <span id="colorPreviewName"></span>
+        <div class="quote-only" id="colorQuoteWrap">
+          <input type="text" id="quoteColor" class="txt-input" placeholder="e.g. black, red/white, camo, whatever you have in mind">
+          <p class="hint">Tell us the color(s) you'd like. We'll confirm exact options in your quote.</p>
         </div>
-        <div id="breakdownWrap"></div>
         <p class="hint" id="colorHint"></p>
         <div id="sizingWrap" style="display:none">
           <label class="field-label">Sizing</label>
@@ -479,6 +487,7 @@ from {{ shop.metafields.judgeme.all_reviews_count }} reviews
   </div>
 <!-- End of Judge.me code -->
   </section>
+  </div>
 
   <div class="confirm" id="confirm">
     <h3 id="confTitle">Request sent ✓</h3>
@@ -741,7 +750,7 @@ function buildOrderSummary(){
   const lines = [
     ["Hat", state.style.quote ? "Different style (custom quote)" : `${state.style.name} (${state.style.brand})`],
     ["Quantity", `${state.qty} hats`],
-    ["Colors", colorSummary()],
+    ["Colors", quoteMode() ? ($("quoteColor")?.value.trim() || "Not specified") : colorSummary()],
     ["Decoration", state.deco.label],
     ["Placement", places.join(", ") || "Front"],
   ];
@@ -911,13 +920,17 @@ function renderColors(){
 
   const hint = $("colorHint");
   hint.style.color = "";
-  hint.textContent = quoteMode()
-    ? "Rough color direction is fine. We'll confirm exact colorways in your quote."
-    : (state.colorSel.length === 0
+  if (quoteMode()){
+    hint.textContent = "";
+    hint.style.display = "none";
+  } else {
+    hint.style.display = "";
+    hint.textContent = state.colorSel.length === 0
       ? "Open the dropdown to pick your hat color(s)."
       : state.colorSel.length > 1
       ? "Set how many hats you want in each color. The total drives your price."
-      : "Add more colors from the dropdown to split your order across colorways. Don't see yours? Mention it in the notes.");
+      : "Add more colors from the dropdown to split your order across colorways. Don't see yours? Mention it in the notes.";
+  }
 }
 
 // show a photo of the most recently tapped color, if this style has photos
@@ -1093,7 +1106,7 @@ function orderMeta(){
     phone: $("custPhone")?.value.trim() || "",
     style: state.style.name,
     requestedStyle: quoteMode() ? ($("quoteStyle").value.trim() || "Not specified, see notes") : "",
-    color: colorSummary(),
+    color: quoteMode() ? ($("quoteColor")?.value.trim() || "Not specified") : colorSummary(),
     qty: state.qty,
     deco: state.deco.label,
     placements: [...state.placements].map(p=> p==="front" ? `Front (${state.frontPos})` : PLACEMENTS.find(x=>x.id===p).label).join(", "),
@@ -1124,8 +1137,11 @@ async function sendToDrive(type){
 
   // show the progress UI, start animated immediately so there's always motion
   const box = $("uploadProgress"), fill = $("upFill"), label = $("upLabel");
+  const hasLogo = files.length > 0;
+  const workingText = hasLogo ? "Sending your logo…" : (type === "quote" ? "Submitting your request…" : "Submitting…");
+  const doneText = hasLogo ? "Logo sent ✓" : "Submitted ✓";
   if (box) box.style.display = "block";
-  if (label) label.textContent = "Sending your logo…";
+  if (label) label.textContent = workingText;
   // simulated steady climb so the bar always moves, even if the browser
   // fires no upload-progress events (common for cross-origin Apps Script).
   let simPct = 8;
@@ -1139,7 +1155,7 @@ async function sendToDrive(type){
     const finish = (result) => {
       clearInterval(simTimer);
       if (fill){ fill.classList.remove("indeterminate"); fill.style.width = "100%"; }
-      if (label) label.textContent = "Logo sent ✓";
+      if (label) label.textContent = doneText;
       setTimeout(() => resolve(result), 300);
     };
     // no-cors fetch actually delivers to Apps Script (a cross-origin XHR gets
@@ -1157,8 +1173,8 @@ async function sendToDrive(type){
 }
 
 async function submitQuote(){
-  const btn = $("submitBtn");
-  btn.disabled = true; btn.textContent = "Sending…";
+  const btn = $("sbSummaryCheckout") || $("submitBtn");
+  if (btn) btn.disabled = true;
   const meta = orderMeta();
   const summary = [
     `Name: ${meta.name}`, `Email: ${meta.email}`, `Phone: ${meta.phone || "-"}`,
@@ -1169,19 +1185,26 @@ async function submitQuote(){
   ].join("\n");
 
   const sent = await sendToDrive("quote");
-  btn.disabled = false; btn.textContent = "Request my quote";
+  if (btn){ btn.disabled = false; btn.textContent = "Request my quote"; }
+
+  // close the review modal
+  closeSummary();
 
   if (sent.ok){
     $("confTitle").textContent = "Request sent ✓";
-    $("confBody").innerHTML = "We've got it" + (sent.uploaded.length ? ", artwork and all" : "") + ". We'll reply from <strong>help@threadbreak.com</strong> with your exact price and free mockup within 1 business day. Watch your inbox.";
+    $("confBody").innerHTML = "Thanks " + (meta.name ? meta.name.split(" ")[0] : "") + "! We've got your request" + (sent.uploaded.length ? ", logo and all" : "") + ". We'll reply from <strong>help@threadbreak.com</strong> with your exact price and a free mockup within 1 business day. Here's a copy of what you sent:";
   } else {
     $("confTitle").textContent = "Almost there, hit send";
-    $("confBody").innerHTML = "Your quote request just opened in your email app. Press send and we'll reply within 1 business day. Please attach your logo file(s) to that email too. Or copy the summary below to <strong>help@threadbreak.com</strong>.";
+    $("confBody").innerHTML = "Your quote request just opened in your email app. Press send and we'll reply within 1 business day. If you have a logo, attach it to that email too. Here's your summary:";
     window.location.href = `mailto:${QUOTE_EMAIL}?subject=${encodeURIComponent("Custom Hat Quote Request")}&body=${encodeURIComponent("CUSTOM HAT QUOTE REQUEST (threadbreak.com)\n\n" + summary)}`;
   }
   $("summary").textContent = summary;
+
+  // hide the form + sticky bar, reveal the confirmation
+  const steps = $("tbFormSteps"); if (steps) steps.style.display = "none";
+  const bar = $("scoreboard"); if (bar) bar.style.display = "none";
   $("confirm").classList.add("show");
-  $("confirm").scrollIntoView({ behavior:"smooth", block:"start" });
+  $("confirm").scrollIntoView({ behavior:"smooth", block:"center" });
 }
 
 async function submitCheckout(){
@@ -1288,12 +1311,22 @@ function initAccordion(){
   document.querySelectorAll('[data-continue]').forEach(btn => {
     btn.addEventListener("click", () => {
       const step = +btn.getAttribute("data-continue");
-      // step 3 (colors) requires at least one color before moving on
-      if (step === 3 && state.colorSel.length === 0){
-        const hint = $("colorHint");
-        if (hint){ hint.textContent = "Please pick at least one color to continue."; hint.style.color = "#C22B3F"; }
-        const dd = $("cddTrigger"); if (dd) dd.scrollIntoView({ behavior:"smooth", block:"center" });
-        return;
+      // step 3 (colors): buy mode needs a picked color; quote mode needs the text field
+      if (step === 3){
+        if (quoteMode()){
+          const qc = $("quoteColor");
+          if (qc && qc.value.trim() === ""){
+            const hint = $("colorHint");
+            if (hint){ hint.textContent = "Please tell us a color to continue."; hint.style.color = "#C22B3F"; hint.style.display = "block"; }
+            qc.focus(); qc.scrollIntoView({ behavior:"smooth", block:"center" });
+            return;
+          }
+        } else if (state.colorSel.length === 0){
+          const hint = $("colorHint");
+          if (hint){ hint.textContent = "Please pick at least one color to continue."; hint.style.color = "#C22B3F"; }
+          const dd = $("cddTrigger"); if (dd) dd.scrollIntoView({ behavior:"smooth", block:"center" });
+          return;
+        }
       }
       markDone(step, true);
       setOpen(step + 1, true);
