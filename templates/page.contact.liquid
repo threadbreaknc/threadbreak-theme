@@ -1,4 +1,4 @@
-{%- comment -%} build: v47 {%- endcomment -%}
+{%- comment -%} build: v48 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -1139,7 +1139,7 @@ function orderMeta(){
     name: $("custName")?.value.trim() || "",
     email: $("custEmail")?.value.trim() || "",
     phone: $("custPhone")?.value.trim() || "",
-    style: state.style.name,
+    style: quoteMode() ? (($("quoteStyle")?.value.trim()) || "Different style (see notes)") : state.style.name,
     requestedStyle: quoteMode() ? ($("quoteStyle").value.trim() || "Not specified, see notes") : "",
     color: quoteMode() ? ($("quoteColor")?.value.trim() || "Not specified") : colorSummary(),
     qty: state.qty,
