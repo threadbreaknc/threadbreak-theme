@@ -1,0 +1,92 @@
+{%- comment -%} build: work-v1 {%- endcomment -%}
+<div id="tbwork">
+  <style>
+    #tbwork{--ink:#14121C;--purple:#5028AA;--ice:#F4F3F7;--line:#E2E0EA;--muted:#6B6A78;--white:#fff;
+      max-width:1200px;margin:0 auto;padding:0 20px 80px;font-family:'DM Sans',sans-serif;color:var(--ink)}
+    #tbwork .work-hero{text-align:center;padding:56px 16px 40px}
+    #tbwork .work-eyebrow{text-transform:uppercase;letter-spacing:.18em;font-size:13px;font-weight:700;color:var(--purple);margin:0 0 10px}
+    #tbwork .work-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,8vw,68px);line-height:.98;margin:0 0 14px;letter-spacing:.01em}
+    #tbwork .work-hero p{font-size:17px;color:var(--muted);max-width:560px;margin:0 auto;line-height:1.55}
+
+    /* masonry-style responsive grid */
+    #tbwork .gallery{columns:3;column-gap:16px}
+    @media(max-width:900px){#tbwork .gallery{columns:2}}
+    @media(max-width:560px){#tbwork .gallery{columns:1}}
+    #tbwork .tile{break-inside:avoid;margin:0 0 16px;border-radius:14px;overflow:hidden;background:var(--ice);
+      border:1px solid var(--line);position:relative;display:block}
+    #tbwork .tile img,#tbwork .tile video{width:100%;height:auto;display:block}
+    #tbwork .tile .cap{padding:12px 14px;font-size:14px;font-weight:600;color:var(--ink)}
+    #tbwork .tile .cap span{display:block;font-weight:400;color:var(--muted);font-size:13px;margin-top:2px}
+    /* play badge on videos */
+    #tbwork .tile.vid::after{content:"";position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;
+      background:rgba(80,40,170,.9);background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'><path d='M8 5v14l11-7z'/></svg>");
+      background-size:16px;background-repeat:no-repeat;background-position:55% center;pointer-events:none}
+
+    /* CTA band */
+    #tbwork .work-cta{margin-top:56px;text-align:center;background:var(--ink);color:#fff;border-radius:18px;padding:44px 24px}
+    #tbwork .work-cta h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,5vw,40px);margin:0 0 10px;letter-spacing:.01em}
+    #tbwork .work-cta p{color:#C9C6D6;margin:0 auto 22px;max-width:460px;line-height:1.55}
+    #tbwork .work-cta a{display:inline-block;background:var(--purple);color:#fff;text-decoration:none;
+      font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.04em;padding:13px 30px;border-radius:10px;
+      transition:transform .15s,background .15s}
+    #tbwork .work-cta a:hover{background:#6234c9;transform:translateY(-1px)}
+    #tbwork .ig-link{display:inline-flex;align-items:center;gap:8px;margin-top:30px;color:var(--purple);
+      font-weight:700;text-decoration:none;font-size:15px}
+    #tbwork .ig-link:hover{text-decoration:underline}
+  </style>
+
+  <section class="work-hero">
+    <p class="work-eyebrow">Our Work</p>
+    <h1>Stitched in-house.</h1>
+    <p>A look at custom hats we've embroidered for businesses, brands, teams, and events. Every one designed, stitched, and shipped from Burlington, NC.</p>
+  </section>
+
+  <div class="gallery">
+
+    <!--
+      HOW TO ADD ITEMS
+      ================
+      PHOTO tile:
+        <a class="tile" href="FULL_IMAGE_URL" target="_blank" rel="noopener">
+          <img src="FULL_IMAGE_URL" alt="short description" loading="lazy">
+          <div class="cap">Title<span>optional detail</span></div>
+        </a>
+
+      VIDEO tile (add class "vid" for the play badge):
+        <div class="tile vid">
+          <video src="FULL_VIDEO_URL" muted loop playsinline controls preload="metadata"></video>
+          <div class="cap">Title<span>optional detail</span></div>
+        </div>
+
+      Paste your Shopify CDN links in place of the REPLACE_ME... placeholders.
+      Delete any example tiles you don't use. The caption block is optional,
+      remove it if you just want the image.
+    -->
+
+    <!-- EXAMPLE PHOTO TILE (replace the URL, duplicate as needed) -->
+    <a class="tile" href="REPLACE_ME_IMAGE_URL" target="_blank" rel="noopener">
+      <img src="REPLACE_ME_IMAGE_URL" alt="Custom embroidered hat" loading="lazy">
+      <div class="cap">Custom order<span>Richardson 112, 3D puff front</span></div>
+    </a>
+
+    <!-- EXAMPLE VIDEO TILE -->
+    <div class="tile vid">
+      <video src="REPLACE_ME_VIDEO_URL" muted loop playsinline controls preload="metadata"></video>
+      <div class="cap">Stitch-out<span>watch it come together</span></div>
+    </div>
+
+  </div>
+
+  <section class="work-cta">
+    <h2>Want hats like these?</h2>
+    <p>Send us your logo and we'll bring it to life. Wholesale pricing from just 10 hats.</p>
+    <a href="/pages/quote">Start a Custom Order</a>
+    <div>
+      <a class="ig-link" href="REPLACE_ME_INSTAGRAM_URL" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c3.2 0 3.6 0 4.9.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.86s0 3.6-.07 4.86c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.86.07s-3.6 0-4.86-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23C2.21 15.6 2.2 15.2 2.2 12s0-3.6.07-4.86c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.4 2.21 8.8 2.2 12 2.2m0-2.2C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.12 1.38C1.35 2.68.93 3.35.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.12.66.66 1.33 1.08 2.12 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.12-1.38.66-.66 1.08-1.33 1.38-2.12.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.3-.79-.72-1.46-1.38-2.12C21.32 1.35 20.65.93 19.86.63 19.1.33 18.22.13 16.95.07 15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84zm0 10.16A4 4 0 1 1 16 12a4 4 0 0 1-4 4zm6.41-10.4a1.44 1.44 0 1 0 1.44 1.44 1.44 1.44 0 0 0-1.44-1.44z"/></svg>
+        See more on Instagram
+      </a>
+    </div>
+  </section>
+
+</div>
