@@ -17,10 +17,6 @@
     #tbwork .tile img,#tbwork .tile video{width:100%;height:auto;display:block}
     #tbwork .tile .cap{padding:12px 14px;font-size:14px;font-weight:600;color:var(--ink)}
     #tbwork .tile .cap span{display:block;font-weight:400;color:var(--muted);font-size:13px;margin-top:2px}
-    /* play badge on videos */
-    #tbwork .tile.vid::after{content:"";position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;
-      background:rgba(80,40,170,.9);background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'><path d='M8 5v14l11-7z'/></svg>");
-      background-size:16px;background-repeat:no-repeat;background-position:55% center;pointer-events:none}
 
     /* CTA band */
     #tbwork .work-cta{margin-top:56px;text-align:center;background:var(--ink);color:#fff;border-radius:18px;padding:44px 24px}
@@ -33,6 +29,23 @@
     #tbwork .ig-link{display:inline-flex;align-items:center;gap:8px;margin-top:30px;color:var(--purple);
       font-weight:700;text-decoration:none;font-size:15px}
     #tbwork .ig-link:hover{text-decoration:underline}
+
+    /* video preview + expand button */
+    #tbwork .tile.vid{cursor:default}
+    #tbwork .tile-expand{position:absolute;inset:0;width:100%;height:100%;border:none;background:transparent;cursor:pointer;padding:0}
+    #tbwork .tile-expand::after{content:"";position:absolute;bottom:12px;right:12px;width:38px;height:38px;border-radius:50%;
+      background:rgba(20,18,28,.72);
+      background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'><path d='M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z'/></svg>");
+      background-size:18px;background-repeat:no-repeat;background-position:center;transition:transform .15s}
+    #tbwork .tile-expand:hover::after{transform:scale(1.08)}
+
+    /* lightbox */
+    #tbwork-lb{position:fixed;inset:0;z-index:9999;background:rgba(10,8,16,.92);display:none;align-items:center;justify-content:center;padding:20px}
+    #tbwork-lb.open{display:flex}
+    #tbwork-lb video{max-width:min(900px,94vw);max-height:88vh;width:auto;height:auto;border-radius:12px;background:#000}
+    #tbwork-lb .lb-close{position:absolute;top:18px;right:20px;width:44px;height:44px;border-radius:50%;border:none;
+      background:rgba(255,255,255,.14);color:#fff;font-size:26px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    #tbwork-lb .lb-close:hover{background:rgba(255,255,255,.26)}
   </style>
 
   <section class="work-hero">
@@ -43,37 +56,63 @@
 
   <div class="gallery">
 
-    <!--
-      HOW TO ADD ITEMS
-      ================
-      PHOTO tile:
-        <a class="tile" href="FULL_IMAGE_URL" target="_blank" rel="noopener">
-          <img src="FULL_IMAGE_URL" alt="short description" loading="lazy">
-          <div class="cap">Title<span>optional detail</span></div>
-        </a>
+    <!-- To add more: copy a tile block below, swap the URL. Photo = <a class="tile">, video = <div class="tile vid">. -->
 
-      VIDEO tile (add class "vid" for the play badge):
-        <div class="tile vid">
-          <video src="FULL_VIDEO_URL" muted loop playsinline controls preload="metadata"></video>
-          <div class="cap">Title<span>optional detail</span></div>
-        </div>
+    <div class="tile vid">
+      <video src="https://cdn.shopify.com/videos/c/o/v/79578b6d77c7468d8421dbfcfd332cc1.mov" muted loop playsinline preload="none" data-preview></video>
+      <button type="button" class="tile-expand" aria-label="Play with sound" data-src="https://cdn.shopify.com/videos/c/o/v/79578b6d77c7468d8421dbfcfd332cc1.mov"></button>
+      <div class="cap">Concept to cap<span>the full process, start to finish</span></div>
+    </div>
 
-      Paste your Shopify CDN links in place of the REPLACE_ME... placeholders.
-      Delete any example tiles you don't use. The caption block is optional,
-      remove it if you just want the image.
-    -->
-
-    <!-- EXAMPLE PHOTO TILE (replace the URL, duplicate as needed) -->
-    <a class="tile" href="REPLACE_ME_IMAGE_URL" target="_blank" rel="noopener">
-      <img src="REPLACE_ME_IMAGE_URL" alt="Custom embroidered hat" loading="lazy">
-      <div class="cap">Custom order<span>Richardson 112, 3D puff front</span></div>
+    <a class="tile" href="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/07217139-5CCE-441B-B790-0029094697DC.jpg?v=1786337803" target="_blank" rel="noopener">
+      <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/07217139-5CCE-441B-B790-0029094697DC.jpg?v=1786337803" alt="Custom embroidered hat" loading="lazy">
     </a>
 
-    <!-- EXAMPLE VIDEO TILE -->
+    <a class="tile" href="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/72816A1C-5D40-4732-9FEB-F01282E9C397.jpg?v=1786337803" target="_blank" rel="noopener">
+      <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/72816A1C-5D40-4732-9FEB-F01282E9C397.jpg?v=1786337803" alt="Custom embroidered hat" loading="lazy">
+    </a>
+
     <div class="tile vid">
-      <video src="REPLACE_ME_VIDEO_URL" muted loop playsinline controls preload="metadata"></video>
-      <div class="cap">Stitch-out<span>watch it come together</span></div>
+      <video src="https://cdn.shopify.com/videos/c/o/v/646e4d5dac3a42159c7712498d9c9516.mov" muted loop playsinline preload="none" data-preview></video>
+      <button type="button" class="tile-expand" aria-label="Play with sound" data-src="https://cdn.shopify.com/videos/c/o/v/646e4d5dac3a42159c7712498d9c9516.mov"></button>
     </div>
+
+    <a class="tile" href="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6DFA090A-1089-4CDE-8C3F-764AA7E7D576.jpg?v=1786337802" target="_blank" rel="noopener">
+      <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6DFA090A-1089-4CDE-8C3F-764AA7E7D576.jpg?v=1786337802" alt="Custom embroidered hat" loading="lazy">
+    </a>
+
+    <a class="tile" href="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/31046EA1-FC9B-495F-A851-AEF0819AA92E.jpg?v=1786337803" target="_blank" rel="noopener">
+      <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/31046EA1-FC9B-495F-A851-AEF0819AA92E.jpg?v=1786337803" alt="Custom embroidered hat" loading="lazy">
+    </a>
+
+    <a class="tile" href="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/2736EC88-FDD3-4C5D-BBA3-F70364DE24BE.jpg?v=1786337802" target="_blank" rel="noopener">
+      <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/2736EC88-FDD3-4C5D-BBA3-F70364DE24BE.jpg?v=1786337802" alt="Custom embroidered hat" loading="lazy">
+    </a>
+
+    <div class="tile vid">
+      <video src="https://cdn.shopify.com/videos/c/o/v/94e23f4e713646de8daf27f1d46110c9.mov" muted loop playsinline preload="none" data-preview></video>
+      <button type="button" class="tile-expand" aria-label="Play with sound" data-src="https://cdn.shopify.com/videos/c/o/v/94e23f4e713646de8daf27f1d46110c9.mov"></button>
+    </div>
+
+    <a class="tile" href="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/EFEAC5FD-7972-4C16-A5AF-185D6B1A184F.jpg?v=1786337802" target="_blank" rel="noopener">
+      <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/EFEAC5FD-7972-4C16-A5AF-185D6B1A184F.jpg?v=1786337802" alt="Custom embroidered hat" loading="lazy">
+    </a>
+
+    <a class="tile" href="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6CB0AC79-A34F-4B4D-AD9D-FBAEF30942E3.jpg?v=1786337802" target="_blank" rel="noopener">
+      <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6CB0AC79-A34F-4B4D-AD9D-FBAEF30942E3.jpg?v=1786337802" alt="Custom embroidered hat" loading="lazy">
+    </a>
+
+    <a class="tile" href="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/BF75EB21-5B52-4F5F-BC31-F8813365F87B.jpg?v=1786337802" target="_blank" rel="noopener">
+      <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/BF75EB21-5B52-4F5F-BC31-F8813365F87B.jpg?v=1786337802" alt="Custom embroidered hat" loading="lazy">
+    </a>
+
+    <a class="tile" href="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/73D7073E-A985-4396-9FD8-50363613C29D.jpg?v=1786337803" target="_blank" rel="noopener">
+      <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/73D7073E-A985-4396-9FD8-50363613C29D.jpg?v=1786337803" alt="Custom embroidered hat" loading="lazy">
+    </a>
+
+    <a class="tile" href="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/66F31C75-49D4-41FA-824D-18C19E90682C.jpg?v=1786337802" target="_blank" rel="noopener">
+      <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/66F31C75-49D4-41FA-824D-18C19E90682C.jpg?v=1786337802" alt="Custom embroidered hat" loading="lazy">
+    </a>
 
   </div>
 
@@ -89,4 +128,63 @@
     </div>
   </section>
 
+  <!-- lightbox for full-size video with sound -->
+  <div id="tbwork-lb" role="dialog" aria-modal="true">
+    <button type="button" class="lb-close" aria-label="Close">&times;</button>
+    <video id="tbwork-lb-video" controls playsinline></video>
+  </div>
+
 </div>
+
+<script>
+(function(){
+  var root = document.getElementById("tbwork");
+  if (!root) return;
+
+  // 1) autoplay previews only while on screen (silent, looping)
+  var previews = root.querySelectorAll("video[data-preview]");
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        var v = e.target;
+        if (e.isIntersecting){
+          if (!v.src && v.dataset.lazy){ v.src = v.dataset.lazy; }
+          v.play().catch(function(){});
+        } else {
+          v.pause();
+        }
+      });
+    }, { threshold: 0.35 });
+    previews.forEach(function(v){
+      // load source only when needed
+      if (v.getAttribute("src")){ v.dataset.lazy = v.getAttribute("src"); v.removeAttribute("src"); }
+      io.observe(v);
+    });
+  } else {
+    // old browsers: just load + play
+    previews.forEach(function(v){ v.play().catch(function(){}); });
+  }
+
+  // 2) click expand -> lightbox with sound
+  var lb = document.getElementById("tbwork-lb");
+  var lbVideo = document.getElementById("tbwork-lb-video");
+  function openLb(src){
+    lbVideo.src = src;
+    lbVideo.muted = false;
+    lb.classList.add("open");
+    lbVideo.play().catch(function(){});
+  }
+  function closeLb(){
+    lb.classList.remove("open");
+    lbVideo.pause();
+    lbVideo.removeAttribute("src");
+    lbVideo.load();
+  }
+  root.querySelectorAll(".tile-expand").forEach(function(btn){
+    btn.addEventListener("click", function(){ openLb(btn.dataset.src); });
+  });
+  lb.querySelector(".lb-close").addEventListener("click", closeLb);
+  lb.addEventListener("click", function(e){ if (e.target === lb) closeLb(); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeLb(); });
+})();
+</script>
