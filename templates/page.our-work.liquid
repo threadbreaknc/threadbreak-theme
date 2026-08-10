@@ -35,6 +35,8 @@
     #tbwork .tile{break-inside:avoid;margin:0 0 16px;border-radius:14px;overflow:hidden;background:var(--ice);
       border:1px solid var(--line);position:relative;display:block}
     #tbwork .tile img,#tbwork .tile video{width:100%;height:auto;display:block}
+    #tbwork .tile.vid{background:#14121C;min-height:220px}
+    #tbwork .tile.vid video{min-height:220px;object-fit:cover}
     #tbwork .tile .cap{padding:12px 14px;font-size:14px;font-weight:600;color:var(--ink)}
     #tbwork .tile .cap span{display:block;font-weight:400;color:var(--muted);font-size:13px;margin-top:2px}
 
@@ -83,7 +85,7 @@
     <!-- To add more: copy a tile block below, swap the URL. Photo = <a class="tile">, video = <div class="tile vid">. -->
 
     <div class="tile vid">
-      <video src="https://cdn.shopify.com/videos/c/o/v/79578b6d77c7468d8421dbfcfd332cc1.mov" muted loop playsinline preload="none" data-preview></video>
+      <video src="https://cdn.shopify.com/videos/c/o/v/79578b6d77c7468d8421dbfcfd332cc1.mov" muted loop playsinline preload="metadata" data-preview></video>
       <button type="button" class="tile-expand" aria-label="Play with sound" data-src="https://cdn.shopify.com/videos/c/o/v/79578b6d77c7468d8421dbfcfd332cc1.mov"></button>
       <div class="cap">Concept to cap<span>the full process, start to finish</span></div>
     </div>
@@ -97,7 +99,7 @@
     </a>
 
     <div class="tile vid">
-      <video src="https://cdn.shopify.com/videos/c/o/v/646e4d5dac3a42159c7712498d9c9516.mov" muted loop playsinline preload="none" data-preview></video>
+      <video src="https://cdn.shopify.com/videos/c/o/v/646e4d5dac3a42159c7712498d9c9516.mov" muted loop playsinline preload="metadata" data-preview></video>
       <button type="button" class="tile-expand" aria-label="Play with sound" data-src="https://cdn.shopify.com/videos/c/o/v/646e4d5dac3a42159c7712498d9c9516.mov"></button>
     </div>
 
@@ -114,7 +116,7 @@
     </a>
 
     <div class="tile vid">
-      <video src="https://cdn.shopify.com/videos/c/o/v/94e23f4e713646de8daf27f1d46110c9.mov" muted loop playsinline preload="none" data-preview></video>
+      <video src="https://cdn.shopify.com/videos/c/o/v/94e23f4e713646de8daf27f1d46110c9.mov" muted loop playsinline preload="metadata" data-preview></video>
       <button type="button" class="tile-expand" aria-label="Play with sound" data-src="https://cdn.shopify.com/videos/c/o/v/94e23f4e713646de8daf27f1d46110c9.mov"></button>
     </div>
 
@@ -127,7 +129,7 @@
     </a>
 
     <div class="tile vid">
-      <video src="https://cdn.shopify.com/videos/c/o/v/3e2e8c0cc91f4a37938e0f27ac9e3690.mov" muted loop playsinline preload="none" data-preview></video>
+      <video src="https://cdn.shopify.com/videos/c/o/v/3e2e8c0cc91f4a37938e0f27ac9e3690.mov" muted loop playsinline preload="metadata" data-preview></video>
       <button type="button" class="tile-expand" aria-label="Play with sound" data-src="https://cdn.shopify.com/videos/c/o/v/3e2e8c0cc91f4a37938e0f27ac9e3690.mov"></button>
     </div>
 
@@ -175,19 +177,11 @@
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(e){
         var v = e.target;
-        if (e.isIntersecting){
-          if (!v.src && v.dataset.lazy){ v.src = v.dataset.lazy; }
-          v.play().catch(function(){});
-        } else {
-          v.pause();
-        }
+        if (e.isIntersecting){ v.play().catch(function(){}); }
+        else { v.pause(); }
       });
     }, { threshold: 0.35 });
-    previews.forEach(function(v){
-      // load source only when needed
-      if (v.getAttribute("src")){ v.dataset.lazy = v.getAttribute("src"); v.removeAttribute("src"); }
-      io.observe(v);
-    });
+    previews.forEach(function(v){ io.observe(v); });
   } else {
     // old browsers: just load + play
     previews.forEach(function(v){ v.play().catch(function(){}); });
