@@ -29,16 +29,18 @@
     }
 
     /* masonry-style responsive grid */
-    #tbwork .gallery{columns:3;column-gap:16px}
-    @media(max-width:900px){#tbwork .gallery{columns:2}}
-    @media(max-width:560px){#tbwork .gallery{columns:1}}
-    #tbwork .tile{break-inside:avoid;margin:0 0 16px;border-radius:14px;overflow:hidden;background:var(--ice);
+    /* robust CSS grid (columns masonry was letting tiles escape) */
+    #tbwork .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
+    @media(max-width:900px){#tbwork .gallery{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:560px){#tbwork .gallery{grid-template-columns:1fr}}
+    #tbwork .tile{margin:0;border-radius:14px;overflow:hidden;background:var(--ice);
       border:1px solid var(--line);position:relative;display:block}
-    #tbwork .tile img,#tbwork .tile video{width:100%;height:auto;display:block}
+    #tbwork .tile img,#tbwork .tile video{width:100%;height:100%;display:block;object-fit:cover;aspect-ratio:4/5}
     #tbwork .tile.vid{background:#14121C}
-    #tbwork .tile.vid video{aspect-ratio:9/16;object-fit:cover;background:#14121C}
-    #tbwork .tile .cap{padding:12px 14px;font-size:14px;font-weight:600;color:var(--ink)}
-    #tbwork .tile .cap span{display:block;font-weight:400;color:var(--muted);font-size:13px;margin-top:2px}
+    #tbwork .tile.vid video{aspect-ratio:4/5;object-fit:cover;background:#14121C}
+    #tbwork .tile .cap{position:absolute;left:0;right:0;bottom:0;padding:20px 14px 12px;font-size:14px;font-weight:600;color:#fff;
+      background:linear-gradient(transparent,rgba(0,0,0,.75));z-index:2;pointer-events:none}
+    #tbwork .tile .cap span{display:block;font-weight:400;color:rgba(255,255,255,.85);font-size:13px;margin-top:2px}
 
     /* CTA band */
     #tbwork .work-cta{margin-top:56px;text-align:center;background:var(--ink);color:#fff;border-radius:18px;padding:44px 24px}
@@ -87,7 +89,6 @@
     <div class="tile vid">
       <video src="https://cdn.shopify.com/videos/c/o/v/79578b6d77c7468d8421dbfcfd332cc1.mov" muted loop playsinline preload="metadata" data-preview></video>
       <button type="button" class="tile-expand" aria-label="Play with sound" data-src="https://cdn.shopify.com/videos/c/o/v/79578b6d77c7468d8421dbfcfd332cc1.mov"></button>
-      <div class="cap">Concept to cap<span>the full process, start to finish</span></div>
     </div>
 
     <a class="tile" href="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/07217139-5CCE-441B-B790-0029094697DC.jpg?v=1786337803" target="_blank" rel="noopener">
