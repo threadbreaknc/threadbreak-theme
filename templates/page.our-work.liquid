@@ -2,11 +2,31 @@
 <div id="tbwork">
   <style>
     #tbwork{--ink:#14121C;--purple:#5028AA;--ice:#F4F3F7;--line:#E2E0EA;--muted:#6B6A78;--white:#fff;
-      max-width:1200px;margin:0 auto;padding:0 20px 80px;font-family:'DM Sans',sans-serif;color:var(--ink)}
+      max-width:1200px;margin:0 auto;padding:120px 20px 80px;font-family:'DM Sans',sans-serif;color:var(--ink)}
     #tbwork .work-hero{text-align:center;padding:56px 16px 40px}
+    @media(max-width:700px){#tbwork{padding-top:100px}}
     #tbwork .work-eyebrow{text-transform:uppercase;letter-spacing:.18em;font-size:13px;font-weight:700;color:var(--purple);margin:0 0 10px}
     #tbwork .work-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,8vw,68px);line-height:.98;margin:0 0 14px;letter-spacing:.01em}
     #tbwork .work-hero p{font-size:17px;color:var(--muted);max-width:560px;margin:0 auto;line-height:1.55}
+    /* hero CTA buttons */
+    #tbwork .hero-cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+    #tbwork .btn-primary{display:inline-block;background:var(--purple);color:#fff;text-decoration:none;
+      font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.04em;padding:15px 36px;border-radius:11px;
+      box-shadow:0 6px 20px rgba(80,40,170,.28);transition:transform .15s,background .15s}
+    #tbwork .btn-primary:hover{background:#6234c9;transform:translateY(-2px)}
+    #tbwork .btn-ghost{display:inline-block;background:transparent;color:var(--purple);text-decoration:none;border:2px solid var(--line);
+      font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.04em;padding:13px 30px;border-radius:11px;transition:border-color .15s,color .15s}
+    #tbwork .btn-ghost:hover{border-color:var(--purple)}
+    /* sticky mobile CTA bar */
+    #tbwork-sticky{display:none}
+    @media(max-width:700px){
+      #tbwork-sticky{display:block;position:fixed;left:0;right:0;bottom:0;z-index:900;
+        background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);
+        padding:10px 16px calc(10px + env(safe-area-inset-bottom))}
+      #tbwork-sticky a{display:block;text-align:center;background:var(--purple);color:#fff;text-decoration:none;
+        font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.04em;padding:14px;border-radius:10px}
+      #tbwork{padding-bottom:110px}
+    }
 
     /* masonry-style responsive grid */
     #tbwork .gallery{columns:3;column-gap:16px}
@@ -50,11 +70,15 @@
 
   <section class="work-hero">
     <p class="work-eyebrow">Our Work</p>
-    <h1>Stitched in-house.</h1>
-    <p>A look at custom hats we've embroidered for businesses, brands, teams, and events. Every one designed, stitched, and shipped from Burlington, NC.</p>
+    <h1>Your logo, stitched in-house.</h1>
+    <p>Custom embroidered hats for businesses, brands, teams, and events. Designed, stitched, and shipped from&nbsp;Burlington,&nbsp;NC. Wholesale pricing from just 10&nbsp;hats.</p>
+    <div class="hero-cta-row">
+      <a class="btn-primary" href="/pages/quote">Start Your Custom Order</a>
+      <a class="btn-ghost" href="#work-gallery">See our work ↓</a>
+    </div>
   </section>
 
-  <div class="gallery">
+  <div class="gallery" id="work-gallery">
 
     <!-- To add more: copy a tile block below, swap the URL. Photo = <a class="tile">, video = <div class="tile vid">. -->
 
@@ -94,10 +118,6 @@
       <button type="button" class="tile-expand" aria-label="Play with sound" data-src="https://cdn.shopify.com/videos/c/o/v/94e23f4e713646de8daf27f1d46110c9.mov"></button>
     </div>
 
-    <a class="tile" href="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/EFEAC5FD-7972-4C16-A5AF-185D6B1A184F.jpg?v=1786337802" target="_blank" rel="noopener">
-      <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/EFEAC5FD-7972-4C16-A5AF-185D6B1A184F.jpg?v=1786337802" alt="Custom embroidered hat" loading="lazy">
-    </a>
-
     <a class="tile" href="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6CB0AC79-A34F-4B4D-AD9D-FBAEF30942E3.jpg?v=1786337802" target="_blank" rel="noopener">
       <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6CB0AC79-A34F-4B4D-AD9D-FBAEF30942E3.jpg?v=1786337802" alt="Custom embroidered hat" loading="lazy">
     </a>
@@ -117,9 +137,9 @@
   </div>
 
   <section class="work-cta">
-    <h2>Want hats like these?</h2>
-    <p>Send us your logo and we'll bring it to life. Wholesale pricing from just 10 hats.</p>
-    <a href="/pages/quote">Start a Custom Order</a>
+    <h2>Ready to make your own?</h2>
+    <p>Send us your logo and we'll bring it to life on premium blanks. Wholesale pricing from just 10 hats, mockup approved before we stitch.</p>
+    <a href="/pages/quote">Start Your Custom Order</a>
     <div>
       <a class="ig-link" href="REPLACE_ME_INSTAGRAM_URL" target="_blank" rel="noopener">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.2c3.2 0 3.6 0 4.9.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.86s0 3.6-.07 4.86c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.86.07s-3.6 0-4.86-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23C2.21 15.6 2.2 15.2 2.2 12s0-3.6.07-4.86c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41C8.4 2.21 8.8 2.2 12 2.2m0-2.2C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.12 1.38C1.35 2.68.93 3.35.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.12.66.66 1.33 1.08 2.12 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.12-1.38.66-.66 1.08-1.33 1.38-2.12.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.3-.79-.72-1.46-1.38-2.12C21.32 1.35 20.65.93 19.86.63 19.1.33 18.22.13 16.95.07 15.67.01 15.26 0 12 0zm0 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84zm0 10.16A4 4 0 1 1 16 12a4 4 0 0 1-4 4zm6.41-10.4a1.44 1.44 0 1 0 1.44 1.44 1.44 1.44 0 0 0-1.44-1.44z"/></svg>
@@ -127,6 +147,9 @@
       </a>
     </div>
   </section>
+
+  <!-- sticky mobile CTA (only shows on phones) -->
+  <div id="tbwork-sticky"><a href="/pages/quote">Start Your Custom Order</a></div>
 
   <!-- lightbox for full-size video with sound -->
   <div id="tbwork-lb" role="dialog" aria-modal="true">
