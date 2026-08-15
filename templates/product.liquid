@@ -26,8 +26,10 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
 <h1 class="product-title">{{ product.title }}</h1>
 
 {%- assign is_apparel = false -%}
+{%- assign is_premade = false -%}
 {%- for col in product.collections -%}
   {%- if col.handle == 'apparel' -%}{%- assign is_apparel = true -%}{%- endif -%}
+  {%- if col.handle == 'pre-made-hats' -%}{%- assign is_premade = true -%}{%- endif -%}
 {%- endfor -%}
 {%- unless is_apparel -%}
 <!-- Start of Judge.me code -->
@@ -73,7 +75,7 @@ data-variant-image="{% if variant.featured_image %}{{ variant.featured_image | i
 {%- endfor -%}
 {%- endunless -%}
 
-{%- unless is_apparel -%}
+{%- if is_premade -%}
 <div class="leadtime-check-wrap">
 <label class="leadtime-check-label" for="leadtime-cb">
 <input type="checkbox" id="leadtime-cb" onchange="
@@ -99,7 +101,7 @@ noteInput.value = 'Customer acknowledged up to 5 business day lead time.';
 </div>
 
 <p class="leadtime-hint" id="leadtime-hint" style="display:none;"><strong style="color:#c0392b;">⚠</strong> The box above must be checked before adding to cart.</p>
-{%- endunless -%}
+{%- endif -%}
 
 <div class="product-actions">
 <div class="qty-wrap">
@@ -107,11 +109,7 @@ noteInput.value = 'Customer acknowledged up to 5 business day lead time.';
 <input type="number" name="quantity" value="1" min="1" id="qty-input" class="qty-input">
 <button type="button" class="qty-btn" id="qty-plus">+</button>
 </div>
-{%- if is_apparel -%}
-<button type="submit" name="add" class="btn btn-fill product-atc" id="atc-btn">
-{%- if selected_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
-</button>
-{%- else -%}
+{%- if is_premade -%}
 <button type="button" class="btn btn-fill product-atc" id="atc-btn"
 style="opacity:0.4;cursor:not-allowed;"
 onclick="
@@ -122,6 +120,10 @@ document.getElementById('leadtime-cb').closest('.leadtime-check-wrap').scrollInt
 this.closest('form').submit();
 }
 ">
+{%- if selected_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
+</button>
+{%- else -%}
+<button type="submit" name="add" class="btn btn-fill product-atc" id="atc-btn">
 {%- if selected_variant.available -%}Add to Cart{%- else -%}Sold Out{%- endif -%}
 </button>
 {%- endif -%}
@@ -247,7 +249,7 @@ document.querySelectorAll('.product-thumb').forEach(function(thumb) {
   });
 });
 
-// Swatch click — update variant ID, image, label, AND PRICE
+// Swatch click - update variant ID, image, label, AND PRICE
 document.querySelectorAll('.swatch').forEach(function(swatch) {
   swatch.addEventListener('click', function() {
     if (swatch.disabled) return;
@@ -291,8 +293,9 @@ document.querySelectorAll('.swatch').forEach(function(swatch) {
         btn.style.cursor = 'not-allowed';
       } else {
         btn.textContent = 'Add to Cart';
-        // Only restore if checkbox is checked
-        if (document.getElementById('leadtime-cb').checked) {
+        // Only restore if checkbox is checked (checkbox only exists on premade hats)
+        var lcb = document.getElementById('leadtime-cb');
+        if (!lcb || lcb.checked) {
           btn.style.opacity = '1';
           btn.style.cursor = 'pointer';
         }
