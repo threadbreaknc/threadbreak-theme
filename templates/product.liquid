@@ -27,6 +27,8 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
 
 {%- assign is_apparel = false -%}
 {%- assign is_premade = false -%}
+{%- assign is_bundle = false -%}
+{%- if product.type == 'Custom Hat Bundle' -%}{%- assign is_bundle = true -%}{%- endif -%}
 {%- for col in product.collections -%}
   {%- if col.handle == 'apparel' -%}{%- assign is_apparel = true -%}{%- endif -%}
   {%- if col.handle == 'pre-made-hats' -%}{%- assign is_premade = true -%}{%- endif -%}
@@ -44,7 +46,7 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
 
 </div>
 
-{%- form 'product', product, id: 'product-form' -%}
+{%- form 'product', product, id: 'product-form', enctype: 'multipart/form-data' -%}
 <input type="hidden" name="id" id="variant-id" value="{{ selected_variant.id }}">
 
 {%- unless product.has_only_default_variant -%}
@@ -74,6 +76,42 @@ data-variant-image="{% if variant.featured_image %}{{ variant.featured_image | i
 </div>
 {%- endfor -%}
 {%- endunless -%}
+
+{%- if is_bundle -%}
+<style>
+.bundle-opts{margin:18px 0;display:flex;flex-direction:column;gap:16px}
+.bundle-opt-label{display:block;font-weight:600;font-size:15px;margin-bottom:6px;color:#14121C}
+.bundle-req{color:#5028AA}
+.bundle-select,.bundle-file{width:100%;border:1.5px solid #E2E0EA;border-radius:10px;padding:12px 14px;font-size:15px;font-family:inherit;background:#fff}
+.bundle-select:focus,.bundle-file:focus{outline:2px solid #5028AA;border-color:#5028AA}
+.bundle-file{padding:10px 14px}
+.bundle-hint{font-size:13px;color:#6B6A78;margin:6px 0 0;line-height:1.5}
+.bundle-notice{margin-top:12px;background:#F3EFFC;border-left:5px solid #5028AA;border-radius:8px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start}
+.bundle-notice-icon{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#5028AA;color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;line-height:1}
+.bundle-notice p{margin:0;font-size:13px;line-height:1.55;color:#14121C}
+.bundle-notice strong{color:#5028AA}
+</style>
+<div class="bundle-opts">
+<div class="bundle-opt">
+<label class="bundle-opt-label" for="logo-placement">Logo placement <span class="bundle-req">*</span></label>
+<select id="logo-placement" name="properties[Logo placement]" class="bundle-select" required>
+<option value="">Choose placement...</option>
+<option value="Centered front">Centered front</option>
+<option value="Left panel">Left panel</option>
+<option value="Right panel">Right panel</option>
+</select>
+</div>
+<div class="bundle-opt">
+<label class="bundle-opt-label" for="logo-file">Upload your logo <span class="bundle-req">*</span></label>
+<input type="file" id="logo-file" name="properties[Logo file]" class="bundle-file" accept="image/*,.pdf,.ai,.eps,.svg,.png,.jpg,.jpeg" required>
+<p class="bundle-hint">Front embroidery. PNG, JPG, PDF, AI, EPS, or SVG. We'll confirm your design before stitching.</p>
+<div class="bundle-notice">
+<span class="bundle-notice-icon">!</span>
+<p><strong>Embroidery Notice:</strong> AI-generated and highly detailed logos don't always translate well to embroidery. If your design isn't suitable, we'll recommend the best solution, such as simplifying the artwork, using a DTF transfer, or a patch to ensure the best possible result.</p>
+</div>
+</div>
+</div>
+{%- endif -%}
 
 {%- if is_premade -%}
 <div class="leadtime-check-wrap">
