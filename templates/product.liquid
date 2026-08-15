@@ -90,6 +90,11 @@ data-variant-image="{% if variant.featured_image %}{{ variant.featured_image | i
 .bundle-notice-icon{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#5028AA;color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;line-height:1}
 .bundle-notice p{margin:0;font-size:13px;line-height:1.55;color:#14121C}
 .bundle-notice strong{color:#5028AA}
+.bundle-en-toggle{margin-top:8px;background:none;border:none;padding:0;color:#5028AA;font-weight:700;font-size:13px;font-family:inherit;cursor:pointer;text-decoration:underline;display:inline-flex;align-items:center;gap:5px}
+.bundle-en-toggle::after{content:"▾";font-size:11px}
+.bundle-en-toggle[aria-expanded="true"]::after{content:"▴"}
+.bundle-en-example{margin-top:10px}
+.bundle-en-example img{max-width:100%;border-radius:10px;border:1px solid #E2E0EA;display:block}
 </style>
 <div class="bundle-opts">
 <div class="bundle-opt">
@@ -107,7 +112,13 @@ data-variant-image="{% if variant.featured_image %}{{ variant.featured_image | i
 <p class="bundle-hint">Front embroidery. PNG, JPG, PDF, AI, EPS, or SVG. We'll confirm your design before stitching.</p>
 <div class="bundle-notice">
 <span class="bundle-notice-icon">!</span>
+<div>
 <p><strong>Embroidery Notice:</strong> AI-generated and highly detailed logos don't always translate well to embroidery. If your design isn't suitable, we'll recommend the best solution, such as simplifying the artwork, using a DTF transfer, or a patch to ensure the best possible result.</p>
+<button type="button" class="bundle-en-toggle" onclick="var ex=document.getElementById('bundleEnExample');var sh=ex.hasAttribute('hidden');if(sh){ex.removeAttribute('hidden');this.setAttribute('aria-expanded','true');this.firstChild.textContent='Hide example';}else{ex.setAttribute('hidden','');this.setAttribute('aria-expanded','false');this.firstChild.textContent='View example';}" aria-expanded="false">View example</button>
+<div class="bundle-en-example" id="bundleEnExample" hidden>
+<img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ChatGPT_Image_Aug_14_2026_at_10_40_32_PM.png?v=1786761670" alt="Example showing how a detailed logo simplifies for embroidery" loading="lazy">
+</div>
+</div>
 </div>
 </div>
 </div>

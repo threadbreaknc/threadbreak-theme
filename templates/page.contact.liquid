@@ -1,4 +1,4 @@
-{%- comment -%} build: v48 {%- endcomment -%}
+{%- comment -%} build: v49 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -198,6 +198,11 @@ html {scroll-behavior:smooth}
 #tbco .embroidery-notice p{font-size:13px;color:var(--ink);line-height:1.55;margin:0}
 #tbco .embroidery-notice strong{color:var(--purple)}
 #tbco .en-icon{flex:none;width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;line-height:1}
+#tbco .en-toggle{margin-top:8px;background:none;border:none;padding:0;color:var(--purple);font-weight:700;font-size:13px;font-family:inherit;cursor:pointer;text-decoration:underline;display:inline-flex;align-items:center;gap:5px}
+#tbco .en-toggle::after{content:"▾";font-size:11px;transition:transform .2s}
+#tbco .en-toggle[aria-expanded="true"]::after{transform:rotate(180deg)}
+#tbco .en-example{margin-top:10px}
+#tbco .en-example img{max-width:100%;border-radius:10px;border:1px solid var(--line);display:block}
 #tbco .quote-only {display:none}
 body.quote-mode #tbco .quote-only {display:block}
 body.quote-mode #tbco .buy-only {display:none}
@@ -426,7 +431,13 @@ body.quote-mode #tbco .buy-only {display:none}
         <p class="hint">One file per location: PNG, JPG, PDF, AI, or SVG, up to 10 MB each. Digitizing is free. No file handy? Skip it and email us after.</p>
         <div class="embroidery-notice">
           <span class="en-icon" aria-hidden="true">!</span>
-          <p><strong>Embroidery Notice:</strong> AI-generated and highly detailed logos don't always translate well to embroidery. If your design isn't suitable, we'll recommend the best solution, such as simplifying the artwork, using a DTF transfer, or a patch to ensure the best possible result.</p>
+          <div>
+            <p><strong>Embroidery Notice:</strong> AI-generated and highly detailed logos don't always translate well to embroidery. If your design isn't suitable, we'll recommend the best solution, such as simplifying the artwork, using a DTF transfer, or a patch to ensure the best possible result.</p>
+            <button type="button" class="en-toggle" id="enToggle" aria-expanded="false">View example</button>
+            <div class="en-example" id="enExample" hidden>
+              <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ChatGPT_Image_Aug_14_2026_at_10_40_32_PM.png?v=1786761670" alt="Example showing how a detailed logo simplifies for embroidery" loading="lazy">
+            </div>
+          </div>
         </div>
         <div class="art-note">
           <p><strong>Thread colors:</strong> Unless you tell us otherwise, we match thread colors to your logo. Want something different, like tone-on-tone or matched to the hat? Just mention it in the notes.</p>
@@ -1429,6 +1440,12 @@ function closeSummary(){
 }
 
 function tbcoInit(){
+  const enT = $("enToggle"), enE = $("enExample");
+  if (enT && enE) enT.addEventListener("click", () => {
+    const show = enE.hasAttribute("hidden");
+    if (show){ enE.removeAttribute("hidden"); enT.setAttribute("aria-expanded","true"); enT.firstChild.textContent = "Hide example"; }
+    else { enE.setAttribute("hidden",""); enT.setAttribute("aria-expanded","false"); enT.firstChild.textContent = "View example"; }
+  });
   const pib = $("puffInfoBtn"), pi = $("puffInfo");
   if (pib && pi) pib.addEventListener("click", () => {
     const open = pi.hasAttribute("hidden");
