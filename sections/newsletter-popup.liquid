@@ -16,7 +16,7 @@
         <input type="email" id="nl-email" class="nl-input" placeholder="Your email address" autocomplete="email">
         <button class="nl-btn" id="nl-submit">Claim 10% Off →</button>
         <button class="nl-skip" id="nl-skip">No thanks, I'll pay full price</button>
-        <p class="nl-consent">By signing up you agree to receive emails from Threadbreak — new products and deals only. No spam, ever. Unsubscribe anytime.</p>
+        <p class="nl-consent">By signing up you agree to receive emails from Threadbreak, new products and deals only. No spam, ever. Unsubscribe anytime.</p>
       </div>
     </div>
 
@@ -29,7 +29,7 @@
           <span class="nl-code" id="nl-code">WELCOME10</span>
           <button class="nl-copy" id="nl-copy">Copy</button>
         </div>
-        <p class="nl-success-note">Save this code — copy it before closing!</p>
+        <p class="nl-success-note">Save this code, copy it before closing!</p>
       </div>
     </div>
 
@@ -226,18 +226,13 @@
   }
 
   function dismiss() {
-    localStorage.setItem(KEY, '1');
     overlay.classList.add('nl-hidden');
+    // Note: we intentionally do NOT set KEY here, so the floating button
+    // can reopen the popup later. KEY is only set on actual signup.
   }
 
-  // Show after 30-45 seconds (random)
-  var delay = 12000;
-  setTimeout(showPopup, delay);
-
-  // Exit intent — mouse leaving toward top of page
-  document.addEventListener('mouseleave', function(e) {
-    if (e.clientY <= 10) showPopup();
-  });
+  // Auto-popup disabled - the popup now only opens when the visitor clicks
+  // the floating "Get 10% off" button. (Timed + exit-intent triggers removed.)
 
   closeBtn.addEventListener('click', dismiss);
   skipBtn.addEventListener('click', dismiss);
