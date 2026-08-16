@@ -64,7 +64,7 @@
       justify-content:flex-start !important;
       align-items:stretch !important;
       gap:0 !important;
-      padding:6.5rem 1.75rem 2.5rem !important;
+      padding:9rem 1.75rem 2.5rem !important;
       overflow-y:auto !important;
       background:#F8F5FF !important;
     }
@@ -113,14 +113,11 @@
   .nav-dd-menu::before{content:"";position:absolute;top:-8px;left:0;right:0;height:8px;}
   .nav-dd-menu a{display:block;padding:8px 12px;border-radius:7px;text-decoration:none;color:#14121C !important;font-family:var(--font-body,'DM Sans',sans-serif);font-size:0.8rem;letter-spacing:0.02em;text-transform:none;white-space:nowrap;transition:background .12s,color .12s;}
   .nav-dd-menu a:hover{background:#F3EFFC;color:var(--purple,#5028AA) !important;}
-  /* labeled Menu button (replaces plain hamburger) - mobile only */
-  .nav-hamburger{display:none;align-items:center;gap:7px;background:none;border:1.5px solid #E2E0EA;border-radius:9px;padding:6px 12px 6px 10px;cursor:pointer;}
+  /* text "Menu" button (mobile only) */
+  .nav-hamburger{display:none;align-items:center;justify-content:center;background:none;border:1.5px solid #E2E0EA;border-radius:9px;padding:7px 16px;cursor:pointer;}
   @media(max-width:768px){ .nav-hamburger{display:flex;} }
-  .nav-hamburger-lines{display:flex !important;flex-direction:column;justify-content:center;gap:4px;width:18px !important;height:auto !important;background:none !important;flex:none;}
-  /* theme.css paints every span inside .nav-hamburger as a 22x2 black bar; undo that for our label + wrapper */
-  .nav-hamburger > span.nav-hamburger-label{display:inline-block !important;width:auto !important;height:auto !important;background:none !important;transform:none !important;opacity:1 !important;font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.06em;color:#14121C;line-height:1;}
-  .nav-hamburger-lines span{display:block !important;height:2px !important;width:100% !important;background:#14121C !important;border-radius:2px;transform:none !important;opacity:1 !important;margin:0 !important;}
-  .nav-hamburger.open .nav-hamburger-lines span{transform:none !important;opacity:1 !important;}
+  /* theme.css paints spans inside .nav-hamburger as black bars; force our label back to text */
+  .nav-hamburger span,.nav-hamburger > span.nav-hamburger-label{display:inline-block !important;width:auto !important;height:auto !important;background:none !important;transform:none !important;opacity:1 !important;font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:.06em;color:#14121C;line-height:1;}
   .footer-col-head{font-family:'Bebas Neue',sans-serif;font-size:0.95rem;letter-spacing:.08em;color:#fff;margin:0 0 0.7rem;text-transform:uppercase}
   .footer-col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0.5rem}
   .footer-col li{margin:0}
@@ -149,7 +146,6 @@
   <a href="/pages/our-work" onclick="closeMobileMenu()">Our Work</a>
   <a href="/pages/about" onclick="closeMobileMenu()">About Us</a>
   <a href="/pages/faq" onclick="closeMobileMenu()">FAQ</a>
-  <a href="/pages/custom-order" class="nav-cta" onclick="closeMobileMenu()">Place a Custom Order</a>
 </div>
 
 <div class="shipping-banner">
@@ -195,7 +191,6 @@
       <span class="nav-cart-count" id="nav-cart-count">{{ cart.item_count }}</span>
     </a>
     <button class="nav-hamburger" id="hamburger" aria-label="Menu">
-      <span class="nav-hamburger-lines"><span></span><span></span><span></span></span>
       <span class="nav-hamburger-label">Menu</span>
     </button>
   </div>
