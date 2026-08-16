@@ -15,7 +15,7 @@
 <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}">
 <style>
   html, body { margin: 0 !important; padding: 0 !important; }
-  /* full threadbreak wordmark logo — override theme's square/black-filter rules */
+  /* full threadbreak wordmark logo, override theme's square/black-filter rules */
   .nav-brand{display:flex;align-items:center;height:100%;}
   .nav-logo-full.nav-logo-img{height:56px !important;width:auto !important;display:block;object-fit:contain;align-self:center;filter:none !important;animation:none !important;position:relative;top:2px;}
   .footer-logo-full.footer-logo{height:80px !important;width:auto !important;display:block;object-fit:contain;filter:none !important;}
@@ -42,6 +42,11 @@
   .site-header { display: none !important; }
   main { display: block !important; margin: 0 !important; padding: 0 !important; }
   .shopify-section { margin: 0 !important; padding: 0 !important; }
+  /* footer newsletter prompt */
+  .footer-newsletter{margin-top:1rem}
+  .footer-nl-text{font-size:0.8rem;color:rgba(247,244,240,0.55);margin:0 0 0.5rem}
+  .footer-nl-btn{background:var(--purple,#5028aa);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:0.82rem;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s,transform .15s}
+  .footer-nl-btn:hover{background:#6234c9;transform:translateY(-1px)}
 </style>
 </head>
 <body>
@@ -110,6 +115,10 @@
     <div class="footer-contact">
       <p class="footer-contact-label">Questions?</p>
       <a href="mailto:help@threadbreak.com" class="footer-contact-email">help@threadbreak.com</a>
+      <div class="footer-newsletter">
+        <p class="footer-nl-text">Get 10% off your first order</p>
+        <button type="button" class="footer-nl-btn" id="footer-nl-btn">Join our newsletter</button>
+      </div>
       <div class="footer-social">
         <a href="https://www.instagram.com/THREADBREAK_" class="soc" target="_blank" rel="noopener" aria-label="Instagram">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
@@ -218,6 +227,19 @@
       setTimeout(function() {
         if (localStorage.getItem(KEY)) fab.classList.add('nl-fab-hidden');
       }, 500);
+    });
+  }
+})();
+</script>
+<script>
+(function(){
+  // footer "Join our newsletter" button opens the newsletter popup,
+  // independent of the floating-button script so it always works.
+  var footerBtn = document.getElementById('footer-nl-btn');
+  var overlay = document.getElementById('nl-overlay');
+  if (footerBtn && overlay){
+    footerBtn.addEventListener('click', function(){
+      overlay.classList.remove('nl-hidden');
     });
   }
 })();

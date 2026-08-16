@@ -1,0 +1,341 @@
+{%- comment -%} build: quote-v1 {%- endcomment -%}
+<div id="tbquote">
+  <style>
+    #tbquote{--ink:#14121C;--purple:#5028AA;--purple2:#6234c9;--ice:#F3EFFC;--line:#E2E0EA;--muted:#6B6A78;--white:#fff;
+      max-width:640px;margin:0 auto;padding:120px 20px 80px;font-family:'DM Sans',sans-serif;color:var(--ink)}
+    @media(max-width:700px){#tbquote{padding-top:100px}}
+    #tbquote .q-hero{text-align:center;margin-bottom:8px}
+    #tbquote .q-eyebrow{text-transform:uppercase;letter-spacing:.18em;font-size:13px;font-weight:700;color:var(--purple);margin:0 0 10px}
+    #tbquote .q-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(34px,7vw,52px);line-height:1;margin:0 0 12px;letter-spacing:.01em}
+    #tbquote .q-hero p{font-size:16px;color:var(--muted);line-height:1.55;margin:0 auto 8px;max-width:480px}
+    #tbquote .q-inspo{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:20px;padding:14px 18px;background:var(--ice);border:1.5px solid var(--line);border-radius:12px;text-decoration:none;color:var(--ink);transition:border-color .15s,transform .15s}
+    #tbquote .q-inspo:hover{border-color:var(--purple);transform:translateY(-1px)}
+    #tbquote .q-inspo-text{font-size:14px;line-height:1.4}
+    #tbquote .q-inspo-text strong{color:var(--purple)}
+    #tbquote .q-inspo-arrow{color:var(--purple);font-size:20px;font-weight:700;flex-shrink:0}
+    #tbquote form{margin-top:28px;display:flex;flex-direction:column;gap:22px}
+    #tbquote .q-field label{display:block;font-weight:600;font-size:15px;margin-bottom:7px}
+    #tbquote .q-req{color:var(--purple)}
+    #tbquote .q-opt{color:var(--muted);font-weight:400;font-size:13px}
+    #tbquote input[type=text],#tbquote input[type=email],#tbquote input[type=tel],#tbquote input[type=number],#tbquote textarea,#tbquote select{
+      width:100%;border:1.5px solid var(--line);border-radius:11px;padding:13px 15px;font-size:15px;font-family:inherit;background:var(--white);box-sizing:border-box}
+    #tbquote input:focus,#tbquote textarea:focus,#tbquote select:focus{outline:2px solid var(--purple);border-color:var(--purple)}
+    #tbquote textarea{min-height:90px;resize:vertical}
+    #tbquote .q-hint{font-size:13px;color:var(--muted);margin:6px 0 0;line-height:1.5}
+    /* chip groups */
+    #tbquote .q-chips{display:flex;flex-wrap:wrap;gap:9px}
+    #tbquote .q-chip{position:relative;cursor:pointer}
+    #tbquote .q-chip input{position:absolute;opacity:0;pointer-events:none}
+    #tbquote .q-chip span{display:block;border:1.5px solid var(--line);border-radius:10px;padding:11px 18px;font-size:15px;font-weight:500;transition:all .12s;background:var(--white)}
+    #tbquote .q-chip input:checked + span{border-color:var(--purple);background:var(--ice);color:var(--purple);font-weight:600}
+    /* embroidery notice */
+    #tbquote .q-notice{background:var(--ice);border-left:5px solid var(--purple);border-radius:8px;padding:13px 15px;display:flex;gap:11px;align-items:flex-start;margin-top:2px}
+    #tbquote .q-notice-icon{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:var(--purple);color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;justify-content:center;line-height:1}
+    #tbquote .q-notice p{margin:0;font-size:13px;line-height:1.55}
+    #tbquote .q-notice strong{color:var(--purple)}
+    #tbquote .q-en-toggle{margin-top:8px;background:none;border:none;padding:0;color:var(--purple);font-weight:700;font-size:13px;font-family:inherit;cursor:pointer;text-decoration:underline}
+    #tbquote .q-en-toggle::after{content:" ▾";font-size:11px}
+    #tbquote .q-en-toggle[aria-expanded="true"]::after{content:" ▴"}
+    #tbquote .q-en-example{margin-top:10px}
+    #tbquote .q-en-example img{max-width:100%;border-radius:10px;border:1px solid var(--line);display:block}
+    /* info button + box */
+    #tbquote .q-info-btn{background:none;border:none;padding:0;color:var(--purple);font-weight:600;font-size:13px;font-family:inherit;cursor:pointer;text-decoration:underline}
+    #tbquote .q-puff-info{background:var(--ice);border-radius:10px;padding:13px 15px;margin:0 0 12px}
+    #tbquote .q-puff-info p{margin:0 0 8px;font-size:13px;line-height:1.55}
+    #tbquote .q-puff-info p:last-child{margin-bottom:0}
+    #tbquote .q-puff-info strong{color:var(--purple)}
+    /* per-location upload slots */
+    #tbquote .q-loc{border:1.5px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+    #tbquote .q-loc-head{font-weight:600;font-size:15px;margin-bottom:10px;color:var(--purple)}
+    #tbquote .q-loc-pos{margin-bottom:12px}
+    #tbquote .q-loc-pos-label{font-size:13px;color:var(--muted);margin-bottom:6px}
+    #tbquote .q-file-wrap{border:1.5px dashed var(--line);border-radius:10px;padding:16px;text-align:center;transition:border-color .15s;background:var(--white)}
+    #tbquote .q-file-wrap.has-file{border-color:var(--purple);border-style:solid;background:var(--ice)}
+    #tbquote .q-file-wrap input[type=file]{display:none}
+    #tbquote .q-file-label{cursor:pointer;color:var(--purple);font-weight:600;font-size:14px}
+    #tbquote .q-file-name{font-size:13px;color:var(--ink);margin-top:6px;word-break:break-word}
+    /* submit */
+    #tbquote .q-submit{background:var(--purple);color:#fff;border:none;border-radius:12px;padding:17px;font-family:'Bebas Neue',sans-serif;font-size:23px;letter-spacing:.04em;cursor:pointer;transition:background .15s,transform .15s;box-shadow:0 6px 20px rgba(80,40,170,.26)}
+    #tbquote .q-submit:hover{background:var(--purple2);transform:translateY(-1px)}
+    #tbquote .q-submit:disabled{opacity:.6;cursor:default;transform:none}
+    #tbquote .q-err{color:#C22B3F;font-size:14px;margin-top:6px;display:none}
+    #tbquote .q-err.show{display:block}
+    #tbquote .q-reassure{text-align:center;font-size:13px;color:var(--muted);margin-top:14px}
+    /* progress + confirm */
+    #tbquote .q-progress{display:none;margin-top:8px}
+    #tbquote .q-progress.show{display:block}
+    #tbquote .q-bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden}
+    #tbquote .q-bar-fill{height:100%;width:0;background:var(--purple);border-radius:99px;transition:width .3s}
+    #tbquote .q-progress-label{font-size:13px;color:var(--muted);margin-top:6px;text-align:center}
+    #tbquote .q-confirm{display:none;background:#F1FAF5;border:1px solid #BFE8D2;border-radius:16px;padding:32px 24px;text-align:center}
+    #tbquote .q-confirm.show{display:block}
+    #tbquote .q-confirm h2{font-family:'Bebas Neue',sans-serif;font-size:30px;margin:0 0 10px}
+    #tbquote .q-confirm p{color:var(--ink);line-height:1.6;margin:0 auto;max-width:400px}
+    #tbquote .q-confirm .q-sum{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:16px;margin-top:18px;text-align:left;font-size:13px;white-space:pre-wrap;color:var(--muted)}
+  </style>
+
+  <div class="q-hero">
+    <h1>Custom Hat Quote Request</h1>
+    <p>Have something specific in mind? Fill this out and we'll follow up with pricing. Quick, easy, no obligation.</p>
+  </div>
+
+  <a class="q-inspo" href="/pages/our-work">
+    <span class="q-inspo-text"><strong>Need ideas?</strong> See some of our recent projects for inspiration</span>
+    <span class="q-inspo-arrow">→</span>
+  </a>
+
+  <form id="quoteForm" onsubmit="return false;">
+
+    <div class="q-field">
+      <label for="qStyle">What hat are you looking for? <span class="q-req">*</span></label>
+      <input type="text" id="qStyle" placeholder="Brand, style, or just describe it (e.g. Richardson 112, dad cap, fitted, 5-panel...)">
+      <p class="q-hint">Not sure? Just describe what you're after and we'll help you find it.</p>
+    </div>
+
+    <div class="q-field">
+      <label for="qColor">Color(s) <span class="q-req">*</span></label>
+      <input type="text" id="qColor" placeholder="e.g. black, red/white, camo, whatever you have in mind">
+    </div>
+
+    <div class="q-field">
+      <label for="qQty">How many? <span class="q-req">*</span></label>
+      <input type="number" id="qQty" min="1" inputmode="numeric" placeholder="Total quantity">
+    </div>
+
+    <div class="q-field">
+      <label>Decoration <span class="q-req">*</span> <button type="button" class="q-info-btn" id="qPuffBtn" aria-expanded="false">ⓘ What's the difference?</button></label>
+      <div class="q-puff-info" id="qPuffInfo" hidden>
+        <p><strong>Flat embroidery</strong> is stitched flush to the hat, clean and classic, works with almost any design and any location.</p>
+        <p><strong>3D puff</strong> raises the stitching off the hat with foam underneath for a bold, dimensional look. Great for bold letters and simple shapes, front only.</p>
+      </div>
+      <div class="q-chips">
+        <label class="q-chip"><input type="radio" name="qDeco" value="Flat embroidery" checked><span>Flat embroidery</span></label>
+        <label class="q-chip"><input type="radio" name="qDeco" value="3D puff"><span>3D puff (front only)</span></label>
+        <label class="q-chip"><input type="radio" name="qDeco" value="Not sure"><span>Not sure yet</span></label>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label>Where should the logo go? <span class="q-opt">(select all that apply)</span></label>
+      <div class="q-chips">
+        <label class="q-chip"><input type="checkbox" name="qPlace" value="Front" data-loc="Front" checked><span>Front</span></label>
+        <label class="q-chip"><input type="checkbox" name="qPlace" value="Side" data-loc="Side"><span>Side</span></label>
+        <label class="q-chip"><input type="checkbox" name="qPlace" value="Back" data-loc="Back"><span>Back</span></label>
+      </div>
+      <p class="q-hint">Pick each spot you want decorated. You can add a different logo for each one.</p>
+    </div>
+
+    <div class="q-field">
+      <label>Your logo <span class="q-opt">(one per location, optional)</span></label>
+      <div id="qLocSlots"></div>
+      <p class="q-hint">PNG, JPG, PDF, AI, EPS, or SVG. No file handy? Skip it and email us after.</p>
+      <div class="q-notice">
+        <span class="q-notice-icon">!</span>
+        <div>
+          <p><strong>Embroidery Notice:</strong> AI-generated and highly detailed logos don't always translate well to embroidery. If your design isn't suitable, we'll recommend the best solution, such as simplifying the artwork, using a DTF transfer, or a patch to ensure the best possible result.</p>
+          <button type="button" class="q-en-toggle" id="qEnToggle" aria-expanded="false">View example</button>
+          <div class="q-en-example" id="qEnExample" hidden>
+            <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ChatGPT_Image_Aug_14_2026_at_10_40_32_PM.png?v=1786761670" alt="Example showing how a detailed logo simplifies for embroidery" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="q-field">
+      <label for="qName">Your name <span class="q-req">*</span></label>
+      <input type="text" id="qName" autocomplete="name" placeholder="First and last name">
+    </div>
+
+    <div class="q-field">
+      <label for="qEmail">Your email <span class="q-req">*</span></label>
+      <input type="email" id="qEmail" autocomplete="email" placeholder="you@example.com">
+    </div>
+
+    <div class="q-field">
+      <label for="qNotes">Anything else? <span class="q-opt">(optional)</span></label>
+      <textarea id="qNotes" placeholder="Thread colors, deadline, text to add, or any other details."></textarea>
+    </div>
+
+    <div class="q-submit-wrap">
+      <button type="button" class="q-submit" id="qSubmit">Get My Quote</button>
+      <p class="q-err" id="qErr">Please fill in the required fields so we can quote your order.</p>
+      <p class="q-reassure">Free to request. No obligation.</p>
+      <div class="q-progress" id="qProgress">
+        <div class="q-bar"><div class="q-bar-fill" id="qBarFill"></div></div>
+        <p class="q-progress-label" id="qProgressLabel">Submitting your request...</p>
+      </div>
+    </div>
+
+  </form>
+
+  <div class="q-confirm" id="qConfirm">
+    <h2>Request sent ✓</h2>
+    <p id="qConfirmBody"></p>
+    <div class="q-sum" id="qConfirmSum"></div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0-rO8Y8fqsyAGPM1WLd_Q48GiOGKHxUYxq-UCT4a6ONXWLW6fIo2feCzDOcjmuAPE/exec";
+  var $ = function(id){ return document.getElementById(id); };
+
+  // view-example toggle
+  var enT = $("qEnToggle"), enE = $("qEnExample");
+  if (enT && enE) enT.addEventListener("click", function(){
+    var show = enE.hasAttribute("hidden");
+    if (show){ enE.removeAttribute("hidden"); enT.setAttribute("aria-expanded","true"); enT.firstChild.textContent = "Hide example"; }
+    else { enE.setAttribute("hidden",""); enT.setAttribute("aria-expanded","false"); enT.firstChild.textContent = "View example"; }
+  });
+
+  // 3D puff info toggle
+  var pB = $("qPuffBtn"), pI = $("qPuffInfo");
+  if (pB && pI) pB.addEventListener("click", function(){
+    var show = pI.hasAttribute("hidden");
+    if (show){ pI.removeAttribute("hidden"); pB.setAttribute("aria-expanded","true"); }
+    else { pI.setAttribute("hidden",""); pB.setAttribute("aria-expanded","false"); }
+  });
+
+  // per-location upload slots (files keyed by location)
+  var FRONT_POSITIONS = ["Left front","Center front","Right front"];
+  var locFiles = {};   // { Front:{data,name,type}, Side:{...}, Back:{...} }
+  var frontPos = "Center front";
+  var slotWrap = $("qLocSlots");
+
+  function buildSlots(){
+    var checked = Array.prototype.slice.call(document.querySelectorAll('input[name="qPlace"]:checked')).map(function(c){ return c.getAttribute("data-loc"); });
+    slotWrap.innerHTML = "";
+    if (!checked.length){
+      slotWrap.innerHTML = '<p class="q-hint" style="margin-top:0">Select a location above to add a logo.</p>';
+      return;
+    }
+    checked.forEach(function(loc){
+      var box = document.createElement("div");
+      box.className = "q-loc";
+      var posHtml = "";
+      if (loc === "Front"){
+        posHtml = '<div class="q-loc-pos"><div class="q-loc-pos-label">Front position</div><div class="q-chips">' +
+          FRONT_POSITIONS.map(function(p){
+            return '<label class="q-chip"><input type="radio" name="qFrontPos" value="'+p+'"'+(p===frontPos?' checked':'')+'><span>'+p.replace(" front","")+'</span></label>';
+          }).join("") + '</div></div>';
+      }
+      var has = locFiles[loc];
+      box.innerHTML =
+        '<div class="q-loc-head">'+loc+'</div>' + posHtml +
+        '<div class="q-file-wrap'+(has?' has-file':'')+'" data-loc="'+loc+'">' +
+          '<label class="q-file-label">'+(has?'Logo added - tap to change':'Tap to upload your '+loc.toLowerCase()+' logo')+'</label>' +
+          '<input type="file" accept="image/*,.pdf,.ai,.eps,.svg,.png,.jpg,.jpeg" data-loc="'+loc+'">' +
+          '<div class="q-file-name">'+(has?has.name:'')+'</div>' +
+        '</div>';
+      slotWrap.appendChild(box);
+    });
+    // wire file inputs
+    slotWrap.querySelectorAll('input[type=file]').forEach(function(inp){
+      inp.addEventListener("change", function(e){
+        var loc = inp.getAttribute("data-loc");
+        var f = e.target.files[0];
+        if (!f) return;
+        var wrap = inp.closest(".q-file-wrap");
+        wrap.querySelector(".q-file-name").textContent = f.name;
+        wrap.querySelector(".q-file-label").textContent = "Logo added - tap to change";
+        wrap.classList.add("has-file");
+        var reader = new FileReader();
+        reader.onload = function(ev){ locFiles[loc] = { data: ev.target.result.split(",")[1], name: f.name, type: f.type }; };
+        reader.readAsDataURL(f);
+      });
+    });
+    // clicking the label opens the file input
+    slotWrap.querySelectorAll(".q-file-label").forEach(function(lbl){
+      lbl.addEventListener("click", function(){ lbl.parentNode.querySelector('input[type=file]').click(); });
+    });
+    // front position radios
+    slotWrap.querySelectorAll('input[name="qFrontPos"]').forEach(function(r){
+      r.addEventListener("change", function(){ frontPos = r.value; });
+    });
+  }
+
+  document.querySelectorAll('input[name="qPlace"]').forEach(function(c){
+    c.addEventListener("change", buildSlots);
+  });
+  buildSlots();
+
+  function val(id){ return ($(id).value || "").trim(); }
+  function radio(name){ var r = document.querySelector('input[name="'+name+'"]:checked'); return r ? r.value : ""; }
+  function checkedLocs(){ return Array.prototype.slice.call(document.querySelectorAll('input[name="qPlace"]:checked')).map(function(c){ return c.getAttribute("data-loc"); }); }
+
+  function placementSummary(){
+    return checkedLocs().map(function(loc){
+      return loc === "Front" ? "Front (" + frontPos + ")" : loc;
+    }).join(", ") || "Front";
+  }
+
+  function validate(){
+    var ok = val("qStyle") && val("qColor") && val("qQty") && val("qName") &&
+             /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val("qEmail"));
+    $("qErr").classList.toggle("show", !ok);
+    if (!ok){
+      var first = !val("qStyle") ? "qStyle" : !val("qColor") ? "qColor" : !val("qQty") ? "qQty" :
+                  !val("qName") ? "qName" : "qEmail";
+      $(first).focus(); $(first).scrollIntoView({ behavior:"smooth", block:"center" });
+    }
+    return ok;
+  }
+
+  $("qSubmit").addEventListener("click", function(){
+    if (!validate()) return;
+    var btn = $("qSubmit");
+    btn.disabled = true;
+
+    var meta = {
+      name: val("qName"), email: val("qEmail"), phone: "",
+      style: val("qStyle"), requestedStyle: val("qStyle"),
+      color: val("qColor"), qty: val("qQty"),
+      deco: radio("qDeco"), placements: placementSummary(),
+      notes: val("qNotes") || "-", social: "-", estimate: "quote"
+    };
+    var files = [];
+    checkedLocs().forEach(function(loc){
+      if (locFiles[loc]){
+        files.push({ name: locFiles[loc].name, mimeType: locFiles[loc].type, data: locFiles[loc].data, placement: loc });
+      }
+    });
+
+    var prog = $("qProgress"), fill = $("qBarFill"), label = $("qProgressLabel");
+    prog.classList.add("show");
+    label.textContent = files.length ? "Sending your logo..." : "Submitting your request...";
+    var pct = 0;
+    var sim = setInterval(function(){ pct += (90 - pct) * 0.15; fill.style.width = pct + "%"; }, 200);
+
+    var summary = [
+      "Name: " + meta.name, "Email: " + meta.email,
+      "Hat: " + meta.style, "Color(s): " + meta.color, "Quantity: " + meta.qty,
+      "Decoration: " + meta.deco, "Placement: " + meta.placements,
+      "Logos: " + (files.length ? files.map(function(f){ return f.placement; }).join(", ") : "none uploaded"),
+      "Notes: " + meta.notes
+    ].join("\n");
+
+    fetch(APPS_SCRIPT_URL, {
+      method: "POST", mode: "no-cors",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ type: "quote", meta: meta, files: files })
+    }).then(function(){
+      clearInterval(sim); fill.style.width = "100%";
+      label.textContent = files.length ? "Logo sent ✓" : "Submitted ✓";
+      setTimeout(showConfirm, 350);
+    }).catch(function(){
+      clearInterval(sim); fill.style.width = "100%";
+      setTimeout(showConfirm, 350);
+    });
+
+    function showConfirm(){
+      $("quoteForm").style.display = "none";
+      $("qConfirmBody").innerHTML = "Thanks " + meta.name.split(" ")[0] + "! We've got your request" +
+        (files.length ? ", logo and all" : "") + ". We'll review it and follow up from <strong>help@threadbreak.com</strong> with pricing and next steps. Keep an eye on your inbox (and your spam folder, just in case). Here's a copy of what you sent:";
+      $("qConfirmSum").textContent = summary;
+      $("qConfirm").classList.add("show");
+      $("qConfirm").scrollIntoView({ behavior:"smooth", block:"center" });
+    }
+  });
+})();
+</script>
