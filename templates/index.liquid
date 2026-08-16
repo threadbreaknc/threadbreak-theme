@@ -30,7 +30,33 @@
   </div>
 </section>
 
-{% section 'featured-products' %}
+{%- comment -%} Machine video band, replaces the premade-hats featured products {%- endcomment -%}
+<section class="tb-machine">
+  <video class="tb-machine-vid" autoplay muted loop playsinline preload="metadata"
+    poster="">
+    <source src="https://cdn.shopify.com/videos/c/o/v/646e4d5dac3a42159c7712498d9c9516.mov" type="video/quicktime"><source src="https://cdn.shopify.com/videos/c/o/v/646e4d5dac3a42159c7712498d9c9516.mov" type="video/mp4">
+  </video>
+  <div class="tb-machine-overlay"></div>
+  <div class="tb-machine-inner">
+    <p class="tb-machine-eyebrow">Every hat, start to finish</p>
+    <h2 class="tb-machine-title">Made in-house.</h2>
+    <p class="tb-machine-sub">Embroidered, inspected, and shipped from Burlington, NC. No mass production, no shortcuts.</p>
+    <a href="/pages/custom-order" class="tb-machine-cta">Start a Custom Order</a>
+  </div>
+</section>
+
+<style>
+  .tb-machine{position:relative;min-height:60vh;display:flex;align-items:center;justify-content:center;overflow:hidden;border-top:5px solid #5028AA;border-bottom:5px solid #5028AA;}
+  .tb-machine-vid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;}
+  .tb-machine-overlay{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(20,18,28,.55),rgba(20,18,28,.35) 45%,rgba(20,18,28,.65));}
+  .tb-machine-inner{position:relative;z-index:2;text-align:center;color:#fff;padding:4rem 1.5rem;max-width:640px;}
+  .tb-machine-eyebrow{text-transform:uppercase;letter-spacing:.18em;font-size:.8rem;font-weight:700;color:#B7A6EE;margin:0 0 .75rem;}
+  .tb-machine-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.8rem,7vw,5rem);line-height:.95;margin:0 0 1rem;text-shadow:0 2px 20px rgba(0,0,0,.4);}
+  .tb-machine-sub{font-size:1.05rem;line-height:1.55;color:rgba(255,255,255,.9);margin:0 auto 1.75rem;max-width:440px;}
+  .tb-machine-cta{display:inline-block;background:#5028AA;color:#fff;text-decoration:none;font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:.05em;padding:.85rem 2.2rem;border-radius:12px;transition:background .18s,transform .18s;box-shadow:0 6px 24px rgba(80,40,170,.4);}
+  .tb-machine-cta:hover{background:#6234c9;transform:translateY(-2px);}
+  @media(max-width:600px){.tb-machine{min-height:50vh;}.tb-machine-inner{padding:3rem 1.25rem;}}
+</style>
 
 <style>
   .hc-hero{position:relative;min-height:82vh;display:flex;align-items:center;overflow:hidden;padding-top:5rem;border-bottom:5px solid #5028AA;}
