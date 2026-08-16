@@ -62,7 +62,7 @@
 <style>
   .hc-hero{position:relative;min-height:82vh;display:flex;align-items:center;overflow:hidden;padding-top:5rem;border-bottom:5px solid #5028AA;}
   .hc-hero-bg{position:absolute;inset:0;background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/hat-hero.jpg?v=1785008565');background-size:cover;background-position:center;transform:scale(1.04);}
-  .hc-hero-video{width:100%;height:100%;object-fit:cover;background-image:none;}
+  .hc-hero-video{width:100%;height:100%;object-fit:cover;object-position:center;background-image:none;}
   .hc-hero-loopfade{position:absolute;inset:0;z-index:1;background:#14121C;opacity:0;transition:opacity .5s ease;pointer-events:none;}
   .hc-hero-loopfade.show{opacity:1;}
   .hc-hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(16,14,22,.92) 0%,rgba(16,14,22,.72) 42%,rgba(16,14,22,.40) 100%);}
@@ -89,6 +89,7 @@
     .hc-cta-primary,.hc-cta-secondary{font-size:1.1rem;padding:.7rem 1.4rem;}
     .hc-cta-row{flex-direction:column;align-items:stretch;}
     .hc-hero-overlay{background:linear-gradient(180deg,rgba(16,14,22,.6) 0%,rgba(16,14,22,.85) 100%);}
+    .hc-hero-video{object-position:75% center;}
     .hc-props{gap:.4rem 1.25rem;}
     .hc-props span{font-size:.8rem;}
   }

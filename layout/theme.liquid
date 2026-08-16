@@ -48,15 +48,56 @@
   .footer-nl-btn{background:var(--purple,#5028aa);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:0.82rem;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s,transform .15s}
   .footer-nl-btn:hover{background:#6234c9;transform:translateY(-1px)}
   /* grouped footer link columns */
-  .footer-grid{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2.5rem;align-items:flex-start;max-width:1200px;margin:0 auto;padding:3rem 1.5rem 2rem;}
-  .footer-brand-row{flex:0 0 auto;}
-  .footer-nav-groups{display:flex;flex-wrap:wrap;gap:2.5rem;flex:1 1 auto;justify-content:center;}
+  .footer-grid{display:flex;flex-wrap:wrap;gap:2.5rem 3rem;align-items:flex-start;max-width:1200px;margin:0 auto;padding:3rem 1.5rem 2rem;}
+  .footer-brand-row{flex:1 1 100%;}
+  .footer-nav-groups{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.5rem 2rem;flex:2 1 340px;}
   .footer-grid .footer-col{display:block !important;}
-  .footer-contact{flex:0 0 auto;}
-  /* mobile menu: clear the fixed nav + banner so the first link isn't cut off */
-  @media(max-width:700px){
-    .nav-mobile-menu{padding-top:1rem !important;}
-    .nav-mobile-menu a:first-child{margin-top:0.5rem;}
+  .footer-contact{flex:1 1 220px;}
+  @media(max-width:768px){
+    .footer-grid{gap:2rem;}
+    .footer-nav-groups{grid-template-columns:1fr 1fr;gap:1.5rem;flex-basis:100%;}
+    .footer-contact{flex-basis:100%;}
+  }
+  /* ===== MOBILE MENU: full override of theme.css full-screen version ===== */
+  @media(max-width:768px){
+    .nav-mobile-menu{
+      justify-content:flex-start !important;
+      align-items:stretch !important;
+      gap:0 !important;
+      padding:6.5rem 1.75rem 2.5rem !important;
+      overflow-y:auto !important;
+      background:#F8F5FF !important;
+    }
+    .nav-mobile-menu a{
+      font-family:var(--font-display,'Bebas Neue',sans-serif) !important;
+      font-size:1.5rem !important;
+      letter-spacing:0.04em !important;
+      text-align:left !important;
+      padding:0.55rem 0 !important;
+      opacity:1 !important;
+      transform:none !important;
+      animation:none !important;
+      line-height:1.15 !important;
+    }
+    .nav-mobile-menu .nav-m-head{
+      font-family:var(--font-body,'DM Sans',sans-serif) !important;
+      font-size:0.72rem !important;
+      font-weight:700 !important;
+      letter-spacing:0.18em !important;
+      color:var(--purple,#5028AA) !important;
+      text-transform:uppercase;
+      margin:1.5rem 0 0.35rem !important;
+      padding:0 !important;
+      text-align:left !important;
+    }
+    .nav-mobile-menu .nav-m-head:first-child{margin-top:0 !important;}
+    .nav-mobile-menu .nav-cta{
+      margin-top:1.75rem !important;
+      text-align:center !important;
+      align-self:stretch !important;
+      border-radius:10px;
+      font-size:1.3rem !important;
+    }
   }
   /* desktop dropdown menus */
   .nav-dd{position:relative;}
@@ -72,15 +113,15 @@
   .nav-dd-menu::before{content:"";position:absolute;top:-8px;left:0;right:0;height:8px;}
   .nav-dd-menu a{display:block;padding:8px 12px;border-radius:7px;text-decoration:none;color:#14121C !important;font-family:var(--font-body,'DM Sans',sans-serif);font-size:0.8rem;letter-spacing:0.02em;text-transform:none;white-space:nowrap;transition:background .12s,color .12s;}
   .nav-dd-menu a:hover{background:#F3EFFC;color:var(--purple,#5028AA) !important;}
-  /* mobile menu group headings */
-  .nav-m-head{font-family:'Bebas Neue',sans-serif;letter-spacing:.1em;font-size:0.85rem;color:#B7A6EE;text-transform:uppercase;margin:1.1rem 0 0.2rem;padding:0 0.5rem;}
-  .nav-m-head:first-child{margin-top:0.5rem;}
   /* labeled Menu button (replaces plain hamburger) - mobile only */
   .nav-hamburger{display:none;align-items:center;gap:7px;background:none;border:1.5px solid #E2E0EA;border-radius:9px;padding:6px 12px 6px 10px;cursor:pointer;}
   @media(max-width:768px){ .nav-hamburger{display:flex;} }
-  .nav-hamburger-lines{display:flex;flex-direction:column;justify-content:center;gap:4px;width:18px;}
-  .nav-hamburger-lines span{display:block;height:2px;width:100%;background:#14121C;border-radius:2px;transition:transform .2s,opacity .2s;}
-  .nav-hamburger-label{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.06em;color:#14121C;line-height:1;}
+  .nav-hamburger-lines{display:flex;flex-direction:column;justify-content:center;gap:4px;width:18px;flex:none;}
+  /* neutralize theme.css's 3-line-to-X animation which targets bare spans */
+  .nav-hamburger > span{transform:none !important;opacity:1 !important;width:auto;height:auto;margin:0;}
+  .nav-hamburger.open > span{transform:none !important;opacity:1 !important;}
+  .nav-hamburger-lines span{display:block !important;height:2px !important;width:100% !important;background:#14121C !important;border-radius:2px;transform:none !important;opacity:1 !important;margin:0 !important;}
+  .nav-hamburger-label{font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.06em;color:#14121C;line-height:1;transform:none !important;opacity:1 !important;width:auto !important;height:auto !important;background:none !important;}
   .footer-col-head{font-family:'Bebas Neue',sans-serif;font-size:0.95rem;letter-spacing:.08em;color:#fff;margin:0 0 0.7rem;text-transform:uppercase}
   .footer-col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0.5rem}
   .footer-col li{margin:0}
@@ -98,6 +139,7 @@
 
 <!-- MOBILE MENU OVERLAY -->
 <div class="nav-mobile-menu" id="mobile-menu">
+  <a href="/" onclick="closeMobileMenu()">Home</a>
   <p class="nav-m-head">Shop</p>
   <a href="/collections/pre-made-hats" onclick="closeMobileMenu()">Premade Hats</a>
   <a href="/collections/apparel" onclick="closeMobileMenu()">Apparel</a>
@@ -119,6 +161,7 @@
     <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tb-logo-dark.png?v=1785009640" alt="{{ shop.name }}" class="nav-logo-img nav-logo-full">
   </a>
   <ul class="nav-links">
+    <li><a href="/">Home</a></li>
     <li class="nav-dd">
       <button type="button" class="nav-dd-toggle" aria-expanded="false">Shop <span class="nav-dd-caret">▾</span></button>
       <div class="nav-dd-menu">
