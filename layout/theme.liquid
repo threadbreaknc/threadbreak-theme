@@ -48,7 +48,33 @@
   .footer-nl-btn{background:var(--purple,#5028aa);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:0.82rem;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s,transform .15s}
   .footer-nl-btn:hover{background:#6234c9;transform:translateY(-1px)}
   /* grouped footer link columns */
-  .footer-nav-groups{display:flex;flex-wrap:wrap;gap:2.5rem}
+  .footer-grid{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2.5rem;align-items:flex-start;max-width:1200px;margin:0 auto;padding:3rem 1.5rem 2rem;}
+  .footer-brand-row{flex:0 0 auto;}
+  .footer-nav-groups{display:flex;flex-wrap:wrap;gap:2.5rem;flex:1 1 auto;justify-content:center;}
+  .footer-contact{flex:0 0 auto;}
+  /* mobile menu: clear the fixed nav + banner so the first link isn't cut off */
+  @media(max-width:700px){
+    .nav-mobile-menu{padding-top:1rem !important;}
+    .nav-mobile-menu a:first-child{margin-top:0.5rem;}
+  }
+  /* desktop dropdown menus */
+  .nav-dd{position:relative;}
+  .nav-dd-toggle{background:none;border:none;font-family:inherit;font-size:inherit;color:inherit;cursor:pointer;display:inline-flex;align-items:center;gap:5px;padding:0;}
+  .nav-dd-caret{font-size:0.7em;transition:transform .18s;}
+  .nav-dd:hover .nav-dd-caret,.nav-dd.open .nav-dd-caret{transform:rotate(180deg);}
+  .nav-dd-menu{position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(8px);min-width:190px;background:#fff;border:1px solid #E2E0EA;border-radius:12px;box-shadow:0 12px 32px rgba(20,18,28,.14);padding:8px;opacity:0;visibility:hidden;transition:opacity .16s,transform .16s;z-index:1200;display:flex;flex-direction:column;gap:2px;}
+  .nav-dd:hover .nav-dd-menu,.nav-dd.open .nav-dd-menu{opacity:1;visibility:visible;transform:translateX(-50%) translateY(4px);}
+  .nav-dd-menu::before{content:"";position:absolute;top:-8px;left:0;right:0;height:8px;}
+  .nav-dd-menu a{display:block;padding:10px 14px;border-radius:8px;text-decoration:none;color:#14121C;font-size:0.95rem;white-space:nowrap;transition:background .12s,color .12s;}
+  .nav-dd-menu a:hover{background:#F3EFFC;color:#5028AA;}
+  /* mobile menu group headings */
+  .nav-m-head{font-family:'Bebas Neue',sans-serif;letter-spacing:.1em;font-size:0.85rem;color:#B7A6EE;text-transform:uppercase;margin:1.1rem 0 0.2rem;padding:0 0.5rem;}
+  .nav-m-head:first-child{margin-top:0.5rem;}
+  /* labeled Menu button (replaces plain hamburger) */
+  .nav-hamburger{display:flex;align-items:center;gap:7px;background:none;border:1.5px solid #E2E0EA;border-radius:9px;padding:6px 12px 6px 10px;cursor:pointer;}
+  .nav-hamburger-lines{display:flex;flex-direction:column;justify-content:center;gap:4px;width:18px;}
+  .nav-hamburger-lines span{display:block;height:2px;width:100%;background:#14121C;border-radius:2px;transition:transform .2s,opacity .2s;}
+  .nav-hamburger-label{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.06em;color:#14121C;line-height:1;}
   .footer-col-head{font-family:'Bebas Neue',sans-serif;font-size:0.95rem;letter-spacing:.08em;color:#fff;margin:0 0 0.7rem;text-transform:uppercase}
   .footer-col ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0.5rem}
   .footer-col li{margin:0}
@@ -66,11 +92,15 @@
 
 <!-- MOBILE MENU OVERLAY -->
 <div class="nav-mobile-menu" id="mobile-menu">
-  <a href="/" onclick="closeMobileMenu()">Home</a>
-  <a href="/collections/pre-made-hats" onclick="closeMobileMenu()">Hats</a>
+  <p class="nav-m-head">Shop</p>
+  <a href="/collections/pre-made-hats" onclick="closeMobileMenu()">Premade Hats</a>
   <a href="/collections/apparel" onclick="closeMobileMenu()">Apparel</a>
-  <a href="/pages/about" onclick="closeMobileMenu()">About</a>
+  <p class="nav-m-head">Custom</p>
+  <a href="/pages/custom-order" onclick="closeMobileMenu()">Place a Custom Order</a>
+  <a href="/pages/quote" onclick="closeMobileMenu()">Get a Quote</a>
+  <p class="nav-m-head">More</p>
   <a href="/pages/our-work" onclick="closeMobileMenu()">Our Work</a>
+  <a href="/pages/about" onclick="closeMobileMenu()">About Us</a>
   <a href="/pages/faq" onclick="closeMobileMenu()">FAQ</a>
   <a href="/pages/custom-order" class="nav-cta" onclick="closeMobileMenu()">Place a Custom Order</a>
 </div>
@@ -83,12 +113,28 @@
     <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tb-logo-dark.png?v=1785009640" alt="{{ shop.name }}" class="nav-logo-img nav-logo-full">
   </a>
   <ul class="nav-links">
-    <li><a href="/">Home</a></li>
-    <li><a href="/collections/pre-made-hats">Hats</a></li>
-    <li><a href="/collections/apparel">Apparel</a></li>
-    <li><a href="/pages/about">About</a></li>
+    <li class="nav-dd">
+      <button type="button" class="nav-dd-toggle" aria-expanded="false">Shop <span class="nav-dd-caret">▾</span></button>
+      <div class="nav-dd-menu">
+        <a href="/collections/pre-made-hats">Premade Hats</a>
+        <a href="/collections/apparel">Apparel</a>
+      </div>
+    </li>
+    <li class="nav-dd">
+      <button type="button" class="nav-dd-toggle" aria-expanded="false">Custom <span class="nav-dd-caret">▾</span></button>
+      <div class="nav-dd-menu">
+        <a href="/pages/custom-order">Place a Custom Order</a>
+        <a href="/pages/quote">Get a Quote</a>
+      </div>
+    </li>
     <li><a href="/pages/our-work">Our Work</a></li>
-    <li><a href="/pages/faq">FAQ</a></li>
+    <li class="nav-dd">
+      <button type="button" class="nav-dd-toggle" aria-expanded="false">About <span class="nav-dd-caret">▾</span></button>
+      <div class="nav-dd-menu">
+        <a href="/pages/about">About Us</a>
+        <a href="/pages/faq">FAQ</a>
+      </div>
+    </li>
     <li><a href="/pages/custom-order" class="nav-cta">Place a Custom Order</a></li>
   </ul>
   <div class="nav-right">
@@ -101,9 +147,8 @@
       <span class="nav-cart-count" id="nav-cart-count">{{ cart.item_count }}</span>
     </a>
     <button class="nav-hamburger" id="hamburger" aria-label="Menu">
-      <span></span>
-      <span></span>
-      <span></span>
+      <span class="nav-hamburger-lines"><span></span><span></span><span></span></span>
+      <span class="nav-hamburger-label">Menu</span>
     </button>
   </div>
 </nav>
@@ -286,6 +331,28 @@
     if (!ticking){ window.requestAnimationFrame(update); ticking = true; }
   }, { passive: true });
   update();
+})();
+</script>
+<script>
+(function(){
+  // Desktop dropdowns: hover works via CSS. This adds click/tap toggling
+  // for touch devices and keyboard access, plus close-on-outside-click.
+  var dds = document.querySelectorAll('.nav-dd');
+  dds.forEach(function(dd){
+    var toggle = dd.querySelector('.nav-dd-toggle');
+    if (!toggle) return;
+    toggle.addEventListener('click', function(e){
+      e.preventDefault();
+      var isOpen = dd.classList.contains('open');
+      dds.forEach(function(d){ d.classList.remove('open'); d.querySelector('.nav-dd-toggle').setAttribute('aria-expanded','false'); });
+      if (!isOpen){ dd.classList.add('open'); toggle.setAttribute('aria-expanded','true'); }
+    });
+  });
+  document.addEventListener('click', function(e){
+    if (!e.target.closest('.nav-dd')){
+      dds.forEach(function(d){ d.classList.remove('open'); d.querySelector('.nav-dd-toggle').setAttribute('aria-expanded','false'); });
+    }
+  });
 })();
 </script>
 </body>
