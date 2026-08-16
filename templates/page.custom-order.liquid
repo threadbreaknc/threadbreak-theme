@@ -204,9 +204,9 @@ html {scroll-behavior:smooth}
 #tbco .en-example{margin-top:10px}
 #tbco .en-example img{max-width:100%;border-radius:10px;border:1px solid var(--line);display:block}
 #tbco .quote-only {display:none}
-#tbco .quote-redirect{display:block;text-align:center;margin:16px 0 4px;padding:13px 16px;background:#F3EFFC;border:1.5px solid var(--line);border-radius:12px;text-decoration:none;color:var(--muted);font-size:14px;transition:border-color .15s}
-#tbco .quote-redirect:hover{border-color:var(--purple)}
-#tbco .quote-redirect strong{color:var(--purple)}
+#tbco .quote-redirect{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;text-align:center;margin:20px 0 4px;padding:16px 20px;background:#F3EFFC;border:2px solid var(--purple);border-radius:12px;text-decoration:none;color:var(--ink);font-size:15px;font-weight:500;box-shadow:0 3px 12px rgba(80,40,170,.12);transition:background .15s,transform .15s,box-shadow .15s}
+#tbco .quote-redirect:hover{background:#EAE2FA;transform:translateY(-1px);box-shadow:0 5px 16px rgba(80,40,170,.2)}
+#tbco .quote-redirect strong{color:var(--purple);font-weight:700}
 body.quote-mode #tbco .quote-only {display:block}
 body.quote-mode #tbco .buy-only {display:none}
 #tbco .scoreboard {position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:var(--white);border-top:3px solid var(--purple);z-index:50;transition:transform .35s ease}
