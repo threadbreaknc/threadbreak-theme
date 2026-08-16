@@ -1,4 +1,4 @@
-{%- comment -%} build: order-v1 {%- endcomment -%}
+{%- comment -%} build: order-v2 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -194,6 +194,8 @@ html {scroll-behavior:smooth}
 #tbco .art-note {background:var(--ice);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--muted);margin-top:10px;line-height:1.55}
 #tbco .art-note strong {color:var(--ink)}
 #tbco .art-note p + p {margin-top:8px}
+#tbco .proof-note{border-left:4px solid var(--purple);background:#F3EFFC}
+#tbco .proof-note strong{color:var(--purple)}
 #tbco .embroidery-notice{display:flex;gap:12px;align-items:flex-start;background:#F3EFFC;border:1.5px solid var(--purple);border-left:5px solid var(--purple);border-radius:12px;padding:14px 16px;margin-top:12px}
 #tbco .embroidery-notice p{font-size:13px;color:var(--ink);line-height:1.55;margin:0}
 #tbco .embroidery-notice strong{color:var(--purple)}
@@ -482,6 +484,9 @@ body.quote-mode #tbco .buy-only {display:none}
     </ol>
     <div class="art-note">
       <p><strong>Lead time:</strong> Most orders are shipped in 2 to 3 weeks. Need it faster? Email <strong>help@threadbreak.com</strong> directly before placing your order and we'll see what we can make happen.</p>
+    </div>
+    <div class="art-note proof-note">
+      <p><strong>Please keep an eye on your email!</strong> We can't start your order until you approve your digital proof, so your response is what gets things moving. We'll reach out from <strong>help@threadbreak.com</strong>, so please watch your inbox (and spam folder) and reply when you can. If we don't hear back after a few attempts, we may have to cancel the order. We'd hate for that to happen, so a quick reply keeps your hats on track!</p>
     </div>
     <div class="err" id="cartErr">Couldn't add to cart. This form talks to Shopify, so it only works when hosted on threadbreak.com. If you're seeing this on the live site, refresh and try again or email help@threadbreak.com.</div>
   </section>

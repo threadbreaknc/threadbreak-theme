@@ -1,54 +1,98 @@
-<div class="about-page">
-  <div class="about-sparkles" id="about-sparkles" aria-hidden="true"></div>
+{%- comment -%} build: about-v2 {%- endcomment -%}
+<div id="tbabout">
+  <style>
+    #tbabout{--ink:#14121C;--purple:#5028AA;--purple2:#6234c9;--light:#B7A6EE;--ice:#F3EFFC;--line:#E2E0EA;--muted:#6B6A78;
+      font-family:'DM Sans',sans-serif;color:var(--ink);padding:130px 20px 80px;max-width:1080px;margin:0 auto;}
+    @media(max-width:700px){#tbabout{padding-top:110px}}
+    #tbabout .ab-hero{text-align:center;max-width:760px;margin:0 auto 3.5rem;}
+    #tbabout .ab-eyebrow{text-transform:uppercase;letter-spacing:.2em;font-size:.8rem;font-weight:700;color:var(--purple);margin:0 0 .9rem;}
+    #tbabout .ab-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.6rem,6vw,4.6rem);line-height:.98;margin:0 0 1.2rem;}
+    #tbabout .ab-hero p{font-size:1.08rem;line-height:1.65;color:var(--muted);margin:0 auto;max-width:640px;}
+    #tbabout .ab-video-wrap{position:relative;border-radius:18px;overflow:hidden;margin:0 0 4rem;border:3px solid var(--purple);box-shadow:0 16px 44px rgba(80,40,170,.18);aspect-ratio:16/9;background:#14121C;}
+    #tbabout .ab-video-wrap video{width:100%;height:100%;object-fit:cover;display:block;}
+    #tbabout .ab-story{display:flex;flex-direction:column;gap:2rem;max-width:760px;margin:0 auto 4rem;}
+    #tbabout .ab-story p{font-size:1.06rem;line-height:1.7;margin:0;}
+    #tbabout .ab-story p strong{color:var(--purple);}
+    #tbabout .ab-values{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin:0 0 4rem;}
+    @media(max-width:760px){#tbabout .ab-values{grid-template-columns:1fr;}}
+    #tbabout .ab-value{background:var(--ice);border-radius:16px;padding:1.8rem 1.5rem;text-align:center;}
+    #tbabout .ab-value-icon{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:var(--purple);color:#fff;font-size:1.3rem;margin-bottom:.9rem;}
+    #tbabout .ab-value h3{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.03em;margin:0 0 .5rem;}
+    #tbabout .ab-value p{font-size:.94rem;line-height:1.55;color:var(--muted);margin:0;}
+    #tbabout .ab-gallery-head{text-align:center;margin:0 0 1.5rem;}
+    #tbabout .ab-gallery-head h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4.5vw,3rem);margin:0 0 .5rem;}
+    #tbabout .ab-gallery-head p{color:var(--muted);font-size:1rem;margin:0;}
+    #tbabout .ab-gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:0 0 3.5rem;}
+    @media(max-width:760px){#tbabout .ab-gallery{grid-template-columns:repeat(2,1fr);}}
+    #tbabout .ab-gallery img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:12px;display:block;}
+    #tbabout .ab-cta{background:var(--ink);border-radius:20px;padding:3rem 2rem;text-align:center;color:#fff;}
+    #tbabout .ab-cta h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4.5vw,3rem);margin:0 0 .8rem;}
+    #tbabout .ab-cta p{color:rgba(255,255,255,.8);font-size:1.02rem;line-height:1.6;margin:0 auto 1.8rem;max-width:480px;}
+    #tbabout .ab-cta-row{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+    #tbabout .ab-btn{display:inline-block;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:.05em;padding:.85rem 2.2rem;border-radius:12px;text-decoration:none;transition:transform .15s,background .15s;}
+    #tbabout .ab-btn-fill{background:var(--purple);color:#fff;box-shadow:0 6px 20px rgba(80,40,170,.4);}
+    #tbabout .ab-btn-fill:hover{background:var(--purple2);transform:translateY(-2px);}
+    #tbabout .ab-btn-outline{border:1.5px solid rgba(255,255,255,.5);color:#fff;}
+    #tbabout .ab-btn-outline:hover{border-color:#fff;background:rgba(255,255,255,.08);transform:translateY(-2px);}
+  </style>
 
-  <!-- HERO -->
-  <section class="about-hero">
-    <div class="about-hero-content">
-      <blockquote class="about-statement reveal reveal-d1">
-        Threadbreak is a one man operation based in North Carolina focused on sports and culture inspired hats. It started from being obsessed with good hats, good design, and wanting to make pieces that actually felt different from the mass produced stuff everywhere else.
-        <br><br>
-        Every hat is designed, stitched, and shipped in house in small batches. No factories, no huge production runs. Just quality hats made by someone who genuinely cares about the details.
-        <br><br>
-        Designs are either created in house or in collaboration with local North Carolina designers.
-      </blockquote>
-      <div class="about-sig reveal reveal-d2">Threadbreak, Burlington NC</div>
-      <div class="about-ctas reveal reveal-d3">
-        <a href="/collections/all" class="btn btn-fill">Shop the Collection</a>
-        <a href="/pages/quote" class="btn btn-outline">Get a Custom Quote</a>
-      </div>
-    </div>
+  <section class="ab-hero">
+    <p class="ab-eyebrow">Our Story</p>
+    <h1>Custom embroidery, made in-house.</h1>
+    <p>Threadbreak is a North Carolina-based custom embroidery shop specializing in high-quality custom hats for businesses, brands, teams, organizations, and events.</p>
   </section>
 
-  <!-- VALUES BAND -->
-  <section class="about-values">
-    <div class="about-values-inner">
-      <div class="about-value reveal">
-        <span class="about-value-icon">✦</span>
-        <h3>Design First</h3>
-        <p>Every hat starts with a design worth wearing. Not just a logo slapped on fabric.</p>
-      </div>
-      <div class="about-value reveal reveal-d1">
-        <span class="about-value-icon">✦</span>
-        <h3>Made In House</h3>
-        <p>Designed, stitched, and shipped from Burlington, NC. Full control over every step.</p>
-      </div>
-      <div class="about-value reveal reveal-d2">
-        <span class="about-value-icon">✦</span>
-        <h3>Quality Over Volume</h3>
-        <p>No rush jobs. No cutting corners. Every piece gets the same attention whether it's one hat or a hundred.</p>
-      </div>
-    </div>
-  </section>
+  <div class="ab-video-wrap">
+    <video autoplay muted loop playsinline preload="metadata">
+      <source src="https://cdn.shopify.com/videos/c/o/v/646e4d5dac3a42159c7712498d9c9516.mov" type="video/quicktime">
+      <source src="https://cdn.shopify.com/videos/c/o/v/646e4d5dac3a42159c7712498d9c9516.mov" type="video/mp4">
+    </video>
+  </div>
 
-  <!-- CLOSING -->
-  <section class="about-closing">
-    <div class="about-closing-inner reveal">
-      <p class="about-closing-quote">
-        "A simple piece can say a lot<br>
-        <em>without trying too hard.</em>"
-      </p>
-      <div class="about-closing-sig">Threadbreak</div>
+  <div class="ab-story">
+    <p>From small local businesses to growing brands, we work with customers to turn their logos and ideas into professionally embroidered headwear. Every order is produced <strong>in-house</strong>, giving us complete control over the quality of the finished product from setup to the final stitch.</p>
+    <p>We focus on clean embroidery, quality materials, and attention to detail. Whether you're ordering hats for your employees, merchandise for your brand, an upcoming event, or something completely custom, our goal is to deliver a finished product you'll be proud to put your name on.</p>
+    <p>We offer a variety of hat styles and work with each customer to make sure their design is suited for embroidery and looks its best on the finished hat.</p>
+  </div>
+
+  <div class="ab-values">
+    <div class="ab-value">
+      <span class="ab-value-icon">&#10022;</span>
+      <h3>Made In-House</h3>
+      <p>Every order is set up, stitched, and shipped from Burlington, NC. Full control over every step.</p>
     </div>
-  </section>
+    <div class="ab-value">
+      <span class="ab-value-icon">&#10022;</span>
+      <h3>Built For Your Brand</h3>
+      <p>Businesses, teams, and events. We turn your logo into headwear you'll be proud to wear.</p>
+    </div>
+    <div class="ab-value">
+      <span class="ab-value-icon">&#10022;</span>
+      <h3>Detail Obsessed</h3>
+      <p>Clean embroidery, quality materials, and a design checked to look its best on the hat.</p>
+    </div>
+  </div>
+
+  <div class="ab-gallery-head">
+    <h2>Our work</h2>
+    <p>A look at some of the custom hats we've stitched.</p>
+  </div>
+  <div class="ab-gallery">
+    <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/07217139-5CCE-441B-B790-0029094697DC.jpg" alt="Custom embroidered hat by Threadbreak" loading="lazy">
+    <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/72816A1C-5D40-4732-9FEB-F01282E9C397.jpg" alt="Custom embroidered hat by Threadbreak" loading="lazy">
+    <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6DFA090A-1089-4CDE-8C3F-764AA7E7D576.jpg" alt="Custom embroidered hat by Threadbreak" loading="lazy">
+    <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/31046EA1-FC9B-495F-A851-AEF0819AA92E.jpg" alt="Custom embroidered hat by Threadbreak" loading="lazy">
+    <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/2736EC88-FDD3-4C5D-BBA3-F70364DE24BE.jpg" alt="Custom embroidered hat by Threadbreak" loading="lazy">
+    <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6CB0AC79-A34F-4B4D-AD9D-FBAEF30942E3.jpg" alt="Custom embroidered hat by Threadbreak" loading="lazy">
+  </div>
+
+  <div class="ab-cta">
+    <h2>Let's make something.</h2>
+    <p>Tell us what you have in mind and we'll help you bring it to life, from your logo to the final stitch.</p>
+    <div class="ab-cta-row">
+      <a href="/pages/custom-order" class="ab-btn ab-btn-fill">Place a Custom Order</a>
+      <a href="/pages/quote" class="ab-btn ab-btn-outline">Get a Quote</a>
+    </div>
+  </div>
 
 </div>

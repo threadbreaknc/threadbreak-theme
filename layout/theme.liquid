@@ -60,8 +60,11 @@
   }
   /* desktop dropdown menus */
   .nav-dd{position:relative;}
-  .nav-dd-toggle{background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px;padding:0;font-family:var(--font-body,'DM Sans',sans-serif);font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(26,21,32,0.55);transition:color .2s;}
+  .nav-dd-toggle{background:none;border:none;cursor:pointer;display:inline-flex;align-items:center;gap:5px;padding:0;font-family:var(--font-body,'DM Sans',sans-serif);font-size:0.9rem;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#14121C;transition:color .2s;}
   .nav-dd-toggle:hover{color:var(--purple,#5028AA);}
+  /* plain nav links (Our Work) match the dropdown toggles */
+  .nav-links > li > a:not(.nav-cta){font-size:0.9rem !important;font-weight:600 !important;letter-spacing:0.12em !important;color:#14121C !important;text-transform:uppercase;}
+  .nav-links > li > a:not(.nav-cta):hover{color:var(--purple,#5028AA) !important;}
   .nav-dd-caret{font-size:0.85em;letter-spacing:0;transition:transform .18s;}
   .nav-dd:hover .nav-dd-caret,.nav-dd.open .nav-dd-caret{transform:rotate(180deg);}
   .nav-dd-menu{position:absolute;top:100%;left:50%;transform:translateX(-50%) translateY(8px);min-width:170px;background:#fff;border:1px solid #E2E0EA;border-radius:12px;box-shadow:0 12px 32px rgba(20,18,28,.14);padding:6px;opacity:0;visibility:hidden;transition:opacity .16s,transform .16s;z-index:1200;display:flex;flex-direction:column;gap:1px;}
@@ -171,6 +174,7 @@
         <ul>
           <li><a href="/">Home</a></li>
           <li><a href="/pages/about">About Us</a></li>
+          <li><a href="/pages/our-work">Our Work</a></li>
           <li><a href="/pages/faq">FAQ</a></li>
         </ul>
       </div>
@@ -179,7 +183,6 @@
         <ul>
           <li><a href="/collections/pre-made-hats">Premade Hats</a></li>
           <li><a href="/collections/apparel">Apparel</a></li>
-          <li><a href="/pages/our-work">Our Work</a></li>
         </ul>
       </div>
       <div class="footer-col">
