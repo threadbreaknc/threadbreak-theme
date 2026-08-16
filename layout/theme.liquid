@@ -47,6 +47,12 @@
   .footer-nl-text{font-size:0.8rem;color:rgba(247,244,240,0.55);margin:0 0 0.5rem}
   .footer-nl-btn{background:var(--purple,#5028aa);color:#fff;border:none;border-radius:8px;padding:9px 18px;font-size:0.82rem;font-weight:600;font-family:inherit;cursor:pointer;transition:background .15s,transform .15s}
   .footer-nl-btn:hover{background:#6234c9;transform:translateY(-1px)}
+  /* stacked footer links */
+  .footer-links{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0.6rem}
+  .footer-links li{margin:0}
+  .footer-links a{text-decoration:none;font-size:0.9rem;color:rgba(247,244,240,0.7);transition:color .15s}
+  .footer-links a:hover{color:#fff}
+  .footer-links a.footer-link-cta{color:#fff;font-weight:600}
 </style>
 </head>
 <body>
@@ -61,7 +67,7 @@
   <a href="/pages/about" onclick="closeMobileMenu()">About</a>
   <a href="/pages/our-work" onclick="closeMobileMenu()">Our Work</a>
   <a href="/pages/faq" onclick="closeMobileMenu()">FAQ</a>
-  <a href="/pages/quote" class="nav-cta" onclick="closeMobileMenu()">Place a Custom Order</a>
+  <a href="/pages/custom-order" class="nav-cta" onclick="closeMobileMenu()">Place a Custom Order</a>
 </div>
 
 <div class="shipping-banner">
@@ -78,7 +84,7 @@
     <li><a href="/pages/about">About</a></li>
     <li><a href="/pages/our-work">Our Work</a></li>
     <li><a href="/pages/faq">FAQ</a></li>
-    <li><a href="/pages/quote" class="nav-cta">Place a Custom Order</a></li>
+    <li><a href="/pages/custom-order" class="nav-cta">Place a Custom Order</a></li>
   </ul>
   <div class="nav-right">
     <a href="/cart" class="nav-cart{% if cart.item_count == 0 %} nav-cart-hidden{% endif %}" aria-label="Cart" id="nav-cart-link">
@@ -107,10 +113,14 @@
       <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tb-logo-light.png?v=1785009640" alt="{{ shop.name }}" class="footer-logo footer-logo-full">
     </div>
     <ul class="footer-links">
+      <li><a href="/">Home</a></li>
       <li><a href="/collections/pre-made-hats">Hats</a></li>
+      <li><a href="/collections/apparel">Apparel</a></li>
       <li><a href="/pages/about">About</a></li>
+      <li><a href="/pages/our-work">Our Work</a></li>
       <li><a href="/pages/faq">FAQ</a></li>
-      <li><a href="/pages/quote">Custom Hats</a></li>
+      <li><a href="/pages/quote">Get a Quote</a></li>
+      <li><a href="/pages/custom-order" class="footer-link-cta">Place a Custom Order</a></li>
     </ul>
     <div class="footer-contact">
       <p class="footer-contact-label">Questions?</p>
