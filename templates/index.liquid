@@ -6,6 +6,7 @@
     <source src="https://cdn.shopify.com/videos/c/o/v/4f8d2a0347e7479382891962bc3a7b4e.mov" type="video/mp4">
   </video>
   <div class="hc-hero-overlay"></div>
+  <div class="hc-hero-loopfade" id="hcLoopFade"></div>
   <div class="hc-hero-inner">
     <p class="hc-eyebrow">Custom &amp; Wholesale Embroidery</p>
     <h1 class="hc-h1">Custom&nbsp;embroidered hats for your brand.</h1>
@@ -62,7 +63,9 @@
   .hc-hero{position:relative;min-height:82vh;display:flex;align-items:center;overflow:hidden;padding-top:5rem;border-bottom:5px solid #5028AA;}
   .hc-hero-bg{position:absolute;inset:0;background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/hat-hero.jpg?v=1785008565');background-size:cover;background-position:center;transform:scale(1.04);}
   .hc-hero-video{width:100%;height:100%;object-fit:cover;background-image:none;}
-  .hc-hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(16,14,22,.92) 0%,rgba(16,14,22,.78) 42%,rgba(16,14,22,.42) 100%);}
+  .hc-hero-loopfade{position:absolute;inset:0;z-index:1;background:linear-gradient(120deg,rgba(80,40,170,.9),rgba(40,20,90,.9));opacity:0;transition:opacity .5s ease;pointer-events:none;}
+  .hc-hero-loopfade.show{opacity:1;}
+  .hc-hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(28,16,58,.92) 0%,rgba(30,18,60,.72) 42%,rgba(80,40,170,.30) 100%);}
   .hc-hero-inner{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:5rem 2rem 4rem;width:100%;color:#F7F4F0;}
   .hc-eyebrow{font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:#B7A6EE;font-weight:700;margin:0 0 1rem;}
   .hc-h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.6rem,6.5vw,5.4rem);line-height:.94;letter-spacing:.01em;margin:0 0 1.25rem;max-width:20ch;}
@@ -101,3 +104,31 @@
   .tb-story-item span{color:#C9C8D4;font-size:.95rem;line-height:1.55;}
   @media(max-width:800px){.tb-story{padding:3.5rem 1.5rem;}.tb-story-inner{grid-template-columns:1fr;gap:2rem;}}
 </style>
+<script>
+(function(){
+  var vid = document.querySelector('.hc-hero-video');
+  var fade = document.getElementById('hcLoopFade');
+  if (!vid) return;
+  var TRIM = 2;       // seconds to cut from the end
+  var FADE = 0.5;     // seconds of purple crossfade before the loop
+  var looping = false;
+
+  vid.addEventListener('timeupdate', function(){
+    if (!vid.duration || isNaN(vid.duration)) return;
+    var cutoff = vid.duration - TRIM;
+    // start the purple fade shortly before the cutoff
+    if (!looping && vid.currentTime >= cutoff - FADE){
+      if (fade) fade.classList.add('show');
+    }
+    // at the cutoff, jump back to start and fade the purple back out
+    if (!looping && vid.currentTime >= cutoff){
+      looping = true;
+      vid.currentTime = 0;
+      setTimeout(function(){
+        if (fade) fade.classList.remove('show');
+        looping = false;
+      }, FADE * 1000);
+    }
+  });
+})();
+</script>
