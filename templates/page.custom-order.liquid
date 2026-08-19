@@ -1,4 +1,4 @@
-{%- comment -%} build: order-v5 {%- endcomment -%}
+{%- comment -%} build: order-v6 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -163,6 +163,8 @@ html {scroll-behavior:smooth}
 #tbco .qty-row {display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 #tbco .qty-input {width:110px;border:1.5px solid var(--line);border-radius:10px;padding:11px 14px;font-size:16px;font-weight:700;font-family:'DM Sans',sans-serif}
 #tbco .qty-input:focus {outline:2px solid var(--purple);border-color:var(--purple)}
+#tbco .qty-input.qty-nudge {animation:qtyNudge .5s ease 2;border-color:var(--purple)}
+@keyframes qtyNudge{0%,100%{box-shadow:0 0 0 0 rgba(80,40,170,0)}50%{box-shadow:0 0 0 4px rgba(80,40,170,.25)}}
 #tbco .tiers {display:grid;grid-template-columns:repeat(auto-fit,minmax(86px,1fr));gap:8px;margin-top:14px}
 #tbco .tier {border:1.5px solid var(--line);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .12s}
 #tbco .tier:hover {border-color:#B7A6EE}
@@ -354,7 +356,7 @@ body.quote-mode #tbco .buy-only {display:none}
       <p class="step-sub quote-only">Quantity helps us put together your quote.</p>
       <div class="step-body">
         <div class="qty-row">
-          <input class="qty-input" id="qty" type="number" min="1" value="1" inputmode="numeric" aria-label="Total quantity">
+          <input class="qty-input" id="qty" type="number" min="1" placeholder="Qty" inputmode="numeric" aria-label="Total quantity">
           <span class="hint" style="margin-top:0">hats total</span>
         </div>
         <div class="buy-only">
@@ -549,11 +551,11 @@ from {{ shop.metafields.judgeme.all_reviews_count }} reviews
 <!-- sticky scoreboard -->
 <div class="scoreboard sb-hidden" id="scoreboard" role="region" aria-label="Your quote">
   <div class="sb-inner">
-    <div class="sb-stat"><div class="sb-label">Qty</div><div class="sb-value" id="sbQty">1</div></div>
+    <div class="sb-stat"><div class="sb-label">Qty</div><div class="sb-value" id="sbQty">–</div></div>
     <div class="sb-divider"></div>
-    <div class="sb-stat"><div class="sb-label">Per hat</div><div class="sb-value accent" id="sbPer">$0</div></div>
+    <div class="sb-stat"><div class="sb-label">Per hat</div><div class="sb-value accent" id="sbPer">–</div></div>
     <div class="sb-divider sb-hide-sm"></div>
-    <div class="sb-stat sb-hide-sm"><div class="sb-label" id="sbTotalLabel">Estimated total</div><div class="sb-value" id="sbTotal">$0</div></div>
+    <div class="sb-stat sb-hide-sm"><div class="sb-label" id="sbTotalLabel">Select a quantity</div><div class="sb-value" id="sbTotal">–</div></div>
     <button class="sb-cta" id="submitBtn" type="button" style="display:none">Review order</button>
   </div>
 </div>
@@ -727,7 +729,7 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0-rO8Y8fqsyAG
 
 const state = {
   style: STYLES[0], colorSel: [], lastColor: null, colorQty: {},
-  showAllColors: false, hasChosen: false, sizing: SIZES[0], qty: 1, deco: DECOS[0],
+  showAllColors: false, hasChosen: false, qtyTouched: false, sizing: SIZES[0], qty: 1, deco: DECOS[0],
   placements: new Set(["front"]), frontPos: "Center front", files: { front:null, side:null, back:null }
 };
 const $ = id => document.getElementById(id);
@@ -888,14 +890,15 @@ function updatePricingUI(){
     sv.classList.add("show");
   }
   const per = perHat();
+  const showPrice = state.qtyTouched;
   const newTotal = per === null ? null : per * state.qty;
-  $("sbQty").textContent = state.qty;
-  $("sbPer").textContent = per === null ? "TBD" : money(per);
+  $("sbQty").textContent = state.qtyTouched ? state.qty : "–";
+  $("sbPer").textContent = !showPrice ? "–" : (per === null ? "TBD" : money(per));
 
   const perEl = $("sbPer");
   const totalEl = $("sbTotal");
   // pulse both per-hat and total purple whenever the price changes (no up/down direction)
-  if (newTotal !== null && window._tbPrevTotal != null && newTotal !== window._tbPrevTotal){
+  if (showPrice && newTotal !== null && window._tbPrevTotal != null && newTotal !== window._tbPrevTotal){
     [perEl, totalEl].forEach(el => {
       if (!el) return;
       el.classList.remove("flash");
@@ -903,10 +906,10 @@ function updatePricingUI(){
       el.classList.add("flash");
     });
   }
-  window._tbPrevTotal = newTotal;
+  window._tbPrevTotal = showPrice ? newTotal : null;
 
-  totalEl.textContent = per === null ? "TBD" : money(newTotal);
-  $("sbTotalLabel").textContent = per === null ? "We'll quote it" : "Estimated total";
+  totalEl.textContent = !showPrice ? "–" : (per === null ? "TBD" : money(newTotal));
+  $("sbTotalLabel").textContent = !showPrice ? "Select a quantity" : (per === null ? "We'll quote it" : "Estimated total");
   const bt = document.querySelector(".bd-total");
   if (bt) bt.textContent = state.qty + " hats total";
 }
@@ -968,6 +971,7 @@ function renderColors(){
       inp.addEventListener("input", e => {
         state.colorQty[e.target.dataset.c] = Math.max(0, parseInt(e.target.value || "0", 10));
         state.qty = Math.max(1, state.colorSel.reduce((s,c)=> s + (state.colorQty[c] || 0), 0));
+        state.qtyTouched = true;
         $("qty").value = state.qty;
         updatePricingUI();
       }));
@@ -1077,6 +1081,7 @@ function render(){
     $("tiers").querySelectorAll('.tier').forEach(el =>
       el.addEventListener('click', () => {
         state.qty = +el.dataset.q; $("qty").value = state.qty;
+        state.qtyTouched = true;
         evenSplit(); render();
       }));
   }
@@ -1146,6 +1151,7 @@ function renderUploads(){
 $("qty").addEventListener("input", e => {
   const v = Math.max(1, parseInt(e.target.value || "1", 10));
   state.qty = Math.max(1, v);
+  state.qtyTouched = true;
   evenSplit();
   renderColors();
   updatePricingUI();
@@ -1422,7 +1428,19 @@ function initAccordion(){
   }
   // Step 4's button opens the order-review modal
   document.querySelectorAll('[data-checkout]').forEach(btn => {
-    btn.addEventListener("click", () => { markDone(4, true); openSummary(); });
+    btn.addEventListener("click", () => {
+      if (!quoteMode() && !state.qtyTouched){
+        const qi = $("qty");
+        if (qi){
+          qi.focus();
+          qi.scrollIntoView({ behavior:"smooth", block:"center" });
+          qi.classList.add("qty-nudge");
+          setTimeout(() => qi.classList.remove("qty-nudge"), 1200);
+        }
+        return;
+      }
+      markDone(4, true); openSummary();
+    });
   });
   const sc = $("sbSummaryClose");
   if (sc) sc.addEventListener("click", closeSummary);
