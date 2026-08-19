@@ -1,4 +1,4 @@
-{%- comment -%} build: order-v2 {%- endcomment -%}
+{%- comment -%} build: order-v3 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -339,11 +339,11 @@ body.quote-mode #tbco .buy-only {display:none}
     </div>
     <div class="acc-summary" id="sum2"></div>
     <div class="acc-wrap">
-      <p class="step-sub buy-only">Starts at just 10 hats total. Price per hat drops as your total goes up. Pick a tier or type your own number.</p>
+      <p class="step-sub buy-only">Order as few as 1 hat. Price per hat drops as your total goes up. Pick a tier or type your own number.</p>
       <p class="step-sub quote-only">Quantity helps us put together your quote.</p>
       <div class="step-body">
         <div class="qty-row">
-          <input class="qty-input" id="qty" type="number" min="10" value="10" inputmode="numeric" aria-label="Total quantity">
+          <input class="qty-input" id="qty" type="number" min="1" value="1" inputmode="numeric" aria-label="Total quantity">
           <span class="hint" style="margin-top:0">hats total</span>
         </div>
         <div class="buy-only">
@@ -538,7 +538,7 @@ from {{ shop.metafields.judgeme.all_reviews_count }} reviews
 <!-- sticky scoreboard -->
 <div class="scoreboard sb-hidden" id="scoreboard" role="region" aria-label="Your quote">
   <div class="sb-inner">
-    <div class="sb-stat"><div class="sb-label">Qty</div><div class="sb-value" id="sbQty">10</div></div>
+    <div class="sb-stat"><div class="sb-label">Qty</div><div class="sb-value" id="sbQty">1</div></div>
     <div class="sb-divider"></div>
     <div class="sb-stat"><div class="sb-label">Per hat</div><div class="sb-value accent" id="sbPer">$0</div></div>
     <div class="sb-divider sb-hide-sm"></div>
@@ -590,7 +590,7 @@ const STYLES = [
       "Dark Green/Natural":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/dark_green-natural.jpg?v=1785628631",
       "Charcoal Grey/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-grey-black.jpg?v=1785628631"
     },
-    tiers:[[10,17,52559807807620],[24,15,52559807840388],[48,14,52559807873156],[96,13,52559807905924],[144,12,52559807938692]] },
+    tiers:[[1,45,52662448488580],[5,24,52662448521348],[10,17,52559807807620],[24,15,52559807840388],[48,14,52559807873156],[96,13,52559807905924],[144,12,52559807938692]] },
   { id:"atonal", name:"Atonal Camo A-Frame", brand:"Atonal A590P", desc:"Snapback · 100% cotton · adult · one size fits most", popular:99,
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590p_NaturalFieldCamo001_jpg_02583279-95d6-49dd-8bc8-36bb3e0e8aff.webp?v=1785629359","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590p_FieldCamo001_webp.jpg?v=1785629359","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590P_BlackFieldCamp001_jpg_b9bafb49-b972-4b12-ab31-f6af5ff99e53.webp?v=1785629359"],
     colors:["Natural/Field Camo","Field Camo","Black/Field Camo"],
@@ -599,7 +599,7 @@ const STYLES = [
       "Field Camo":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590p_FieldCamo001_webp.jpg?v=1785629359",
       "Black/Field Camo":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590P_BlackFieldCamp001_jpg_b9bafb49-b972-4b12-ab31-f6af5ff99e53.webp?v=1785629359"
     },
-    tiers:[[10,18,52559807971460],[24,16,52559808004228],[48,15,52559808036996],[96,14,52559808069764],[144,13,52559808102532]] },
+    tiers:[[1,45,52662448554116],[5,24,52662448586884],[10,18,52559807971460],[24,16,52559808004228],[48,15,52559808036996],[96,14,52559808069764],[144,13,52559808102532]] },
   { id:"atonal_a500r", name:"Atonal A500R Rope Snapback", brand:"Atonal A500R", desc:"Pinch-front rope snapback · adult · one size fits most", popular:99,
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black.webp?v=1785794799","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/gold-black.jpg?v=1785794799","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/cardinal-white.jpg?v=1785794799","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/sage-white.jpg?v=1785794799"],
     colors:["Black","Black/White","Black/Red","Gold/Black","Charcoal/Gold","Cardinal/White","Sage/White","Bone/Medium Blue/Gold","Cream/Copper/Black","Bone/Seafoam/Black"],
@@ -615,7 +615,7 @@ const STYLES = [
       "Cream/Copper/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/cream-copper-black.webp?v=1785794799",
       "Bone/Seafoam/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/bone-seafoam-black.jpg?v=1785794799"
     },
-    tiers:[[10,18,52589230063748],[24,16,52589230096516],[48,15,52589230129284],[96,14,52589230162052],[144,13,52589230194820]] },
+    tiers:[[1,45,52662448619652],[5,24,52662448652420],[10,18,52589230063748],[24,16,52589230096516],[48,15,52589230129284],[96,14,52589230162052],[144,13,52589230194820]] },
   { id:"rich112", name:"Richardson 112 6-Panel Trucker", brand:"Richardson 112", desc:"6-panel snapback · adult · one size fits most", popular:99,
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-white-red.jpg?v=1785626680","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/all-black.jpg?v=1785626679","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-neon-yellow.jpg?v=1785626679","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue-white.jpg?v=1785626680"],
     colors:["Black/White/Red","Black","White","Black/White","Black/Charcoal","Charcoal/Black","Charcoal/Neon Blue","Charcoal/Neon Green","Charcoal/Neon Yellow","Charcoal/Neon Orange","Heather Grey/White","Heather Grey/Black","Loden/Black","Red/Black","Red/White","Royal Blue/Black","Royal Blue/White","Orange/Black","Purple/White","Hot Pink/White","Hot Pink/Black","White/Navy","White/Black","Charcoal/White"],
@@ -645,7 +645,7 @@ const STYLES = [
       "White/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/white-black.jpg?v=1785626680",
       "Charcoal/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-charcoal_white.jpg?v=1785794877"
     },
-    tiers:[[10,20,52559808135300],[24,18,52559808168068],[48,17,52559808200836],[96,16,52559808233604],[144,14,52559808266372]] },
+    tiers:[[1,49.99,52662448685188],[5,28,52662448717956],[10,20,52559808135300],[24,18,52559808168068],[48,17,52559808200836],[96,16,52559808233604],[144,14,52559808266372]] },
   { id:"rich112_5p", name:"Richardson 112 5-Panel Trucker", brand:"Richardson 112", desc:"5-panel snapback · adult · one size fits most", popular:99,
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-black.jpg?v=1785794828","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-charcoal-white.jpg?v=1785794828","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-loden_green-black.jpg?v=1785794828","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-cobaltblue-gray.jpg?v=1785794828"],
     colors:["Black","Black/White","Charcoal/Black","Charcoal/White","Heather Grey/Black","Loden Green/Black","Cobalt Blue/Gray","Khaki/Coffee"],
@@ -659,7 +659,7 @@ const STYLES = [
       "Cobalt Blue/Gray":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-cobaltblue-gray.jpg?v=1785794828",
       "Khaki/Coffee":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-khaki-coffee.jpg?v=1785794828"
     },
-    tiers:[[10,20,52589229801604],[24,18,52589229834372],[48,17,52589229867140],[96,16,52589229899908],[144,14,52589229932676]] },
+    tiers:[[1,49.99,52662448750724],[5,28,52662448783492],[10,20,52589229801604],[24,18,52589229834372],[48,17,52589229867140],[96,16,52589229899908],[144,14,52589229932676]] },
   { id:"rich112p", name:"Richardson 112 Printed 5-Panel", brand:"Richardson 112P", desc:"Printed camo 5-panel trucker · adult · one size fits most", popular:99,
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-realtree-neon-yellow.jpg?v=1785626680","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-green-camo.jpg?v=1785626679","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-mossy-oak-habitat-brown.jpg?v=1785626680","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-realtree-neon-pink.jpg?v=1785626680"],
     colors:["Realtree/Neon Yellow","Green Camo/White","Green Camo/Black","Mossy Oak Habitat/Brown","Realtree/Neon Pink","Admiral Duck Camo/Blue"],
@@ -671,7 +671,7 @@ const STYLES = [
       "Realtree/Neon Pink":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-realtree-neon-pink.jpg?v=1785626680",
       "Admiral Duck Camo/Blue":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-adirmal-duck-camo-blue.jpg?v=1785626680"
     },
-    tiers:[[10,21,52582676103300],[24,19,52582676136068],[48,18,52582676168836],[96,17,52582676201604],[144,15,52582676234372]] },
+    tiers:[[1,49.99,52662448816260],[5,28,52662448849028],[10,21,52582676103300],[24,19,52582676136068],[48,18,52582676168836],[96,17,52582676201604],[144,15,52582676234372]] },
   { id:"yupoong", name:"Yupoong Classic 5-Panel Trucker", brand:"YP Classics 6006", desc:"Flat bill snapback · adult · one size fits most", popular:99,
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black_e6045cde-21cd-4a15-928d-9d8a8f3b5edc.jpg?v=1785629360","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/red_black.jpg?v=1785629359","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/carolina_blue_white.jpg?v=1785629359","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/green_camo_black.jpg?v=1785629359"],
     colors:["Black","White","Red","Pink","Navy Blue","Charcoal/Black","Charcoal/White","Black/White","Black/White/Black","Heather Grey/Black","Heather Grey/White","Carolina Blue/White","Green Camo/Black","Red/Black","Red/White","Royal/White","Silver/Black"],
@@ -694,7 +694,7 @@ const STYLES = [
       "Royal/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal_white.jpg?v=1785629359",
       "Silver/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/silver_black.jpg?v=1785629359"
     },
-    tiers:[[10,20,52559808299140],[24,18,52559808331908],[48,17,52559808364676],[96,16,52559808397444],[144,14,52559808430212]] },
+    tiers:[[1,49.99,52662448881796],[5,28,52662448914564],[10,20,52559808299140],[24,18,52559808331908],[48,17,52559808364676],[96,16,52559808397444],[144,14,52559808430212]] },
 ];
 const SIZES = ["Adult (one size)","Youth","Mix of both"];
 const DECOS = [
@@ -716,7 +716,7 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0-rO8Y8fqsyAG
 
 const state = {
   style: STYLES[0], colorSel: [], lastColor: null, colorQty: {},
-  showAllColors: false, hasChosen: false, sizing: SIZES[0], qty: 10, deco: DECOS[0],
+  showAllColors: false, hasChosen: false, sizing: SIZES[0], qty: 1, deco: DECOS[0],
   placements: new Set(["front"]), frontPos: "Center front", files: { front:null, side:null, back:null }
 };
 const $ = id => document.getElementById(id);
@@ -1134,13 +1134,13 @@ function renderUploads(){
 
 $("qty").addEventListener("input", e => {
   const v = Math.max(1, parseInt(e.target.value || "1", 10));
-  state.qty = Math.max(10, v);
+  state.qty = Math.max(1, v);
   evenSplit();
   renderColors();
   updatePricingUI();
 });
 $("qty").addEventListener("blur", e => {
-  if (parseInt(e.target.value || "0", 10) < 10) e.target.value = 10;
+  if (parseInt(e.target.value || "0", 10) < 1) e.target.value = 1;
 });
 
 function fileToB64(file){
