@@ -1,4 +1,4 @@
-{%- comment -%} build: quote-v2 {%- endcomment -%}
+{%- comment -%} build: quote-v3 {%- endcomment -%}
 <div id="tbquote">
   <style>
     #tbquote{--ink:#14121C;--purple:#5028AA;--purple2:#6234c9;--ice:#F3EFFC;--line:#E2E0EA;--muted:#6B6A78;--white:#fff;
@@ -13,6 +13,11 @@
     #tbquote .q-inspo-text{font-size:14px;line-height:1.4}
     #tbquote .q-inspo-text strong{color:var(--purple)}
     #tbquote .q-inspo-arrow{color:var(--purple);font-size:20px;font-weight:700;flex-shrink:0}
+    #tbquote .q-textus{display:flex;align-items:center;gap:10px;margin-top:12px;padding:13px 18px;background:#fff;border:1.5px solid var(--line);border-radius:12px;text-decoration:none;color:var(--ink);transition:border-color .15s,background .15s}
+    #tbquote .q-textus:hover{border-color:var(--purple);background:#FAF8FF}
+    #tbquote .q-textus-icon{display:inline-flex;color:var(--purple);flex:none}
+    #tbquote .q-textus-text{font-size:14px;line-height:1.4}
+    #tbquote .q-textus-text strong{color:var(--purple);white-space:nowrap}
     #tbquote form{margin-top:28px;display:flex;flex-direction:column;gap:22px}
     #tbquote .q-field label{display:block;font-weight:600;font-size:15px;margin-bottom:7px}
     #tbquote .q-req{color:var(--purple)}
@@ -82,6 +87,13 @@
   <a class="q-inspo" href="/pages/our-work">
     <span class="q-inspo-text"><strong>Need ideas?</strong> See some of our recent projects for inspiration</span>
     <span class="q-inspo-arrow">→</span>
+  </a>
+
+  <a class="q-textus" href="sms:+13365856176">
+    <span class="q-textus-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+    </span>
+    <span class="q-textus-text">Prefer to text? Question about an order or a new one? <strong>Text us: (336) 585-6176</strong></span>
   </a>
 
   <form id="quoteForm" onsubmit="return false;">

@@ -1,4 +1,4 @@
-<!-- build: custom-order-2026-07-25b -->
+<!-- build: textus-2026-08 -->
 <!DOCTYPE html>
 <html lang="{{ request.locale.iso_code }}">
 <head>
@@ -53,6 +53,8 @@
   .footer-nav-groups{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.5rem 2rem;flex:2 1 340px;}
   .footer-grid .footer-col{display:block !important;}
   .footer-contact{flex:1 1 220px;}
+  .footer-contact-text{display:inline-block;margin-top:8px;color:rgba(247,244,240,0.85);text-decoration:none;font-size:0.92rem;font-weight:600;transition:color .15s}
+  .footer-contact-text:hover{color:#fff}
   @media(max-width:768px){
     .footer-grid{gap:2rem;}
     .footer-nav-groups{grid-template-columns:1fr 1fr;gap:1.5rem;flex-basis:100%;}
@@ -233,6 +235,7 @@
     <div class="footer-contact">
       <p class="footer-contact-label">Questions?</p>
       <a href="mailto:help@threadbreak.com" class="footer-contact-email">help@threadbreak.com</a>
+      <a href="sms:+13365856176" class="footer-contact-text">Text us: (336) 585-6176</a>
       <div class="footer-newsletter">
         <p class="footer-nl-text">Get 10% off your first order</p>
         <button type="button" class="footer-nl-btn" id="footer-nl-btn">Join our newsletter</button>
