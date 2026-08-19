@@ -1,4 +1,4 @@
-{%- comment -%} build: quote-v3 {%- endcomment -%}
+{%- comment -%} build: quote-v4 {%- endcomment -%}
 <div id="tbquote">
   <style>
     #tbquote{--ink:#14121C;--purple:#5028AA;--purple2:#6234c9;--ice:#F3EFFC;--line:#E2E0EA;--muted:#6B6A78;--white:#fff;
@@ -18,6 +18,8 @@
     #tbquote .q-textus-icon{display:inline-flex;color:var(--purple);flex:none}
     #tbquote .q-textus-text{font-size:14px;line-height:1.4}
     #tbquote .q-textus-text strong{color:var(--purple);white-space:nowrap}
+    #tbquote #quoteForm{background:#fff;border:1.5px solid var(--line);border-radius:18px;padding:28px 26px;margin-top:22px;box-shadow:0 8px 30px rgba(20,18,28,.07)}
+    @media(max-width:560px){#tbquote #quoteForm{padding:22px 18px;border-radius:14px}}
     #tbquote form{margin-top:28px;display:flex;flex-direction:column;gap:22px}
     #tbquote .q-field label{display:block;font-weight:600;font-size:15px;margin-bottom:7px}
     #tbquote .q-req{color:var(--purple)}
