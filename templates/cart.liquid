@@ -1,4 +1,9 @@
 {%- if cart.item_count > 0 -%}
+<style>
+  .cart-item-qty-locked{display:inline-flex;align-items:center;padding:6px 14px;background:#F3EFFC;border:1.5px solid #E2E0EA;border-radius:8px}
+  .qty-locked-label{font-weight:600;color:#14121C;font-size:0.95rem}
+  .qty-locked-note{display:block;font-size:0.72rem;color:#6B6A78;margin-top:5px;max-width:260px;line-height:1.35}
+</style>
 <div class="cart-page">
   <div class="about-sparkles" id="about-sparkles" aria-hidden="true"></div>
 
@@ -29,11 +34,23 @@
               <p class="cart-item-variant">{{ item.variant.title }}</p>
             {%- endunless -%}
             <div class="cart-item-bottom">
-              <div class="cart-item-qty">
-                <button type="button" class="qty-btn cart-qty-minus" data-line="{{ forloop.index }}">−</button>
-                <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" class="qty-input cart-qty-input" data-line="{{ forloop.index }}">
-                <button type="button" class="qty-btn cart-qty-plus" data-line="{{ forloop.index }}">+</button>
-              </div>
+              {%- assign is_tier_locked = false -%}
+              {%- if item.product.type == 'Custom Hats' or item.product.tags contains 'custom-order-form' -%}
+                {%- assign is_tier_locked = true -%}
+              {%- endif -%}
+              {%- if is_tier_locked -%}
+                <div class="cart-item-qty cart-item-qty-locked">
+                  <span class="qty-locked-label">Qty: {{ item.quantity }}</span>
+                  <input type="hidden" name="updates[]" value="{{ item.quantity }}">
+                </div>
+                <span class="qty-locked-note">Custom order quantity is set on the order form. To change it, remove this and rebuild your order.</span>
+              {%- else -%}
+                <div class="cart-item-qty">
+                  <button type="button" class="qty-btn cart-qty-minus" data-line="{{ forloop.index }}">−</button>
+                  <input type="number" name="updates[]" value="{{ item.quantity }}" min="0" class="qty-input cart-qty-input" data-line="{{ forloop.index }}">
+                  <button type="button" class="qty-btn cart-qty-plus" data-line="{{ forloop.index }}">+</button>
+                </div>
+              {%- endif -%}
               <span class="cart-item-total">{{ item.line_price | money }}</span>
               <a href="{{ item.url_to_remove }}" class="cart-item-remove">✕</a>
             </div>
