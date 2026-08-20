@@ -1,4 +1,4 @@
-{%- comment -%} build: order-v9 {%- endcomment -%}
+{%- comment -%} build: order-v10 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -1096,7 +1096,7 @@ function updateColorPreview(){
 function render(){
   document.body.classList.toggle("quote-mode", quoteMode());
 
-  $("styles").innerHTML = STYLES.map(s => {
+  $("styles").innerHTML = STYLES.slice().sort((a,b) => a.brand.localeCompare(b.brand)).map(s => {
     const sel = state.hasChosen && s.id === state.style.id;
     const media = s.imgs && s.imgs.length
       ? `<img class="style-thumb" src="${s.imgs[0]}" alt="${s.name}" loading="lazy" onerror="this.style.visibility='hidden'">`
