@@ -1,4 +1,4 @@
-{%- comment -%} build: order-v13 {%- endcomment -%}
+{%- comment -%} build: order-v14 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -211,7 +211,7 @@ html {scroll-behavior:smooth}
 #tbco .en-example img{max-width:100%;border-radius:10px;border:1px solid var(--line);display:block}
 #tbco .quote-only {display:none}
 #tbco .quote-redirect{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;text-align:center;margin:20px 0 4px;padding:16px 20px;background:#F3EFFC;border:2px solid var(--purple);border-radius:12px;text-decoration:none;color:var(--ink);font-size:15px;font-weight:500;box-shadow:0 3px 12px rgba(80,40,170,.12);transition:background .15s,transform .15s,box-shadow .15s}
-#tbco .tbco-textus{display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;margin:40px 0 22px;padding:15px 22px;background:var(--purple);border:1.5px solid var(--purple);border-radius:12px;text-decoration:none;color:#fff;font-size:14.5px;box-shadow:0 4px 16px rgba(80,40,170,.22);transition:background .15s,transform .15s,box-shadow .15s}
+#tbco .tbco-textus{display:none !important; /* HIDDEN until SMS number approved - change back to flex to re-enable */ align-items:center;justify-content:center;align-items:center;justify-content:center;gap:10px;text-align:center;margin:40px 0 22px;padding:15px 22px;background:var(--purple);border:1.5px solid var(--purple);border-radius:12px;text-decoration:none;color:#fff;font-size:14.5px;box-shadow:0 4px 16px rgba(80,40,170,.22);transition:background .15s,transform .15s,box-shadow .15s}
 #tbco .tbco-textus:hover{background:var(--purple2,#6234c9);transform:translateY(-1px);box-shadow:0 6px 20px rgba(80,40,170,.3)}
 #tbco .tbco-textus-icon{display:inline-flex;color:#fff;flex:none}
 #tbco .tbco-textus strong{color:#fff;font-weight:700;white-space:nowrap}

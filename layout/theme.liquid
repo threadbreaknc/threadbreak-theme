@@ -1,4 +1,4 @@
-<!-- build: textus-2026-08 -->
+<!-- build: textus-hidden-2026-08 -->
 <!DOCTYPE html>
 <html lang="{{ request.locale.iso_code }}">
 <head>
@@ -53,7 +53,7 @@
   .footer-nav-groups{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.5rem 2rem;flex:2 1 340px;}
   .footer-grid .footer-col{display:block !important;}
   .footer-contact{flex:1 1 220px;}
-  .footer-contact-text{display:inline-block;margin-top:8px;color:rgba(247,244,240,0.85);text-decoration:none;font-size:0.92rem;font-weight:600;transition:color .15s}
+  .footer-contact-text{display:none !important; /* HIDDEN until SMS number approved - change to inline-block to re-enable */ margin-top:8px;color:rgba(247,244,240,0.85);text-decoration:none;font-size:0.92rem;font-weight:600;transition:color .15s}
   .footer-contact-text:hover{color:#fff}
   @media(max-width:768px){
     .footer-grid{gap:2rem;}

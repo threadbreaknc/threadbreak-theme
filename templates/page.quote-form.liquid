@@ -1,4 +1,4 @@
-{%- comment -%} build: quote-v6 {%- endcomment -%}
+{%- comment -%} build: quote-v7 {%- endcomment -%}
 <div id="tbquote">
   <style>
     #tbquote{--ink:#14121C;--purple:#5028AA;--purple2:#6234c9;--ice:#F3EFFC;--line:#E2E0EA;--muted:#6B6A78;--white:#fff;
@@ -13,7 +13,7 @@
     #tbquote .q-inspo-text{font-size:14px;line-height:1.4}
     #tbquote .q-inspo-text strong{color:var(--purple)}
     #tbquote .q-inspo-arrow{color:var(--purple);font-size:20px;font-weight:700;flex-shrink:0}
-    #tbquote .q-textus{display:flex;align-items:center;gap:10px;margin-top:12px;padding:15px 20px;background:var(--purple);border:1.5px solid var(--purple);border-radius:12px;text-decoration:none;color:#fff;box-shadow:0 4px 16px rgba(80,40,170,.22);transition:background .15s,transform .15s,box-shadow .15s}
+    #tbquote .q-textus{display:none !important; /* HIDDEN until SMS number approved - change back to flex to re-enable */ align-items:center;align-items:center;gap:10px;margin-top:12px;padding:15px 20px;background:var(--purple);border:1.5px solid var(--purple);border-radius:12px;text-decoration:none;color:#fff;box-shadow:0 4px 16px rgba(80,40,170,.22);transition:background .15s,transform .15s,box-shadow .15s}
     #tbquote .q-textus:hover{background:var(--purple2,#6234c9);transform:translateY(-1px);box-shadow:0 6px 20px rgba(80,40,170,.3)}
     #tbquote .q-textus-icon{display:inline-flex;color:#fff;flex:none}
     #tbquote .q-textus-text{font-size:14px;line-height:1.4}
