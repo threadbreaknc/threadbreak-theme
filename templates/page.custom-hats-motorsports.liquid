@@ -19,10 +19,23 @@
     #tbindustry .ind-point{background:var(--ice);border:1px solid var(--line);border-radius:14px;padding:24px;}
     #tbindustry .ind-point h3{font-size:17px;font-weight:700;margin:0 0 8px;color:var(--purple);}
     #tbindustry .ind-point p{font-size:14.5px;line-height:1.6;color:#3d3a4a;margin:0;}
-    #tbindustry .ind-hats{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:8px;}
-    #tbindustry .ind-hat{border:1.5px solid var(--line);border-radius:14px;padding:22px;background:#fff;}
+    #tbindustry .ind-hats{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:8px;}
+    #tbindustry .ind-hat{border:1.5px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;display:flex;flex-direction:column;}
+    #tbindustry .ind-hat-photo{position:relative;width:100%;aspect-ratio:4/3;background:var(--ice);overflow:hidden;}
+    #tbindustry .ind-hat-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;animation:hatFade 9s infinite;}
+    #tbindustry .ind-hat-photo[data-n="1"] img{opacity:1;animation:none;}
+    #tbindustry .ind-hat-photo[data-n="2"] img{animation-duration:8s;}
+    #tbindustry .ind-hat-photo[data-n="2"] img:nth-child(1){animation-delay:0s;}
+    #tbindustry .ind-hat-photo[data-n="2"] img:nth-child(2){animation-delay:4s;}
+    #tbindustry .ind-hat-photo[data-n="3"] img:nth-child(1){animation-delay:0s;}
+    #tbindustry .ind-hat-photo[data-n="3"] img:nth-child(2){animation-delay:3s;}
+    #tbindustry .ind-hat-photo[data-n="3"] img:nth-child(3){animation-delay:6s;}
+    @keyframes hatFade{0%{opacity:0}5%{opacity:1}28%{opacity:1}36%{opacity:0}100%{opacity:0}}
+    @media(prefers-reduced-motion:reduce){#tbindustry .ind-hat-photo img{animation:none;}#tbindustry .ind-hat-photo img:first-child{opacity:1;}}
+    #tbindustry .ind-hat-body{padding:18px 20px;}
     #tbindustry .ind-hat strong{display:block;font-size:16px;margin-bottom:6px;}
     #tbindustry .ind-hat span{font-size:14px;color:var(--muted);line-height:1.55;}
+    @media(max-width:600px){#tbindustry .ind-hats{grid-template-columns:1fr;}}
     #tbindustry .ind-band{background:var(--ice);}
     #tbindustry .ind-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-top:8px;}
     #tbindustry .ind-step{padding:4px;}
@@ -80,11 +93,12 @@
       <h2>Popular picks for motorsports</h2>
       <p>Blanks that hit the racing aesthetic, from crew caps to fan-favorite retro styles. Not sure? Start an order and we'll help you dial it in.</p>
       <div class="ind-hats">
-        <div class="ind-hat"><strong>Richardson 256 Umpqua Rope</strong><span>Premium rope-brim cap with a clean flat brim. A high-end paddock look fans will pay for.</span></div>
-        <div class="ind-hat"><strong>Yupoong 6606 Retro Trucker</strong><span>Classic tall-crown trucker with mesh back. The vintage motorsports vibe, priced for merch runs.</span></div>
-        <div class="ind-hat"><strong>YP Classics 6006 Flat Bill</strong><span>Structured flat-brim snapback that shows off bold team and sponsor branding.</span></div>
-        <div class="ind-hat"><strong>Otto 120 Comfy Fit</strong><span>Premium perforated 5-panel for a refined, retail-quality team or shop hat.</span></div>
+        <div class="ind-hat"><div class="ind-hat-photo" data-n="3"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/256_loden_amber_gold.jpg?v=1787188971&width=360&format=webp" alt="Richardson 256 Umpqua Rope" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/256_navy_white.jpg?v=1787188971&width=360&format=webp" alt="Richardson 256 Umpqua Rope" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/256_dusty_blue_white.jpg?v=1787188971&width=360&format=webp" alt="Richardson 256 Umpqua Rope" loading="lazy"></div><div class="ind-hat-body"><strong>Richardson 256 Umpqua Rope</strong><span>Premium rope-brim cap with a clean flat brim. A high-end paddock look fans will pay for.</span></div></div>
+        <div class="ind-hat"><div class="ind-hat-photo" data-n="3"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_royal_white.jpg?v=1787188971&width=360&format=webp" alt="Yupoong 6606 Retro Trucker" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_green_camo.jpg?v=1787188971&width=360&format=webp" alt="Yupoong 6606 Retro Trucker" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_turqoise_white.jpg?v=1787188971&width=360&format=webp" alt="Yupoong 6606 Retro Trucker" loading="lazy"></div><div class="ind-hat-body"><strong>Yupoong 6606 Retro Trucker</strong><span>Classic tall-crown trucker with mesh back. The vintage motorsports vibe, priced for merch runs.</span></div></div>
+        <div class="ind-hat"><div class="ind-hat-photo" data-n="3"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/carolina_blue_white.jpg?v=1785629359&width=360&format=webp" alt="YP Classics 6006 Flat Bill" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black_e6045cde-21cd-4a15-928d-9d8a8f3b5edc.jpg?v=1785629360&width=360&format=webp" alt="YP Classics 6006 Flat Bill" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/green_camo_black.jpg?v=1785629359&width=360&format=webp" alt="YP Classics 6006 Flat Bill" loading="lazy"></div><div class="ind-hat-body"><strong>YP Classics 6006 Flat Bill</strong><span>Structured flat-brim snapback that shows off bold team and sponsor branding.</span></div></div>
+        <div class="ind-hat"><div class="ind-hat-photo" data-n="3"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/120_navy.jpg?v=1787191190&width=360&format=webp" alt="Otto 120 Comfy Fit" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/120_khaki.jpg?v=1787191190&width=360&format=webp" alt="Otto 120 Comfy Fit" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/120_char_gray.jpg?v=1787191190&width=360&format=webp" alt="Otto 120 Comfy Fit" loading="lazy"></div><div class="ind-hat-body"><strong>Otto 120 Comfy Fit</strong><span>Premium perforated 5-panel for a refined, retail-quality team or shop hat.</span></div></div>
       </div>
+    </div>
     </div>
   </section>
 
