@@ -1,0 +1,106 @@
+{%- comment -%} build: industry-motorsports-v1 {%- endcomment -%}
+<div id="tbindustry">
+  <style>
+    #tbindustry{--ink:#14121C;--purple:#5028AA;--purple2:#6234c9;--ice:#F3EFFC;--line:#E2E0EA;--muted:#6B6A78;--white:#fff;
+      font-family:'DM Sans',sans-serif;color:var(--ink);}
+    #tbindustry *{box-sizing:border-box;margin:0;padding:0}
+    #tbindustry .ind-hero{background:linear-gradient(135deg,#14121C 0%,#241f33 100%);color:#F7F4F0;padding:150px 20px 70px;text-align:center;border-bottom:5px solid var(--purple);}
+    #tbindustry .ind-hero-inner{max-width:760px;margin:0 auto;}
+    #tbindustry .ind-eyebrow{text-transform:uppercase;letter-spacing:.18em;font-size:13px;font-weight:700;color:var(--purple2);margin:0 0 14px;}
+    #tbindustry .ind-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(38px,7vw,64px);line-height:1.02;margin:0 0 18px;}
+    #tbindustry .ind-hero p{font-size:17px;line-height:1.6;color:#C9C8D4;margin:0 auto 26px;max-width:560px;}
+    #tbindustry .ind-cta{display:inline-flex;align-items:center;gap:8px;background:var(--purple);color:#fff;text-decoration:none;font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:.05em;padding:.85rem 2.2rem;border-radius:12px;transition:background .18s,transform .18s;box-shadow:0 6px 24px rgba(80,40,170,.4);}
+    #tbindustry .ind-cta:hover{background:var(--purple2);transform:translateY(-2px);}
+    #tbindustry .ind-cta-sub{display:block;margin-top:14px;font-size:13px;color:#9a97a8;}
+    #tbindustry .ind-section{max-width:960px;margin:0 auto;padding:64px 20px;}
+    #tbindustry .ind-section h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(28px,4.5vw,40px);line-height:1.05;margin:0 0 20px;color:var(--ink);}
+    #tbindustry .ind-section p{font-size:16px;line-height:1.7;color:#3d3a4a;margin:0 0 16px;}
+    #tbindustry .ind-points{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;margin-top:8px;}
+    #tbindustry .ind-point{background:var(--ice);border:1px solid var(--line);border-radius:14px;padding:24px;}
+    #tbindustry .ind-point h3{font-size:17px;font-weight:700;margin:0 0 8px;color:var(--purple);}
+    #tbindustry .ind-point p{font-size:14.5px;line-height:1.6;color:#3d3a4a;margin:0;}
+    #tbindustry .ind-hats{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:8px;}
+    #tbindustry .ind-hat{border:1.5px solid var(--line);border-radius:14px;padding:22px;background:#fff;}
+    #tbindustry .ind-hat strong{display:block;font-size:16px;margin-bottom:6px;}
+    #tbindustry .ind-hat span{font-size:14px;color:var(--muted);line-height:1.55;}
+    #tbindustry .ind-band{background:var(--ice);}
+    #tbindustry .ind-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;margin-top:8px;}
+    #tbindustry .ind-step{padding:4px;}
+    #tbindustry .ind-step .num{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;color:var(--purple);margin-bottom:6px;}
+    #tbindustry .ind-step strong{display:block;font-size:16px;margin-bottom:6px;}
+    #tbindustry .ind-step span{font-size:14.5px;color:#3d3a4a;line-height:1.6;}
+    #tbindustry .ind-final{text-align:center;background:linear-gradient(135deg,#14121C 0%,#241f33 100%);color:#F7F4F0;padding:64px 20px;}
+    #tbindustry .ind-final h2{color:#fff;}
+    #tbindustry .ind-final p{color:#C9C8D4;max-width:520px;margin:0 auto 26px;}
+    @media(max-width:700px){#tbindustry .ind-hero{padding-top:120px;}}
+    #tbindustry .ind-gallery{max-width:760px;margin:0 auto;padding:40px 20px 0;}
+    #tbindustry .ind-gallery-row{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+    #tbindustry .ind-gallery-row img{width:100%;max-width:340px;aspect-ratio:4/3;object-fit:cover;border-radius:14px;border:1px solid var(--line);box-shadow:0 6px 20px rgba(20,18,28,.12);}
+    @media(max-width:600px){#tbindustry .ind-gallery-row img{max-width:100%;}}
+  </style>
+
+  <section class="ind-hero">
+    <div class="ind-hero-inner">
+      <p class="ind-eyebrow">Custom Embroidered Hats</p>
+      <h1>Custom Hats for Motorsports Teams</h1>
+      <p>Give your race team, car club, or shop a lid worth wearing in the paddock. Custom embroidered hats with your team, sponsor, or livery branding, stitched in-house in Burlington, NC, and shipped free anywhere in the country.</p>
+      <a href="/pages/custom-order" class="ind-cta">Start a Custom Order</a>
+      <span class="ind-cta-sub">Order as few as 1 hat &middot; free shipping &middot; free logo digitizing</span>
+    </div>
+  </section>
+
+  <div class="ind-gallery">
+    <div class="ind-gallery-row">
+      <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/2736EC88-FDD3-4C5D-BBA3-F70364DE24BE.jpg?v=1786337802&width=680&format=webp" alt="Custom embroidered hat for a motorsports team" loading="lazy">
+      <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/FullSizeRender_7e6dedf3-cf73-4735-835c-fcf9d1f539e9.jpg?v=1787277761&width=680&format=webp" alt="Custom embroidered hat for a motorsports team" loading="lazy">
+    </div>
+  </div>
+
+  <section class="ind-section">
+    <h2>Built for the paddock, the pits, and the podium</h2>
+    <p>Motorsports runs on identity. Your team, your sponsors, your livery: all of it deserves headwear that looks as sharp as the car. We embroider clean, high-detail logos on premium blanks so your crew, drivers, and fans are all repping the same brand, whether it's a grassroots track day team, a sim racing squad, a car club, or a shop building the fastest thing in town. Sponsor logos come out crisp, and reorders are easy when you add crew or run merch for fans.</p>
+    <div class="ind-points">
+      <div class="ind-point">
+        <h3>Sponsor-ready detail</h3>
+        <p>Clean embroidery that keeps sponsor logos legible and professional, exactly what partners want to see repped.</p>
+      </div>
+      <div class="ind-point">
+        <h3>Crew, driver &amp; fan runs</h3>
+        <p>From a handful of crew hats to a full fan merch run, we scale with you. No minimum to get started.</p>
+      </div>
+      <div class="ind-point">
+        <h3>Premium looks that sell</h3>
+        <p>Rope hats, flat brims, and retro truckers that fans actually want to buy at the track or online.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="ind-section ind-band">
+    <div style="max-width:960px;margin:0 auto;">
+      <h2>Popular picks for motorsports</h2>
+      <p>Blanks that hit the racing aesthetic, from crew caps to fan-favorite retro styles. Not sure? Start an order and we'll help you dial it in.</p>
+      <div class="ind-hats">
+        <div class="ind-hat"><strong>Richardson 256 Umpqua Rope</strong><span>Premium rope-brim cap with a clean flat brim. A high-end paddock look fans will pay for.</span></div>
+        <div class="ind-hat"><strong>Yupoong 6606 Retro Trucker</strong><span>Classic tall-crown trucker with mesh back. The vintage motorsports vibe, priced for merch runs.</span></div>
+        <div class="ind-hat"><strong>YP Classics 6006 Flat Bill</strong><span>Structured flat-brim snapback that shows off bold team and sponsor branding.</span></div>
+        <div class="ind-hat"><strong>Otto 120 Comfy Fit</strong><span>Premium perforated 5-panel for a refined, retail-quality team or shop hat.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="ind-section">
+    <h2>How it works</h2>
+    <div class="ind-steps">
+      <div class="ind-step"><div class="num">01</div><strong>Pick your hats</strong><span>Choose your blank, colors, and quantity. Send your team or sponsor logo in any format, we digitize it free.</span></div>
+      <div class="ind-step"><div class="num">02</div><strong>Approve your mockup</strong><span>We send a free digital proof so you can see your livery on the hat before we stitch anything.</span></div>
+      <div class="ind-step"><div class="num">03</div><strong>We embroider &amp; ship</strong><span>Your hats are embroidered in-house in Burlington, NC and shipped free, usually in 2 to 3 weeks.</span></div>
+    </div>
+  </section>
+
+  <section class="ind-final">
+    <h2>Ready to gear up your team?</h2>
+    <p>Start a custom order in minutes, or request a quote for bigger fan runs. Free shipping, free logo setup, no minimum.</p>
+    <a href="/pages/custom-order" class="ind-cta">Start a Custom Order</a>
+    <span class="ind-cta-sub">Questions first? Email help@threadbreak.com</span>
+  </section>
+</div>
