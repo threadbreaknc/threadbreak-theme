@@ -1,4 +1,4 @@
-{%- comment -%} build: order-v15 {%- endcomment -%}
+{%- comment -%} build: order-v16 {%- endcomment -%}
 {%- comment -%}
   Custom Hats order page. Replaces the old quote form.
   URL stays /pages/quote so existing links keep working.
@@ -266,6 +266,11 @@ body.quote-mode #tbco .buy-only {display:none}
     .sb-value{font-size:21px}
     .sb-cta{font-size:17px;padding:10px 18px}
     .sb-hide-sm{display:none}
+  }
+  /* sticky Continue in the bottom bar is mobile-only; desktop uses the in-page step buttons */
+  #tbco .sb-continue-mobile{display:none !important}
+  @media(max-width:768px){
+    #tbco .sb-continue-mobile.sb-continue-on{display:inline-flex !important;margin-left:auto}
   }
 #tbco .confirm {display:none;background:#F1FAF5;border:1px solid #BFE8D2;border-radius:14px;padding:24px;margin-top:22px}
 #tbco .confirm.show {display:block}
@@ -558,6 +563,7 @@ from {{ shop.metafields.judgeme.all_reviews_count }} reviews
     <div class="sb-stat"><div class="sb-label">Per hat</div><div class="sb-value accent" id="sbPer">–</div></div>
     <div class="sb-divider sb-hide-sm"></div>
     <div class="sb-stat sb-hide-sm"><div class="sb-label" id="sbTotalLabel">Select a quantity</div><div class="sb-value" id="sbTotal">–</div></div>
+    <button class="sb-cta sb-continue-mobile" id="sbContinue" type="button">Continue</button>
     <button class="sb-cta" id="submitBtn" type="button" style="display:none">Review order</button>
   </div>
 </div>
@@ -1432,11 +1438,24 @@ function setOpen(step, open){
 function updateBarBtn(){
   const label = quoteMode() ? "Review quote" : "Review order";
   const btn = $("submitBtn");
+  const step4Open = document.querySelector('.acc[data-step="4"]')?.classList.contains("open");
   if (btn){
-    const step4Open = document.querySelector('.acc[data-step="4"]')?.classList.contains("open");
     // only show the bar button once they've opened the final step
     btn.style.display = step4Open ? "" : "none";
     btn.textContent = label;
+  }
+  // Mobile sticky "Continue": visible when a style is chosen but they're not yet on the final step.
+  // Advances whichever step is currently open, so the action is always reachable without scrolling.
+  const cont = $("sbContinue");
+  if (cont){
+    let openStep = 0;
+    for (let s = 1; s <= 3; s++){
+      if (document.querySelector(`.acc[data-step="${s}"]`)?.classList.contains("open")) { openStep = s; }
+    }
+    // step 1 is the styles section (always open at start); show once they've chosen a style
+    const showContinue = state.hasChosen && !step4Open && openStep >= 1;
+    cont.classList.toggle("sb-continue-on", showContinue);
+    cont.dataset.step = openStep || 1;
   }
   // keep the step-4 button in sync (preserve its arrow icon)
   document.querySelectorAll('[data-checkout]').forEach(b => {
@@ -1489,6 +1508,16 @@ function initAccordion(){
       }
     });
   });
+
+  // Mobile sticky Continue: proxy to the in-page Continue button for the current open step
+  const sbCont = $("sbContinue");
+  if (sbCont){
+    sbCont.addEventListener("click", () => {
+      const step = +(sbCont.dataset.step || 1);
+      const target = document.querySelector(`[data-continue="${step}"]`);
+      if (target) target.click();
+    });
+  }
 
   // gentle eased scroll (consistent speed, softer than native smooth)
   function easeScrollTo(targetY, duration){
