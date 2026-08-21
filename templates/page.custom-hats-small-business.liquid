@@ -21,17 +21,18 @@
     #tbindustry .ind-point p{font-size:14.5px;line-height:1.6;color:#3d3a4a;margin:0;}
     #tbindustry .ind-hats{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:8px;}
     #tbindustry .ind-hat{border:1.5px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;display:flex;flex-direction:column;}
-    #tbindustry .ind-hat-photo{position:relative;width:100%;aspect-ratio:4/3;background:var(--ice);overflow:hidden;}
-    #tbindustry .ind-hat-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;animation:hatFade 9s infinite;}
+    #tbindustry .ind-hat-photo{position:relative;width:100%;aspect-ratio:3/2;background:var(--ice);overflow:hidden;}
+    #tbindustry .ind-hat-photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;animation:hatFade 12s ease-in-out infinite;}
     #tbindustry .ind-hat-photo[data-n="1"] img{opacity:1;animation:none;}
-    #tbindustry .ind-hat-photo[data-n="2"] img{animation-duration:8s;}
+    #tbindustry .ind-hat-photo[data-n="2"] img{animation-name:hatFade2;animation-duration:10s;}
     #tbindustry .ind-hat-photo[data-n="2"] img:nth-child(1){animation-delay:0s;}
-    #tbindustry .ind-hat-photo[data-n="2"] img:nth-child(2){animation-delay:4s;}
+    #tbindustry .ind-hat-photo[data-n="2"] img:nth-child(2){animation-delay:5s;}
     #tbindustry .ind-hat-photo[data-n="3"] img:nth-child(1){animation-delay:0s;}
-    #tbindustry .ind-hat-photo[data-n="3"] img:nth-child(2){animation-delay:3s;}
-    #tbindustry .ind-hat-photo[data-n="3"] img:nth-child(3){animation-delay:6s;}
-    @keyframes hatFade{0%{opacity:0}5%{opacity:1}28%{opacity:1}36%{opacity:0}100%{opacity:0}}
-    @media(prefers-reduced-motion:reduce){#tbindustry .ind-hat-photo img{animation:none;}#tbindustry .ind-hat-photo img:first-child{opacity:1;}}
+    #tbindustry .ind-hat-photo[data-n="3"] img:nth-child(2){animation-delay:4s;}
+    #tbindustry .ind-hat-photo[data-n="3"] img:nth-child(3){animation-delay:8s;}
+    @keyframes hatFade{0%{opacity:0}4%{opacity:1}30%{opacity:1}37%{opacity:0}100%{opacity:0}}
+    @keyframes hatFade2{0%{opacity:0}6%{opacity:1}44%{opacity:1}56%{opacity:0}100%{opacity:0}}
+    @media(prefers-reduced-motion:reduce){#tbindustry .ind-hat-photo img{animation:none!important;opacity:0;}#tbindustry .ind-hat-photo img:first-child{opacity:1;}}}
     #tbindustry .ind-hat-body{padding:18px 20px;}
     #tbindustry .ind-hat strong{display:block;font-size:16px;margin-bottom:6px;}
     #tbindustry .ind-hat span{font-size:14px;color:var(--muted);line-height:1.55;}
@@ -95,7 +96,7 @@
       <div class="ind-hats">
         <div class="ind-hat"><div class="ind-hat-photo" data-n="3"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-neon-yellow.jpg?v=1785626679&width=360&format=webp" alt="Richardson 112 Trucker" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-white-red.jpg?v=1785626680&width=360&format=webp" alt="Richardson 112 Trucker" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/all-black.jpg?v=1785626679&width=360&format=webp" alt="Richardson 112 Trucker" loading="lazy"></div><div class="ind-hat-body"><strong>Richardson 112 Trucker</strong><span>The most popular trucker in the country. A safe, professional choice that works for almost any business.</span></div></div>
         <div class="ind-hat"><div class="ind-hat-photo" data-n="3"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue-natural.jpg?v=1785628631&width=360&format=webp" alt="Otto 5-Panel Mid Profile" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-natural.jpg?v=1785628631&width=360&format=webp" alt="Otto 5-Panel Mid Profile" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black.jpg?v=1785628632&width=360&format=webp" alt="Otto 5-Panel Mid Profile" loading="lazy"></div><div class="ind-hat-body"><strong>Otto 5-Panel Mid Profile</strong><span>Budget-friendly all-cotton cap in tons of colors. Great for keeping per-hat cost low on bigger runs.</span></div></div>
-        <div class="ind-hat"><div class="ind-hat-photo" data-n="3"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/carolina_blue_white.jpg?v=1785629359&width=360&format=webp" alt="Yupoong 6006 Flat Bill" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black_e6045cde-21cd-4a15-928d-9d8a8f3b5edc.jpg?v=1785629360&width=360&format=webp" alt="Yupoong 6006 Flat Bill" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/green_camo_black.jpg?v=1785629359&width=360&format=webp" alt="Yupoong 6006 Flat Bill" loading="lazy"></div><div class="ind-hat-body"><strong>Yupoong 6006 Flat Bill</strong><span>Structured flat-brim snapback for a modern, branded look that stands out.</span></div></div>
+        <div class="ind-hat"><div class="ind-hat-photo" data-n="3"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-loden_green-black.jpg?v=1785794828&width=360&format=webp" alt="Richardson 112 5-Panel Trucker" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-black.jpg?v=1785794828&width=360&format=webp" alt="Richardson 112 5-Panel Trucker" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-charcoal-white.jpg?v=1785794828&width=360&format=webp" alt="Richardson 112 5-Panel Trucker" loading="lazy"></div><div class="ind-hat-body"><strong>Richardson 112 5-Panel Trucker</strong><span>Structured 5-panel trucker with a flat front. A modern, professional look for your brand.</span></div>
         <div class="ind-hat"><div class="ind-hat-photo" data-n="3"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_royal_white.jpg?v=1787188971&width=360&format=webp" alt="Yupoong 6606 Retro Trucker" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_green_camo.jpg?v=1787188971&width=360&format=webp" alt="Yupoong 6606 Retro Trucker" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_turqoise_white.jpg?v=1787188971&width=360&format=webp" alt="Yupoong 6606 Retro Trucker" loading="lazy"></div><div class="ind-hat-body"><strong>Yupoong 6606 Retro Trucker</strong><span>Affordable retro trucker with wide appeal. A fan favorite for merch and giveaways.</span></div></div>
       </div>
     </div>
