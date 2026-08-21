@@ -1,10 +1,9 @@
 {%- comment -%} Homepage: hero + story inlined so no separate section files are needed. {%- endcomment -%}
 
 <section class="hc-hero">
-  <video class="hc-hero-bg hc-hero-video" autoplay muted loop playsinline preload="metadata">
-    <source src="https://cdn.shopify.com/videos/c/o/v/4f8d2a0347e7479382891962bc3a7b4e.mov" type="video/quicktime">
-    <source src="https://cdn.shopify.com/videos/c/o/v/4f8d2a0347e7479382891962bc3a7b4e.mov" type="video/mp4">
-  </video>
+  <video class="hc-hero-bg hc-hero-video" muted loop playsinline preload="none"
+         poster="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/hat-hero.jpg?v=1785008565"
+         data-video-src="https://cdn.shopify.com/videos/c/o/v/4f8d2a0347e7479382891962bc3a7b4e.mov"></video>
   <div class="hc-hero-overlay"></div>
   <div class="hc-hero-loopfade" id="hcLoopFade"></div>
   <div class="hc-hero-inner">
@@ -129,18 +128,35 @@
   var vid = document.querySelector('.hc-hero-video');
   var fade = document.getElementById('hcLoopFade');
   if (!vid) return;
-  var TRIM = 2.5;     // seconds to cut from the end
-  var FADE = 0.5;     // seconds of purple crossfade before the loop
+
+  // Only load + play the hero video on larger screens, and only after the page has loaded.
+  // On mobile the poster image is the hero (fast LCP), no video download at all.
+  function initHeroVideo(){
+    if (window.matchMedia('(max-width: 768px)').matches) return; // mobile: keep poster only
+    if (vid.dataset.loaded) return;
+    var src = vid.getAttribute('data-video-src');
+    if (!src) return;
+    vid.dataset.loaded = "1";
+    var s1 = document.createElement('source'); s1.src = src; s1.type = 'video/quicktime';
+    var s2 = document.createElement('source'); s2.src = src; s2.type = 'video/mp4';
+    vid.appendChild(s1); vid.appendChild(s2);
+    vid.load();
+    var p = vid.play();
+    if (p && p.catch) p.catch(function(){});
+  }
+  if (document.readyState === 'complete') { setTimeout(initHeroVideo, 200); }
+  else { window.addEventListener('load', function(){ setTimeout(initHeroVideo, 200); }); }
+
+  var TRIM = 2.5;
+  var FADE = 0.5;
   var looping = false;
 
   vid.addEventListener('timeupdate', function(){
     if (!vid.duration || isNaN(vid.duration)) return;
     var cutoff = vid.duration - TRIM;
-    // start the purple fade shortly before the cutoff
     if (!looping && vid.currentTime >= cutoff - FADE){
       if (fade) fade.classList.add('show');
     }
-    // at the cutoff, jump back to start and fade the purple back out
     if (!looping && vid.currentTime >= cutoff){
       looping = true;
       vid.currentTime = 0;
