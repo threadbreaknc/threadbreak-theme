@@ -1,317 +1,219 @@
-{%- comment -%} build: order-v16 {%- endcomment -%}
+{%- comment -%} build: order-v20 {%- endcomment -%}
 {%- comment -%}
-  Custom Hats order page. Replaces the old quote form.
-  URL stays /pages/quote so existing links keep working.
-  Requires the two Shopify products (Custom Embroidered Hat + Custom Hat
-  Add-On) set to ACTIVE. Cart add uses /cart/add.js on the live domain.
-  Reviews use the Judge.me featured carousel (feature reviews in Judge.me).
+  Custom Hats order page. Four-step wizard: hat+colors, quantity, design, review.
+  Colors are chosen inside the selected hat card. Uploads are per placement.
+  Requires the two Shopify products (Custom Embroidered Hat + Custom Hat Add-On)
+  set to ACTIVE. Cart add uses /cart/add.js on the live domain.
+  Artwork + order details POST to the Apps Script endpoint below.
 {%- endcomment -%}
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
-
-<style>
-
-
-/* ---- theme-compatibility hardening ---- */
-#tbco{position:relative;z-index:1;padding-top:5.5rem;max-width:100%;overflow-x:hidden;font-family:'DM Sans',sans-serif;}
-#tbco *{box-sizing:border-box;}
-#tbco button{font-family:inherit;-webkit-appearance:none;appearance:none;}
-#tbco .tbco-hero{margin-top:0;}
-/* keep the sticky checkout bar above the newsletter FAB, and give the FAB room */
-#tbco .scoreboard{z-index:9999;}
-.nl-fab{bottom:6.5rem !important;}
-@media(max-width:560px){ .nl-fab{bottom:6rem !important;} }
-
-  #tbco{
-    --purple:#5028AA; --purple-dark:#3D1E85; --ink:#14121C; --ice:#F2F3F6;
-    --white:#FFFFFF; --line:#DDDEE6; --muted:#6B6A78; --good:#1E9E5A;
-  }
-#tbco * {box-sizing:border-box;margin:0;padding:0}
-html {scroll-behavior:smooth}
-#tbco {font-family:'DM Sans',sans-serif;background:var(--ice);color:var(--ink);line-height:1.55;padding-bottom:96px}
-#tbco .wrap {max-width:880px;margin:0 auto;padding:0 20px}
-#tbco header {position:relative;overflow:hidden;background:var(--ink);color:var(--white);padding:56px 0 48px}
-#tbco .hero-photos{position:absolute;inset:0;display:flex;z-index:0;opacity:.5}
-#tbco .hero-photos div{flex:1;background-size:cover;background-position:center;min-width:0}
-#tbco .hero-photos div:not(:first-child){-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%);mask-image:linear-gradient(90deg,transparent,#000 12%);margin-left:-6%}
-#tbco header::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,var(--ink) 0%,rgba(20,18,28,.7) 42%,rgba(20,18,28,.32) 100%)}
-#tbco header .wrap{position:relative;z-index:2}
-@media(max-width:640px){#tbco .hero-photos div:nth-child(n+4){display:none}#tbco header::after{background:linear-gradient(180deg,rgba(20,18,28,.72),rgba(20,18,28,.9))}}
-#tbco .kicker {font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#7F5FD8;font-weight:700}
-#tbco h1 {font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,8vw,76px);line-height:.95;letter-spacing:.01em;margin:10px 0 14px}
-#tbco h1 em {font-style:normal;color:#7F5FD8}
-#tbco .sub {max-width:520px;color:#C9C8D4;font-size:16px}
-#tbco .props {display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:22px}
-#tbco .props span {font-size:14px;font-weight:500;color:#EDEAF7}
-#tbco .props span::before {content:"✓";color:#7F5FD8;font-weight:700;margin-right:7px}
-#tbco section {background:var(--white);border:1px solid var(--line);border-radius:14px;padding:26px 24px;margin-top:22px}
-#tbco section:first-of-type {margin-top:28px}
-#tbco .step-head {display:flex;align-items:center;gap:12px;margin-bottom:6px}
-#tbco .step-num {font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--purple);min-width:30px;width:30px;height:30px;border-radius:50%;background:var(--ice);display:flex;align-items:center;justify-content:center;transition:background .2s,color .2s}
-#tbco .step-head h2 {font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.02em}
-#tbco .step-sub {color:var(--muted);font-size:14px;margin:0 0 18px 42px}
-#tbco .step-body {margin-left:42px}
-
-  @media(max-width:560px){.step-sub,.step-body{margin-left:0}}
-
-/* ---- accordion steps ---- */
-#tbco .acc .step-head{cursor:pointer;user-select:none;margin-bottom:0}
-#tbco .acc.done .step-num{background:var(--good);color:#fff}
-#tbco .acc-arrow{margin-left:auto;width:20px;height:20px;flex:none;color:var(--muted);transition:transform .25s}
-#tbco .acc.open .acc-arrow{transform:rotate(180deg)}
-#tbco .acc-summary{font-size:13px;color:var(--purple);font-weight:600;margin:6px 0 0 42px}
-#tbco .acc.open .acc-summary{display:none}
-#tbco .acc:not(.open) .step-sub{display:none}
-#tbco .acc-wrap{max-height:0;overflow:hidden;transition:max-height .45s ease}
-#tbco .acc.open .acc-wrap{max-height:8000px;transition:max-height .7s ease}
-#tbco .acc-wrap > *{opacity:0;transition:opacity .45s ease}
-#tbco .acc.open .acc-wrap > *{opacity:1;transition:opacity .5s ease .15s}
-@media(max-width:560px){#tbco .acc-summary{margin-left:0}}
-#tbco .acc-continue-row{display:flex;justify-content:flex-end;margin-top:22px}
-#tbco .acc-continue{display:inline-flex;align-items:center;gap:8px;background:var(--purple);color:#fff;border:none;font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:.05em;padding:11px 28px;border-radius:10px;cursor:pointer;transition:background .15s,transform .15s}
-#tbco .acc-continue:hover{background:var(--purple-dark);transform:translateY(-1px)}
-#tbco .acc-continue svg{width:17px;height:17px}
-@media(max-width:560px){#tbco .acc-continue{width:100%;justify-content:center}}
-#tbco .info-block{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:26px 24px;margin-top:22px}
-#tbco .info-block h3{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.02em;margin-bottom:14px}
-#tbco .styles {display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
-#tbco .style-card {position:relative;border:2px solid var(--line);border-radius:12px;padding:10px;cursor:pointer;background:var(--white);transition:border-color .15s, box-shadow .15s;display:flex;gap:12px;align-items:center}
-#tbco .style-card:hover {border-color:#B7A6EE}
-#tbco .style-card input {position:absolute;opacity:0}
-#tbco .style-card.on {border-color:var(--purple);box-shadow:0 0 0 3px rgba(80,40,170,.18);background:#FAF8FE}
-#tbco .style-thumb {width:62px;height:62px;flex:none;object-fit:cover;border-radius:9px;background:var(--ice);display:block}
-#tbco .style-thumb.ph {display:flex;align-items:center;justify-content:center;color:var(--purple);font-family:'Bebas Neue',sans-serif;font-size:26px}
-#tbco .style-info {min-width:0}
-#tbco .style-name {font-weight:700;font-size:15px;line-height:1.25}
-#tbco .style-brand {font-size:12px;color:var(--purple);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
-#tbco .style-desc {font-size:13px;color:var(--muted);margin-top:3px}
-#tbco .style-price {margin-top:6px;font-size:13px;font-weight:700;color:var(--purple)}
-#tbco .style-included{margin-top:3px;font-size:12px;color:var(--muted)}
-#tbco .color-disclosures{margin-top:14px;font-size:12.5px;line-height:1.6;color:var(--muted);background:var(--ice);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
-#tbco .style-price-low{display:block;margin-top:2px;font-size:11.5px;font-weight:500;color:var(--muted)}
-#tbco .style-colors-btn{margin-top:8px;background:none;border:none;padding:0;font-family:inherit;font-size:12.5px;color:var(--muted);cursor:pointer;text-align:left}
-#tbco .style-colors-btn span{color:var(--purple);font-weight:600;text-decoration:underline}
-#tbco .style-colorpeek{margin-top:8px;padding:10px;background:var(--ice);border:1px solid var(--line);border-radius:10px;display:flex;flex-wrap:wrap;gap:5px}
-#tbco .peek-chip{font-size:11.5px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px 9px;color:#3d3a4a}
-#tbco .peek-note{flex:1 1 100%;margin:6px 0 0;font-size:11.5px;color:var(--muted)}
-#tbco .style-features {font-size:13px;line-height:1.5;color:var(--ink);margin-top:10px;padding-top:10px;border-top:1px solid var(--line);animation:featFade .25s ease}
-@keyframes featFade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
-#tbco /* ---------- expanded card photo viewer ---------- */
-  .style-card.expanded {grid-column:1/-1;align-items:flex-start;gap:16px;padding:14px}
-#tbco .hero-wrap {flex:none;width:min(300px,44%)}
-#tbco .hero-stage {position:relative;width:100%;aspect-ratio:1/1;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:var(--ice)}
-#tbco .hero-img {position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .5s ease}
-#tbco .hero-img.on {opacity:1}
-#tbco .hero-dots {display:flex;gap:6px;margin-top:9px;justify-content:center}
-#tbco .hero-dots button {width:9px;height:9px;border-radius:50%;border:none;background:var(--line);cursor:pointer;padding:0;transition:background .15s}
-#tbco .hero-dots button.on {background:var(--purple)}
-
-  @media(max-width:560px){.style-card.expanded{flex-direction:column;align-items:stretch}.hero-wrap{width:100%}}
-#tbco .chips {display:flex;flex-wrap:wrap;gap:8px}
-#tbco .color-preview{display:flex;flex-direction:column;align-items:center;gap:8px;margin:4px 0 14px;padding:18px;background:var(--ice);border:1px solid var(--line);border-radius:14px}
-#tbco .color-preview img{width:100%;max-width:320px;height:auto;border-radius:12px;display:block}
-#tbco .color-preview span{font-size:15px;font-weight:700;color:var(--ink)}
-#tbco .color-preview.empty{padding:26px 18px}
-#tbco .color-preview.empty span{font-weight:500;color:var(--muted);text-align:center}
-/* color dropdown */
-#tbco .cdd{position:relative;margin-bottom:4px}
-#tbco .cdd-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:#fff;border:2px solid var(--purple);border-radius:12px;font-size:15px;font-weight:700;color:var(--purple);cursor:pointer;box-shadow:0 2px 8px rgba(80,40,170,.1)}
-#tbco .cdd-trigger:hover{background:#F7F4FF}
-#tbco .cdd-trigger.ph #cddLabel,#tbco .cdd-trigger .ph{color:var(--muted);font-weight:500}
-#tbco .cdd-arrow{transition:transform .2s;color:var(--purple);font-size:12px}
-#tbco .cdd-trigger.open{border-color:var(--purple);border-radius:12px 12px 0 0}
-#tbco .cdd-trigger.open .cdd-arrow{transform:rotate(180deg)}
-#tbco .cdd-list{position:relative;z-index:20;background:#fff;border:1.5px solid var(--purple);border-top:none;border-radius:0 0 12px 12px;max-height:300px;overflow-y:auto;box-shadow:0 12px 30px rgba(0,0,0,.12);-webkit-overflow-scrolling:touch}
-#tbco .cdd-list.scrollable{border-bottom:none;border-radius:0}
-#tbco .cdd-scrollcue{display:none;text-align:center;font-size:12px;font-weight:600;color:var(--purple);background:#F3EFFC;border:1.5px solid var(--purple);border-top:none;border-radius:0 0 12px 12px;padding:6px}
-#tbco .cdd-scrollcue.show{display:block}
-#tbco .cdd-list.hidden{display:none}
-#tbco .cdd-row{display:flex;align-items:center;gap:12px;padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--ice)}
-#tbco .cdd-row:hover{background:var(--ice)}
-#tbco .cdd-row img{width:46px;height:46px;border-radius:8px;object-fit:cover;flex:none;background:var(--ice)}
-#tbco .cdd-row .cdd-nm{flex:1;font-size:14px;font-weight:500;color:var(--ink)}
-#tbco .cdd-row .cdd-chk{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);flex:none;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px}
-#tbco .cdd-row.sel .cdd-chk{background:var(--purple);border-color:var(--purple)}
-#tbco .cdd-dot{width:14px;height:14px;border-radius:50%;flex:none;border:1px solid rgba(0,0,0,.15)}
-#tbco .chip {border:1.5px solid var(--line);border-radius:999px;padding:8px 15px;font-size:14px;font-weight:500;cursor:pointer;background:var(--white);user-select:none;transition:all .12s;display:inline-flex;align-items:center;gap:7px}
-#tbco .chip:hover {border-color:#B7A6EE}
-#tbco .chip.on {background:var(--purple);border-color:var(--purple);color:var(--white)}
-#tbco .chip small {opacity:.75;font-weight:400}
-#tbco .chip.more {border-style:dashed;color:var(--purple);font-weight:700}
-#tbco .dot {width:13px;height:13px;border-radius:50%;border:1px solid rgba(0,0,0,.18);flex:none}
-#tbco .chip.on .dot {border-color:rgba(255,255,255,.6)}
-#tbco .field-label {display:block;font-weight:700;font-size:14px;margin:18px 0 8px}
-#tbco .info-btn{font:inherit;font-size:12px;font-weight:700;color:var(--purple);background:none;border:none;cursor:pointer;padding:0;margin-left:8px;text-decoration:underline;text-underline-offset:2px}
-#tbco .info-btn:hover{color:var(--purple-dark)}
-#tbco .info-panel{margin:10px 0 4px;border:1.5px solid var(--line);border-radius:12px;padding:16px;background:var(--ice)}
-#tbco .info-panel[hidden]{display:none}
-#tbco .info-compare{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-#tbco .info-col{text-align:center;background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px 12px}
-#tbco .info-col strong{display:block;font-size:14px;margin:10px 0 4px}
-#tbco .info-col span{font-size:12.5px;color:var(--muted);line-height:1.45;display:block}
-#tbco .info-swatch{height:52px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:.08em;color:var(--ink);background:#E4E2EC}
-#tbco .flat-swatch{color:#4A4A52;text-shadow:none}
-#tbco .puff-swatch{color:#2E2A3A;text-shadow:0 2px 0 #B7A6EE,0 3px 3px rgba(0,0,0,.28);transform:scaleY(1.06)}
-#tbco .info-note{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:12px}
-@media(max-width:420px){#tbco .info-compare{grid-template-columns:1fr}}
-#tbco .hint {font-size:13px;color:var(--muted);margin-top:6px}
-#tbco .breakdown {margin-top:14px;border:1.5px solid var(--line);border-radius:12px;overflow:hidden}
-#tbco .bd-row {display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--line)}
-#tbco .bd-row:last-child {border-bottom:none}
-#tbco .bd-name {flex:1;font-size:14px;font-weight:500}
-#tbco .bd-qty {width:76px;border:1.5px solid var(--line);border-radius:8px;padding:7px 10px;font-size:15px;font-weight:700;font-family:'DM Sans',sans-serif;text-align:center}
-#tbco .bd-qty:focus {outline:2px solid var(--purple);border-color:var(--purple)}
-#tbco .bd-thumb{width:38px;height:38px;border-radius:8px;object-fit:cover;flex:none}
-#tbco .bd-pick{display:flex;align-items:center;gap:10px;flex:1;background:none;border:none;padding:0;cursor:pointer;text-align:left;min-width:0}
-#tbco .bd-pick .bd-name{font-family:'DM Sans',sans-serif}
-#tbco .bd-row.previewing{background:#F3EFFC}
-#tbco .bd-row.previewing .bd-name{color:var(--purple);font-weight:700}
-#tbco .bd-remove{background:none;border:none;color:var(--muted);font-size:20px;line-height:1;cursor:pointer;padding:0 2px;flex:none}
-#tbco .bd-remove:hover{color:#C22B3F}
-#tbco .bd-total {padding:10px 14px;background:var(--ice);font-size:13px;font-weight:700;text-align:right}
-#tbco .qty-row {display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-#tbco .qty-input {width:110px;border:1.5px solid var(--line);border-radius:10px;padding:11px 14px;font-size:16px;font-weight:700;font-family:'DM Sans',sans-serif}
-#tbco .qty-input:focus {outline:2px solid var(--purple);border-color:var(--purple)}
-#tbco .qty-input.qty-nudge {animation:qtyNudge .5s ease 2;border-color:var(--purple)}
-@keyframes qtyNudge{0%,100%{box-shadow:0 0 0 0 rgba(80,40,170,0)}50%{box-shadow:0 0 0 4px rgba(80,40,170,.25)}}
-#tbco .tiers {display:grid;grid-template-columns:repeat(auto-fit,minmax(86px,1fr));gap:8px;margin-top:14px}
-#tbco .tier {border:1.5px solid var(--line);border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;transition:all .12s}
-#tbco .tier:hover {border-color:#B7A6EE}
-#tbco .tier.on {border-color:var(--purple);background:#F4F0FD}
-#tbco .tier .t-qty {font-size:12px;color:var(--muted)}
-#tbco .tier .t-price {font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--ink)}
-#tbco .tier.on .t-price {color:var(--purple)}
-#tbco .savings {margin-top:12px;font-size:14px;font-weight:500;color:var(--good);display:none}
-#tbco .savings.show {display:block}
-#tbco textarea, #tbco input[type=text], #tbco input[type=email], #tbco input[type=tel] {width:100%;border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;font-size:15px;font-family:'DM Sans',sans-serif;background:var(--white)}
-#tbco textarea:focus, #tbco input[type=text]:focus, #tbco input[type=email]:focus, #tbco input[type=tel]:focus {outline:2px solid var(--purple);border-color:var(--purple)}
-#tbco .txt-input{margin-bottom:6px}
-#tbco .opt{color:var(--muted);font-weight:400;font-size:13px}
-#tbco textarea {min-height:90px;resize:vertical}
-#tbco .social-optout{display:flex;align-items:flex-start;gap:10px;margin-top:16px;padding:14px 16px;background:var(--ice);border:1px solid var(--line);border-radius:12px;cursor:pointer}
-#tbco .social-optout input{margin-top:3px;width:18px;height:18px;flex:none;accent-color:var(--purple);cursor:pointer}
-#tbco .social-optout span{font-size:14px;font-weight:600;color:var(--ink);line-height:1.4}
-#tbco .social-optout small{display:block;font-weight:400;font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.45}
-#tbco .uploads-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
-#tbco .upload {border:2px dashed var(--line);border-radius:12px;padding:16px 12px;text-align:center;cursor:pointer;transition:border-color .15s;display:block}
-#tbco .upload:hover {border-color:var(--purple)}
-#tbco .upload input {display:none}
-#tbco .upload .u-title {font-weight:700;font-size:14px;word-break:break-word}
-#tbco .upload .u-sub {font-size:12px;color:var(--muted);margin-top:2px}
-#tbco .upload.has-file {border-style:solid;border-color:var(--good);background:#F1FAF5}
-#tbco .flow {list-style:none;margin:0}
-#tbco .flow li {display:flex;gap:12px;align-items:flex-start;padding:7px 0;font-size:15px}
-#tbco .flow .n {flex:none;width:26px;height:26px;border-radius:50%;background:#F4F0FD;color:var(--purple);font-family:'Bebas Neue',sans-serif;font-size:16px;display:flex;align-items:center;justify-content:center;margin-top:1px}
-#tbco .art-note {background:var(--ice);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--muted);margin-top:10px;line-height:1.55}
-#tbco .art-note strong {color:var(--ink)}
-#tbco .art-note p + p {margin-top:8px}
-#tbco .proof-note{border-left:4px solid var(--purple);background:#F3EFFC}
-#tbco .proof-note strong{color:var(--purple)}
-#tbco .embroidery-notice{display:flex;gap:12px;align-items:flex-start;background:#F3EFFC;border:1.5px solid var(--purple);border-left:5px solid var(--purple);border-radius:12px;padding:14px 16px;margin-top:12px}
-#tbco .embroidery-notice p{font-size:13px;color:var(--ink);line-height:1.55;margin:0}
-#tbco .embroidery-notice strong{color:var(--purple)}
-#tbco .en-icon{flex:none;width:24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;line-height:1}
-#tbco .en-toggle{margin-top:8px;background:none;border:none;padding:0;color:var(--purple);font-weight:700;font-size:13px;font-family:inherit;cursor:pointer;text-decoration:underline;display:inline-flex;align-items:center;gap:5px}
-#tbco .en-toggle::after{content:"▾";font-size:11px;transition:transform .2s}
-#tbco .en-toggle[aria-expanded="true"]::after{transform:rotate(180deg)}
-#tbco .en-example{margin-top:10px}
-#tbco .en-example img{max-width:100%;border-radius:10px;border:1px solid var(--line);display:block}
-#tbco .quote-only {display:none}
-#tbco .quote-redirect{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;text-align:center;margin:20px 0 4px;padding:16px 20px;background:#F3EFFC;border:2px solid var(--purple);border-radius:12px;text-decoration:none;color:var(--ink);font-size:15px;font-weight:500;box-shadow:0 3px 12px rgba(80,40,170,.12);transition:background .15s,transform .15s,box-shadow .15s}
-#tbco .tbco-textus{display:none !important; /* HIDDEN until SMS number approved - change back to flex to re-enable */ align-items:center;justify-content:center;align-items:center;justify-content:center;gap:10px;text-align:center;margin:40px 0 22px;padding:15px 22px;background:var(--purple);border:1.5px solid var(--purple);border-radius:12px;text-decoration:none;color:#fff;font-size:14.5px;box-shadow:0 4px 16px rgba(80,40,170,.22);transition:background .15s,transform .15s,box-shadow .15s}
-#tbco .tbco-textus:hover{background:var(--purple2,#6234c9);transform:translateY(-1px);box-shadow:0 6px 20px rgba(80,40,170,.3)}
-#tbco .tbco-textus-icon{display:inline-flex;color:#fff;flex:none}
-#tbco .tbco-textus strong{color:#fff;font-weight:700;white-space:nowrap}
-#tbco .quote-redirect:hover{background:#EAE2FA;transform:translateY(-1px);box-shadow:0 5px 16px rgba(80,40,170,.2)}
-#tbco .quote-redirect strong{color:var(--purple);font-weight:700}
-body.quote-mode #tbco .quote-only {display:block}
-body.quote-mode #tbco .buy-only {display:none}
-#tbco .scoreboard {position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:var(--white);border-top:3px solid var(--purple);z-index:50;transition:transform .35s ease}
-#tbco .scoreboard.sb-hidden{transform:translateY(110%)}
-#tbco .sb-inner {max-width:880px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:18px}
-#tbco .sb-stat {line-height:1.1}
-#tbco .sb-label {font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#9A97AC}
-#tbco .sb-value {font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.03em}
-#tbco .sb-value.accent {color:#B7A6EE}
-#tbco .sb-divider {width:1px;height:34px;background:#312E44}
-#tbco .sb-cta {margin-left:auto;background:var(--purple);color:var(--white);border:none;font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.06em;padding:12px 26px;border-radius:10px;cursor:pointer;transition:background .15s}
-#tbco .sb-cta:hover {background:var(--purple-dark)}
-#tbco .sb-cta:disabled {opacity:.7;cursor:wait}
-/* price change flash */
-#tbco .sb-value{position:relative;transition:color .3s}
-#tbco .sb-value.flash{animation:sbPulse .55s ease}
-@keyframes sbPulse{0%{color:#B7A6EE;transform:scale(1.12)}100%{color:inherit;transform:none}}
-/* expandable order summary above the bar */
-/* order review modal + dimmed overlay */
-#tbco .sb-overlay{position:fixed;inset:0;background:rgba(10,8,16,.72);opacity:0;visibility:hidden;transition:opacity .3s;z-index:9998}
-#tbco .sb-overlay.open{opacity:1;visibility:visible}
-#tbco .sb-summary{position:fixed;left:50%;top:50%;transform:translate(-50%,-46%) scale(.96);width:min(520px,92vw);max-height:86vh;overflow-y:auto;background:#1B1826;border:1px solid #312E44;border-radius:18px;box-shadow:0 24px 70px rgba(0,0,0,.5);opacity:0;visibility:hidden;transition:opacity .3s,transform .3s;z-index:9999}
-#tbco .sb-summary.open{opacity:1;visibility:visible;transform:translate(-50%,-50%) scale(1)}
-#tbco .sb-summary-inner{padding:26px 26px 24px}
-#tbco .upload-progress{margin-top:16px}
-#tbco .up-label{font-size:13px;font-weight:600;color:var(--purple);margin-bottom:8px;text-align:center}
-#tbco .up-track{height:8px;background:var(--ice);border-radius:6px;overflow:hidden}
-#tbco .up-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--purple),#8B6FD4);border-radius:6px;transition:width .2s ease}
-#tbco .up-fill.indeterminate{width:40%!important;animation:upSlide 1.1s ease-in-out infinite}
-@keyframes upSlide{0%{margin-left:-40%}100%{margin-left:100%}}
-#tbco .sb-summary-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px}
-#tbco .sb-summary-head h3{font-family:'Bebas Neue',sans-serif;font-size:26px;color:#fff;letter-spacing:.02em}
-#tbco .sb-summary-close{background:none;border:none;color:#9A97AC;font-size:22px;line-height:1;cursor:pointer;padding:2px 6px}
-#tbco .sb-summary-close:hover{color:#fff}
-#tbco .sb-summary-rows{display:flex;flex-direction:column;gap:0}
-#tbco .sb-sum-row{display:flex;justify-content:space-between;gap:16px;font-size:14px;color:#D6D3E0;padding:11px 0;border-bottom:1px solid #29263A}
-#tbco .sb-sum-row .sb-sum-label{color:#9A97AC;flex:none}
-#tbco .sb-sum-row .sb-sum-val{color:#fff;font-weight:500;text-align:right}
-#tbco .sb-sum-row.sb-sum-total{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#fff;border-bottom:none;padding-top:14px}
-#tbco .sb-sum-row.sb-sum-total .sb-sum-val{color:#B7A6EE;font-weight:400}
-#tbco .sb-summary-cta{margin-top:20px;text-align:center}
-#tbco .sb-summary-cta p{color:#C9C8D4;font-size:14px;margin-bottom:12px}
-#tbco .sb-summary-cta .sb-cta{width:100%;justify-content:center;font-size:22px;padding:14px}
-
-  @media(max-width:560px){
-    .sb-inner{gap:12px;padding:10px 14px}
-    .sb-value{font-size:21px}
-    .sb-cta{font-size:17px;padding:10px 18px}
-    .sb-hide-sm{display:none}
-  }
-  /* sticky Continue in the bottom bar is mobile-only; desktop uses the in-page step buttons */
-  #tbco .sb-continue-mobile{display:none !important}
-  @media(max-width:768px){
-    #tbco .sb-continue-mobile.sb-continue-on{display:inline-flex !important;margin-left:auto}
-  }
-#tbco .confirm {display:none;background:#F1FAF5;border:1px solid #BFE8D2;border-radius:14px;padding:24px;margin-top:22px}
-#tbco .confirm.show {display:block}
-#tbco .confirm h3 {font-family:'Bebas Neue',sans-serif;font-size:26px;margin-bottom:8px}
-#tbco .confirm pre {background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px;font-size:13px;white-space:pre-wrap;font-family:'DM Sans',sans-serif;margin-top:12px}
-#tbco .err {color:#C22B3F;font-size:14px;margin-top:12px;display:none}
-/* ---- judge.me carousel ---- */
-#tbco .tbco-rating{max-width:520px;margin:0 auto;text-align:center;background:var(--ice);border:1px solid var(--line);border-radius:16px;padding:28px 24px}
-#tbco .tbco-rating-stars{display:block;font-size:26px;color:#F5C518;letter-spacing:3px;margin-bottom:10px}
-#tbco .tbco-rating-score{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--ink);margin:0 0 4px;line-height:1}
-#tbco .tbco-rating-count{font-size:14.5px;color:var(--muted);margin:0 0 14px}
-#tbco .tbco-rating-link{display:inline-block;font-size:14.5px;font-weight:600;color:var(--purple);text-decoration:underline}
-#tbco .jdgm-carousel-wrapper{text-align:center;margin:0 auto}
-#tbco .jdgm-carousel-title-and-link{text-align:center;margin-bottom:1.25rem}
-#tbco .jdgm-carousel-item{padding:0 16px !important}
-#tbco .jdgm-carousel-item__review,
-#tbco .jdgm-carousel-item__reviewer-name{text-align:center !important}
-/* the empty box: an empty <section> Judge.me renders inside the carousel wrapper,
-   which my generic "#tbco section" card style was turning into a bordered box.
-   Strip the card styling and collapse it. */
-#tbco .jdgm-carousel-wrapper section:empty,
-#tbco .jdgm-carousel-wrapper > section:last-child:empty{
-  display:none !important;background:none !important;border:none !important;
-  padding:0 !important;margin:0 !important;
-}
-#tbco .err.show {display:block}
-
-
-  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.hero-img{transition:none}}
-</style>
-
 <div id="tbco">
+<style>
+  #tbco{position:relative;z-index:1;padding-top:5.5rem;max-width:100%;overflow-x:hidden;font-family:'DM Sans',sans-serif;
+    --purple:#5028AA;--purple2:#6234c9;--purple-dark:#3D1E85;--ink:#14121C;--ice:#F3EFFC;--white:#fff;--line:#E2E0EA;--muted:#6B6A78;--good:#1E9E5A;color:var(--ink)}
+  #tbco *{box-sizing:border-box;margin:0;padding:0}
+  #tbco .wrap{max-width:880px;margin:0 auto;padding:0 20px}
+  #tbco header{position:relative;overflow:hidden;background:var(--ink);color:var(--white);padding:56px 0 48px}
+  #tbco .hero-photos{position:absolute;inset:0;display:flex;z-index:0;opacity:.5}
+  #tbco .hero-photos div{flex:1;background-size:cover;background-position:center;min-width:0}
+  #tbco .hero-photos div:not(:first-child){-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%);mask-image:linear-gradient(90deg,transparent,#000 12%);margin-left:-6%}
+  #tbco header::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,var(--ink) 0%,rgba(20,18,28,.7) 42%,rgba(20,18,28,.32) 100%)}
+  #tbco header .wrap{position:relative;z-index:2}
+  @media(max-width:640px){#tbco .hero-photos div:nth-child(n+4){display:none}#tbco header::after{background:linear-gradient(180deg,rgba(20,18,28,.72),rgba(20,18,28,.9))}}
+  #tbco h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,8vw,76px);line-height:.95;letter-spacing:.01em;margin:10px 0 14px}
+  #tbco h1 em{font-style:normal;color:#7F5FD8}
+  #tbco .sub{font-size:16px;line-height:1.6;color:#D9D6E4;max-width:620px}
+  #tbco .props{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:22px}
+  #tbco .props span{font-size:14px;font-weight:500;color:#EDEAF7}
+  #tbco .props span::before{content:"\2713";color:#7F5FD8;font-weight:700;margin-right:7px}
+  #tbco .tbco-textus{display:none !important;align-items:center;justify-content:center;gap:10px;text-align:center;margin:40px 0 22px;padding:15px 22px;background:var(--purple);border:1.5px solid var(--purple);border-radius:12px;text-decoration:none;color:#fff;font-size:14.5px}
+  #tbco .tbco-textus-icon{display:inline-flex;color:#fff;flex:none}
+  #tbco .tbco-textus strong{color:#fff;font-weight:700;white-space:nowrap}
 
+  /* progress rail */
+  #tbco .rail{display:flex;gap:6px;margin:34px 0 22px;flex-wrap:wrap;position:sticky;top:0;z-index:50;background:#fff;padding:10px 0}
+  #tbco .rail-item{flex:1 1 0;min-width:120px;display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:11px;background:#fff;border:1.5px solid var(--line);font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer;transition:.18s}
+  #tbco .rail-item .dot{width:22px;height:22px;border-radius:50%;background:var(--line);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex:0 0 auto}
+  #tbco .rail-item.done{border-color:#B7A6EE;color:var(--ink)}
+  #tbco .rail-item.done .dot{background:var(--good)}
+  #tbco .rail-item.active{border-color:var(--purple);color:var(--purple);box-shadow:0 4px 14px rgba(80,40,170,.12)}
+  #tbco .rail-item.active .dot{background:var(--purple)}
+
+  /* steps */
+  #tbco .step{background:#fff;border:1.5px solid var(--line);border-radius:16px;margin-bottom:14px;display:none}
+  #tbco .step.active{display:block;border-color:var(--purple);box-shadow:0 6px 22px rgba(80,40,170,.10)}
+  #tbco .step-head{display:flex;align-items:center;gap:13px;padding:20px 22px}
+  #tbco .step-num{width:28px;height:28px;border-radius:50%;background:var(--ice);color:var(--purple);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex:0 0 auto}
+  #tbco .step-head h2{font-family:'Bebas Neue',sans-serif;font-size:23px;letter-spacing:.02em;flex:1}
+  #tbco .step-sum{font-size:13px;color:var(--muted);text-align:right;max-width:45%}
+  #tbco .step-body{padding:0 22px 22px}
+  #tbco .step-hint{font-size:13.5px;color:var(--muted);margin-bottom:16px;line-height:1.55}
+  #tbco .step-hint strong{color:var(--ink)}
+
+  /* hat grid */
+  #tbco .hats{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:13px}
+  #tbco .hats.picking{grid-template-columns:1fr}
+  #tbco .hat{border:1.5px solid var(--line);border-radius:13px;background:#fff;cursor:pointer;overflow:hidden;transition:.2s;position:relative}
+  #tbco .hat:hover{border-color:#B7A6EE;transform:translateY(-2px)}
+  #tbco .hat.on{border-color:var(--purple);box-shadow:0 6px 22px rgba(80,40,170,.18);overflow:visible;z-index:5}
+  #tbco .hats.picking .hat{display:none}
+  #tbco .hats.picking .hat.on{display:block;cursor:default}
+  #tbco .hats.picking .hat.on:hover{transform:none}
+  #tbco .hat-img{width:100%;aspect-ratio:1/1;object-fit:contain;background:#fff;display:block}
+  #tbco .hat-info{padding:12px 14px 14px}
+  #tbco .hat-name{font-weight:700;font-size:14.5px;line-height:1.25}
+  #tbco .hat-brand{font-size:11.5px;color:var(--muted);margin-top:2px}
+  #tbco .hat-price{margin-top:7px;font-size:13px;font-weight:700;color:var(--purple)}
+  #tbco .hat-colors{display:flex;align-items:center;gap:7px;margin-top:8px;font-size:12px;color:var(--muted)}
+  #tbco .wheel{width:18px;height:18px;border-radius:50%;flex:0 0 auto;border:1px solid rgba(0,0,0,.12);background:conic-gradient(#e23b3b,#e2a13b,#d7e23b,#4ce23b,#3be2c0,#3b8fe2,#7a3be2,#e23bc0,#e23b3b)}
+  #tbco .hat-badge{position:absolute;top:9px;left:9px;background:var(--purple);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;z-index:2}
+  #tbco .hat.on .hat-top{display:flex;gap:18px;align-items:flex-start}
+  #tbco .hat.on .hat-img{width:190px;flex:0 0 auto}
+  #tbco .hat.on .hat-info{flex:1;padding-top:14px}
+  @media(max-width:560px){#tbco .hat.on .hat-top{display:block}#tbco .hat.on .hat-img{width:100%}#tbco .hat.on .hat-info{padding-top:0}}
+  #tbco .hat-change{display:inline-flex;align-items:center;gap:7px;background:#fff;border:2px solid var(--purple);border-radius:10px;padding:10px 18px;font-family:inherit;font-size:14px;font-weight:600;color:var(--purple);cursor:pointer;margin-top:14px;transition:.16s}
+  #tbco .hat-change:hover{background:var(--purple);color:#fff}
+  #tbco .hat-specs{margin-top:10px;font-size:12.5px;color:var(--muted);line-height:1.6}
+  #tbco .hat-specs b{color:var(--ink);font-weight:600}
+  #tbco .hat-expand{padding:0 16px 18px;border-top:1px solid var(--line);margin-top:4px}
+
+  /* color dropdown */
+  #tbco .colorpanel{margin-top:16px;border-radius:12px;background:var(--ice);padding:16px;position:relative;z-index:6}
+  #tbco .colorpanel h3{font-size:15px;margin-bottom:4px}
+  #tbco .cp-sub{font-size:12.5px;color:var(--muted);margin-bottom:13px}
+  #tbco .dd{position:relative;max-width:420px}
+  #tbco .dd-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1.5px solid var(--line);border-radius:11px;padding:11px 13px;font-family:inherit;font-size:14px;cursor:pointer;text-align:left;color:var(--ink)}
+  #tbco .dd-btn:hover{border-color:#B7A6EE}
+  #tbco .dd-btn .chev{transition:transform .18s;flex:0 0 auto}
+  #tbco .dd.open .dd-btn .chev{transform:rotate(180deg)}
+  #tbco .dd-menu{display:none;position:absolute;z-index:40;top:calc(100% + 6px);left:0;right:0;max-height:290px;overflow-y:auto;background:#fff;border:1.5px solid var(--line);border-radius:12px;box-shadow:0 14px 34px rgba(20,18,28,.16);scrollbar-width:thin}
+  #tbco .dd.open .dd-menu{display:block}
+  #tbco .dd-menu::-webkit-scrollbar{width:9px}
+  #tbco .dd-menu::-webkit-scrollbar-thumb{background:#B7A6EE;border-radius:9px;border:2px solid #fff}
+  #tbco .dd-more{display:none;position:absolute;left:1px;right:1px;bottom:1px;z-index:41;pointer-events:none;height:44px;border-radius:0 0 11px 11px;background:linear-gradient(180deg,rgba(255,255,255,0),#fff 72%);align-items:flex-end;justify-content:center;padding-bottom:6px}
+  #tbco .dd.open .dd-more.on{display:flex}
+  #tbco .dd-more span{font-size:11px;font-weight:700;color:var(--purple);display:flex;align-items:center;gap:5px}
+  #tbco .dd-opt{display:flex;align-items:center;gap:11px;padding:9px 12px;cursor:pointer;font-size:13.5px;border-bottom:1px solid #f2f1f6}
+  #tbco .dd-opt:last-child{border-bottom:none}
+  #tbco .dd-opt:hover{background:var(--ice)}
+  #tbco .dd-opt img{width:42px;height:42px;object-fit:contain;border-radius:7px;background:#fff;border:1px solid var(--line);flex:0 0 auto}
+  #tbco .dd-opt.picked{background:#eee9fb}
+  #tbco .dd-opt .tick{margin-left:auto;color:var(--purple);font-weight:700}
+  #tbco .picked-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
+  #tbco .pchip{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:6px 9px;font-size:13px}
+  #tbco .pchip img{width:32px;height:32px;object-fit:contain;border-radius:6px}
+  #tbco .pchip button{background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;line-height:1;padding:0 2px}
+  #tbco .pchip button:hover{color:#c33}
+
+  /* fields */
+  #tbco .qty-row{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
+  #tbco .field{display:flex;flex-direction:column;gap:6px}
+  #tbco .field label{font-size:13px;font-weight:600}
+  #tbco .field input,#tbco .field select,#tbco .field textarea{font-family:inherit;font-size:14.5px;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+  #tbco .field input:focus,#tbco .field textarea:focus{outline:none;border-color:var(--purple)}
+  #tbco .qty-input{width:130px}
+  #tbco .price-now{display:flex;gap:26px;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:12px;padding:14px 18px;margin-top:16px}
+  #tbco .price-now .pn{display:flex;flex-direction:column}
+  #tbco .price-now .pn-l{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+  #tbco .price-now .pn-v{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1.15}
+  #tbco .price-now .pn-note{margin-left:auto;align-self:center;font-size:12px;color:rgba(255,255,255,.65);max-width:220px;line-height:1.5}
+  @media(max-width:520px){#tbco .price-now .pn-note{margin-left:0;flex:1 1 100%;max-width:none;margin-top:6px}}
+  #tbco .tier-nudge{font-size:13px;color:var(--purple);font-weight:600;background:var(--ice);border-radius:9px;padding:9px 12px;margin-top:13px}
+  #tbco .split{margin-top:18px;border:1.5px solid var(--line);border-radius:12px;overflow:hidden}
+  #tbco .split-head{background:var(--ice);padding:11px 14px;font-size:13px;font-weight:700}
+  #tbco .split-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-top:1px solid var(--line)}
+  #tbco .split-row img{width:38px;height:38px;object-fit:contain;border-radius:7px;border:1px solid var(--line)}
+  #tbco .split-row .nm{flex:1;font-size:13.5px}
+  #tbco .split-row input{width:88px;font-family:inherit;font-size:14px;padding:8px 10px;border:1.5px solid var(--line);border-radius:9px}
+  #tbco .split-total{display:flex;justify-content:space-between;padding:11px 14px;border-top:1.5px solid var(--line);font-size:13.5px;font-weight:700;background:#fafafa}
+  #tbco .split-total.bad{color:#c33}
+
+  /* chips */
+  #tbco .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  #tbco .chip{background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:9px 14px;font-family:inherit;font-size:13.5px;cursor:pointer;transition:.15s;color:var(--ink)}
+  #tbco .chip:hover{border-color:#B7A6EE}
+  #tbco .chip.on{border-color:var(--purple);background:var(--ice);color:var(--purple);font-weight:600}
+  #tbco .chip .tag{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:var(--purple);color:#fff;border-radius:999px;padding:2px 8px;margin-left:7px;display:inline-block;vertical-align:1px}
+  #tbco .chip .tag.inc{background:var(--good)}
+
+  /* step 3 pieces */
+  #tbco .fld{font-size:13.5px;font-weight:700;margin-top:20px;margin-bottom:7px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  #tbco .info-btn{background:none;border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-family:inherit;font-size:11.5px;font-weight:600;color:var(--purple);cursor:pointer}
+  #tbco .info-btn:hover{border-color:var(--purple)}
+  #tbco .info-panel{margin-top:11px;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:16px}
+  #tbco .info-compare{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  #tbco .info-col{text-align:center}
+  #tbco .info-col strong{display:block;margin-top:8px;font-size:13.5px}
+  #tbco .info-col span{display:block;font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:3px}
+  #tbco .info-swatch{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:2px;padding:14px;border-radius:9px;background:var(--ice);color:var(--purple)}
+  #tbco .puff-swatch{text-shadow:0 3px 0 rgba(80,40,170,.35),0 5px 7px rgba(0,0,0,.18)}
+  #tbco .info-note{font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:11px}
+  #tbco .hint{font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:9px}
+  #tbco .uploads{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:4px}
+  #tbco .up-slot{border:1.5px dashed var(--line);border-radius:12px;padding:14px;background:#fff}
+  #tbco .up-slot.req{border-color:var(--purple);background:var(--ice)}
+  #tbco .up-slot-label{font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px;margin-bottom:4px;flex-wrap:wrap}
+  #tbco .up-tag{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:var(--purple);color:#fff;border-radius:999px;padding:2px 8px}
+  #tbco .up-tag.inc{background:var(--good)}
+  #tbco .up-slot-sub{font-size:11.5px;color:var(--muted);margin-bottom:9px}
+  #tbco .up-slot input{width:100%;font-family:inherit;font-size:12.5px}
+  #tbco .up-have{font-size:12px;color:var(--good);font-weight:600;margin-top:5px}
+  #tbco .embroidery-notice{display:flex;gap:12px;align-items:flex-start;background:var(--ice);border:1.5px solid var(--purple);border-left:5px solid var(--purple);border-radius:12px;padding:14px 16px;margin-top:18px}
+  #tbco .embroidery-notice p{font-size:13px;line-height:1.55;margin:0}
+  #tbco .embroidery-notice strong{color:var(--purple)}
+  #tbco .en-icon{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  #tbco .en-toggle{background:none;border:none;padding:0;margin-top:8px;font-family:inherit;font-size:12.5px;font-weight:600;color:var(--purple);text-decoration:underline;cursor:pointer}
+  #tbco .en-example{margin-top:10px}
+  #tbco .en-example img{max-width:100%;border-radius:10px;border:1px solid var(--line);display:block}
+  #tbco .art-note{margin-top:14px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:13px 15px}
+  #tbco .art-note p{font-size:12.5px;line-height:1.6;margin:0;color:#3d3a4a}
+  #tbco .art-note strong{color:var(--ink)}
+  #tbco .social-optout{display:flex;gap:9px;align-items:flex-start;margin-top:16px;font-size:12.5px;color:#3d3a4a;line-height:1.55}
+  #tbco .social-optout input{margin-top:2px;width:17px;height:17px;flex:none;accent-color:var(--purple);cursor:pointer}
+  @media(max-width:520px){#tbco .info-compare{grid-template-columns:1fr}}
+
+  /* review */
+  #tbco .rev-line{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+  #tbco .rev-line span:first-child{color:var(--muted);flex:0 0 auto}
+  #tbco .rev-line strong{text-align:right}
+  #tbco .proof-note{display:flex;gap:12px;align-items:flex-start;background:var(--ice);border:1.5px solid var(--purple);border-left:5px solid var(--purple);border-radius:12px;padding:14px 16px;margin-top:18px}
+  #tbco .proof-note p{font-size:13px;line-height:1.55;margin:0}
+  #tbco .proof-note strong{color:var(--purple)}
+  #tbco .cart-err{display:none;margin-top:14px;background:#FDECEC;border:1.5px solid #E3A2A2;color:#8B2E2E;border-radius:10px;padding:12px 14px;font-size:13.5px}
+  #tbco .cart-err.show{display:block}
+  #tbco .upload-progress{display:none;margin-top:14px}
+  #tbco .up-bar{height:10px;background:var(--ice);border-radius:6px;overflow:hidden}
+  #tbco .up-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--purple),#8B6FD4);border-radius:6px;transition:width .2s ease}
+  #tbco .up-label{font-size:12.5px;color:var(--muted);margin-top:6px}
+
+  /* buttons */
+  #tbco .next{margin-top:20px;background:var(--purple);color:#fff;border:none;border-radius:11px;padding:13px 26px;font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:.04em;cursor:pointer;transition:.18s}
+  #tbco .next:hover{background:var(--purple2);transform:translateY(-1px)}
+  #tbco .next:disabled{opacity:.4;cursor:not-allowed;transform:none}
+  #tbco .back{margin-top:20px;margin-right:10px;background:none;color:var(--muted);border:1.5px solid var(--line);border-radius:11px;padding:13px 20px;font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:.04em;cursor:pointer}
+  #tbco .back:hover{border-color:#B7A6EE;color:var(--ink)}
+  #tbco .btn-row{display:flex;align-items:center;flex-wrap:wrap}
+  #tbco .quote-redirect{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;text-align:center;margin:20px 0 4px;padding:16px 20px;background:var(--ice);border:2px solid var(--purple);border-radius:12px;text-decoration:none;color:var(--ink);font-size:15px}
+  #tbco .quote-redirect strong{color:var(--purple);font-weight:700}
+
+  /* reviews block */
+  #tbco .tbco-rating{max-width:520px;margin:32px auto 0;text-align:center;background:var(--ice);border:1px solid var(--line);border-radius:16px;padding:28px 24px}
+  #tbco .tbco-rating-stars{display:block;font-size:26px;color:#F5C518;letter-spacing:3px;margin-bottom:10px}
+  #tbco .tbco-rating-score{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--ink);margin:0 0 4px;line-height:1}
+  #tbco .tbco-rating-count{font-size:14.5px;color:var(--muted);margin:0 0 14px}
+  #tbco .tbco-rating-link{display:inline-block;font-size:14.5px;font-weight:600;color:var(--purple);text-decoration:underline}
+
+  /* sticky bar */
+  #tbco .bar{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;z-index:60;transform:translateY(110%);transition:transform .28s}
+  #tbco .bar.show{transform:none}
+  #tbco .bar-in{max-width:880px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:18px}
+  #tbco .bar-stat .l{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+  #tbco .bar-stat .v{font-family:'Bebas Neue',sans-serif;font-size:22px;line-height:1.1}
+  #tbco .bar-cta{margin-left:auto;background:var(--purple);color:#fff;border:none;border-radius:10px;padding:11px 22px;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.04em;cursor:pointer}
+  #tbco .bar-cta:hover{background:var(--purple2)}
+  #tbco .bar-cta:disabled{opacity:.45;cursor:not-allowed}
+  @media(max-width:640px){#tbco .bar-hide-sm{display:none}#tbco .step-sum{display:none}}
+
+</style>
 
 <header class="tbco-hero">
   <div class="hero-photos" aria-hidden="true">
@@ -342,253 +244,144 @@ body.quote-mode #tbco .buy-only {display:none}
     <span class="tbco-textus-text">Have questions before placing an order? <strong>Text us: (336) 585-6176</strong></span>
   </a>
 
+
+  <div class="rail" id="rail"></div>
+
   <div id="tbFormSteps">
-  <!-- STEP 1 -->
-  <section class="acc open" data-step="1">
-    <div class="step-head" data-acc-toggle>
-      <div class="step-num"><span>1</span></div><h2>Pick your hat</h2>
-      <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-    </div>
-    <div class="acc-summary" id="sum1"></div>
-    <div class="acc-wrap">
-      <p class="step-sub">The most popular blanks in the game, priced with front embroidery included.</p>
-      <div class="step-body">
-        <div class="styles" id="styles"></div>
-        <a href="/pages/quote" class="quote-redirect">Don't see what you're looking for? <strong>Get a custom quote instead →</strong></a>
-        <div class="quote-only">
-          <label class="field-label">What style or brand do you want?</label>
-          <input type="text" id="quoteStyle" placeholder="e.g. dad cap, Flexfit fitted, Richardson 168, 5-panel...">
-        </div>
-        <div class="acc-continue-row"><button type="button" class="acc-continue" data-continue="1">Choose Quantity <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
-      </div>
+  <!-- STEP 1: hat + colors -->
+  <section class="step active" data-step="1">
+    <div class="step-head"><div class="step-num">1</div><h2>Choose your hat</h2><div class="step-sum" id="sum1"></div></div>
+    <div class="step-body">
+      <p class="step-hint">Front embroidery is included on every hat. Pick a style, then choose your colors right below it.</p>
+      <div class="hats" id="hats"></div>
+      <a href="/pages/quote" class="quote-redirect">Don't see what you're looking for? <strong>Get a custom quote instead</strong></a>
+      <div class="btn-row"><button type="button" class="next" id="next1" disabled>Choose Quantity</button></div>
     </div>
   </section>
 
-  <!-- STEP 2 -->
-  <section class="acc" data-step="2">
-    <div class="step-head" data-acc-toggle>
-      <div class="step-num"><span>2</span></div><h2>How many?</h2>
-      <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-    </div>
-    <div class="acc-summary" id="sum2"></div>
-    <div class="acc-wrap">
-      <p class="step-sub buy-only">Order as few as 1 hat. Price per hat drops as your total goes up. Pick a tier or type your own number.</p>
-      <p class="step-sub quote-only">Quantity helps us put together your quote.</p>
-      <div class="step-body">
-        <div class="qty-row">
-          <input class="qty-input" id="qty" type="number" min="1" placeholder="Qty" inputmode="numeric" aria-label="Total quantity">
-          <span class="hint" style="margin-top:0">hats total</span>
-        </div>
-        <div class="buy-only">
-          <div class="tiers" id="tiers"></div>
-          <div class="savings" id="savings"></div>
-        </div>
-        <p class="hint quote-only">No set pricing on this one. Tell us how many and we'll quote it.</p>
-        <div class="acc-continue-row"><button type="button" class="acc-continue" data-continue="2">Choose Colors <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+  <!-- STEP 2: quantity -->
+  <section class="step" data-step="2">
+    <div class="step-head"><div class="step-num">2</div><h2>How many?</h2><div class="step-sum" id="sum2"></div></div>
+    <div class="step-body">
+      <p class="step-hint"><strong>Order as few as 1 hat.</strong> Price breaks start at 5, and wholesale pricing kicks in at 10+. Mixed colors all count toward the same total.</p>
+      <div class="qty-row">
+        <div class="field"><label for="qty">Total quantity</label><input class="qty-input" id="qty" type="number" min="1" inputmode="numeric" placeholder="Qty"></div>
       </div>
+      <div class="price-now" id="priceNow"></div>
+      <div id="nudge"></div>
+      <div id="splitHost"></div>
+      <div class="btn-row"><button type="button" class="back" data-back="1">Back</button><button type="button" class="next" id="next2" disabled>Add Your Design</button></div>
     </div>
   </section>
 
-  <!-- STEP 3: COLORS -->
-  <section class="acc" data-step="3">
-    <div class="step-head" data-acc-toggle>
-      <div class="step-num"><span>3</span></div><h2>Choose your colors</h2>
-      <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-    </div>
-    <div class="acc-summary" id="sum3"></div>
-    <div class="acc-wrap">
-      <p class="step-sub">You can mix hat colors within one order at no extra charge. Select each color you want, then enter how many of each below. All quantities count toward your total volume pricing.</p>
-      <div class="step-body">
-        <label class="field-label buy-only" style="margin-top:0">Select one or more colors</label>
-        <label class="field-label quote-only" style="margin-top:0">Hat color(s)</label>
-        <div class="buy-only" id="colorBuyWrap">
-          <div class="cdd" id="colorDD">
-            <button type="button" class="cdd-trigger" id="cddTrigger" aria-haspopup="listbox" aria-expanded="false">
-              <span id="cddLabel">Select colors</span>
-              <span class="cdd-arrow">▼</span>
-            </button>
-            <div class="cdd-list hidden" id="cddList" role="listbox"></div>
-            <div class="cdd-scrollcue" id="cddScrollCue">Scroll for more colors ▼</div>
-          </div>
-          <div class="color-preview" id="colorPreview" style="display:none">
-            <img id="colorPreviewImg" alt="" />
-            <span id="colorPreviewName"></span>
-          </div>
-          <div id="breakdownWrap"></div>
-        </div>
-        <div class="quote-only" id="colorQuoteWrap">
-          <input type="text" id="quoteColor" class="txt-input" placeholder="e.g. black, red/white, camo, whatever you have in mind">
-          <p class="hint">Tell us the color(s) you'd like. We'll confirm exact options in your quote.</p>
-        </div>
-        <p class="hint" id="colorHint"></p>
-        <div id="sizingWrap" style="display:none">
-          <label class="field-label">Sizing</label>
-          <div class="chips" id="sizes"></div>
-        </div>
-        <p class="color-disclosures">Need different thread colors on different hat colors? Mention it in the notes and we'll reflect it in your mockup. Hat colors are subject to supplier availability; if your selection is unavailable, we'll contact you before processing the order.</p>
-        <div class="acc-continue-row"><button type="button" class="acc-continue" data-continue="3">Add Your Design <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
-      </div>
-    </div>
-  </section>
+  <!-- STEP 3: design -->
+  <section class="step" data-step="3">
+    <div class="step-head"><div class="step-num">3</div><h2>Your design</h2><div class="step-sum" id="sum3"></div></div>
+    <div class="step-body">
+      <p class="step-hint">Send your logo in any format. We digitize it for embroidery free and email a mockup before we stitch.</p>
 
-  <!-- STEP 4: DESIGN -->
-  <section class="acc" data-step="4">
-    <div class="step-head" data-acc-toggle>
-      <div class="step-num"><span>4</span></div><h2>Your design</h2>
-      <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
-    </div>
-    <div class="acc-summary" id="sum4"></div>
-    <div class="acc-wrap">
-      <p class="step-sub">Front embroidery is included. Digitizing your artwork is always free.</p>
-      <div class="step-body">
-        <label class="field-label" style="margin-top:0">Decoration style <button type="button" class="info-btn" id="puffInfoBtn" aria-expanded="false" aria-controls="puffInfo">What is 3D puff?</button></label>
-        <div class="chips" id="deco"></div>
-        <div class="info-panel" id="puffInfo" hidden>
-          <div class="info-compare">
-            <div class="info-col">
-              <div class="info-swatch flat-swatch">ABC</div>
-              <strong>Flat embroidery</strong>
-              <span>Stitched flush to the hat. Handles fine detail, small text, and intricate logos.</span>
-            </div>
-            <div class="info-col">
-              <div class="info-swatch puff-swatch">ABC</div>
-              <strong>3D puff</strong>
-              <span>Foam under the stitching lifts the design off the hat for a bold, raised look.</span>
-            </div>
-          </div>
-          <p class="info-note">Puff works best with blocky letters and simple, bold shapes. It is not a fit for small text, thin lines, or fine detail, since the foam rounds those out. Not sure if your logo works? Leave it on flat and mention puff in the notes, and we will tell you honestly.</p>
-          <p class="info-note"><strong>3D puff is front only.</strong> Any side or back embroidery will be stitched flat.</p>
+      <p class="fld">Decoration style <button type="button" class="info-btn" id="puffBtn">What is 3D puff?</button></p>
+      <div class="chips" id="decos"></div>
+      <div class="info-panel" id="puffInfo" hidden>
+        <div class="info-compare">
+          <div class="info-col"><div class="info-swatch flat-swatch">ABC</div><strong>Flat embroidery</strong><span>Stitched flush to the hat. Handles fine detail, small text, and intricate logos.</span></div>
+          <div class="info-col"><div class="info-swatch puff-swatch">ABC</div><strong>3D puff</strong><span>Foam under the stitching lifts the design off the hat for a bold, raised look.</span></div>
         </div>
-        <label class="field-label">Placement</label>
-        <div class="chips" id="placements"></div>
-        <div id="frontPosWrap">
-          <label class="field-label" style="font-size:13px;margin-top:14px">Front logo position</label>
-          <div class="chips" id="frontPos"></div>
-        </div>
-        <p class="hint">Front is included. <strong>Additional locations are $5 per hat, per location.</strong> 3D puff applies to the front only; side and back are stitched flat.</p>
-        <label class="field-label">Your logo / artwork</label>
-        <div class="uploads-grid" id="uploads"></div>
-        <p class="hint">One file per location: PNG, JPG, PDF, AI, or SVG, up to 10 MB each. Digitizing is free. No file handy? Skip it and email us after.</p>
-        <div class="embroidery-notice">
-          <span class="en-icon" aria-hidden="true">!</span>
-          <div>
-            <p><strong>Embroidery Notice:</strong> AI-generated and highly detailed logos don't always translate well to embroidery. If your design isn't suitable, we'll recommend the best solution, such as simplifying the artwork, using a DTF transfer, or a patch to ensure the best possible result.</p>
-            <button type="button" class="en-toggle" id="enToggle" aria-expanded="false">View example</button>
-            <div class="en-example" id="enExample" hidden>
-              <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ChatGPT_Image_Aug_14_2026_at_10_40_32_PM.png?v=1786761670" alt="Example showing how a detailed logo simplifies for embroidery" loading="lazy">
-            </div>
+        <p class="info-note">Puff works best with blocky letters and simple, bold shapes. It is not a fit for small text, thin lines, or fine detail, since the foam rounds those out. Not sure if your logo works? Leave it on flat and mention puff in the notes, and we will tell you honestly.</p>
+        <p class="info-note"><strong>3D puff is front only.</strong> Any side or back embroidery will be stitched flat.</p>
+      </div>
+
+      <p class="fld">Placement</p>
+      <div class="chips" id="places"></div>
+      <div id="frontPosWrap">
+        <p class="fld" style="font-size:13px">Front logo position</p>
+        <div class="chips" id="frontPos"></div>
+      </div>
+      <p class="hint">Front is included. <strong>Additional locations are $5 per hat, per location.</strong> 3D puff applies to the front only; side and back are stitched flat.</p>
+
+      <p class="fld">Your logo / artwork</p>
+      <div class="uploads" id="uploads"></div>
+      <p class="hint">One file per location: PNG, JPG, PDF, AI, or SVG, up to 10 MB each. Digitizing is free. No file handy? Skip it and email us after.</p>
+
+      <div class="embroidery-notice">
+        <span class="en-icon" aria-hidden="true">!</span>
+        <div>
+          <p><strong>Embroidery Notice:</strong> AI-generated and highly detailed logos don't always translate well to embroidery. If your design isn't suitable, we'll recommend the best solution, such as simplifying the artwork, using a DTF transfer, or a patch to ensure the best possible result.</p>
+          <button type="button" class="en-toggle" id="enToggle">View example</button>
+          <div class="en-example" id="enExample" hidden>
+            <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ChatGPT_Image_Aug_14_2026_at_10_40_32_PM.png?v=1786761670" alt="Example showing how a detailed logo simplifies for embroidery" loading="lazy">
           </div>
         </div>
-        <div class="art-note">
-          <p><strong>Thread colors:</strong> Unless you tell us otherwise, we match thread colors to your logo. Want something different, like tone-on-tone or matched to the hat? Just mention it in the notes.</p>
-        </div>
-        <div class="quote-only" id="contactWrap">
-          <label class="field-label">Your name</label>
-          <input type="text" id="custName" class="txt-input" placeholder="First and last name" autocomplete="name">
-          <label class="field-label">Your email</label>
-          <input type="email" id="custEmail" class="txt-input" placeholder="you@example.com" autocomplete="email">
-          <label class="field-label">Phone <span class="opt">(optional)</span></label>
-          <input type="tel" id="custPhone" class="txt-input" placeholder="(555) 555-5555" autocomplete="tel">
-          <p class="err" id="contactErr">Please add your name and a valid email so we can send your quote.</p>
-        </div>
-        <label class="field-label">Notes for us</label>
-        <textarea id="notes" placeholder="Thread colors, text to add, deadline, anything else we should know..."></textarea>
-        <label class="social-optout">
-          <input type="checkbox" id="noSocial">
-          <span>Keep my finished order private <small>Leave this unchecked if you're comfortable with us featuring your finished hats in our portfolio or on social media.</small></span>
-        </label>
-        <div class="acc-continue-row"><button type="button" class="acc-continue acc-checkout" data-checkout="1">Review order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
       </div>
+
+      <div class="art-note">
+        <p><strong>Thread colors:</strong> Unless you tell us otherwise, we match thread colors to your logo. Want something different, like tone-on-tone or matched to the hat? Just mention it in the notes.</p>
+      </div>
+
+      <div class="field" style="margin-top:18px"><label for="notes">Notes</label><textarea id="notes" rows="3" placeholder="Thread colors, deadlines, anything else we should know"></textarea></div>
+
+      <label class="social-optout">
+        <input type="checkbox" id="noSocial">
+        <span><strong>Keep my finished order private.</strong> Leave this unchecked if you're comfortable with us featuring your finished hats in our portfolio or on social media.</span>
+      </label>
+
+      <div class="btn-row"><button type="button" class="back" data-back="2">Back</button><button type="button" class="next" id="next3">Review Order</button></div>
     </div>
   </section>
 
-  <!-- WHAT HAPPENS NEXT (info, not a step) -->
-  <section class="info-block">
-    <h3 class="buy-only">What happens after checkout</h3>
-    <h3 class="quote-only">What happens after you send your request</h3>
-    <ol class="flow buy-only">
-      <li><span class="n">1</span><span>Your uploaded artwork comes straight to us with the order. Forgot it? Just reply to your confirmation email with the file.</span></li>
-      <li><span class="n">2</span><span>We email your free digital mockup within 1 business day.</span></li>
-      <li><span class="n">3</span><span>You approve it, then we stitch and ship. Nothing hits a machine until you sign off.</span></li>
-    </ol>
-    <ol class="flow quote-only">
-      <li><span class="n">1</span><span>Hit the button and your request, artwork included, comes straight to us.</span></li>
-      <li><span class="n">2</span><span>We'll review your request and follow up with next steps and pricing.</span></li>
-      <li><span class="n">3</span><span>You approve, then we stitch and ship.</span></li>
-    </ol>
-    <div class="art-note">
-      <p><strong>Lead time:</strong> Most orders are shipped in 2 to 3 weeks. Need it faster? Email <strong>help@threadbreak.com</strong> directly before placing your order and we'll see what we can make happen.</p>
-    </div>
-    <div class="art-note proof-note">
-      <p>We'll email your digital mockup from <strong>help@threadbreak.com</strong> within one business day. Production begins after you approve it, so please watch your inbox and spam folder.</p>
-    </div>
-    <div class="err" id="cartErr">Couldn't add to cart. This form talks to Shopify, so it only works when hosted on threadbreak.com. If you're seeing this on the live site, refresh and try again or email help@threadbreak.com.</div>
-  </section>
+  <!-- STEP 4: review -->
+  <section class="step" data-step="4">
+    <div class="step-head"><div class="step-num">4</div><h2>Review</h2><div class="step-sum" id="sum4"></div></div>
+    <div class="step-body">
+      <div id="review"></div>
 
-  <!-- REVIEWS: compact rating overview (full reviews live on the reviews page) -->
-  <section>
-    <div class="tbco-rating">
-      {% assign jm = shop.metafields.judgeme %}
-      <span class="tbco-rating-stars" data-score="{{ jm.all_reviews_rating }}" class="jdgm-all-reviews-rating" role="img" aria-label="{{ jm.all_reviews_rating | default: 5.0 }} out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-      <p class="tbco-rating-score">{{ jm.all_reviews_rating | default: 5.0 | round: 1 }} out of 5</p>
-      <p class="tbco-rating-count">from {{ jm.all_reviews_count | default: 45 }} verified customer reviews</p>
-      <a href="/pages/reviews" class="tbco-rating-link">Read the reviews</a>
+      <p class="fld" style="margin-top:22px">Your contact info</p>
+      <div class="qty-row">
+        <div class="field"><label for="custName">Name</label><input type="text" id="custName" placeholder="First and last name" autocomplete="name"></div>
+        <div class="field"><label for="custEmail">Email</label><input type="email" id="custEmail" placeholder="you@example.com" autocomplete="email"></div>
+        <div class="field"><label for="custPhone">Phone (optional)</label><input type="tel" id="custPhone" placeholder="(555) 555-5555" autocomplete="tel"></div>
+      </div>
+
+      <div class="proof-note">
+        <span class="en-icon" aria-hidden="true">!</span>
+        <div><p><strong>Keep an eye on your email.</strong> We'll send your digital mockup from help@threadbreak.com within one business day. We can't start production until you approve it, so please watch your inbox and spam folder.</p></div>
+      </div>
+
+      <div class="upload-progress" id="uploadProgress">
+        <div class="up-bar"><div class="up-fill" id="upFill"></div></div>
+        <div class="up-label" id="upLabel">Working...</div>
+      </div>
+      <div class="cart-err" id="cartErr">Something went wrong adding this to your cart. Please try again, or email help@threadbreak.com and we'll sort it out.</div>
+
+      <div class="btn-row"><button type="button" class="back" data-back="3">Back</button><button type="button" class="next" id="checkout">Add to Cart</button></div>
+      <p class="hint">Production typically takes 2-3 weeks after mockup approval. Shipping transit time is additional.</p>
     </div>
   </section>
   </div>
 
-  <div class="confirm" id="confirm">
-    <h3 id="confTitle">Request sent ✓</h3>
-    <p id="confBody"></p>
-    <pre id="summary"></pre>
+  <div class="tbco-rating">
+    {% assign jm = shop.metafields.judgeme %}
+    <span class="tbco-rating-stars" role="img" aria-label="{{ jm.all_reviews_rating | default: 5.0 }} out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+    <p class="tbco-rating-score">{{ jm.all_reviews_rating | default: 5.0 | round: 1 }} out of 5</p>
+    <p class="tbco-rating-count">from {{ jm.all_reviews_count | default: 45 }} verified customer reviews</p>
+    <a href="/pages/reviews" class="tbco-rating-link">Read the reviews</a>
   </div>
 
 </div>
 
-<!-- order review modal -->
-<div class="sb-overlay" id="sbOverlay"></div>
-<div class="sb-summary" id="sbSummary" role="dialog" aria-modal="true" aria-label="Review your order">
-  <div class="sb-summary-inner">
-    <div class="sb-summary-head">
-      <h3>Review your order</h3>
-      <button type="button" class="sb-summary-close" id="sbSummaryClose" aria-label="Close">&times;</button>
-    </div>
-    <div class="sb-summary-rows" id="sbSummaryRows"></div>
-    <div class="upload-progress" id="uploadProgress" style="display:none">
-      <div class="up-label" id="upLabel">Sending your logo…</div>
-      <div class="up-track"><div class="up-fill" id="upFill"></div></div>
-    </div>
+<div class="bar" id="bar">
+  <div class="bar-in">
+    <div class="bar-stat"><div class="l">Qty</div><div class="v" id="barQty">0</div></div>
+    <div class="bar-stat bar-hide-sm"><div class="l">Per hat</div><div class="v" id="barEach">-</div></div>
+    <div class="bar-stat"><div class="l">Total</div><div class="v" id="barTotal">-</div></div>
+    <button type="button" class="bar-cta" id="barCta">Continue</button>
   </div>
+</div>
 </div>
 
-<!-- sticky scoreboard -->
-<div class="scoreboard sb-hidden" id="scoreboard" role="region" aria-label="Your quote">
-  <div class="sb-inner">
-    <div class="sb-stat"><div class="sb-label">Qty</div><div class="sb-value" id="sbQty">–</div></div>
-    <div class="sb-divider"></div>
-    <div class="sb-stat"><div class="sb-label">Per hat</div><div class="sb-value accent" id="sbPer">–</div></div>
-    <div class="sb-divider sb-hide-sm"></div>
-    <div class="sb-stat sb-hide-sm"><div class="sb-label" id="sbTotalLabel">Select a quantity</div><div class="sb-value" id="sbTotal">–</div></div>
-    <button class="sb-cta sb-continue-mobile" id="sbContinue" type="button">Continue</button>
-    <button class="sb-cta" id="submitBtn" type="button" style="display:none">Review order</button>
-  </div>
-</div>
-</div>
 
 <script>
-
-/* =========================================================
-   Wired to live Shopify variants (product: Custom Embroidered Hat).
-   Tier format: [min qty, price per hat, Shopify variant ID]
-   If you change prices, change them BOTH here and in Shopify admin.
-
-   IMAGES, each style rotates through its `imgs` array. Swap in
-   your colorway photos (Shopify admin > Content > Files, paste URLs).
-   COLORS, condensed to sourcing-friendly basics: Otto top 15,
-   Richardson top 20, Atonal 3 camos, YP 6006 full list (popular
-   controls how many chips show before the "+ more" toggle).
-   Add/remove names freely, swatches generate automatically.
-   ========================================================= */
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0-rO8Y8fqsyAGPM1WLd_Q48GiOGKHxUYxq-UCT4a6ONXWLW6fIo2feCzDOcjmuAPE/exec";
 const STYLES = [
   { id:"otto", name:"Otto 5-Panel Mid Profile", brand:"Otto Cap 31-069", desc:"Snapback · one size fits most", popular:99, features:"Mid-profile 5-panel with a structured front, pre-curved visor, and adjustable snapback. A versatile everyday cap that takes embroidery cleanly. 100% cotton twill.",
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue-natural.jpg?v=1785628631","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-natural.jpg?v=1785628631","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black.jpg?v=1785628632","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-red-otto.jpg?v=1785628631"],
@@ -798,7 +591,6 @@ const STYLES = [
     },
     tiers:[[1,59.99,52668967846020],[5,36,52668967878788],[10,31,52668967911556],[24,29,52668967944324],[48,27,52668967977092],[96,26,52668968009860]] },
 ];
-const SIZES = ["One size fits most","Youth","Mix of both"];
 const DECOS = [
   { id:"flat",  label:"Flat embroidery", add:0 },
   { id:"puff",  label:"3D puff", add:3, variantId:52543282741380 },
@@ -809,477 +601,408 @@ const PLACEMENTS = [
   { id:"back",  label:"Back", add:5, variantId:52543282839684 },
 ];
 const FRONT_POSITIONS = ["Left front","Center front","Right front"];
-const QUOTE_EMAIL = "help@threadbreak.com";
-/* Paste your Apps Script web app URL (ends in /exec) here, see
-   threadbreak-apps-script.gs. Until set, uploads are skipped and
-   quote requests fall back to email. */
-const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz0-rO8Y8fqsyAGPM1WLd_Q48GiOGKHxUYxq-UCT4a6ONXWLW6fIo2feCzDOcjmuAPE/exec";
-/* ========================================================= */
+</script>
+
+<script>
+(function(){
+"use strict";
+const $ = id => document.getElementById(id);
+const money = n => "$" + (Math.round(n * 100) / 100).toFixed(2).replace(/\.00$/, "");
+
+// Brand-alphabetical, but the popular Richardson 112s lead their brand group.
+const RANK = { rich112: 0, rich112_5p: 1, rich112p: 2 };
+const sorted = STYLES.slice().sort((a, b) => {
+  const brand = a.brand.split(" ")[0].localeCompare(b.brand.split(" ")[0]);
+  if (brand !== 0) return brand;
+  const ra = RANK[a.id] != null ? RANK[a.id] : 50;
+  const rb = RANK[b.id] != null ? RANK[b.id] : 50;
+  if (ra !== rb) return ra - rb;
+  return a.brand.localeCompare(b.brand);
+});
+
+const BADGES = { rich112: "Most popular", otto: "Best value", atonal_a500r: "Premium rope" };
+
+// Display name without the model number; the model lives in the secondary line.
+const CLEAN_NAME = {
+  otto: "Otto 5-Panel Mid Profile",
+  atonal: "Atonal Camo A-Frame",
+  atonal_a500r: "Atonal Rope Snapback",
+  rich112: "Richardson 6-Panel Trucker",
+  rich112_5p: "Richardson 5-Panel Trucker",
+  rich112p: "Richardson Printed 5-Panel",
+  yupoong: "Yupoong Flat Bill Trucker",
+  yp6606: "Yupoong Retro Trucker",
+  rich168: "Richardson 7-Panel Trucker",
+  rich256: "Richardson Umpqua Rope Hat",
+  otto120: "Otto Comfy Fit 5-Panel"
+};
+const nameOf = s => CLEAN_NAME[s.id] || s.name;
+// Every blank we carry is one size fits most; the Richardsons are the standard M/L.
+const sizingOf = s => (/^rich/i.test(s.id) || /richardson/i.test(s.brand))
+  ? "One size fits most (standard M/L)" : "One size fits most";
+const specsOf = s => (s.desc || "").split("\u00b7").map(x => x.trim()).filter(x => x && !/size|fits/i.test(x));
 
 const state = {
-  style: STYLES[0], colorSel: [], lastColor: null, colorQty: {},
-  showAllColors: false, hasChosen: false, qtyTouched: false, sizing: SIZES[0], qty: 1, deco: DECOS[0],
-  placements: new Set(["front"]), frontPos: "Center front", files: { front:null, side:null, back:null }
+  style: null, colors: [], split: {}, qty: null,
+  deco: DECOS[0], places: new Set(["front"]), frontPos: "Center front",
+  files: { front:null, side:null, back:null },
+  step: 1, maxStep: 1, done: new Set()
 };
-const $ = id => document.getElementById(id);
-const money = n => "$" + (Number.isInteger(n) ? n : n.toFixed(2));
-const quoteMode = () => !!state.style.quote;
 
-/* ---- auto swatches from manufacturer color names ---- */
-const HUES = { black:"#1B1B1F", white:"#F5F5F5", natural:"#E8E0CC", charcoal:"#4A4A52",
-  "charcoal grey":"#4A4A52", grey:"#8E8E96", gray:"#8E8E96", "light grey":"#C9CBD1",
-  "heather grey":"#A8A8B0", heather:"#A8A8B0", silver:"#C0C0C8", aluminum:"#C9CBD1",
-  navy:"#1E2A4A", royal:"#2A4FC7", "true blue":"#3A66B0", "columbia blue":"#7BAFD4",
-  "carolina blue":"#7BAFD4", "light blue":"#A8CBE8", "smoke blue":"#5E7A96",
-  "legion blue":"#1F4E6B", "blue teal":"#2E7F8F", cyan:"#57B8D8",
-  red:"#C0243A", cardinal:"#8C1D2F", maroon:"#6E2639", "hot pink":"#E24E9C", pink:"#F4A6C0",
-  orange:"#E07020", "dark orange":"#C4551F", yellow:"#F2D01E", gold:"#D4A93C",
-  "vegas gold":"#C5B358", "amber gold":"#C99435",
-  "kelly":"#349C55", "kelly green":"#349C55", "dark green":"#1F4A34", loden:"#4F5A43",
-  "loden green":"#4F5A43", "army olive":"#5A6234",
-  khaki:"#B9A583", biscuit:"#E4D5B0", cream:"#F0E9D8", birch:"#E8E2D4", tan:"#C2A878",
-  brown:"#6B4A2F", "grey brown":"#8A7A6A", coffee:"#4E3A2A", carmel:"#B87E3F",
-  "chocolate chip":"#6B5B4A", "mink beige":"#C7B29E", gunmetal:"#5A5F66",
-  purple:"#5D3A9B", quarry:"#8C9490",
-  "neon blue":"#2AB8E8", "neon green":"#7CE81E", "neon orange":"#FF7A1A",
-  "neon pink":"#FF5EC0", "neon yellow":"#E8F51E" };
-function camoCss(n){
-  let t = ["#4B5320","#6B8E23","#3B3B2F"];                       // field/green/army/tropic
-  if (/arid|tan|desert|duck/.test(n)) t = ["#C2B280","#A48A5F","#8B7355"];
-  else if (/black/.test(n))           t = ["#1B1B1F","#3C3C44","#55555E"];
-  else if (/alpine/.test(n))          t = ["#E8E8E8","#C9CBD1","#9DA1A8"];
-  return `repeating-linear-gradient(45deg,${t[0]} 0 4px,${t[1]} 4px 8px,${t[2]} 8px 12px)`;
-}
-function colorCss(name){
-  const clean = name.replace(/\s*CMB\s*$/i, "");
-  const parts = clean.split("/").map(s => s.trim());
-  const isCamo = s => /camo|multicam/i.test(s);
-  if (parts.length === 2 && (isCamo(parts[0]) || isCamo(parts[1]))){
-    const camo = camoCss(clean.toLowerCase());
-    if (isCamo(parts[0]) && isCamo(parts[1])) return camo;
-    if (isCamo(parts[1])){
-      const a = HUES[parts[0].toLowerCase()] || "#CFCFD8";
-      return `linear-gradient(90deg, ${a} 0 50%, rgba(0,0,0,0) 50% 100%), ${camo}`;
-    }
-    const b = HUES[parts[1].toLowerCase()] || "#CFCFD8";
-    return `linear-gradient(90deg, rgba(0,0,0,0) 0 50%, ${b} 50% 100%), ${camo}`;
-  }
-  if (isCamo(clean)) return camoCss(clean.toLowerCase());
-  const hexes = parts.map(s => HUES[s.toLowerCase()] || "#CFCFD8");
-  if (hexes.length === 1) return hexes[0];
-  const step = 100 / hexes.length;
-  return "linear-gradient(90deg," + hexes.map((c,i)=>`${c} ${i*step}% ${(i+1)*step}%`).join(",") + ")";
-}
-
-function tenPriceLabel(s){
-  // Show the 10-hat price (the realistic entry point for most buyers) plus the volume floor,
-  // instead of leading with the 96+ price which reads as bait.
-  var oneTier = s.tiers.find(function(t){ return t[0] === 1; }) || s.tiers[0];
-  var tenTier = s.tiers.find(function(t){ return t[0] === 10; }) || s.tiers[0];
-  var low = s.tiers[s.tiers.length-1][1];
-  // Show the single-hat price up front now that there is no minimum, then the 10-hat
-  // price and the volume floor, so nothing reads as bait.
-  return money(oneTier[1]) + " for 1 \u00b7 " + money(tenTier[1]) + " each at 10"
-       + '<small class="style-price-low">as low as ' + money(low) + ' at 96+</small>';
-}
-
+/* ---------- pricing ---------- */
 function tierFor(style, qty){
+  if (!style || !qty) return null;
   let t = style.tiers[0];
   for (const tier of style.tiers) if (qty >= tier[0]) t = tier;
   return t;
 }
 function perHat(){
-  if (quoteMode()) return null;
-  const base = tierFor(state.style, state.qty)[1];
-  const extras = [...state.placements].reduce((s,p)=> s + PLACEMENTS.find(x=>x.id===p).add, 0);
-  return base + state.deco.add + extras;
+  const t = tierFor(state.style, state.qty);
+  if (!t) return null;
+  let p = t[1] + (state.deco.add || 0);
+  state.places.forEach(id => {
+    const pl = PLACEMENTS.find(x => x.id === id);
+    if (pl) p += pl.add || 0;
+  });
+  return p;
 }
-function evenSplit(){
-  const n = state.colorSel.length;
-  if (n === 0){ state.colorQty = {}; return; }
-  const base = Math.floor(state.qty / n);
-  const rem = state.qty - base * n;
-  state.colorQty = {};
-  state.colorSel.forEach((c,i) => state.colorQty[c] = base + (i === 0 ? rem : 0));
+function nextTier(){
+  if (!state.style || !state.qty) return null;
+  for (const t of state.style.tiers) if (t[0] > state.qty) return t;
+  return null;
 }
 function colorSummary(){
-  if (state.colorSel.length === 1) return state.colorSel[0];
-  return state.colorSel.map(c => `${c} ×${state.colorQty[c] || 0}`).join(", ");
+  if (!state.colors.length) return "Not specified";
+  if (state.colors.length === 1) return state.colors[0];
+  return state.colors.map(c => c + " x" + (state.split[c] || 0)).join(", ");
+}
+function colorImg(style, color){
+  if (style.colorImgs && style.colorImgs[color]) return style.colorImgs[color];
+  return style.imgs[0];
+}
+function activeUploadSlots(){
+  return ["front","side","back"].filter(p => p === "front" || state.places.has(p));
 }
 
-function buildOrderSummary(){
-  const rows = $("sbSummaryRows");
-  if (!rows) return;
-  const per = perHat();
-  const places = [...state.placements].map(p => p==="front" ? `Front (${state.frontPos})` : ((PLACEMENTS.find(x=>x.id===p)||{}).label || p));
-  const lines = [
-    ["Hat", state.style.quote ? "Different style (custom quote)" : `${state.style.name} (${state.style.brand})`],
-    ["Quantity", `${state.qty} hats`],
-    ["Colors", quoteMode() ? ($("quoteColor")?.value.trim() || "Not specified") : colorSummary()],
-    ["Decoration", state.deco.label],
-    ["Placement", places.join(", ") || "Front"],
-  ];
-  if (quoteMode()){
-    const cName = $("custName")?.value.trim(), cEmail = $("custEmail")?.value.trim();
-    if (cName) lines.push(["Name", cName]);
-    if (cEmail) lines.push(["Email", cEmail]);
-  }
-  if (state.style.youth) lines.push(["Sizing", state.sizing]);
-  let html = lines.map(([l,v]) =>
-    `<div class="sb-sum-row"><span class="sb-sum-label">${l}</span><span class="sb-sum-val">${v}</span></div>`).join("");
-  if (per !== null){
-    html += `<div class="sb-sum-row"><span class="sb-sum-label">Per hat</span><span class="sb-sum-val">${money(per)}</span></div>`;
-    html += `<div class="sb-sum-row sb-sum-total"><span class="sb-sum-label">Estimated total</span><span class="sb-sum-val">${money(per*state.qty)}</span></div>`;
-    html += `<div class="sb-summary-cta"><p>Look good? Complete your purchase.</p><button type="button" class="sb-cta" id="sbSummaryCheckout">Checkout</button></div>`;
-  } else {
-    html += `<div class="sb-sum-row sb-sum-total"><span class="sb-sum-label">Total</span><span class="sb-sum-val">We'll quote it</span></div>`;
-    html += `<div class="sb-summary-cta"><p>Look good? We'll send your exact pricing.</p><button type="button" class="sb-cta" id="sbSummaryCheckout">Request my quote</button></div>`;
-  }
-  rows.innerHTML = html;
-  const co = $("sbSummaryCheckout");
-  if (co) co.addEventListener("click", () => quoteMode() ? submitQuote() : submitCheckout());
-}
+/* ---------- step 1: hats ---------- */
+function renderHats(){
+  const picking = !!state.style;
+  const grid = $("hats");
+  grid.classList.toggle("picking", picking);
 
-let heroTimer = null, heroIdx = 0, heroTop = "A";
-function renderHero(){
-  clearInterval(heroTimer);
-  const a = $("heroImgA"), b = $("heroImgB");
-  if (!a || !b) return; // selected style has no photos (quote card)
-  const imgs = state.style.imgs || [];
-  heroIdx = 0; heroTop = "A";
-  a.src = imgs[0]; a.classList.add("on"); b.classList.remove("on");
-  const dots = $("heroDots");
-  dots.innerHTML = imgs.map((_,i) =>
-    `<button type="button" class="${i===0?'on':''}" aria-label="Photo ${i+1}"></button>`).join("");
-  const show = i => {
-    if (i === heroIdx) return;
-    heroIdx = i;
-    const top = heroTop === "A" ? a : b;   // currently visible
-    const bottom = heroTop === "A" ? b : a; // will become visible
-    const swap = () => {
-      bottom.classList.add("on");
-      top.classList.remove("on");
-      heroTop = heroTop === "A" ? "B" : "A";
-    };
-    if (bottom.src === imgs[i]) swap();
-    else {
-      bottom.onload = swap;
-      bottom.src = imgs[i];
+  grid.innerHTML = sorted.map(s => {
+    const on = state.style && state.style.id === s.id;
+    const badge = BADGES[s.id] ? '<div class="hat-badge">' + BADGES[s.id] + '</div>' : "";
+    const low = s.tiers[s.tiers.length - 1][1];
+    const one = (s.tiers.find(t => t[0] === 1) || s.tiers[0])[1];
+    const ten = (s.tiers.find(t => t[0] === 10) || s.tiers[0])[1];
+
+    if (!on){
+      return '<div class="hat" data-hat="' + s.id + '">' + badge +
+        '<img class="hat-img" src="' + s.imgs[0] + '" alt="' + nameOf(s) + '" loading="lazy">' +
+        '<div class="hat-info">' +
+          '<div class="hat-name">' + nameOf(s) + '</div>' +
+          '<div class="hat-brand">' + s.brand + '</div>' +
+          '<div class="hat-price">As low as ' + money(low) + '/hat</div>' +
+          '<div class="hat-colors"><span class="wheel"></span>' + s.colors.length + ' colors</div>' +
+        '</div></div>';
     }
-    dots.querySelectorAll("button").forEach((btn,j) => btn.classList.toggle("on", j === i));
-  };
-  const restart = () => {
-    clearInterval(heroTimer);
-    if (imgs.length > 1) heroTimer = setInterval(() => show((heroIdx + 1) % imgs.length), 2600);
-  };
-  dots.querySelectorAll("button").forEach((btn,i) =>
-    btn.addEventListener("click", e => { e.preventDefault(); e.stopPropagation(); show(i); restart(); }));
-  restart();
-}
-
-function updatePricingUI(){
-  if (!quoteMode()){
-    const activeTier = tierFor(state.style, state.qty);
-    $("tiers").querySelectorAll(".tier").forEach(el =>
-      el.classList.toggle("on", +el.dataset.q === activeTier[0]));
-    const idx = state.style.tiers.indexOf(activeTier);
-    const next = state.style.tiers[idx+1];
-    const sv = $("savings");
-    sv.textContent = next
-      ? `Add ${next[0]-state.qty} more and your price drops to ${money(next[1])}/hat.`
-      : "You're at our best rate. Nice.";
-    sv.classList.add("show");
-  }
-  const per = perHat();
-  const showPrice = state.qtyTouched;
-  const newTotal = per === null ? null : per * state.qty;
-  $("sbQty").textContent = state.qtyTouched ? state.qty : "–";
-  $("sbPer").textContent = !showPrice ? "–" : (per === null ? "TBD" : money(per));
-
-  const perEl = $("sbPer");
-  const totalEl = $("sbTotal");
-  // pulse both per-hat and total purple whenever the price changes (no up/down direction)
-  if (showPrice && newTotal !== null && window._tbPrevTotal != null && newTotal !== window._tbPrevTotal){
-    [perEl, totalEl].forEach(el => {
-      if (!el) return;
-      el.classList.remove("flash");
-      void el.offsetWidth;  // restart animation
-      el.classList.add("flash");
-    });
-  }
-  window._tbPrevTotal = showPrice ? newTotal : null;
-
-  totalEl.textContent = !showPrice ? "–" : (per === null ? "TBD" : money(newTotal));
-  $("sbTotalLabel").textContent = !showPrice ? "Select a quantity" : (per === null ? "We'll quote it" : "Estimated total");
-  const bt = document.querySelector(".bd-total");
-  if (bt) bt.textContent = state.qty + " hats total";
-}
-
-function renderColors(){
-  const list = [...state.style.colors].sort((a,b) => a.localeCompare(b));
-  const map = state.style.colorImgs || {};
-  const dot = c => map[c]
-    ? `<img src="${map[c]}" alt="${c}">`
-    : `<span class="cdd-dot" style="background:${colorCss(c)}"></span>`;
-
-  // build the dropdown list rows
-  $("cddList").innerHTML = list.map(c =>
-    `<div class="cdd-row ${state.colorSel.includes(c)?'sel':''}" data-c="${c}" role="option">
-       ${dot(c)}<span class="cdd-nm">${c}</span><span class="cdd-chk">${state.colorSel.includes(c)?'✓':''}</span>
-     </div>`).join("");
-  $("cddList").querySelectorAll(".cdd-row").forEach(r =>
-    r.addEventListener("click", () => {
-      const c = r.dataset.c;
-      const i = state.colorSel.indexOf(c);
-      if (i >= 0){ state.colorSel.splice(i,1); }
-      else { state.colorSel.push(c); state.lastColor = c; }
-      evenSplit(); render();
-    }));
-
-  // trigger label
-  const trig = $("cddTrigger"), lbl = $("cddLabel");
-  if (state.colorSel.length){
-    lbl.textContent = `${state.colorSel.length} color${state.colorSel.length>1?'s':''} selected`;
-    trig.classList.remove("ph");
-  } else {
-    lbl.textContent = "Select colors";
-    trig.classList.add("ph");
-  }
-
-  updateColorPreview();
-
-  // per-color quantity list (always shown, one row per selected color)
-  const wrap = $("breakdownWrap");
-  if (state.colorSel.length){
-    wrap.innerHTML = `<div class="breakdown">` + state.colorSel.map(c => `
-      <div class="bd-row ${state.lastColor===c?'previewing':''}">
-        <button type="button" class="bd-pick" data-pick="${c}" aria-label="Preview ${c}">
-          ${map[c] ? `<img class="bd-thumb" src="${map[c]}" alt="${c}">` : `<span class="dot" style="background:${colorCss(c)}"></span>`}
-          <span class="bd-name">${c}</span>
-        </button>
-        <input class="bd-qty" type="number" min="0" inputmode="numeric" value="${state.colorQty[c] || 0}" data-c="${c}" aria-label="Quantity for ${c}">
-        <button type="button" class="bd-remove" data-rm="${c}" aria-label="Remove ${c}">&times;</button>
-      </div>`).join("") + `<div class="bd-total">${state.qty} hats total</div></div>`;
-    wrap.querySelectorAll(".bd-pick").forEach(b =>
-      b.addEventListener("click", () => {
-        state.lastColor = b.dataset.pick;
-        updateColorPreview();
-        // reflect which row is previewing
-        wrap.querySelectorAll(".bd-row").forEach(r => r.classList.remove("previewing"));
-        b.closest(".bd-row").classList.add("previewing");
-      }));
-    wrap.querySelectorAll(".bd-qty").forEach(inp =>
-      inp.addEventListener("input", e => {
-        state.colorQty[e.target.dataset.c] = Math.max(0, parseInt(e.target.value || "0", 10));
-        state.qty = Math.max(1, state.colorSel.reduce((s,c)=> s + (state.colorQty[c] || 0), 0));
-        state.qtyTouched = true;
-        $("qty").value = state.qty;
-        updatePricingUI();
-      }));
-    wrap.querySelectorAll(".bd-remove").forEach(b =>
-      b.addEventListener("click", () => {
-        const c = b.dataset.rm;
-        const i = state.colorSel.indexOf(c);
-        if (i >= 0) state.colorSel.splice(i,1);
-        evenSplit(); render();
-      }));
-  } else {
-    wrap.innerHTML = "";
-  }
-
-  const hint = $("colorHint");
-  hint.style.color = "";
-  if (quoteMode()){
-    hint.textContent = "";
-    hint.style.display = "none";
-  } else {
-    hint.style.display = "";
-    hint.textContent = state.colorSel.length === 0
-      ? "Open the dropdown to pick your hat color(s)."
-      : state.colorSel.length > 1
-      ? "Set how many hats you want in each color. The total drives your price."
-      : "Add more colors from the dropdown to split your order across colorways. Don't see yours? Mention it in the notes.";
-  }
-}
-
-// show a photo of the most recently tapped color, if this style has photos
-function updateColorPreview(){
-  const panel = $("colorPreview"), img = $("colorPreviewImg"), name = $("colorPreviewName");
-  if (!panel) return;
-  const map = state.style.colorImgs;
-  let show = null;
-  if (map){
-    if (state.lastColor && state.colorSel.includes(state.lastColor) && map[state.lastColor]) show = state.lastColor;
-    else show = state.colorSel.find(c => map[c]) || null;
-  }
-  if (show){
-    img.style.display = "";
-    img.src = map[show];
-    img.alt = show;
-    name.textContent = show;
-    panel.classList.remove("empty");
-    panel.style.display = "";
-  } else if (state.colorSel.length === 0){
-    // nothing picked yet, prompt them
-    img.style.display = "none";
-    img.removeAttribute("src");
-    name.textContent = "Select your hat color(s) using the dropdown menu above.";
-    panel.classList.add("empty");
-    panel.style.display = "";
-  } else {
-    panel.style.display = "none";
-  }
-}
-
-function render(){
-  document.body.classList.toggle("quote-mode", quoteMode());
-
-  $("styles").innerHTML = STYLES.slice().sort((a,b) => a.brand.localeCompare(b.brand)).map(s => {
-    const sel = state.hasChosen && s.id === state.style.id;
-    const media = s.imgs && s.imgs.length
-      ? `<img class="style-thumb" src="${s.imgs[0]}" alt="${s.name}" loading="lazy" onerror="this.style.visibility='hidden'">`
-      : `<div class="style-thumb ph">?</div>`;
-    return `
-    <label class="style-card ${sel?'on':''}">
-      <input type="radio" name="style" value="${s.id}" ${sel?'checked':''}>
-      ${media}
-      <div class="style-info">
-        <div class="style-name">${s.name}</div>
-        <div class="style-brand">${s.brand}</div>
-        <div class="style-desc">${s.desc}</div>
-        <div class="style-price">${s.quote ? "Custom quote" : tenPriceLabel(s)}</div>
-        ${s.quote ? "" : `<div class="style-included">Front embroidery included</div>`}
-        ${s.colors && s.colors.length ? `<button type="button" class="style-colors-btn" data-colorpeek="${s.id}">Available in ${s.colors.length} colors &middot; <span>View colors</span></button>
-        <div class="style-colorpeek" id="peek-${s.id}" hidden>${s.colors.map(cl => `<span class="peek-chip">${cl}</span>`).join("")}<p class="peek-note">Pick your colors in step 3. Mixing colors costs nothing extra.</p></div>` : ""}
-        ${sel && s.features ? `<div class="style-features">${s.features}</div>` : ""}
-      </div>
-    </label>`;
+    const specs = specsOf(s);
+    return '<div class="hat on" data-hat="' + s.id + '">' + badge +
+      '<div class="hat-top">' +
+        '<img class="hat-img" src="' + s.imgs[0] + '" alt="' + nameOf(s) + '" loading="lazy">' +
+        '<div class="hat-info">' +
+          '<div class="hat-name" style="font-size:19px">' + nameOf(s) + '</div>' +
+          '<div class="hat-brand">' + s.brand + '</div>' +
+          '<div class="hat-price">' + money(one) + ' for 1 &middot; ' + money(ten) + ' each at 10 &middot; as low as ' + money(low) + '</div>' +
+          '<div class="hat-specs">' +
+            '<div><b>Sizing:</b> ' + sizingOf(s) + '</div>' +
+            (specs.length ? '<div><b>Details:</b> ' + specs.join(", ") + '</div>' : "") +
+            '<div><b>Included:</b> front embroidery, free digitizing, free US shipping</div>' +
+          '</div>' +
+          '<button type="button" class="hat-change" data-change="1">Choose a different hat</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="hat-expand" id="colorHost"></div></div>';
   }).join("");
-  // "View colors" preview: lets a buyer confirm their color exists before committing to a blank.
-  // Must not select the hat, so we stop the click from reaching the surrounding label.
-  document.querySelectorAll('[data-colorpeek]').forEach(btn => {
-    btn.addEventListener('click', ev => {
-      ev.preventDefault();
-      ev.stopPropagation();
-      const panel = document.getElementById('peek-' + btn.getAttribute('data-colorpeek'));
-      if (!panel) return;
-      const open = !panel.hasAttribute('hidden');
-      if (open) { panel.setAttribute('hidden',''); }
-      else { panel.removeAttribute('hidden'); }
-      const lbl = btn.querySelector('span');
-      if (lbl) lbl.textContent = open ? 'View colors' : 'Hide colors';
+
+  grid.querySelectorAll("[data-hat]").forEach(el => {
+    el.addEventListener("click", ev => {
+      if (ev.target.closest(".hat-expand") || ev.target.closest("[data-change]")) return;
+      const s = STYLES.find(x => x.id === el.dataset.hat);
+      if (state.style && state.style.id === s.id) return;
+      state.style = s; state.colors = []; state.split = {};
+      renderHats(); sync();
     });
   });
-  document.querySelectorAll('input[name=style]').forEach(r =>
-    r.addEventListener('change', e => {
-      state.hasChosen = true;
-      state.style = STYLES.find(s=>s.id===e.target.value);
-      state.showAllColors = false;
-      state.colorSel = state.colorSel.filter(c => state.style.colors.includes(c));
-      state.lastColor = state.colorSel.includes(state.lastColor) ? state.lastColor : (state.colorSel[0] || null);
-      evenSplit(); render();
-    }));
-  // (selection handled entirely by the radio 'change' handler above)
-  renderHero();
+  const chg = grid.querySelector("[data-change]");
+  if (chg) chg.addEventListener("click", ev => {
+    ev.stopPropagation();
+    state.style = null; state.colors = []; state.split = {};
+    renderHats(); sync();
+  });
+  if (picking) renderColorPanel();
+}
 
-  renderColors();
+/* ---------- color dropdown ---------- */
+function renderColorPanel(){
+  const host = $("colorHost");
+  if (!host || !state.style) return;
+  const s = state.style;
+  host.innerHTML =
+    '<div class="colorpanel">' +
+      '<h3>Choose your colors</h3>' +
+      '<p class="cp-sub">Available in ' + s.colors.length + ' colors. Pick one or as many as you like, mixing costs nothing extra.</p>' +
+      '<div class="dd" id="dd">' +
+        '<button type="button" class="dd-btn" id="ddBtn"><span id="ddLabel">Select a color</span>' +
+        '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></button>' +
+        '<div class="dd-more" id="ddMore"><span>Scroll for more colors <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></span></div>' +
+        '<div class="dd-menu" id="ddMenu">' +
+          s.colors.map(c =>
+            '<div class="dd-opt ' + (state.colors.indexOf(c) > -1 ? "picked" : "") + '" data-color="' + c + '">' +
+              '<img src="' + colorImg(s, c) + '" alt="' + c + '" loading="lazy" onerror="this.onerror=null;this.src=\'' + s.imgs[0] + '\'">' +
+              '<span>' + c + '</span>' +
+              (state.colors.indexOf(c) > -1 ? '<span class="tick">&#10003;</span>' : "") +
+            '</div>').join("") +
+        '</div>' +
+      '</div>' +
+      '<div class="picked-row" id="pickedRow"></div>' +
+    '</div>';
 
-  $("sizingWrap").style.display = state.style.youth ? "block" : "none";
-  if (state.style.youth){
-    $("sizes").innerHTML = SIZES.map(s =>
-      `<button type="button" class="chip ${s===state.sizing?'on':''}" data-s="${s}">${s}</button>`).join("");
-    $("sizes").querySelectorAll('.chip').forEach(b =>
-      b.addEventListener('click', () => { state.sizing = b.dataset.s; render(); }));
+  const dd = $("dd"), menu = $("ddMenu"), more = $("ddMore");
+  function cue(){
+    if (!menu || !more) return;
+    more.classList.toggle("on", menu.scrollHeight - menu.scrollTop - menu.clientHeight > 12);
   }
+  if (menu) menu.addEventListener("scroll", cue);
+  $("ddBtn").addEventListener("click", e => { e.stopPropagation(); dd.classList.toggle("open"); setTimeout(cue, 20); });
+  menu.addEventListener("click", e => e.stopPropagation());
+  document.addEventListener("click", () => { if (dd) dd.classList.remove("open"); });
 
-  if (!quoteMode()){
-    $("tiers").innerHTML = state.style.tiers.map(t => `
-      <div class="tier" data-q="${t[0]}">
-        <div class="t-qty">${t[0]}+</div>
-        <div class="t-price">${money(t[1])}</div>
-      </div>`).join("");
-    $("tiers").querySelectorAll('.tier').forEach(el =>
-      el.addEventListener('click', () => {
-        state.qty = +el.dataset.q; $("qty").value = state.qty;
-        state.qtyTouched = true;
-        evenSplit(); render();
-      }));
-  }
+  host.querySelectorAll("[data-color]").forEach(opt => {
+    opt.addEventListener("click", () => {
+      const c = opt.dataset.color;
+      const i = state.colors.indexOf(c);
+      if (i === -1) state.colors.push(c); else { state.colors.splice(i,1); delete state.split[c]; }
+      renderColorPanel(); renderSplit(); sync();
+    });
+  });
+  renderPicked();
+}
+function renderPicked(){
+  const row = $("pickedRow");
+  if (!row) return;
+  if (!state.colors.length){ row.innerHTML = ""; $("ddLabel").textContent = "Select a color"; return; }
+  $("ddLabel").textContent = state.colors.length === 1 ? state.colors[0] : state.colors.length + " colors selected";
+  row.innerHTML = state.colors.map(c =>
+    '<span class="pchip"><img src="' + colorImg(state.style, c) + '" alt="' + c + '" onerror="this.onerror=null;this.src=\'' + state.style.imgs[0] + '\'">' +
+    c + '<button type="button" data-remove="' + c + '" aria-label="Remove ' + c + '">&times;</button></span>').join("");
+  row.querySelectorAll("[data-remove]").forEach(b => {
+    b.addEventListener("click", () => {
+      const c = b.dataset.remove;
+      state.colors = state.colors.filter(x => x !== c);
+      delete state.split[c];
+      renderColorPanel(); renderSplit(); sync();
+    });
+  });
+}
 
-  $("deco").innerHTML = DECOS.map(d =>
-    `<button type="button" class="chip ${d.id===state.deco.id?'on':''}" data-d="${d.id}">${d.label}${d.add?` <small>+${money(d.add)}/hat</small>`:''}</button>`).join("");
-  $("deco").querySelectorAll('.chip').forEach(b =>
-    b.addEventListener('click', () => { state.deco = DECOS.find(d=>d.id===b.dataset.d); render(); }));
+/* ---------- step 2: quantity + split ---------- */
+function renderSplit(){
+  const host = $("splitHost");
+  if (!host) return;
+  if (state.colors.length < 2){ host.innerHTML = ""; return; }
+  const total = Object.values(state.split).reduce((a,b) => a + (+b || 0), 0);
+  const target = state.qty || 0;
+  const bad = target && total !== target;
+  host.innerHTML =
+    '<div class="split"><div class="split-head">How many of each color?</div>' +
+    state.colors.map(c =>
+      '<div class="split-row"><img src="' + colorImg(state.style, c) + '" alt="' + c + '" onerror="this.onerror=null;this.src=\'' + state.style.imgs[0] + '\'">' +
+      '<span class="nm">' + c + '</span>' +
+      '<input type="number" min="0" inputmode="numeric" data-split="' + c + '" value="' + (state.split[c] != null ? state.split[c] : "") + '" placeholder="0"></div>').join("") +
+    '<div class="split-total ' + (bad ? "bad" : "") + '"><span>Allocated</span><span>' + total +
+    (target ? " of " + target : "") + (bad ? " (needs to match)" : "") + '</span></div></div>';
+  host.querySelectorAll("[data-split]").forEach(inp => {
+    inp.addEventListener("input", () => { state.split[inp.dataset.split] = +inp.value || 0; renderSplit(); sync(); });
+  });
+}
+function evenSplit(){
+  if (state.colors.length < 2 || !state.qty) return;
+  const base = Math.floor(state.qty / state.colors.length);
+  let rem = state.qty - base * state.colors.length;
+  state.colors.forEach(c => { state.split[c] = base + (rem-- > 0 ? 1 : 0); });
+}
 
-  $("placements").innerHTML = PLACEMENTS.map(p =>
-    `<button type="button" class="chip ${state.placements.has(p.id)?'on':''}" data-p="${p.id}">${p.label}${p.add?` <small>+${money(p.add)}/hat</small>`:''}</button>`).join("");
-  $("placements").querySelectorAll('.chip').forEach(b =>
-    b.addEventListener('click', () => {
-      const p = b.dataset.p;
-      if (p === "front") return;
-      state.placements.has(p) ? state.placements.delete(p) : state.placements.add(p);
-      render();
+/* ---------- step 3: design ---------- */
+function renderDesign(){
+  $("decos").innerHTML = DECOS.map(d =>
+    '<button type="button" class="chip ' + (d.id === state.deco.id ? "on" : "") + '" data-d="' + d.id + '">' + d.label +
+    (d.add ? '<span class="tag">+' + money(d.add) + '/hat</span>' : '<span class="tag inc">Included</span>') + '</button>').join("");
+  $("decos").querySelectorAll("[data-d]").forEach(b =>
+    b.addEventListener("click", () => { state.deco = DECOS.find(d => d.id === b.dataset.d); renderDesign(); sync(); }));
+
+  $("places").innerHTML = PLACEMENTS.map(p =>
+    '<button type="button" class="chip ' + (state.places.has(p.id) ? "on" : "") + '" data-p="' + p.id + '">' + p.label +
+    (p.add ? '<span class="tag">+' + money(p.add) + '/hat</span>' : '<span class="tag inc">Included</span>') + '</button>').join("");
+  $("places").querySelectorAll("[data-p]").forEach(b =>
+    b.addEventListener("click", () => {
+      const pl = PLACEMENTS.find(x => x.id === b.dataset.p);
+      if (pl.locked) return;
+      state.places.has(pl.id) ? state.places.delete(pl.id) : state.places.add(pl.id);
+      renderDesign(); sync();
     }));
 
-  // front logo position (left/center/right)
   const fpWrap = $("frontPosWrap");
-  if (fpWrap) fpWrap.style.display = state.placements.has("front") ? "" : "none";
-  const fp = $("frontPos");
-  if (fp){
-    fp.innerHTML = FRONT_POSITIONS.map(pos =>
-      `<button type="button" class="chip ${state.frontPos===pos?'on':''}" data-fp="${pos}">${pos}</button>`).join("");
-    fp.querySelectorAll('.chip').forEach(b =>
-      b.addEventListener('click', () => { state.frontPos = b.dataset.fp; render(); }));
+  if (fpWrap){
+    fpWrap.style.display = state.places.has("front") ? "" : "none";
+    $("frontPos").innerHTML = FRONT_POSITIONS.map(p =>
+      '<button type="button" class="chip ' + (p === state.frontPos ? "on" : "") + '" data-fp="' + p + '">' + p + '</button>').join("");
+    $("frontPos").querySelectorAll("[data-fp]").forEach(b =>
+      b.addEventListener("click", () => { state.frontPos = b.dataset.fp; renderDesign(); sync(); }));
   }
-
-  updateBarBtn();
-  updatePricingUI();
   renderUploads();
-  accSummaries();
-  // reveal the bottom bar only after they've started selecting
-  const sb = $("scoreboard");
-  if (sb) sb.classList.toggle("sb-hidden", !state.hasChosen);
 }
 
-function activeUploadSlots(){
-  return ["front","side","back"].filter(p => p === "front" || state.placements.has(p));
-}
+// One upload slot per selected location, clearly labeled so buyers know which artwork goes where.
 function renderUploads(){
-  const slots = activeUploadSlots();
-  $("uploads").innerHTML = slots.map(p => {
-    const f = state.files[p];
-    const label = PLACEMENTS.find(x=>x.id===p).label;
-    return `<label class="upload ${f?'has-file':''}">
-      <input type="file" data-slot="${p}" accept="image/*,.pdf,.ai,.eps,.svg">
-      <div class="u-title">${f ? f.name : label + " logo"}</div>
-      <div class="u-sub">${f ? "✓ attached, tap to swap" : "Tap to upload"}</div>
-    </label>`;
+  const host = $("uploads");
+  if (!host) return;
+  const chosen = PLACEMENTS.filter(p => state.places.has(p.id));
+  host.innerHTML = chosen.map(p => {
+    const f = state.files[p.id];
+    return '<div class="up-slot ' + (p.id === "front" ? "req" : "") + '">' +
+      '<div class="up-slot-label">' + p.label + ' logo ' +
+        (p.add ? '<span class="up-tag">+' + money(p.add) + '/hat</span>' : '<span class="up-tag inc">Included</span>') +
+      '</div>' +
+      '<div class="up-slot-sub">' + (p.id === "front"
+        ? "Your main logo, stitched on the front panel."
+        : "Artwork for the " + p.label.toLowerCase() + " of the hat.") + '</div>' +
+      '<input type="file" data-up="' + p.id + '" accept=".png,.jpg,.jpeg,.pdf,.ai,.svg,image/*">' +
+      (f ? '<div class="up-have">Attached: ' + f.name + '</div>' : "") +
+    '</div>';
   }).join("");
-  $("uploads").querySelectorAll("input[type=file]").forEach(inp =>
+  host.querySelectorAll("[data-up]").forEach(inp => {
     inp.addEventListener("change", e => {
-      const f = e.target.files[0];
-      if (f && f.size > 10 * 1024 * 1024){
-        alert("That file is over 10 MB. Try a smaller export, or email it to help@threadbreak.com after checkout.");
-        e.target.value = "";
-        return;
-      }
-      state.files[e.target.dataset.slot] = f || null;
+      const file = e.target.files && e.target.files[0];
+      if (file && file.size > 10 * 1024 * 1024){ alert("That file is over 10 MB. Please send a smaller file or email it to help@threadbreak.com."); e.target.value = ""; return; }
+      state.files[inp.dataset.up] = file || null;
       renderUploads();
-    }));
+    });
+  });
+  // drop files for locations that are no longer selected
+  ["side","back"].forEach(id => { if (!state.places.has(id)) state.files[id] = null; });
 }
 
-$("qty").addEventListener("input", e => {
-  const v = Math.max(1, parseInt(e.target.value || "1", 10));
-  state.qty = Math.max(1, v);
-  state.qtyTouched = true;
-  evenSplit();
-  renderColors();
-  updatePricingUI();
-});
-$("qty").addEventListener("blur", e => {
-  if (parseInt(e.target.value || "0", 10) < 1) e.target.value = 1;
-});
+/* ---------- review ---------- */
+function renderReview(){
+  const each = perHat();
+  const places = [...state.places].map(id => id === "front"
+    ? "Front (" + state.frontPos + ")"
+    : (PLACEMENTS.find(p => p.id === id) || {}).label || id);
+  const rows = [
+    ["Hat", state.style ? nameOf(state.style) + " (" + state.style.brand + ")" : "-"],
+    ["Colors", colorSummary()],
+    ["Sizing", state.style ? sizingOf(state.style) : "-"],
+    ["Quantity", state.qty || "-"],
+    ["Decoration", state.deco.label],
+    ["Placement", places.join(", ")],
+    ["Price per hat", each ? money(each) : "-"],
+    ["Order total", each && state.qty ? money(each * state.qty) : "-"]
+  ];
+  $("review").innerHTML = rows.map(r =>
+    '<div class="rev-line"><span>' + r[0] + '</span><strong>' + r[1] + '</strong></div>').join("");
+}
 
+/* ---------- step machinery ---------- */
+function canLeave(step){
+  if (step === 1) return !!state.style && state.colors.length > 0;
+  if (step === 2){
+    if (!state.qty || state.qty < 1) return false;
+    if (state.colors.length > 1){
+      const t = Object.values(state.split).reduce((a,b) => a + (+b || 0), 0);
+      return t === state.qty;
+    }
+    return true;
+  }
+  return true;
+}
+function goto(step){
+  state.step = step;
+  if (step > state.maxStep) state.maxStep = step;
+  document.querySelectorAll("#tbco .step").forEach(sec => {
+    sec.classList.toggle("active", +sec.dataset.step === step);
+  });
+  if (step === 4) renderReview();
+  renderRail();
+  const rail = $("rail");
+  if (rail) rail.scrollIntoView({ behavior: "smooth", block: "start" });
+  sync();
+}
+function resetToStep1(){
+  state.style = null; state.colors = []; state.split = {};
+  state.done.delete(1); state.maxStep = 1;
+  renderHats();
+}
+function renderRail(){
+  const names = ["Hat & colors", "Quantity", "Design", "Review"];
+  $("rail").innerHTML = names.map((n, i) => {
+    const step = i + 1;
+    const cls = state.step === step ? "active" : (state.done.has(step) ? "done" : "");
+    const mark = (state.done.has(step) && state.step !== step) ? "&#10003;" : step;
+    return '<div class="rail-item ' + cls + '" data-goto="' + step + '"><span class="dot">' + mark + '</span>' + n + '</div>';
+  }).join("");
+  $("rail").querySelectorAll("[data-goto]").forEach(el => {
+    const t = +el.dataset.goto;
+    const reachable = t <= state.maxStep || (t === state.step + 1 && canLeave(state.step));
+    el.style.opacity = reachable ? "1" : ".45";
+    el.style.cursor = reachable ? "pointer" : "not-allowed";
+    el.addEventListener("click", () => {
+      if (!reachable) return;
+      if (t > state.step){ state.done.add(state.step); if (state.colors.length > 1) evenSplit(); renderSplit(); }
+      if (t === 1) resetToStep1();
+      goto(t);
+    });
+  });
+}
+
+/* ---------- summaries + sticky bar ---------- */
+function sync(){
+  $("sum1").innerHTML = state.style
+    ? nameOf(state.style) + (state.colors.length ? " &middot; " + (state.colors.length === 1 ? state.colors[0] : state.colors.length + " colors") : "")
+    : "";
+  $("sum2").textContent = state.qty ? state.qty + " hats" : "";
+  $("sum3").textContent = state.deco.label;
+  $("sum4").textContent = "";
+
+  $("next1").disabled = !canLeave(1);
+  $("next2").disabled = !canLeave(2);
+
+  const each = perHat();
+  const pn = $("priceNow");
+  if (pn){
+    pn.style.display = (each && state.qty) ? "flex" : "none";
+    if (each && state.qty){
+      pn.innerHTML =
+        '<div class="pn"><span class="pn-l">Price per hat</span><span class="pn-v">' + money(each) + '</span></div>' +
+        '<div class="pn"><span class="pn-l">' + state.qty + ' hats</span><span class="pn-v">' + money(each * state.qty) + '</span></div>' +
+        '<div class="pn-note">Includes front embroidery, free digitizing, and free US shipping.</div>';
+    }
+  }
+  const nt = nextTier();
+  $("nudge").innerHTML = (nt && state.qty)
+    ? '<div class="tier-nudge">Add ' + (nt[0] - state.qty) + ' more and your price drops to ' + money(nt[1]) + '/hat.</div>'
+    : "";
+
+  $("barQty").textContent = state.qty || 0;
+  $("barEach").textContent = each ? money(each) : "-";
+  $("barTotal").textContent = each && state.qty ? money(each * state.qty) : "-";
+  $("bar").classList.toggle("show", !!state.style);
+  $("barCta").textContent = state.step === 4 ? "Add to Cart" : "Continue";
+  $("barCta").disabled = state.step < 4 && !canLeave(state.step);
+}
+
+/* ---------- Apps Script + cart plumbing ---------- */
 function fileToB64(file){
   return new Promise((res, rej) => {
     const r = new FileReader();
@@ -1290,61 +1013,55 @@ function fileToB64(file){
 }
 function orderMeta(){
   const per = perHat();
-  const meta = {
-    name: $("custName")?.value.trim() || "",
-    email: $("custEmail")?.value.trim() || "",
-    phone: $("custPhone")?.value.trim() || "",
-    style: quoteMode() ? (($("quoteStyle")?.value.trim()) || "Different style (see notes)") : state.style.name,
-    requestedStyle: quoteMode() ? ($("quoteStyle").value.trim() || "Not specified, see notes") : "",
-    color: quoteMode() ? ($("quoteColor")?.value.trim() || "Not specified") : colorSummary(),
+  const places = [...state.places].map(id => id === "front"
+    ? "Front (" + state.frontPos + ")"
+    : (PLACEMENTS.find(p => p.id === id) || {}).label || id);
+  return {
+    name: ($("custName") && $("custName").value.trim()) || "",
+    email: ($("custEmail") && $("custEmail").value.trim()) || "",
+    phone: ($("custPhone") && $("custPhone").value.trim()) || "",
+    style: state.style ? state.style.name : "",
+    requestedStyle: "",
+    color: colorSummary(),
     qty: state.qty,
+    sizing: state.style ? sizingOf(state.style) : "",
     deco: state.deco.label,
-    placements: [...state.placements].map(p=> p==="front" ? `Front (${state.frontPos})` : PLACEMENTS.find(x=>x.id===p).label).join(", "),
-    notes: $("notes").value.trim() || "-",
-    social: $("noSocial")?.checked ? "Do NOT share on social" : "OK to share on social",
-    estimate: per === null ? "quote" : money(per) + "/hat, " + money(per*state.qty) + " total"
+    placements: places.join(", "),
+    notes: ($("notes") && $("notes").value.trim()) || "-",
+    social: ($("noSocial") && $("noSocial").checked) ? "Do NOT share on social" : "OK to share on social",
+    estimate: per === null ? "quote" : money(per) + "/hat, " + money(per * state.qty) + " total"
   };
-  if (state.style.youth) meta.sizing = state.sizing;
-  return meta;
 }
-function scriptConfigured(){ return APPS_SCRIPT_URL && !APPS_SCRIPT_URL.startsWith("PASTE"); }
+function scriptConfigured(){ return APPS_SCRIPT_URL && APPS_SCRIPT_URL.indexOf("PASTE") !== 0; }
+
 async function sendToDrive(type){
   if (!scriptConfigured()) return { ok:false, skipped:true, uploaded:[] };
-  const uploaded = [];
-  const files = [];
+  const uploaded = [], files = [];
   for (const p of activeUploadSlots()){
     const f = state.files[p];
     if (!f) continue;
-    files.push({
-      placement: PLACEMENTS.find(x=>x.id===p).label,
-      name: f.name,
-      mimeType: f.type || "application/octet-stream",
-      data: await fileToB64(f)
-    });
-    uploaded.push(PLACEMENTS.find(x=>x.id===p).label);
+    const label = (PLACEMENTS.find(x => x.id === p) || {}).label || p;
+    files.push({ placement: label, name: f.name, mimeType: f.type || "application/octet-stream", data: await fileToB64(f) });
+    uploaded.push(label);
   }
-  const body = JSON.stringify({ type, meta: orderMeta(), files });
+  const body = JSON.stringify({ type: type, meta: orderMeta(), files: files });
 
-  // show the progress UI, start animated immediately so there's always motion
   const box = $("uploadProgress"), fill = $("upFill"), label = $("upLabel");
   const hasLogo = files.length > 0;
-  const workingText = hasLogo ? "Sending your logo…" : (type === "quote" ? "Submitting your request…" : "Submitting…");
-  const doneText = hasLogo ? "Logo sent ✓" : "Submitted ✓";
+  const workingText = hasLogo ? "Sending your logo..." : "Submitting...";
+  const doneText = hasLogo ? "Logo sent" : "Submitted";
   if (box) box.style.display = "block";
   if (label) label.textContent = workingText;
-  // simulated steady climb so the bar always moves, even if the browser
-  // fires no upload-progress events (common for cross-origin Apps Script).
   let simPct = 8;
-  if (fill){ fill.classList.remove("indeterminate"); fill.style.width = simPct + "%"; }
+  if (fill) fill.style.width = simPct + "%";
   const simTimer = setInterval(() => {
-    // ease toward 90% and hold there until the request resolves
     if (simPct < 90){ simPct += Math.max(1, (90 - simPct) * 0.08); if (fill) fill.style.width = simPct + "%"; }
   }, 200);
 
   return new Promise(resolve => {
-    const finish = (result) => {
+    const finish = result => {
       clearInterval(simTimer);
-      if (fill){ fill.classList.remove("indeterminate"); fill.style.width = "100%"; }
+      if (fill) fill.style.width = "100%";
       if (label) label.textContent = doneText;
       setTimeout(() => resolve(result), 300);
     };
@@ -1357,74 +1074,51 @@ async function sendToDrive(type){
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: body
     })
-    .then(() => finish({ ok:true, uploaded }))
-    .catch(() => { clearInterval(simTimer); resolve({ ok:false, uploaded }); });
+    .then(() => finish({ ok:true, uploaded:uploaded }))
+    .catch(() => { clearInterval(simTimer); resolve({ ok:false, uploaded:uploaded }); });
   });
 }
 
-async function submitQuote(){
-  const btn = $("sbSummaryCheckout") || $("submitBtn");
-  if (btn) btn.disabled = true;
-  const meta = orderMeta();
-  const summary = [
-    `Name: ${meta.name}`, `Email: ${meta.email}`, `Phone: ${meta.phone || "-"}`,
-    `Requested style/brand: ${meta.requestedStyle}`,
-    `Color(s): ${meta.color}`, `Quantity: ${meta.qty}`,
-    `Decoration: ${meta.deco}`, `Placements: ${meta.placements}`,
-    `Notes: ${meta.notes}`, `Social: ${meta.social}`
-  ].join("\n");
-
-  const sent = await sendToDrive("quote");
-  if (btn){ btn.disabled = false; btn.textContent = "Request my quote"; }
-
-  // close the review modal
-  closeSummary();
-
-  if (sent.ok){
-    $("confTitle").textContent = "Request sent ✓";
-    $("confBody").innerHTML = "Thanks " + (meta.name ? meta.name.split(" ")[0] : "") + "! We've got your request" + (sent.uploaded.length ? ", logo and all" : "") + ". We'll follow up from <strong>help@threadbreak.com</strong> once we've reviewed your request. Here's a copy of what you sent:";
-  } else {
-    $("confTitle").textContent = "Almost there, hit send";
-    $("confBody").innerHTML = "Your quote request just opened in your email app. Press send and we'll follow up once we've reviewed it. If you have a logo, attach it to that email too. Here's your summary:";
-    window.location.href = `mailto:${QUOTE_EMAIL}?subject=${encodeURIComponent("Custom Hat Quote Request")}&body=${encodeURIComponent("CUSTOM HAT QUOTE REQUEST (threadbreak.com)\n\n" + summary)}`;
-  }
-  $("summary").textContent = summary;
-
-  // hide the form + sticky bar, reveal the confirmation
-  const steps = $("tbFormSteps"); if (steps) steps.style.display = "none";
-  const bar = $("scoreboard"); if (bar) bar.style.display = "none";
-  $("confirm").classList.add("show");
-  $("confirm").scrollIntoView({ behavior:"smooth", block:"center" });
-}
-
 async function submitCheckout(){
-  const btn = $("sbSummaryCheckout") || $("submitBtn");
+  const btn = $("checkout");
+  const email = ($("custEmail") && $("custEmail").value.trim()) || "";
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    alert("Please enter a valid email so we can send your mockup for approval.");
+    if ($("custEmail")) $("custEmail").focus();
+    return;
+  }
   btn.disabled = true;
   $("cartErr").classList.remove("show");
 
   const hasFiles = activeUploadSlots().some(p => state.files[p]);
   let artNote = "Customer will email logo to help@threadbreak.com";
   if (hasFiles){
-    btn.textContent = "Sending logo…";
+    btn.textContent = "Sending logo...";
     const up = await sendToDrive("order-artwork");
-    if (up.ok) artNote = "Uploaded ✓ (" + up.uploaded.join(", ") + ")";
-    else artNote = "ACTION: email customer for logo (upload not received)";
+    artNote = up.ok ? ("Uploaded (" + up.uploaded.join(", ") + ")") : "ACTION: email customer for logo (upload not received)";
+  } else {
+    await sendToDrive("order-details");
   }
 
-  btn.textContent = "Adding…";
+  btn.textContent = "Adding...";
   const meta = orderMeta();
   const tier = tierFor(state.style, state.qty);
-  const props = { "Hat Color(s)": meta.color, "Decoration": meta.deco, "Placements": meta.placements, "Artwork": artNote };
-  if (meta.sizing) props["Sizing"] = meta.sizing;
+  const props = {
+    "Hat Color(s)": meta.color,
+    "Sizing": meta.sizing,
+    "Decoration": meta.deco,
+    "Placements": meta.placements,
+    "Artwork": artNote
+  };
   if (meta.notes !== "-") props["Notes"] = meta.notes;
   props["Social sharing"] = meta.social;
 
   const items = [{ id: tier[2], quantity: state.qty, properties: props }];
   if (state.deco.variantId)
     items.push({ id: state.deco.variantId, quantity: state.qty, properties: { "Applies to": state.style.name } });
-  for (const p of state.placements) {
-    const pl = PLACEMENTS.find(x=>x.id===p);
-    if (pl.variantId)
+  for (const p of state.places){
+    const pl = PLACEMENTS.find(x => x.id === p);
+    if (pl && pl.variantId)
       items.push({ id: pl.variantId, quantity: state.qty, properties: { "Applies to": state.style.name } });
   }
 
@@ -1432,231 +1126,59 @@ async function submitCheckout(){
     const res = await fetch("/cart/add.js", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items })
+      body: JSON.stringify({ items: items })
     });
     if (!res.ok) throw new Error("cart add failed");
     window.location.href = "/checkout";
   } catch (e) {
-    btn.disabled = false; btn.textContent = "Checkout";
+    btn.disabled = false; btn.textContent = "Add to Cart";
     $("cartErr").classList.add("show");
     $("cartErr").scrollIntoView({ behavior:"smooth", block:"center" });
   }
 }
 
-function accSummaries(){
-  // Step 1: chosen hat
-  const s1 = $("sum1");
-  if (s1) s1.textContent = state.hasChosen ? (state.style.quote ? "Different style (custom quote)" : state.style.name) : "";
-  // Step 2: quantity
-  const s2 = $("sum2");
-  if (s2) s2.textContent = state.hasChosen ? `${state.qty} hats total` : "";
-  // Step 3: colors
-  const s3 = $("sum3");
-  if (s3) s3.textContent = state.hasChosen ? colorSummary() : "";
-  // Step 4: decoration + placements
-  const s4 = $("sum4");
-  if (s4){
-    const places = [...state.placements].map(p => p==="front" ? `Front (${state.frontPos})` : ((PLACEMENTS.find(x=>x.id===p)||{}).label || p));
-    s4.textContent = state.hasChosen ? `${state.deco.label}${places.length?" · "+places.join(", "):""}` : "";
-  }
-}
-
-function markDone(step, done){
-  const sec = document.querySelector(`.acc[data-step="${step}"]`);
-  if (sec) sec.classList.toggle("done", !!done);
-}
-
-function setOpen(step, open){
-  const sec = document.querySelector(`.acc[data-step="${step}"]`);
-  if (sec) sec.classList.toggle("open", open);
-}
-
-function updateBarBtn(){
-  const label = quoteMode() ? "Review quote" : "Review order";
-  const btn = $("submitBtn");
-  const step4Open = document.querySelector('.acc[data-step="4"]')?.classList.contains("open");
-  if (btn){
-    // only show the bar button once they've opened the final step
-    btn.style.display = step4Open ? "" : "none";
-    btn.textContent = label;
-  }
-  // Mobile sticky "Continue": visible when a style is chosen but they're not yet on the final step.
-  // Advances whichever step is currently open, so the action is always reachable without scrolling.
-  const cont = $("sbContinue");
-  if (cont){
-    let openStep = 0;
-    for (let s = 1; s <= 3; s++){
-      if (document.querySelector(`.acc[data-step="${s}"]`)?.classList.contains("open")) { openStep = s; }
-    }
-    // step 1 is the styles section (always open at start); show once they've chosen a style
-    const showContinue = state.hasChosen && !step4Open && openStep >= 1;
-    cont.classList.toggle("sb-continue-on", showContinue);
-    cont.dataset.step = openStep || 1;
-  }
-  // keep the step-4 button in sync (preserve its arrow icon)
-  document.querySelectorAll('[data-checkout]').forEach(b => {
-    const svg = b.querySelector("svg");
-    b.textContent = label + " ";
-    if (svg) b.appendChild(svg);
+/* ---------- wire up ---------- */
+function bindToggle(btnId, panelId, showText, hideText){
+  const b = $(btnId), p = $(panelId);
+  if (!b || !p) return;
+  b.addEventListener("click", () => {
+    const hidden = p.hasAttribute("hidden");
+    if (hidden){ p.removeAttribute("hidden"); b.textContent = hideText; }
+    else { p.setAttribute("hidden",""); b.textContent = showText; }
   });
 }
 
-function initAccordion(){
-  // header click toggles that step open/closed (multiple can be open)
-  document.querySelectorAll('[data-acc-toggle]').forEach(head => {
-    head.addEventListener("click", () => {
-      head.closest(".acc").classList.toggle("open");
-      updateBarBtn();
-    });
+$("qty").addEventListener("input", e => {
+  state.qty = +e.target.value || null;
+  if (state.colors.length > 1) evenSplit();
+  renderSplit(); sync();
+});
+$("next1").addEventListener("click", () => { state.done.add(1); if (state.colors.length > 1) evenSplit(); renderSplit(); goto(2); });
+$("next2").addEventListener("click", () => { state.done.add(2); goto(3); });
+$("next3").addEventListener("click", () => { state.done.add(3); goto(4); });
+$("checkout").addEventListener("click", submitCheckout);
+$("barCta").addEventListener("click", () => {
+  if (state.step === 4){ submitCheckout(); return; }
+  if (!canLeave(state.step)) return;
+  state.done.add(state.step);
+  if (state.step === 1 && state.colors.length > 1){ evenSplit(); renderSplit(); }
+  goto(Math.min(state.step + 1, 4));
+});
+document.querySelectorAll("#tbco [data-back]").forEach(b => {
+  b.addEventListener("click", () => {
+    const t = +b.dataset.back;
+    if (t === 1) resetToStep1();
+    goto(t);
   });
-  // Continue buttons: mark done, collapse this step, open next, then gently scroll after collapse settles
-  document.querySelectorAll('[data-continue]').forEach(btn => {
-    btn.addEventListener("click", () => {
-      const step = +btn.getAttribute("data-continue");
-      // step 3 (colors): buy mode needs a picked color; quote mode needs the text field
-      if (step === 3){
-        if (quoteMode()){
-          const qc = $("quoteColor");
-          if (qc && qc.value.trim() === ""){
-            const hint = $("colorHint");
-            if (hint){ hint.textContent = "Please tell us a color to continue."; hint.style.color = "#C22B3F"; hint.style.display = "block"; }
-            qc.focus(); qc.scrollIntoView({ behavior:"smooth", block:"center" });
-            return;
-          }
-        } else if (state.colorSel.length === 0){
-          const hint = $("colorHint");
-          if (hint){ hint.textContent = "Please pick at least one color to continue."; hint.style.color = "#C22B3F"; }
-          const dd = $("cddTrigger"); if (dd) dd.scrollIntoView({ behavior:"smooth", block:"center" });
-          return;
-        }
-      }
-      markDone(step, true);
-      setOpen(step + 1, true);
-      updateBarBtn();
-      const next = document.querySelector(`.acc[data-step="${step+1}"]`);
-      if (next){
-        // no collapse of the current step, so the page doesn't jump.
-        // wait briefly for the next step to expand, then glide to it.
-        setTimeout(() => {
-          const y = next.getBoundingClientRect().top + window.pageYOffset - 90;
-          easeScrollTo(y, 650);
-        }, 120);
-      }
-    });
-  });
+});
 
-  // Mobile sticky Continue: proxy to the in-page Continue button for the current open step
-  const sbCont = $("sbContinue");
-  if (sbCont){
-    sbCont.addEventListener("click", () => {
-      const step = +(sbCont.dataset.step || 1);
-      const target = document.querySelector(`[data-continue="${step}"]`);
-      if (target) target.click();
-    });
-  }
+bindToggle("puffBtn","puffInfo","What is 3D puff?","Hide");
+bindToggle("enToggle","enExample","View example","Hide example");
 
-  // gentle eased scroll (consistent speed, softer than native smooth)
-  function easeScrollTo(targetY, duration){
-    const startY = window.pageYOffset;
-    const dist = targetY - startY;
-    if (Math.abs(dist) < 4) return;
-    const start = performance.now();
-    const ease = t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
-    function step(now){
-      const p = Math.min(1, (now - start) / duration);
-      window.scrollTo(0, startY + dist * ease(p));
-      if (p < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
-  // Step 4's button opens the order-review modal
-  document.querySelectorAll('[data-checkout]').forEach(btn => {
-    btn.addEventListener("click", () => {
-      if (!quoteMode() && !state.qtyTouched){
-        const qi = $("qty");
-        if (qi){
-          qi.focus();
-          qi.scrollIntoView({ behavior:"smooth", block:"center" });
-          qi.classList.add("qty-nudge");
-          setTimeout(() => qi.classList.remove("qty-nudge"), 1200);
-        }
-        return;
-      }
-      markDone(4, true); openSummary();
-    });
-  });
-  const sc = $("sbSummaryClose");
-  if (sc) sc.addEventListener("click", closeSummary);
-  const ov = $("sbOverlay");
-  if (ov) ov.addEventListener("click", closeSummary);
-  document.addEventListener("keydown", e => { if (e.key === "Escape") closeSummary(); });
-}
+renderHats();
+renderDesign();
+renderRail();
+sync();
+})();
 
-function validateContact(){
-  // contact fields only exist / matter in quote mode; buy mode uses Shopify checkout
-  if (!quoteMode()) return true;
-  const name = $("custName")?.value.trim() || "";
-  const email = $("custEmail")?.value.trim() || "";
-  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const ok = name.length > 0 && emailOk;
-  const err = $("contactErr");
-  if (err) err.classList.toggle("show", !ok);
-  if (!ok){
-    const target = name.length === 0 ? $("custName") : $("custEmail");
-    if (target){ target.focus(); target.scrollIntoView({ behavior:"smooth", block:"center" }); }
-  }
-  return ok;
-}
-function openSummary(){
-  if (!validateContact()) return;
-  buildOrderSummary();
-  $("sbSummary").classList.add("open");
-  const ov = $("sbOverlay"); if (ov) ov.classList.add("open");
-}
-function closeSummary(){
-  $("sbSummary").classList.remove("open");
-  const ov = $("sbOverlay"); if (ov) ov.classList.remove("open");
-}
-
-function tbcoInit(){
-  const enT = $("enToggle"), enE = $("enExample");
-  if (enT && enE) enT.addEventListener("click", () => {
-    const show = enE.hasAttribute("hidden");
-    if (show){ enE.removeAttribute("hidden"); enT.setAttribute("aria-expanded","true"); enT.firstChild.textContent = "Hide example"; }
-    else { enE.setAttribute("hidden",""); enT.setAttribute("aria-expanded","false"); enT.firstChild.textContent = "View example"; }
-  });
-  const pib = $("puffInfoBtn"), pi = $("puffInfo");
-  if (pib && pi) pib.addEventListener("click", () => {
-    const open = pi.hasAttribute("hidden");
-    if (open){ pi.removeAttribute("hidden"); pib.setAttribute("aria-expanded","true"); pib.textContent = "Hide"; }
-    else { pi.setAttribute("hidden",""); pib.setAttribute("aria-expanded","false"); pib.textContent = "What is 3D puff?"; }
-  });
-  initAccordion();
-  // color dropdown open/close
-  const cddT = $("cddTrigger"), cddL = $("cddList"), cddCue = $("cddScrollCue");
-  function updateScrollCue(){
-    if (!cddCue || !cddL) return;
-    const canScroll = cddL.scrollHeight > cddL.clientHeight + 4;
-    const atBottom = cddL.scrollTop + cddL.clientHeight >= cddL.scrollHeight - 6;
-    const show = !cddL.classList.contains("hidden") && canScroll && !atBottom;
-    cddCue.classList.toggle("show", show);
-    cddL.classList.toggle("scrollable", show);
-  }
-  if (cddT && cddL){
-    cddT.addEventListener("click", () => {
-      const open = cddL.classList.toggle("hidden") === false;
-      cddT.classList.toggle("open", open);
-      cddT.setAttribute("aria-expanded", open ? "true" : "false");
-      updateScrollCue();
-    });
-    cddL.addEventListener("scroll", updateScrollCue, { passive: true });
-    document.addEventListener("click", e => {
-      if (!e.target.closest("#colorDD")){ cddL.classList.add("hidden"); cddT.classList.remove("open"); cddT.setAttribute("aria-expanded","false"); if (cddCue) cddCue.classList.remove("show"); cddL.classList.remove("scrollable"); }
-    });
-  }
-  $("submitBtn").addEventListener("click", openSummary);
-  render();
-}
-if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", tbcoInit);
-else tbcoInit();
 </script>
