@@ -52,6 +52,11 @@
   },
   "areaServed": "US",
   "priceRange": "$$",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "{{ shop.metafields.judgeme.all_reviews_rating | default: 5.0 | round: 1 }}",
+    "reviewCount": "{{ shop.metafields.judgeme.all_reviews_count | default: 45 }}"
+  },
   "hasMap": "https://www.google.com/maps/place/Threadbreak+-+Custom+Hat+Embroidery/@35.1705075,-79.86097,15z/data=!4m6!3m5!1s0x4894ed3daa75cd09:0xa65e93c4550cc52d!8m2!3d35.1705075!4d-79.86097",
   "geo": {
     "@type": "GeoCoordinates",

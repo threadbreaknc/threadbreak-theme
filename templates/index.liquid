@@ -15,7 +15,12 @@
       <a href="/collections/pre-made-hats" class="hc-cta-secondary">Shop Premade Hats</a>
       <a href="/pages/our-work" class="hc-cta-secondary">Our Work</a>
     </div>
-    <p class="hc-rating">&#9733; 4.9/5 from 45 verified customers</p>
+    <a href="/pages/reviews" class="hc-rating">
+      {%- assign jm_rating = shop.metafields.judgeme.all_reviews_rating | default: 5.0 -%}
+      {%- assign jm_count = shop.metafields.judgeme.all_reviews_count | default: 45 -%}
+      <span class="hc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+      {{ jm_rating | round: 1 }}/5 from {{ jm_count }} verified reviews
+    </a>
   </div>
 </section>
 
@@ -65,7 +70,9 @@
   </div>
 </section>
 <style>
-  .hc-rating{margin-top:18px;font-size:0.95rem;color:rgba(247,244,240,0.85);letter-spacing:.02em;}
+  .hc-rating{display:inline-flex;align-items:center;gap:8px;margin-top:18px;font-size:0.95rem;color:rgba(247,244,240,0.85);letter-spacing:.02em;text-decoration:none;transition:color .15s;}
+  .hc-rating:hover{color:#fff;}
+  .hc-stars{color:#F5C518;letter-spacing:1px;}
   .tb-industries{background:#fff;padding:4.5rem 2rem;}
   .tb-industries-inner{max-width:1100px;margin:0 auto;}
   .tb-industries-inner h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.9rem,3.5vw,2.8rem);color:#14121C;margin:0 0 0.5rem;line-height:1.05;}

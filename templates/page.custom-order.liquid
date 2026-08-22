@@ -278,6 +278,11 @@ body.quote-mode #tbco .buy-only {display:none}
 #tbco .confirm pre {background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px;font-size:13px;white-space:pre-wrap;font-family:'DM Sans',sans-serif;margin-top:12px}
 #tbco .err {color:#C22B3F;font-size:14px;margin-top:12px;display:none}
 /* ---- judge.me carousel ---- */
+#tbco .tbco-rating{max-width:520px;margin:0 auto;text-align:center;background:var(--ice);border:1px solid var(--line);border-radius:16px;padding:28px 24px}
+#tbco .tbco-rating-stars{display:block;font-size:26px;color:#F5C518;letter-spacing:3px;margin-bottom:10px}
+#tbco .tbco-rating-score{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--ink);margin:0 0 4px;line-height:1}
+#tbco .tbco-rating-count{font-size:14.5px;color:var(--muted);margin:0 0 14px}
+#tbco .tbco-rating-link{display:inline-block;font-size:14.5px;font-weight:600;color:var(--purple);text-decoration:underline}
 #tbco .jdgm-carousel-wrapper{text-align:center;margin:0 auto}
 #tbco .jdgm-carousel-title-and-link{text-align:center;margin-bottom:1.25rem}
 #tbco .jdgm-carousel-item{padding:0 16px !important}
@@ -511,23 +516,15 @@ body.quote-mode #tbco .buy-only {display:none}
     <div class="err" id="cartErr">Couldn't add to cart. This form talks to Shopify, so it only works when hosted on threadbreak.com. If you're seeing this on the live site, refresh and try again or email help@threadbreak.com.</div>
   </section>
 
-  <!-- REVIEWS -->
+  <!-- REVIEWS: compact rating overview (full reviews live on the reviews page) -->
   <section>
-<!-- Start of Judge.me code -->
-  <div class='jdgm-carousel-wrapper'>
-    {% assign jm_metafields = shop.metafields.judgeme %}
-    <div class='jdgm-carousel-title-and-link'>
-      <h2 class='jdgm-carousel-title'>Let customers speak for us</h2>
-      <span class='jdgm-all-reviews-rating-wrapper' href='javascript:void(0)'>
-        <span style='display:block' data-score='{{ jm_metafields.all_reviews_rating }}' class='jdgm-all-reviews-rating' aria-label='{{ jm_metafields.all_reviews_rating }} stars' tabindex='0' role='img'></span>
-        <span style='display: block' class='jdgm-carousel-number-of-reviews' data-number-of-reviews='{{ jm_metafields.all_reviews_count }}'>
-from {{ shop.metafields.judgeme.all_reviews_count }} reviews
-        </span>
-      </span>
+    <div class="tbco-rating">
+      {% assign jm = shop.metafields.judgeme %}
+      <span class="tbco-rating-stars" data-score="{{ jm.all_reviews_rating }}" class="jdgm-all-reviews-rating" role="img" aria-label="{{ jm.all_reviews_rating | default: 5.0 }} out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+      <p class="tbco-rating-score">{{ jm.all_reviews_rating | default: 5.0 | round: 1 }} out of 5</p>
+      <p class="tbco-rating-count">from {{ jm.all_reviews_count | default: 45 }} verified customer reviews</p>
+      <a href="/pages/reviews" class="tbco-rating-link">Read the reviews</a>
     </div>
-    {{ jm_metafields.featured_carousel }}
-  </div>
-<!-- End of Judge.me code -->
   </section>
   </div>
 
@@ -1628,18 +1625,6 @@ function tbcoInit(){
   }
   $("submitBtn").addEventListener("click", openSummary);
   render();
-  cleanupReviews();
-}
-
-// The empty bordered box is an empty <section> Judge.me leaves inside the
-// carousel wrapper. CSS :empty misses it (it contains whitespace), so hide it here.
-function cleanupReviews(){
-  const kill = () => {
-    document.querySelectorAll("#tbco .jdgm-carousel-wrapper section").forEach(sec => {
-      if (sec.textContent.trim() === "" && !sec.querySelector("img")) sec.style.display = "none";
-    });
-  };
-  [300, 900, 2000].forEach(t => setTimeout(kill, t));
 }
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", tbcoInit);
 else tbcoInit();
