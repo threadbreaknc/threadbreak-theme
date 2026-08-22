@@ -87,6 +87,14 @@ html {scroll-behavior:smooth}
 #tbco .style-brand {font-size:12px;color:var(--purple);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
 #tbco .style-desc {font-size:13px;color:var(--muted);margin-top:3px}
 #tbco .style-price {margin-top:6px;font-size:13px;font-weight:700;color:var(--purple)}
+#tbco .style-included{margin-top:3px;font-size:12px;color:var(--muted)}
+#tbco .color-disclosures{margin-top:14px;font-size:12.5px;line-height:1.6;color:var(--muted);background:var(--ice);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+#tbco .style-price-low{display:block;margin-top:2px;font-size:11.5px;font-weight:500;color:var(--muted)}
+#tbco .style-colors-btn{margin-top:8px;background:none;border:none;padding:0;font-family:inherit;font-size:12.5px;color:var(--muted);cursor:pointer;text-align:left}
+#tbco .style-colors-btn span{color:var(--purple);font-weight:600;text-decoration:underline}
+#tbco .style-colorpeek{margin-top:8px;padding:10px;background:var(--ice);border:1px solid var(--line);border-radius:10px;display:flex;flex-wrap:wrap;gap:5px}
+#tbco .peek-chip{font-size:11.5px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px 9px;color:#3d3a4a}
+#tbco .peek-note{flex:1 1 100%;margin:6px 0 0;font-size:11.5px;color:var(--muted)}
 #tbco .style-features {font-size:13px;line-height:1.5;color:var(--ink);margin-top:10px;padding-top:10px;border-top:1px solid var(--line);animation:featFade .25s ease}
 @keyframes featFade{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)}}
 #tbco /* ---------- expanded card photo viewer ---------- */
@@ -351,7 +359,7 @@ body.quote-mode #tbco .buy-only {display:none}
           <label class="field-label">What style or brand do you want?</label>
           <input type="text" id="quoteStyle" placeholder="e.g. dad cap, Flexfit fitted, Richardson 168, 5-panel...">
         </div>
-        <div class="acc-continue-row"><button type="button" class="acc-continue" data-continue="1">Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+        <div class="acc-continue-row"><button type="button" class="acc-continue" data-continue="1">Choose Quantity <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
       </div>
     </div>
   </section>
@@ -376,7 +384,7 @@ body.quote-mode #tbco .buy-only {display:none}
           <div class="savings" id="savings"></div>
         </div>
         <p class="hint quote-only">No set pricing on this one. Tell us how many and we'll quote it.</p>
-        <div class="acc-continue-row"><button type="button" class="acc-continue" data-continue="2">Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+        <div class="acc-continue-row"><button type="button" class="acc-continue" data-continue="2">Choose Colors <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
       </div>
     </div>
   </section>
@@ -384,14 +392,14 @@ body.quote-mode #tbco .buy-only {display:none}
   <!-- STEP 3: COLORS -->
   <section class="acc" data-step="3">
     <div class="step-head" data-acc-toggle>
-      <div class="step-num"><span>3</span></div><h2>What colors?</h2>
+      <div class="step-num"><span>3</span></div><h2>Choose your colors</h2>
       <svg class="acc-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
     </div>
     <div class="acc-summary" id="sum3"></div>
     <div class="acc-wrap">
-      <p class="step-sub">Pick as many as you like. Mixing colors doesn't cost extra. Split your total across them below.</p>
+      <p class="step-sub">You can mix hat colors within one order at no extra charge. Select each color you want, then enter how many of each below. All quantities count toward your total volume pricing.</p>
       <div class="step-body">
-        <label class="field-label buy-only" style="margin-top:0">Hat color (pick as many as you like)</label>
+        <label class="field-label buy-only" style="margin-top:0">Select one or more colors</label>
         <label class="field-label quote-only" style="margin-top:0">Hat color(s)</label>
         <div class="buy-only" id="colorBuyWrap">
           <div class="cdd" id="colorDD">
@@ -417,7 +425,8 @@ body.quote-mode #tbco .buy-only {display:none}
           <label class="field-label">Sizing</label>
           <div class="chips" id="sizes"></div>
         </div>
-        <div class="acc-continue-row"><button type="button" class="acc-continue" data-continue="3">Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
+        <p class="color-disclosures">Need different thread colors on different hat colors? Mention it in the notes and we'll reflect it in your mockup. Hat colors are subject to supplier availability; if your selection is unavailable, we'll contact you before processing the order.</p>
+        <div class="acc-continue-row"><button type="button" class="acc-continue" data-continue="3">Add Your Design <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
       </div>
     </div>
   </section>
@@ -865,9 +874,13 @@ function colorCss(name){
 function tenPriceLabel(s){
   // Show the 10-hat price (the realistic entry point for most buyers) plus the volume floor,
   // instead of leading with the 96+ price which reads as bait.
+  var oneTier = s.tiers.find(function(t){ return t[0] === 1; }) || s.tiers[0];
   var tenTier = s.tiers.find(function(t){ return t[0] === 10; }) || s.tiers[0];
   var low = s.tiers[s.tiers.length-1][1];
-  return money(tenTier[1]) + "/hat at 10 \u00b7 as low as " + money(low);
+  // Show the single-hat price up front now that there is no minimum, then the 10-hat
+  // price and the volume floor, so nothing reads as bait.
+  return money(oneTier[1]) + " for 1 \u00b7 " + money(tenTier[1]) + " each at 10"
+       + '<small class="style-price-low">as low as ' + money(low) + ' at 96+</small>';
 }
 
 function tierFor(style, qty){
@@ -1135,10 +1148,28 @@ function render(){
         <div class="style-brand">${s.brand}</div>
         <div class="style-desc">${s.desc}</div>
         <div class="style-price">${s.quote ? "Custom quote" : tenPriceLabel(s)}</div>
+        ${s.quote ? "" : `<div class="style-included">Front embroidery included</div>`}
+        ${s.colors && s.colors.length ? `<button type="button" class="style-colors-btn" data-colorpeek="${s.id}">Available in ${s.colors.length} colors &middot; <span>View colors</span></button>
+        <div class="style-colorpeek" id="peek-${s.id}" hidden>${s.colors.map(cl => `<span class="peek-chip">${cl}</span>`).join("")}<p class="peek-note">Pick your colors in step 3. Mixing colors costs nothing extra.</p></div>` : ""}
         ${sel && s.features ? `<div class="style-features">${s.features}</div>` : ""}
       </div>
     </label>`;
   }).join("");
+  // "View colors" preview: lets a buyer confirm their color exists before committing to a blank.
+  // Must not select the hat, so we stop the click from reaching the surrounding label.
+  document.querySelectorAll('[data-colorpeek]').forEach(btn => {
+    btn.addEventListener('click', ev => {
+      ev.preventDefault();
+      ev.stopPropagation();
+      const panel = document.getElementById('peek-' + btn.getAttribute('data-colorpeek'));
+      if (!panel) return;
+      const open = !panel.hasAttribute('hidden');
+      if (open) { panel.setAttribute('hidden',''); }
+      else { panel.removeAttribute('hidden'); }
+      const lbl = btn.querySelector('span');
+      if (lbl) lbl.textContent = open ? 'View colors' : 'Hide colors';
+    });
+  });
   document.querySelectorAll('input[name=style]').forEach(r =>
     r.addEventListener('change', e => {
       state.hasChosen = true;
