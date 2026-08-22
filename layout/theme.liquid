@@ -9,6 +9,15 @@
 <title>{{ page_title }}{% unless pt contains sn %} | {{ shop.name }}{% endunless %}</title>
 <meta name="description" content="{{ page_description | escape }}">
 
+{%- comment -%}
+  Backend-only products (the custom order form's hat + add-on products) must stay
+  published to the Online Store so /cart/add.js can reference their variants, but
+  they should never show up in search. Tagged custom-order-form.
+{%- endcomment -%}
+{%- if template contains 'product' and product.tags contains 'custom-order-form' -%}
+  <meta name="robots" content="noindex,nofollow">
+{%- endif -%}
+
 {%- comment -%} ===== SEO: favicon ===== {%- endcomment -%}
 {%- if settings.favicon != blank -%}
   <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
