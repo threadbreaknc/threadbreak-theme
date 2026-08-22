@@ -72,7 +72,7 @@
   /* expanded: brand mark moves up beside the title */
   #tbco .hat-titlerow{display:flex;align-items:flex-start;gap:12px}
   #tbco .hat-logo-lg{height:52px;width:auto;max-width:170px;object-fit:contain;flex:0 0 auto;margin-top:0}
-  #tbco .hat-heroimg{flex:0 0 auto;width:260px}
+  #tbco .hat-heroimg{width:100%}
   #tbco .hat-heroimg .hat-img{width:100%}
   #tbco .hat-herocap{text-align:center;font-size:12px;font-weight:600;color:var(--purple);background:var(--ice);border-radius:8px;padding:5px 8px;margin-top:6px}
   #tbco .pchip{cursor:pointer}
@@ -84,13 +84,26 @@
   #tbco .hat-colors{display:flex;align-items:center;gap:7px;margin-top:8px;font-size:12px;color:var(--muted)}
   #tbco .wheel{width:18px;height:18px;border-radius:50%;flex:0 0 auto;border:1px solid rgba(0,0,0,.12);background:conic-gradient(#e23b3b,#e2a13b,#d7e23b,#4ce23b,#3be2c0,#3b8fe2,#7a3be2,#e23bc0,#e23b3b)}
   #tbco .hat-badge{position:absolute;top:9px;left:9px;background:var(--purple);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;z-index:2}
-  #tbco .hat.on .hat-top{display:flex;gap:24px;align-items:flex-start;padding:6px 6px 0}
+  /* expanded: photo in the left column, details and colors stacked on the right */
+  #tbco .hat.on{display:grid;grid-template-columns:300px minmax(0,1fr);gap:0 26px;padding:18px;align-items:start}
+  #tbco .hat.on .hat-heroimg{grid-column:1;grid-row:1 / span 2;position:sticky;top:86px}
+  #tbco .hat.on .hat-info{grid-column:2;grid-row:1;padding:0}
+  #tbco .hat.on .hat-expand{grid-column:2;grid-row:2;border-top:none;margin-top:0;padding:0}
+  #tbco .hat.on .colorpanel{margin-top:16px}
+  @media(max-width:900px){
+    #tbco .hat.on{grid-template-columns:1fr;padding:14px}
+    #tbco .hat.on .hat-heroimg{grid-column:1;grid-row:1;position:static;max-width:320px;margin:0 auto}
+    #tbco .hat.on .hat-info{grid-column:1;grid-row:2;padding-top:14px}
+    #tbco .hat.on .hat-expand{grid-column:1;grid-row:3}
+  }
 
   #tbco .hat.on .hat-info{flex:1;padding-top:14px}
   @media(max-width:560px){
-    #tbco .hat.on .hat-top{display:block}
+    #tbco .hat.on{display:block;padding:0}
+    #tbco .hat.on .hat-heroimg{position:static;width:100%}
     #tbco .hat.on .hat-img{width:100%}
-    #tbco .hat.on .hat-info{padding-top:0}
+    #tbco .hat.on .hat-info{padding:12px 14px 0}
+    #tbco .hat.on .hat-expand{padding:0 14px 16px}
     /* two-up on phones keeps the photos small and the names above the fold */
     #tbco .hats{grid-template-columns:1fr 1fr;gap:10px}
     #tbco .hat-info{padding:10px 11px 12px}
@@ -778,7 +791,6 @@ function renderHats(){
     const shown = state.activeColor && s.colors.indexOf(state.activeColor) > -1 ? state.activeColor : null;
     const heroSrc = shown ? colorImg(s, shown) : s.imgs[0];
     return '<div class="hat on" data-hat="' + s.id + '">' + badge +
-      '<div class="hat-top">' +
         '<div class="hat-heroimg">' +
           '<img class="hat-img" id="hatHero" src="' + heroSrc + '" alt="' + nameOf(s) + '" loading="lazy" onerror="this.onerror=null;this.src=\'' + s.imgs[0] + '\'">' +
           '<div class="hat-herocap" id="hatHeroCap">' + (shown ? shown : "Pick a color to preview") + '</div>' +
@@ -797,7 +809,6 @@ function renderHats(){
           '</div>' +
           '<button type="button" class="hat-change" data-change="1">Choose a different hat</button>' +
         '</div>' +
-      '</div>' +
       '<div class="hat-expand" id="colorHost"></div></div>';
   }).join("");
 
@@ -1233,12 +1244,23 @@ async function submitCheckout(){
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ items: items })
     });
-    if (!res.ok) throw new Error("cart add failed");
+    if (!res.ok){
+      // Surface what Shopify actually said so a bad variant or sold-out add-on
+      // is obvious instead of a generic failure.
+      let detail = "";
+      try { const j = await res.json(); detail = j.description || j.message || ""; } catch(_) {}
+      throw new Error(detail || ("cart add failed (" + res.status + ")"));
+    }
     window.location.href = "/checkout";
   } catch (e) {
     btn.disabled = false; btn.textContent = "Add to Cart";
-    $("cartErr").classList.add("show");
-    $("cartErr").scrollIntoView({ behavior:"smooth", block:"center" });
+    const box = $("cartErr");
+    const msg = (e && e.message) ? e.message : "";
+    box.innerHTML = "Something went wrong adding this to your cart. Please try again, or email help@threadbreak.com and we'll sort it out."
+      + (msg ? '<br><span style="font-size:12px;opacity:.8">Details: ' + msg + '</span>' : "");
+    box.classList.add("show");
+    box.scrollIntoView({ behavior:"smooth", block:"center" });
+    console.error("[tbco] cart add failed", e, items);
   }
 }
 
