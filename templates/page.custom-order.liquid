@@ -60,7 +60,7 @@
   #tbco .hat:hover{border-color:#B7A6EE;transform:translateY(-2px)}
   #tbco .hat.on{border-color:var(--purple);box-shadow:0 6px 22px rgba(80,40,170,.18);overflow:visible;z-index:5}
   #tbco .hats.picking .hat{display:none}
-  #tbco .hats.picking .hat.on{cursor:default}
+  #tbco .hats.picking .hat.on{display:grid;cursor:default}
   #tbco .hats.picking .hat.on:hover{transform:none}
   #tbco .hat-img{width:100%;aspect-ratio:1/1;object-fit:contain;background:#fff;display:block}
   #tbco .hat-imgwrap{position:relative}
@@ -91,14 +91,14 @@
   #tbco .hat.on .hat-expand{grid-column:2;grid-row:2;border-top:none;margin-top:0;padding:0}
   #tbco .hat.on .colorpanel{margin-top:16px}
   @media(max-width:900px){
-    #tbco .hat.on{grid-template-columns:1fr;padding:14px}
+    #tbco .hat.on,#tbco .hats.picking .hat.on{grid-template-columns:1fr;padding:14px}
     #tbco .hat.on .hat-heroimg{grid-column:1;grid-row:1;position:static;max-width:260px;margin:0 auto}
     #tbco .hat.on .hat-info{grid-column:1;grid-row:2;padding-top:14px}
     #tbco .hat.on .hat-expand{grid-column:1;grid-row:3}
   }
 
   @media(max-width:560px){
-    #tbco .hat.on{display:block;padding:0}
+    #tbco .hat.on,#tbco .hats.picking .hat.on{display:block;padding:0}
     #tbco .hat.on .hat-heroimg{position:static;width:100%;max-width:none}
     #tbco .hat.on .hat-img{width:100%}
     #tbco .hat.on .hat-info{padding:12px 14px 0}
