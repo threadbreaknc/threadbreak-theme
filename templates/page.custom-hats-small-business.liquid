@@ -45,6 +45,19 @@
     @keyframes hatFade2{0%{opacity:0}6%{opacity:1}44%{opacity:1}56%{opacity:0}100%{opacity:0}}
     @media(max-width:600px){#tbindustry .ind-hero{padding-top:165px;}#tbindustry .ind-hats{grid-template-columns:1fr;}#tbindustry .ind-gallery-row img{max-width:100%;}}
     @media(prefers-reduced-motion:reduce){#tbindustry .ind-hat-photo img{animation:none;opacity:0;}#tbindustry .ind-hat-photo img:first-child{opacity:1;}}
+    #tbindustry .ind-cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;align-items:center;}
+    #tbindustry .ind-cta-alt{display:inline-flex;align-items:center;background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.45);text-decoration:none;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.05em;padding:.75rem 1.6rem;border-radius:12px;transition:border-color .18s,background .18s;}
+    #tbindustry .ind-cta-alt:hover{background:rgba(255,255,255,.08);border-color:#fff;}
+    #tbindustry .ind-usecase{background:var(--ice);border:1px solid var(--line);border-radius:16px;padding:28px;margin-top:8px;}
+    #tbindustry .ind-usecase h3{font-size:17px;font-weight:700;color:var(--purple);margin:0 0 10px;}
+    #tbindustry .ind-usecase ul{margin:0;padding-left:18px;}
+    #tbindustry .ind-usecase li{font-size:15px;line-height:1.65;color:#3d3a4a;margin-bottom:7px;}
+    #tbindustry .ind-racer{display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:center;}
+    #tbindustry .ind-racer img{width:100%;border-radius:16px;border:1px solid var(--line);box-shadow:0 10px 30px rgba(20,18,28,.18);display:block;}
+    #tbindustry .ind-crosslinks{border-top:1px solid var(--line);padding-top:26px;margin-top:8px;}
+    #tbindustry .ind-crosslinks p{font-size:14px;color:var(--muted);margin:0 0 10px;}
+    #tbindustry .ind-crosslinks a{display:inline-block;margin:0 14px 8px 0;font-size:14.5px;color:var(--purple);text-decoration:underline;}
+    @media(max-width:700px){#tbindustry .ind-racer{grid-template-columns:1fr;}}
   </style>
 
   <section class="ind-hero">
@@ -58,14 +71,14 @@
 
   <div class="ind-gallery">
     <div class="ind-gallery-row">
-      <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG-6154.jpg?v=1786922824&width=680&format=webp" alt="Custom embroidered hats" loading="lazy">
-      <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6CB0AC79-A34F-4B4D-AD9D-FBAEF30942E3.jpg?v=1786337802&width=680&format=webp" alt="Custom embroidered hats" loading="lazy">
+      <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG-6154.jpg?v=1786922824&width=680&format=webp" alt="Custom embroidered small businesses hats made by Threadbreak" loading="lazy">
+      <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6CB0AC79-A34F-4B4D-AD9D-FBAEF30942E3.jpg?v=1786337802&width=680&format=webp" alt="Custom embroidered small businesses hats made by Threadbreak" loading="lazy">
     </div>
   </div>
 
   <section class="ind-section">
-    <h2>Look bigger than you are</h2>
-    <p>A clean, embroidered hat with your logo makes a small business look professional and legit, at your shop, at the market, on a job, or out in the community. It is walking advertising every time you or your team wears one, and it turns customers into fans when you sell or hand them out. We make it easy and affordable to get started: no minimum order, free logo digitizing, and volume pricing that kicks in as you grow. Start with a few, reorder more whenever you need them.</p>
+    <h2>Give your brand a more established look</h2>
+    <p>A clean embroidered hat with your logo creates a consistent, professional appearance at your shop, at the market, on a job, or out in the community. It is walking advertising every time you or your team wears one, and it turns customers into fans when you sell or hand them out. We make it easy and affordable to get started: no minimum order, free logo digitizing, and volume pricing that kicks in as you grow. Start with a few, reorder more whenever you need them.</p>
     <div class="ind-points">
       <div class="ind-point">
         <h3>No minimum to start</h3>
@@ -95,19 +108,45 @@
     </div>
   </section>
 
+
+  <section class="ind-section">
+    <h2>Ways businesses use branded hats</h2>
+    <div class="ind-usecase">
+      <h3>More than uniforms</h3>
+      <ul>
+        <li>Employee uniforms and new-hire kits</li>
+        <li>Branded merchandise you can sell</li>
+        <li>Customer giveaways and thank-you gifts</li>
+        <li>Markets, trade shows, and events</li>
+        <li>Client gifts at project handoff</li>
+      </ul>
+    </div>
+  </section>
+
   <section class="ind-section">
     <h2>How it works</h2>
     <div class="ind-steps">
       <div class="ind-step"><div class="num">01</div><strong>Pick your hats</strong><span>Choose your blank, colors, and quantity. Send your logo in any format, we digitize it for embroidery free.</span></div>
       <div class="ind-step"><div class="num">02</div><strong>Approve your mockup</strong><span>We send a free digital proof so you can see exactly how your logo looks before we stitch a single hat.</span></div>
-      <div class="ind-step"><div class="num">03</div><strong>We embroider &amp; ship</strong><span>Your hats are embroidered in-house in Burlington, NC and shipped free to your door, usually in 2 to 3 weeks.</span></div>
+      <div class="ind-step"><div class="num">03</div><strong>We embroider &amp; ship</strong><span>Your hats are embroidered in-house in Burlington, NC and shipped free. Production typically takes 2-3 weeks after mockup approval, and shipping transit time is additional.</span></div>
+    </div>
+  </section>
+
+
+  <section class="ind-section">
+    <div class="ind-crosslinks">
+      <p>We also work with:</p>
+      <a href="/pages/custom-hats-for-landscaping-companies">Landscaping</a><a href="/pages/custom-hats-for-construction-companies">Construction</a><a href="/pages/custom-hats-for-sports-teams">Sports Teams</a><a href="/pages/custom-hats-for-motorsports-teams">Motorsports</a>
     </div>
   </section>
 
   <section class="ind-final">
     <h2>Ready to put your logo on a hat?</h2>
-    <p>Start a custom order in minutes, or request a quote for a bigger run. Free shipping, free logo setup, no minimum.</p>
-    <a href="/pages/custom-order" class="ind-cta">Start a Custom Order</a>
+    <p>Start a custom order in minutes, or request a quote for a bigger run. Order as few as one hat, with wholesale pricing beginning at ten. Free shipping and free logo setup.</p>
+    <div class="ind-cta-row">
+      <a href="/pages/custom-order" class="ind-cta">Start a Custom Order</a>
+      <a href="/pages/quote" class="ind-cta-alt">Request a Special Quote</a>
+    </div>
     <span class="ind-cta-sub">Questions first? Email help@threadbreak.com</span>
   </section>
 </div>
