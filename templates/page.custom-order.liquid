@@ -12,6 +12,9 @@
     --purple:#5028AA;--purple2:#6234c9;--purple-dark:#3D1E85;--ink:#14121C;--ice:#F3EFFC;--white:#fff;--line:#E2E0EA;--muted:#6B6A78;--good:#1E9E5A;color:var(--ink)}
   #tbco *{box-sizing:border-box;margin:0;padding:0}
   #tbco .wrap{max-width:880px;margin:0 auto;padding:0 20px}
+  /* the form itself gets more room than the prose-width hero */
+  #tbco .form-wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+  #tbco .bar-in{max-width:1180px}
   #tbco header{position:relative;overflow:hidden;background:var(--ink);color:var(--white);padding:56px 0 48px}
   #tbco .hero-photos{position:absolute;inset:0;display:flex;z-index:0;opacity:.5}
   #tbco .hero-photos div{flex:1;background-size:cover;background-position:center;min-width:0}
@@ -51,7 +54,7 @@
   #tbco .tbstep-hint strong{color:var(--ink)}
 
   /* hat grid */
-  #tbco .hats{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:13px}
+  #tbco .hats{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:13px}
   #tbco .hats.picking{grid-template-columns:1fr}
   #tbco .hat{border:1.5px solid var(--line);border-radius:13px;background:#fff;cursor:pointer;overflow:hidden;transition:.2s;position:relative}
   #tbco .hat:hover{border-color:#B7A6EE;transform:translateY(-2px)}
@@ -67,10 +70,22 @@
   #tbco .hat-colors{display:flex;align-items:center;gap:7px;margin-top:8px;font-size:12px;color:var(--muted)}
   #tbco .wheel{width:18px;height:18px;border-radius:50%;flex:0 0 auto;border:1px solid rgba(0,0,0,.12);background:conic-gradient(#e23b3b,#e2a13b,#d7e23b,#4ce23b,#3be2c0,#3b8fe2,#7a3be2,#e23bc0,#e23b3b)}
   #tbco .hat-badge{position:absolute;top:9px;left:9px;background:var(--purple);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;z-index:2}
-  #tbco .hat.on .hat-top{display:flex;gap:18px;align-items:flex-start}
-  #tbco .hat.on .hat-img{width:190px;flex:0 0 auto}
+  #tbco .hat.on .hat-top{display:flex;gap:24px;align-items:flex-start;padding:6px 6px 0}
+  #tbco .hat.on .hat-img{width:260px;flex:0 0 auto}
   #tbco .hat.on .hat-info{flex:1;padding-top:14px}
-  @media(max-width:560px){#tbco .hat.on .hat-top{display:block}#tbco .hat.on .hat-img{width:100%}#tbco .hat.on .hat-info{padding-top:0}}
+  @media(max-width:560px){
+    #tbco .hat.on .hat-top{display:block}
+    #tbco .hat.on .hat-img{width:100%}
+    #tbco .hat.on .hat-info{padding-top:0}
+    /* two-up on phones keeps the photos small and the names above the fold */
+    #tbco .hats{grid-template-columns:1fr 1fr;gap:10px}
+    #tbco .hat-info{padding:10px 11px 12px}
+    #tbco .hat-name{font-size:13.5px}
+    #tbco .hat-brand{font-size:10.5px}
+    #tbco .hat-price{font-size:12px;margin-top:5px}
+    #tbco .hat-colors{font-size:11px;margin-top:6px}
+    #tbco .hat-badge{font-size:9.5px;padding:2px 6px;top:6px;left:6px}
+  }
   #tbco .hat-change{display:inline-flex;align-items:center;gap:7px;background:#fff;border:2px solid var(--purple);border-radius:10px;padding:10px 18px;font-family:inherit;font-size:14px;font-weight:600;color:var(--purple);cursor:pointer;margin-top:14px;transition:.16s}
   #tbco .hat-change:hover{background:var(--purple);color:#fff}
   #tbco .hat-specs{margin-top:10px;font-size:12.5px;color:var(--muted);line-height:1.6}
@@ -149,7 +164,7 @@
   #tbco .puff-swatch{text-shadow:0 3px 0 rgba(80,40,170,.35),0 5px 7px rgba(0,0,0,.18)}
   #tbco .info-note{font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:11px}
   #tbco .hint{font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:9px}
-  #tbco .uploads{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-top:4px}
+  #tbco .uploads{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:4px}
   #tbco .up-slot{border:1.5px dashed var(--line);border-radius:12px;padding:14px;background:#fff}
   #tbco .up-slot.req{border-color:var(--purple);background:var(--ice)}
   #tbco .up-slot-label{font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px;margin-bottom:4px;flex-wrap:wrap}
@@ -245,6 +260,10 @@
     <span class="tbco-textus-text">Have questions before placing an order? <strong>Text us: (336) 585-6176</strong></span>
   </a>
 
+
+</div>
+
+<div class="form-wrap">
 
   <div class="rail" id="rail"></div>
 
