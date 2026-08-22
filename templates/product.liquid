@@ -43,6 +43,9 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
 
 <div class="product-price-row">
 <p class="product-price" id="product-price">{{ selected_variant.price | money }}</p>
+{%- if selected_variant.compare_at_price > selected_variant.price -%}
+<s class="product-price-was">{{ selected_variant.compare_at_price | money }}</s>
+{%- endif -%}
 
 </div>
 
@@ -102,6 +105,7 @@ data-variant-image="{% if variant.featured_image %}{{ variant.featured_image | i
   .fit-specs ul{margin:0;padding-left:18px;}
   .fit-specs li{font-size:14px;line-height:1.6;color:#3d3a4a;margin-bottom:6px;}
   .fit-specs-note{font-size:13px;color:#6B6A78;margin:10px 0 0;}
+  .product-price-was{margin-left:8px;font-size:0.8em;color:#8b8996;text-decoration:line-through;}
 </style>
 <div class="bundle-opts">
 <div class="bundle-opt">

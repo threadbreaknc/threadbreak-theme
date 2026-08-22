@@ -451,7 +451,7 @@ body.quote-mode #tbco .buy-only {display:none}
           <label class="field-label" style="font-size:13px;margin-top:14px">Front logo position</label>
           <div class="chips" id="frontPos"></div>
         </div>
-        <p class="hint">Front is included. Extra locations add a small per-hat charge. 3D puff applies to the front only; side and back are stitched flat.</p>
+        <p class="hint">Front is included. <strong>Additional locations are $5 per hat, per location.</strong> 3D puff applies to the front only; side and back are stitched flat.</p>
         <label class="field-label">Your logo / artwork</label>
         <div class="uploads-grid" id="uploads"></div>
         <p class="hint">One file per location: PNG, JPG, PDF, AI, or SVG, up to 10 MB each. Digitizing is free. No file handy? Skip it and email us after.</p>
@@ -481,7 +481,7 @@ body.quote-mode #tbco .buy-only {display:none}
         <textarea id="notes" placeholder="Thread colors, text to add, deadline, anything else we should know..."></textarea>
         <label class="social-optout">
           <input type="checkbox" id="noSocial">
-          <span>Please don't share my hats on social media. <small>We love showing off finished customer hats on our channels. Check this if you'd rather we keep yours private.</small></span>
+          <span>Keep my finished order private <small>Leave this unchecked if you're comfortable with us featuring your finished hats in our portfolio or on social media.</small></span>
         </label>
         <div class="acc-continue-row"><button type="button" class="acc-continue acc-checkout" data-checkout="1">Review order <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button></div>
       </div>
@@ -506,7 +506,7 @@ body.quote-mode #tbco .buy-only {display:none}
       <p><strong>Lead time:</strong> Most orders are shipped in 2 to 3 weeks. Need it faster? Email <strong>help@threadbreak.com</strong> directly before placing your order and we'll see what we can make happen.</p>
     </div>
     <div class="art-note proof-note">
-      <p><strong>Please keep an eye on your email!</strong> We can't start your order until you approve your digital proof, so your response is what gets things moving. We'll reach out from <strong>help@threadbreak.com</strong>, so please watch your inbox (and spam folder) and reply when you can. If we don't hear back after a few attempts, we may have to cancel the order. We'd hate for that to happen, so a quick reply keeps your hats on track!</p>
+      <p>We'll email your digital mockup from <strong>help@threadbreak.com</strong> within one business day. Production begins after you approve it, so please watch your inbox and spam folder.</p>
     </div>
     <div class="err" id="cartErr">Couldn't add to cart. This form talks to Shopify, so it only works when hosted on threadbreak.com. If you're seeing this on the live site, refresh and try again or email help@threadbreak.com.</div>
   </section>
@@ -1179,12 +1179,12 @@ function render(){
   }
 
   $("deco").innerHTML = DECOS.map(d =>
-    `<button type="button" class="chip ${d.id===state.deco.id?'on':''}" data-d="${d.id}">${d.label}${d.add?` <small>+${money(d.add)}</small>`:''}</button>`).join("");
+    `<button type="button" class="chip ${d.id===state.deco.id?'on':''}" data-d="${d.id}">${d.label}${d.add?` <small>+${money(d.add)}/hat</small>`:''}</button>`).join("");
   $("deco").querySelectorAll('.chip').forEach(b =>
     b.addEventListener('click', () => { state.deco = DECOS.find(d=>d.id===b.dataset.d); render(); }));
 
   $("placements").innerHTML = PLACEMENTS.map(p =>
-    `<button type="button" class="chip ${state.placements.has(p.id)?'on':''}" data-p="${p.id}">${p.label}${p.add?` <small>+${money(p.add)}</small>`:''}</button>`).join("");
+    `<button type="button" class="chip ${state.placements.has(p.id)?'on':''}" data-p="${p.id}">${p.label}${p.add?` <small>+${money(p.add)}/hat</small>`:''}</button>`).join("");
   $("placements").querySelectorAll('.chip').forEach(b =>
     b.addEventListener('click', () => {
       const p = b.dataset.p;

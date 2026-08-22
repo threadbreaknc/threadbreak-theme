@@ -66,6 +66,9 @@
             <h3 class="coll-name">{{ product.title }}</h3>
             <div class="coll-meta">
               <span class="coll-price">{{ product.price | money }}</span>
+              {%- if product.compare_at_price > product.price -%}
+                <s class="coll-price-was">{{ product.compare_at_price | money }}</s>
+              {%- endif -%}
               {%- if product.variants.size > 1 -%}
                 <span class="coll-variants">{{ product.variants.size }} styles</span>
               {%- endif -%}
@@ -130,7 +133,8 @@
     <p class="eyebrow reveal">Can't find what you're looking for?</p>
     <h2 class="reveal reveal-d1">Get Something<br>Custom Made.</h2>
     <p class="reveal reveal-d2">Send us your logo and we'll build something unique. Order as few as 1 hat, wholesale pricing starts at 10.</p>
-    <a href="/pages/quote" class="btn btn-fill reveal reveal-d3">Get a Quote →</a>
+    <a href="/pages/custom-order" class="btn btn-fill reveal reveal-d3">Start a Custom Order →</a>
+    <p class="cta-alt reveal reveal-d3">Need a style not listed? <a href="/pages/quote">Request a quote</a>.</p>
   </section>
 
 </div>
