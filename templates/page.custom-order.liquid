@@ -375,13 +375,6 @@
     <div class="tbstep-body">
       <div id="review"></div>
 
-      <p class="fld" style="margin-top:22px">Your contact info</p>
-      <div class="qty-row">
-        <div class="field"><label for="custName">Name</label><input type="text" id="custName" placeholder="First and last name" autocomplete="name"></div>
-        <div class="field"><label for="custEmail">Email</label><input type="email" id="custEmail" placeholder="you@example.com" autocomplete="email"></div>
-        <div class="field"><label for="custPhone">Phone (optional)</label><input type="tel" id="custPhone" placeholder="(555) 555-5555" autocomplete="tel"></div>
-      </div>
-
       <div class="proof-note">
         <span class="en-icon" aria-hidden="true">!</span>
         <div><p><strong>Keep an eye on your email.</strong> We'll send your digital mockup from help@threadbreak.com within one business day. We can't start production until you approve it, so please watch your inbox and spam folder.</p></div>
@@ -1135,9 +1128,9 @@ function orderMeta(){
     ? "Front (" + state.frontPos + ")"
     : (PLACEMENTS.find(p => p.id === id) || {}).label || id);
   return {
-    name: ($("custName") && $("custName").value.trim()) || "",
-    email: ($("custEmail") && $("custEmail").value.trim()) || "",
-    phone: ($("custPhone") && $("custPhone").value.trim()) || "",
+    name: "",
+    email: "",
+    phone: "",
     style: state.style ? state.style.name : "",
     requestedStyle: "",
     color: colorSummary(),
@@ -1199,12 +1192,6 @@ async function sendToDrive(type){
 
 async function submitCheckout(){
   const btn = $("checkout");
-  const email = ($("custEmail") && $("custEmail").value.trim()) || "";
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
-    alert("Please enter a valid email so we can send your mockup for approval.");
-    if ($("custEmail")) $("custEmail").focus();
-    return;
-  }
   btn.disabled = true;
   $("cartErr").classList.remove("show");
 
