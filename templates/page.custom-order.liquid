@@ -50,7 +50,7 @@
   #tbco .rail-item.active .dot{background:var(--purple)}
 
   /* steps */
-  #tbco .tbstep{background:#fff;border:1.5px solid var(--line);border-radius:16px;margin-bottom:14px;display:none;opacity:1;transform:none;text-align:left;padding:0}
+  #tbco .tbstep{background:#fff;border:1.5px solid var(--line);border-radius:16px;margin-bottom:14px;display:none;opacity:1;transform:none;text-align:left;padding:0;scroll-margin-top:150px}
   #tbco .tbstep.active{display:block;opacity:1;transform:none;border-color:var(--purple);box-shadow:0 6px 22px rgba(80,40,170,.10)}
   #tbco .tbstep::after{content:none}
   #tbco .tbstep-head{display:flex;align-items:center;gap:13px;padding:20px 22px}
@@ -64,7 +64,7 @@
   /* hat grid */
   #tbco .hats{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:13px}
   #tbco .hats.picking{grid-template-columns:1fr}
-  #tbco .hat{border:1.5px solid var(--line);border-radius:13px;background:#fff;cursor:pointer;overflow:hidden;transition:.2s;position:relative}
+  #tbco .hat{border:1.5px solid var(--line);border-radius:13px;background:#fff;cursor:pointer;overflow:hidden;transition:.2s;position:relative;scroll-margin-top:150px}
   #tbco .hat:hover{border-color:#B7A6EE;transform:translateY(-2px)}
   #tbco .hat.on{border-color:var(--purple);box-shadow:0 6px 22px rgba(80,40,170,.18);overflow:visible;z-index:5}
   #tbco .hats.picking .hat{display:none}
@@ -773,7 +773,7 @@ const HEADER_H = () => (window.innerWidth <= 600 ? 60 : 70);
 function railBottom(){
   const rail = document.getElementById("rail");
   if (!rail) return HEADER_H() + 70;
-  return HEADER_H() + rail.getBoundingClientRect().height + 14;
+  return HEADER_H() + rail.getBoundingClientRect().height + 22;
 }
 let scrollAnim = null;
 // If the visitor scrolls or swipes mid-glide, hand control straight back to them.
@@ -1100,19 +1100,24 @@ function canLeave(step){
 function goto(step){
   state.step = step;
   if (step > state.maxStep) state.maxStep = step;
+  // returning to step 1 should show the hat exactly as they left it
+  if (step === 1) renderHats();
+  if (step === 2) renderSplit();
+  if (step === 3) renderDesign();
   document.querySelectorAll("#tbco .tbstep").forEach(sec => {
     sec.classList.toggle("active", +sec.dataset.step === step);
   });
   if (step === 4) renderReview();
   renderRail();
-  const rail = $("rail");
-  if (rail){
-    // stop with the whole rail visible just below the fixed header
-    const y = window.scrollY + rail.getBoundingClientRect().top - (HEADER_H() + 12);
-    easeScrollTo(y, 800);
-  }
+  // Land on the top of the active step, offset so the pinned rail never covers it.
+  requestAnimationFrame(() => {
+    const sec = document.querySelector('#tbco .tbstep.active');
+    if (sec) easeScrollToEl(sec, 800);
+  });
   sync();
 }
+// Only used by the explicit "Choose a different hat" button. Navigating back to
+// step 1 must keep the chosen hat, colors, and split intact.
 function resetToStep1(){
   state.style = null; state.colors = []; state.split = {}; state.activeColor = null;
   state.done.delete(1); state.maxStep = 1;
@@ -1134,7 +1139,6 @@ function renderRail(){
     el.addEventListener("click", () => {
       if (!reachable) return;
       if (t > state.step){ state.done.add(state.step); if (state.colors.length > 1) evenSplit(); renderSplit(); }
-      if (t === 1) resetToStep1();
       goto(t);
     });
   });
@@ -1346,7 +1350,6 @@ $("barCta").addEventListener("click", () => {
 document.querySelectorAll("#tbco [data-back]").forEach(b => {
   b.addEventListener("click", () => {
     const t = +b.dataset.back;
-    if (t === 1) resetToStep1();
     goto(t);
   });
 });
