@@ -792,7 +792,7 @@ const STYLES = [
     },
     tiers:[[1,59.99,52668967846020],[5,36,52668967878788],[10,31,52668967911556],[24,29,52668967944324],[48,27,52668967977092],[96,26,52668968009860]] },
 ];
-const SIZES = ["One size","Youth","Mix of both"];
+const SIZES = ["One size fits most","Youth","Mix of both"];
 const DECOS = [
   { id:"flat",  label:"Flat embroidery", add:0 },
   { id:"puff",  label:"3D puff", add:3, variantId:52543282741380 },
@@ -863,6 +863,14 @@ function colorCss(name){
   if (hexes.length === 1) return hexes[0];
   const step = 100 / hexes.length;
   return "linear-gradient(90deg," + hexes.map((c,i)=>`${c} ${i*step}% ${(i+1)*step}%`).join(",") + ")";
+}
+
+function tenPriceLabel(s){
+  // Show the 10-hat price (the realistic entry point for most buyers) plus the volume floor,
+  // instead of leading with the 96+ price which reads as bait.
+  var tenTier = s.tiers.find(function(t){ return t[0] === 10; }) || s.tiers[0];
+  var low = s.tiers[s.tiers.length-1][1];
+  return money(tenTier[1]) + "/hat at 10 \u00b7 as low as " + money(low);
 }
 
 function tierFor(style, qty){
@@ -1129,7 +1137,7 @@ function render(){
         <div class="style-name">${s.name}</div>
         <div class="style-brand">${s.brand}</div>
         <div class="style-desc">${s.desc}</div>
-        <div class="style-price">${s.quote ? "Custom quote" : "from " + money(s.tiers[s.tiers.length-1][1]) + "/hat"}</div>
+        <div class="style-price">${s.quote ? "Custom quote" : tenPriceLabel(s)}</div>
         ${sel && s.features ? `<div class="style-features">${s.features}</div>` : ""}
       </div>
     </label>`;
