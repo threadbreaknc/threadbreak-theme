@@ -114,6 +114,12 @@
   .footer-nav-groups{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.5rem 2rem;flex:2 1 340px;}
   .footer-grid .footer-col{display:block !important;}
   .footer-contact{flex:1 1 220px;}
+  /* theme.css forces .soc to a near-black color, which is invisible on the dark footer.
+     Higher specificity (.footer-social .soc) wins over the .soc !important rule. */
+  .footer-social{display:flex;gap:0.6rem;flex-wrap:wrap;}
+  .footer-social .soc{width:34px;height:34px;border:1px solid rgba(247,244,240,0.25) !important;border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:rgba(247,244,240,0.75) !important;transition:color .18s,border-color .18s,background .18s;}
+  .footer-social .soc:hover{color:#fff !important;border-color:var(--purple,#5028aa) !important;background:rgba(80,40,170,0.25);}
+  .footer-social .soc svg{width:16px;height:16px;display:block;}
   .footer-policies{display:flex;flex-wrap:wrap;gap:0.35rem 1.1rem;justify-content:center;margin-top:0.35rem;}
   .footer-policies a{font-size:0.8rem;color:rgba(247,244,240,0.55);text-decoration:none;transition:color .15s;}
   .footer-policies a:hover{color:#fff;text-decoration:underline;}
