@@ -27,11 +27,13 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
 
 {%- assign is_apparel = false -%}
 {%- assign is_premade = false -%}
+{%- assign is_clearance = false -%}
 {%- assign is_bundle = false -%}
 {%- if product.type == 'Custom Hat Bundle' -%}{%- assign is_bundle = true -%}{%- endif -%}
 {%- for col in product.collections -%}
   {%- if col.handle == 'apparel' -%}{%- assign is_apparel = true -%}{%- endif -%}
   {%- if col.handle == 'pre-made-hats' -%}{%- assign is_premade = true -%}{%- endif -%}
+  {%- if col.handle contains 'clearance' -%}{%- assign is_clearance = true -%}{%- endif -%}
 {%- endfor -%}
 {%- unless is_apparel -%}
 <!-- Start of Judge.me code -->
@@ -135,8 +137,12 @@ data-variant-image="{% if variant.featured_image %}{{ variant.featured_image | i
 </div>
 {%- endif -%}
 
-{%- if is_premade -%}
+{%- if is_clearance -%}
+<p class="leadtime-notice">Ready to ship &middot; <strong>sold as-is</strong>, each hat has a disclosed cosmetic or production issue</p>
+{%- elsif is_premade -%}
 <p class="leadtime-notice">Embroidered to order &middot; ships in <strong>2-5 business days</strong></p>
+{%- elsif is_apparel -%}
+<p class="leadtime-notice">Printed to order &middot; ships in <strong>2-5 business days</strong></p>
 {%- endif -%}
 
 <div class="product-actions">

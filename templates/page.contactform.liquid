@@ -1,105 +1,81 @@
-<div class="contact-page">
+{%- comment -%} build: contact-clean-2026-08 {%- endcomment -%}
+<div id="tbcontact">
+  <style>
+    #tbcontact{--ink:#14121C;--purple:#5028AA;--purple2:#6234c9;--ice:#F3EFFC;--line:#E2E0EA;--muted:#6B6A78;
+      font-family:'DM Sans',sans-serif;color:var(--ink);}
+    #tbcontact *{box-sizing:border-box;margin:0;padding:0}
+    #tbcontact .ct-hero{background:linear-gradient(135deg,#14121C 0%,#241f33 100%);color:#F7F4F0;padding:150px 20px 48px;text-align:center;border-bottom:5px solid var(--purple);}
+    #tbcontact .ct-hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(38px,7vw,60px);line-height:1.02;margin:0 0 14px;}
+    #tbcontact .ct-hero p{font-size:17px;line-height:1.6;color:#C9C8D4;margin:0 auto;max-width:520px;}
+    #tbcontact .ct-section{max-width:900px;margin:0 auto;padding:56px 20px;}
+    #tbcontact .ct-section h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(26px,4vw,36px);margin:0 0 20px;}
+    #tbcontact .ct-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;}
+    #tbcontact .ct-card{background:var(--ice);border:1px solid var(--line);border-radius:14px;padding:24px;}
+    #tbcontact .ct-card h3{font-size:17px;font-weight:700;color:var(--purple);margin:0 0 8px;}
+    #tbcontact .ct-card p{font-size:14.5px;line-height:1.6;color:#3d3a4a;margin:0 0 12px;}
+    #tbcontact .ct-card a.ct-btn{display:inline-block;background:var(--purple);color:#fff;text-decoration:none;font-family:'Bebas Neue',sans-serif;font-size:1.05rem;letter-spacing:.04em;padding:.6rem 1.3rem;border-radius:10px;transition:background .18s;}
+    #tbcontact .ct-card a.ct-btn:hover{background:var(--purple2);}
+    #tbcontact .ct-reach{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:28px;text-align:center;}
+    #tbcontact .ct-reach .ct-email{display:inline-block;font-size:1.15rem;font-weight:700;color:var(--purple);text-decoration:none;margin-bottom:10px;}
+    #tbcontact .ct-reach p{font-size:14.5px;color:#3d3a4a;line-height:1.6;margin:0 0 6px;}
+    #tbcontact .ct-note{font-size:13px;color:var(--muted);margin-top:14px;}
+    @media(max-width:600px){#tbcontact .ct-hero{padding-top:165px;}}
+  </style>
 
-  <!-- HERO -->
-  <section class="contact-hero">
-    <div class="contact-hero-content">
-      <p class="eyebrow">We're Here</p>
-      <h1>Contact.</h1>
-      <p class="contact-hero-sub">Questions about an order, a product, or anything else, send us a message and we'll get back to you within 24 hours.</p>
+  <section class="ct-hero">
+    <h1>Contact Us</h1>
+    <p>Questions about an order, or something you want to build? Here's the fastest way to reach us.</p>
+  </section>
+
+  <section class="ct-section">
+    <div class="ct-reach">
+      <a href="mailto:help@threadbreak.com" class="ct-email">help@threadbreak.com</a>
+      <p>Email is the best way to reach us for anything: new orders, existing orders, artwork questions, or special requests.</p>
+      <p class="ct-note">We reply to most messages within one business day.</p>
     </div>
   </section>
 
-  <!-- CONTACT OPTIONS -->
-  <section class="contact-options">
-    <div class="contact-option reveal">
-      <div class="contact-option-icon">✦</div>
-      <h3>General Questions</h3>
-      <p>Order status, product questions, sizing info, anything you need.</p>
-      <p class="contact-email"><a href="mailto:help@threadbreak.com">help@threadbreak.com</a></p>
-    </div>
-    <div class="contact-option reveal reveal-d1">
-      <div class="contact-option-icon">✦</div>
-      <h3>Custom & Wholesale</h3>
-      <p>Looking for a quote on custom embroidered hats? Use our dedicated quote form.</p>
-      <a href="/pages/contact" class="contact-option-link">Get a Quote →</a>
-    </div>
-    <div class="contact-option reveal reveal-d2">
-      <div class="contact-option-icon">✦</div>
-      <h3>Instagram</h3>
-      <p>Slide into our DMs. We're active on Instagram and respond there too.</p>
-      <a href="https://www.instagram.com/THREADBREAK_" target="_blank" rel="noopener" class="contact-option-link">@THREADBREAK_ →</a>
-    </div>
-  </section>
-
-  <!-- CONTACT FORM -->
-  <section class="contact-form-section">
-    <div class="contact-form-header">
-      <p class="eyebrow reveal">Send a Message</p>
-      <h2 class="reveal reveal-d1">We'll Get Back<br>To You.</h2>
-    </div>
-
-    {%- form 'contact', id: 'contact-form' -%}
-
-      {%- if form.posted_successfully? -%}
-        <div class="contact-success">
-          <div class="contact-success-stars" aria-hidden="true">
-            <span class="qstar" style="--tx:-70px;--ty:-50px;">✦</span>
-            <span class="qstar" style="--tx:70px;--ty:-60px;">✦</span>
-            <span class="qstar" style="--tx:-40px;--ty:-80px;">✦</span>
-            <span class="qstar" style="--tx:50px;--ty:-40px;">✦</span>
-            <span class="qstar" style="--tx:-90px;--ty:-25px;">✦</span>
-            <span class="qstar" style="--tx:90px;--ty:-35px;">✦</span>
-          </div>
-          <div class="quote-success-icon">✦</div>
-          <h3>Message Sent!</h3>
-          <div class="quote-success-divider"></div>
-          <p>We'll get back to you at <strong>{{ form.email }}</strong> within 24 hours.</p>
-          <p class="quote-success-sub">Check your inbox, we'll be in touch soon.</p>
-        </div>
-      {%- else -%}
-
-      <input type="hidden" name="contact[subject]" value="Contact Form, Threadbreak">
-
-      <div class="cform">
-        <div class="cform-row">
-          <div class="qform-field">
-            <label for="c-name">Name <span class="req">*</span></label>
-            <input type="text" id="c-name" name="contact[name]" required placeholder="Your name">
-          </div>
-          <div class="qform-field">
-            <label for="c-email">Email <span class="req">*</span></label>
-            <input type="email" id="c-email" name="contact[email]" required placeholder="you@email.com">
-          </div>
-        </div>
-
-        <div class="qform-field">
-          <label for="c-subject">What's this about?</label>
-          <div class="qform-options">
-            <label class="qopt"><input type="radio" name="contact[subject_type]" value="Order question"><span>Order question</span></label>
-            <label class="qopt"><input type="radio" name="contact[subject_type]" value="Product question"><span>Product question</span></label>
-            <label class="qopt"><input type="radio" name="contact[subject_type]" value="Shipping question"><span>Shipping</span></label>
-            <label class="qopt"><input type="radio" name="contact[subject_type]" value="Something else"><span>Something else</span></label>
-          </div>
-        </div>
-
-        <div class="qform-field">
-          <label for="c-order">Order Number <span style="opacity:0.4;font-size:0.65rem;">(if applicable)</span></label>
-          <input type="text" id="c-order" name="contact[order_number]" placeholder="e.g. #TB1234" style="max-width:240px;">
-        </div>
-
-        <div class="qform-field">
-          <label for="c-message">Message <span class="req">*</span></label>
-          <textarea id="c-message" name="contact[body]" rows="5" required placeholder="How can we help?"></textarea>
-        </div>
-
-        <div class="qform-submit-row">
-          <button type="submit" class="btn btn-fill quote-submit">Send Message →</button>
-          <p class="quote-privacy">We respond within 24 hours. No spam, ever.</p>
-        </div>
+  <section class="ct-section" style="padding-top:0;">
+    <h2>What do you need?</h2>
+    <div class="ct-grid">
+      <div class="ct-card">
+        <h3>Start a custom order</h3>
+        <p>Pick your hat, colors, and quantity and see live pricing as you build. Order as few as one hat, with wholesale pricing beginning at ten.</p>
+        <a href="/pages/custom-order" class="ct-btn">Start a Custom Order</a>
       </div>
-
-      {%- endif -%}
-    {%- endform -%}
+      <div class="ct-card">
+        <h3>Request special pricing</h3>
+        <p>Need a brand or style we don't list, a fitted hat, an unusual quantity, or something more complicated? Send us the details and we'll quote it.</p>
+        <a href="/pages/quote" class="ct-btn">Request a Quote</a>
+      </div>
+      <div class="ct-card">
+        <h3>Ask about an existing order</h3>
+        <p>Checking on production, shipping, or a mockup you're waiting on? Email us with your order number and we'll get you an update.</p>
+        <a href="mailto:help@threadbreak.com?subject=Question%20about%20my%20order" class="ct-btn">Email About an Order</a>
+      </div>
+      <div class="ct-card">
+        <h3>General questions</h3>
+        <p>Sizing, hat styles, artwork formats, turnaround, or anything else. Our <a href="/pages/faq" style="color:var(--purple);text-decoration:underline;">FAQ</a> covers the most common questions.</p>
+        <a href="/pages/faq" class="ct-btn">Read the FAQ</a>
+      </div>
+    </div>
   </section>
 
+  <section class="ct-section" style="padding-top:0;">
+    <h2>Good to know</h2>
+    <div class="ct-grid">
+      <div class="ct-card">
+        <h3>Premade hats</h3>
+        <p>Embroidered to order and typically shipped within 2-5 business days. Free shipping anywhere in the US.</p>
+      </div>
+      <div class="ct-card">
+        <h3>Custom orders</h3>
+        <p>Production typically takes 2-3 weeks after you approve your mockup. Shipping transit time is additional.</p>
+      </div>
+      <div class="ct-card">
+        <h3>Where we are</h3>
+        <p>Everything is embroidered in-house in Burlington, North Carolina, and shipped from our own shop.</p>
+      </div>
+    </div>
+  </section>
 </div>
