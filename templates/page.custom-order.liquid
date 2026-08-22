@@ -39,15 +39,16 @@
   #tbco .rail-item.active .dot{background:var(--purple)}
 
   /* steps */
-  #tbco .step{background:#fff;border:1.5px solid var(--line);border-radius:16px;margin-bottom:14px;display:none}
-  #tbco .step.active{display:block;border-color:var(--purple);box-shadow:0 6px 22px rgba(80,40,170,.10)}
-  #tbco .step-head{display:flex;align-items:center;gap:13px;padding:20px 22px}
-  #tbco .step-num{width:28px;height:28px;border-radius:50%;background:var(--ice);color:var(--purple);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex:0 0 auto}
-  #tbco .step-head h2{font-family:'Bebas Neue',sans-serif;font-size:23px;letter-spacing:.02em;flex:1}
-  #tbco .step-sum{font-size:13px;color:var(--muted);text-align:right;max-width:45%}
-  #tbco .step-body{padding:0 22px 22px}
-  #tbco .step-hint{font-size:13.5px;color:var(--muted);margin-bottom:16px;line-height:1.55}
-  #tbco .step-hint strong{color:var(--ink)}
+  #tbco .tbstep{background:#fff;border:1.5px solid var(--line);border-radius:16px;margin-bottom:14px;display:none;opacity:1;transform:none;text-align:left;padding:0}
+  #tbco .tbstep.active{display:block;opacity:1;transform:none;border-color:var(--purple);box-shadow:0 6px 22px rgba(80,40,170,.10)}
+  #tbco .tbstep::after{content:none}
+  #tbco .tbstep-head{display:flex;align-items:center;gap:13px;padding:20px 22px}
+  #tbco .tbstep-num{width:28px;height:28px;border-radius:50%;background:var(--ice);color:var(--purple);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex:0 0 auto}
+  #tbco .tbstep-head h2{font-family:'Bebas Neue',sans-serif;font-size:23px;letter-spacing:.02em;flex:1}
+  #tbco .tbstep-sum{font-size:13px;color:var(--muted);text-align:right;max-width:45%}
+  #tbco .tbstep-body{padding:0 22px 22px}
+  #tbco .tbstep-hint{font-size:13.5px;color:var(--muted);margin-bottom:16px;line-height:1.55}
+  #tbco .tbstep-hint strong{color:var(--ink)}
 
   /* hat grid */
   #tbco .hats{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:13px}
@@ -211,7 +212,7 @@
   #tbco .bar-cta{margin-left:auto;background:var(--purple);color:#fff;border:none;border-radius:10px;padding:11px 22px;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.04em;cursor:pointer}
   #tbco .bar-cta:hover{background:var(--purple2)}
   #tbco .bar-cta:disabled{opacity:.45;cursor:not-allowed}
-  @media(max-width:640px){#tbco .bar-hide-sm{display:none}#tbco .step-sum{display:none}}
+  @media(max-width:640px){#tbco .bar-hide-sm{display:none}#tbco .tbstep-sum{display:none}}
 
 </style>
 
@@ -249,10 +250,10 @@
 
   <div id="tbFormSteps">
   <!-- STEP 1: hat + colors -->
-  <section class="step active" data-step="1">
-    <div class="step-head"><div class="step-num">1</div><h2>Choose your hat</h2><div class="step-sum" id="sum1"></div></div>
-    <div class="step-body">
-      <p class="step-hint">Front embroidery is included on every hat. Pick a style, then choose your colors right below it.</p>
+  <section class="tbstep active" data-step="1">
+    <div class="tbstep-head"><div class="tbstep-num">1</div><h2>Choose your hat</h2><div class="tbstep-sum" id="sum1"></div></div>
+    <div class="tbstep-body">
+      <p class="tbstep-hint">Front embroidery is included on every hat. Pick a style, then choose your colors right below it.</p>
       <div class="hats" id="hats"></div>
       <a href="/pages/quote" class="quote-redirect">Don't see what you're looking for? <strong>Get a custom quote instead</strong></a>
       <div class="btn-row"><button type="button" class="next" id="next1" disabled>Choose Quantity</button></div>
@@ -260,10 +261,10 @@
   </section>
 
   <!-- STEP 2: quantity -->
-  <section class="step" data-step="2">
-    <div class="step-head"><div class="step-num">2</div><h2>How many?</h2><div class="step-sum" id="sum2"></div></div>
-    <div class="step-body">
-      <p class="step-hint"><strong>Order as few as 1 hat.</strong> Price breaks start at 5, and wholesale pricing kicks in at 10+. Mixed colors all count toward the same total.</p>
+  <section class="tbstep" data-step="2">
+    <div class="tbstep-head"><div class="tbstep-num">2</div><h2>How many?</h2><div class="tbstep-sum" id="sum2"></div></div>
+    <div class="tbstep-body">
+      <p class="tbstep-hint"><strong>Order as few as 1 hat.</strong> Price breaks start at 5, and wholesale pricing kicks in at 10+. Mixed colors all count toward the same total.</p>
       <div class="qty-row">
         <div class="field"><label for="qty">Total quantity</label><input class="qty-input" id="qty" type="number" min="1" inputmode="numeric" placeholder="Qty"></div>
       </div>
@@ -275,10 +276,10 @@
   </section>
 
   <!-- STEP 3: design -->
-  <section class="step" data-step="3">
-    <div class="step-head"><div class="step-num">3</div><h2>Your design</h2><div class="step-sum" id="sum3"></div></div>
-    <div class="step-body">
-      <p class="step-hint">Send your logo in any format. We digitize it for embroidery free and email a mockup before we stitch.</p>
+  <section class="tbstep" data-step="3">
+    <div class="tbstep-head"><div class="tbstep-num">3</div><h2>Your design</h2><div class="tbstep-sum" id="sum3"></div></div>
+    <div class="tbstep-body">
+      <p class="tbstep-hint">Send your logo in any format. We digitize it for embroidery free and email a mockup before we stitch.</p>
 
       <p class="fld">Decoration style <button type="button" class="info-btn" id="puffBtn">What is 3D puff?</button></p>
       <div class="chips" id="decos"></div>
@@ -330,9 +331,9 @@
   </section>
 
   <!-- STEP 4: review -->
-  <section class="step" data-step="4">
-    <div class="step-head"><div class="step-num">4</div><h2>Review</h2><div class="step-sum" id="sum4"></div></div>
-    <div class="step-body">
+  <section class="tbstep" data-step="4">
+    <div class="tbstep-head"><div class="tbstep-num">4</div><h2>Review</h2><div class="tbstep-sum" id="sum4"></div></div>
+    <div class="tbstep-body">
       <div id="review"></div>
 
       <p class="fld" style="margin-top:22px">Your contact info</p>
@@ -930,7 +931,7 @@ function canLeave(step){
 function goto(step){
   state.step = step;
   if (step > state.maxStep) state.maxStep = step;
-  document.querySelectorAll("#tbco .step").forEach(sec => {
+  document.querySelectorAll("#tbco .tbstep").forEach(sec => {
     sec.classList.toggle("active", +sec.dataset.step === step);
   });
   if (step === 4) renderReview();
