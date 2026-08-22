@@ -33,12 +33,12 @@
   #tbco .tbco-textus strong{color:#fff;font-weight:700;white-space:nowrap}
 
   /* progress rail */
-  #tbco .rail{display:flex;gap:6px;margin:34px 0 22px;flex-wrap:wrap;position:sticky;top:0;z-index:50;
+  #tbco .rail{display:flex;gap:6px;margin:34px 0 22px;flex-wrap:wrap;position:sticky;top:74px;z-index:50;
     background:rgba(255,255,255,.97);backdrop-filter:blur(6px);padding:12px;border-radius:12px;
     box-shadow:0 6px 18px rgba(20,18,28,.10);border:1px solid var(--line)}
   @media(max-width:640px){
     /* compact pinned rail on phones so it never eats the screen */
-    #tbco .rail{gap:5px;padding:8px;margin:20px 0 16px}
+    #tbco .rail{gap:5px;padding:8px;margin:20px 0 16px;top:64px}
     #tbco .rail-item{min-width:0;flex:1 1 0;padding:8px 6px;font-size:11.5px;gap:6px;justify-content:center;text-align:center}
     #tbco .rail-item .dot{width:19px;height:19px;font-size:11px}
   }
@@ -94,7 +94,7 @@
   #tbco .hat-badge{position:absolute;top:9px;left:9px;background:var(--purple);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;z-index:2}
   /* expanded: photo in the left column, details and colors stacked on the right */
   #tbco .hat.on{display:grid;grid-template-columns:250px minmax(0,1fr);gap:0 26px;padding:18px;align-items:start}
-  #tbco .hat.on .hat-heroimg{grid-column:1;grid-row:1 / span 2;position:sticky;top:96px}
+  #tbco .hat.on .hat-heroimg{grid-column:1;grid-row:1 / span 2;position:sticky;top:168px}
   #tbco .hat.on .hat-info{grid-column:2;grid-row:1;padding:0}
   #tbco .hat.on .hat-expand{grid-column:2;grid-row:2;border-top:none;margin-top:0;padding:0}
   #tbco .hat.on .colorpanel{margin-top:16px}
@@ -826,11 +826,17 @@ function renderHats(){
       if (state.style && state.style.id === s.id) return;
       state.style = s; state.colors = []; state.split = {}; state.activeColor = null;
       renderHats(); sync();
-      // the grid collapses to one card, which shrinks the page and can leave the
-      // viewport stranded at the bottom on mobile; pull the chosen hat back into view
+      // The grid collapses to one card, so the page gets shorter. Only correct the
+      // scroll position if that leaves the card outside the viewport; otherwise stay put.
       requestAnimationFrame(() => {
         const card = document.querySelector("#tbco .hat.on");
-        if (card) card.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (!card) return;
+        const r = card.getBoundingClientRect();
+        const topGuard = 150; // sticky site header + step rail
+        if (r.top < topGuard || r.top > window.innerHeight * 0.6){
+          const y = window.scrollY + r.top - topGuard;
+          window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+        }
       });
     });
   });
@@ -841,7 +847,11 @@ function renderHats(){
     renderHats(); sync();
     requestAnimationFrame(() => {
       const grid = document.getElementById("hats");
-      if (grid) grid.scrollIntoView({ behavior: "smooth", block: "start" });
+      if (!grid) return;
+      const r = grid.getBoundingClientRect();
+      if (r.top < 150 || r.top > window.innerHeight * 0.6){
+        window.scrollTo({ top: Math.max(0, window.scrollY + r.top - 150), behavior: "smooth" });
+      }
     });
   });
   if (picking) renderColorPanel();
@@ -1065,7 +1075,10 @@ function goto(step){
   if (step === 4) renderReview();
   renderRail();
   const rail = $("rail");
-  if (rail) rail.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (rail){
+    const y = window.scrollY + rail.getBoundingClientRect().top - 80;
+    window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+  }
   sync();
 }
 function resetToStep1(){
