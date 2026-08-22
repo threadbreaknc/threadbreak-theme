@@ -65,13 +65,13 @@
   #tbco .hat-img{width:100%;aspect-ratio:1/1;object-fit:contain;background:#fff;display:block}
   #tbco .hat-imgwrap{position:relative}
   /* brand mark sits on the photo in the grid */
-  #tbco .hat-logo{position:absolute;bottom:7px;right:7px;height:20px;width:auto;max-width:64px;object-fit:contain;opacity:.9;
-    background:rgba(255,255,255,.92);border-radius:5px;padding:3px 5px;box-shadow:0 1px 4px rgba(20,18,28,.12)}
+  #tbco .hat-logo{position:absolute;bottom:8px;right:8px;height:30px;width:auto;max-width:112px;object-fit:contain;opacity:.95;
+    background:rgba(255,255,255,.94);border-radius:6px;padding:4px 8px;box-shadow:0 1px 5px rgba(20,18,28,.14)}
   /* short name only on the two-up mobile grid */
   #tbco .hat-name-sm{display:none;font-weight:700;font-size:13px;line-height:1.25}
   /* expanded: brand mark moves up beside the title */
   #tbco .hat-titlerow{display:flex;align-items:flex-start;gap:12px}
-  #tbco .hat-logo-lg{height:34px;width:auto;max-width:96px;object-fit:contain;flex:0 0 auto;margin-top:2px}
+  #tbco .hat-logo-lg{height:52px;width:auto;max-width:170px;object-fit:contain;flex:0 0 auto;margin-top:0}
   #tbco .hat-heroimg{flex:0 0 auto;width:260px}
   #tbco .hat-heroimg .hat-img{width:100%}
   #tbco .hat-herocap{text-align:center;font-size:12px;font-weight:600;color:var(--purple);background:var(--ice);border-radius:8px;padding:5px 8px;margin-top:6px}
@@ -96,11 +96,11 @@
     #tbco .hat-info{padding:10px 11px 12px}
     #tbco .hat-name{display:none}
     #tbco .hat-name-sm{display:block}
-    #tbco .hat-logo{height:16px;max-width:52px;bottom:5px;right:5px;padding:2px 4px}
+    #tbco .hat-logo{height:22px;max-width:82px;bottom:6px;right:6px;padding:3px 6px}
     #tbco .hat.on .hat-name{display:block;font-size:17px}
     #tbco .hat.on .hat-name-sm{display:none}
     #tbco .hat-heroimg{width:100%}
-    #tbco .hat-logo-lg{height:28px}
+    #tbco .hat-logo-lg{height:40px;max-width:130px}
     #tbco .hat-brand{font-size:10.5px}
     #tbco .hat-price{font-size:12px;margin-top:5px}
     #tbco .hat-colors{font-size:11px;margin-top:6px}
@@ -815,6 +815,12 @@ function renderHats(){
       if (state.style && state.style.id === s.id) return;
       state.style = s; state.colors = []; state.split = {}; state.activeColor = null;
       renderHats(); sync();
+      // the grid collapses to one card, which shrinks the page and can leave the
+      // viewport stranded at the bottom on mobile; pull the chosen hat back into view
+      requestAnimationFrame(() => {
+        const card = document.querySelector("#tbco .hat.on");
+        if (card) card.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
     });
   });
   const chg = grid.querySelector("[data-change]");
@@ -822,6 +828,10 @@ function renderHats(){
     ev.stopPropagation();
     state.style = null; state.colors = []; state.split = {}; state.activeColor = null;
     renderHats(); sync();
+    requestAnimationFrame(() => {
+      const grid = document.getElementById("hats");
+      if (grid) grid.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   });
   if (picking) renderColorPanel();
 }
