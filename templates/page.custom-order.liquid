@@ -63,6 +63,20 @@
   #tbco .hats.picking .hat.on{display:block;cursor:default}
   #tbco .hats.picking .hat.on:hover{transform:none}
   #tbco .hat-img{width:100%;aspect-ratio:1/1;object-fit:contain;background:#fff;display:block}
+  #tbco .hat-imgwrap{position:relative}
+  /* brand mark sits on the photo in the grid */
+  #tbco .hat-logo{position:absolute;bottom:7px;right:7px;height:20px;width:auto;max-width:64px;object-fit:contain;opacity:.9;
+    background:rgba(255,255,255,.92);border-radius:5px;padding:3px 5px;box-shadow:0 1px 4px rgba(20,18,28,.12)}
+  /* short name only on the two-up mobile grid */
+  #tbco .hat-name-sm{display:none;font-weight:700;font-size:13px;line-height:1.25}
+  /* expanded: brand mark moves up beside the title */
+  #tbco .hat-titlerow{display:flex;align-items:flex-start;gap:12px}
+  #tbco .hat-logo-lg{height:34px;width:auto;max-width:96px;object-fit:contain;flex:0 0 auto;margin-top:2px}
+  #tbco .hat-heroimg{flex:0 0 auto;width:260px}
+  #tbco .hat-heroimg .hat-img{width:100%}
+  #tbco .hat-herocap{text-align:center;font-size:12px;font-weight:600;color:var(--purple);background:var(--ice);border-radius:8px;padding:5px 8px;margin-top:6px}
+  #tbco .pchip{cursor:pointer}
+  #tbco .pchip.on{border-color:var(--purple);background:var(--ice);box-shadow:0 0 0 2px rgba(80,40,170,.14)}
   #tbco .hat-info{padding:12px 14px 14px}
   #tbco .hat-name{font-weight:700;font-size:14.5px;line-height:1.25}
   #tbco .hat-brand{font-size:11.5px;color:var(--muted);margin-top:2px}
@@ -71,7 +85,7 @@
   #tbco .wheel{width:18px;height:18px;border-radius:50%;flex:0 0 auto;border:1px solid rgba(0,0,0,.12);background:conic-gradient(#e23b3b,#e2a13b,#d7e23b,#4ce23b,#3be2c0,#3b8fe2,#7a3be2,#e23bc0,#e23b3b)}
   #tbco .hat-badge{position:absolute;top:9px;left:9px;background:var(--purple);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;z-index:2}
   #tbco .hat.on .hat-top{display:flex;gap:24px;align-items:flex-start;padding:6px 6px 0}
-  #tbco .hat.on .hat-img{width:260px;flex:0 0 auto}
+
   #tbco .hat.on .hat-info{flex:1;padding-top:14px}
   @media(max-width:560px){
     #tbco .hat.on .hat-top{display:block}
@@ -80,7 +94,13 @@
     /* two-up on phones keeps the photos small and the names above the fold */
     #tbco .hats{grid-template-columns:1fr 1fr;gap:10px}
     #tbco .hat-info{padding:10px 11px 12px}
-    #tbco .hat-name{font-size:13.5px}
+    #tbco .hat-name{display:none}
+    #tbco .hat-name-sm{display:block}
+    #tbco .hat-logo{height:16px;max-width:52px;bottom:5px;right:5px;padding:2px 4px}
+    #tbco .hat.on .hat-name{display:block;font-size:17px}
+    #tbco .hat.on .hat-name-sm{display:none}
+    #tbco .hat-heroimg{width:100%}
+    #tbco .hat-logo-lg{height:28px}
     #tbco .hat-brand{font-size:10.5px}
     #tbco .hat-price{font-size:12px;margin-top:5px}
     #tbco .hat-colors{font-size:11px;margin-top:6px}
@@ -657,13 +677,41 @@ const CLEAN_NAME = {
   otto120: "Otto Comfy Fit 5-Panel"
 };
 const nameOf = s => CLEAN_NAME[s.id] || s.name;
+
+// Short label for the two-up mobile grid, where the full name wraps badly.
+const SHORT_NAME = {
+  otto: "5-Panel Mid Profile",
+  atonal: "Camo A-Frame",
+  atonal_a500r: "Rope Snapback",
+  rich112: "6-Panel Trucker",
+  rich112_5p: "5-Panel Trucker",
+  rich112p: "Printed 5-Panel",
+  yupoong: "Flat Bill Trucker",
+  yp6606: "Retro Trucker",
+  rich168: "7-Panel Trucker",
+  rich256: "Umpqua Rope Hat",
+  otto120: "Comfy Fit 5-Panel"
+};
+const shortOf = s => SHORT_NAME[s.id] || nameOf(s);
+
+// Brand marks, matched off the brand string.
+const BRAND_LOGOS = [
+  { test: /richardson/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/richardson.png?v=1787437321", alt: "Richardson" },
+  { test: /yupoong|yp classics/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yupoong.png?v=1787437321", alt: "Yupoong" },
+  { test: /atonal/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/atonal.png?v=1787437321", alt: "Atonal" },
+  { test: /otto/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/otoo.png?v=1787437321", alt: "Otto" }
+];
+function brandLogo(s){
+  const hit = BRAND_LOGOS.find(b => b.test.test(s.brand) || b.test.test(s.name));
+  return hit || null;
+}
 // Every blank we carry is one size fits most; the Richardsons are the standard M/L.
 const sizingOf = s => (/^rich/i.test(s.id) || /richardson/i.test(s.brand))
   ? "One size fits most (standard M/L)" : "One size fits most";
 const specsOf = s => (s.desc || "").split("\u00b7").map(x => x.trim()).filter(x => x && !/size|fits/i.test(x));
 
 const state = {
-  style: null, colors: [], split: {}, qty: null,
+  style: null, colors: [], split: {}, qty: null, activeColor: null,
   deco: DECOS[0], places: new Set(["front"]), frontPos: "Center front",
   files: { front:null, side:null, back:null },
   step: 1, maxStep: 1, done: new Set()
@@ -718,22 +766,36 @@ function renderHats(){
     const ten = (s.tiers.find(t => t[0] === 10) || s.tiers[0])[1];
 
     if (!on){
+      const lg = brandLogo(s);
       return '<div class="hat" data-hat="' + s.id + '">' + badge +
-        '<img class="hat-img" src="' + s.imgs[0] + '" alt="' + nameOf(s) + '" loading="lazy">' +
+        '<div class="hat-imgwrap">' +
+          '<img class="hat-img" src="' + s.imgs[0] + '" alt="' + nameOf(s) + '" loading="lazy">' +
+          (lg ? '<img class="hat-logo" src="' + lg.src + '" alt="' + lg.alt + '" loading="lazy">' : '') +
+        '</div>' +
         '<div class="hat-info">' +
           '<div class="hat-name">' + nameOf(s) + '</div>' +
+          '<div class="hat-name-sm">' + shortOf(s) + '</div>' +
           '<div class="hat-brand">' + s.brand + '</div>' +
           '<div class="hat-price">As low as ' + money(low) + '/hat</div>' +
           '<div class="hat-colors"><span class="wheel"></span>' + s.colors.length + ' colors</div>' +
         '</div></div>';
     }
     const specs = specsOf(s);
+    const lg = brandLogo(s);
+    const shown = state.activeColor && s.colors.indexOf(state.activeColor) > -1 ? state.activeColor : null;
+    const heroSrc = shown ? colorImg(s, shown) : s.imgs[0];
     return '<div class="hat on" data-hat="' + s.id + '">' + badge +
       '<div class="hat-top">' +
-        '<img class="hat-img" src="' + s.imgs[0] + '" alt="' + nameOf(s) + '" loading="lazy">' +
+        '<div class="hat-heroimg">' +
+          '<img class="hat-img" id="hatHero" src="' + heroSrc + '" alt="' + nameOf(s) + '" loading="lazy" onerror="this.onerror=null;this.src=\'' + s.imgs[0] + '\'">' +
+          '<div class="hat-herocap" id="hatHeroCap">' + (shown ? shown : "Pick a color to preview") + '</div>' +
+        '</div>' +
         '<div class="hat-info">' +
-          '<div class="hat-name" style="font-size:19px">' + nameOf(s) + '</div>' +
-          '<div class="hat-brand">' + s.brand + '</div>' +
+          '<div class="hat-titlerow">' +
+            (lg ? '<img class="hat-logo-lg" src="' + lg.src + '" alt="' + lg.alt + '">' : '') +
+            '<div><div class="hat-name" style="font-size:19px">' + nameOf(s) + '</div>' +
+            '<div class="hat-brand">' + s.brand + '</div></div>' +
+          '</div>' +
           '<div class="hat-price">' + money(one) + ' for 1 &middot; ' + money(ten) + ' each at 10 &middot; as low as ' + money(low) + '</div>' +
           '<div class="hat-specs">' +
             '<div><b>Sizing:</b> ' + sizingOf(s) + '</div>' +
@@ -751,14 +813,14 @@ function renderHats(){
       if (ev.target.closest(".hat-expand") || ev.target.closest("[data-change]")) return;
       const s = STYLES.find(x => x.id === el.dataset.hat);
       if (state.style && state.style.id === s.id) return;
-      state.style = s; state.colors = []; state.split = {};
+      state.style = s; state.colors = []; state.split = {}; state.activeColor = null;
       renderHats(); sync();
     });
   });
   const chg = grid.querySelector("[data-change]");
   if (chg) chg.addEventListener("click", ev => {
     ev.stopPropagation();
-    state.style = null; state.colors = []; state.split = {};
+    state.style = null; state.colors = []; state.split = {}; state.activeColor = null;
     renderHats(); sync();
   });
   if (picking) renderColorPanel();
@@ -803,26 +865,52 @@ function renderColorPanel(){
     opt.addEventListener("click", () => {
       const c = opt.dataset.color;
       const i = state.colors.indexOf(c);
-      if (i === -1) state.colors.push(c); else { state.colors.splice(i,1); delete state.split[c]; }
+      if (i === -1){ state.colors.push(c); state.activeColor = c; }
+      else {
+        state.colors.splice(i,1); delete state.split[c];
+        if (state.activeColor === c) state.activeColor = state.colors[state.colors.length-1] || null;
+      }
+      updateHero();
       renderColorPanel(); renderSplit(); sync();
     });
   });
   renderPicked();
 }
+// Swap the expanded card's main photo to the previewed color without re-rendering the grid.
+function updateHero(){
+  const img = document.getElementById("hatHero");
+  const cap = document.getElementById("hatHeroCap");
+  if (!img || !state.style) return;
+  const c = state.activeColor;
+  img.src = (c && state.style.colors.indexOf(c) > -1) ? colorImg(state.style, c) : state.style.imgs[0];
+  if (cap) cap.textContent = c || "Pick a color to preview";
+}
+
 function renderPicked(){
   const row = $("pickedRow");
   if (!row) return;
   if (!state.colors.length){ row.innerHTML = ""; $("ddLabel").textContent = "Select a color"; return; }
   $("ddLabel").textContent = state.colors.length === 1 ? state.colors[0] : state.colors.length + " colors selected";
   row.innerHTML = state.colors.map(c =>
-    '<span class="pchip"><img src="' + colorImg(state.style, c) + '" alt="' + c + '" onerror="this.onerror=null;this.src=\'' + state.style.imgs[0] + '\'">' +
+    '<span class="pchip' + (state.activeColor === c ? ' on' : '') + '" data-preview="' + c + '">' +
+    '<img src="' + colorImg(state.style, c) + '" alt="' + c + '" onerror="this.onerror=null;this.src=\'' + state.style.imgs[0] + '\'">' +
     c + '<button type="button" data-remove="' + c + '" aria-label="Remove ' + c + '">&times;</button></span>').join("");
   row.querySelectorAll("[data-remove]").forEach(b => {
-    b.addEventListener("click", () => {
+    b.addEventListener("click", ev => {
+      ev.stopPropagation();
       const c = b.dataset.remove;
       state.colors = state.colors.filter(x => x !== c);
       delete state.split[c];
+      if (state.activeColor === c) state.activeColor = state.colors[state.colors.length-1] || null;
+      updateHero();
       renderColorPanel(); renderSplit(); sync();
+    });
+  });
+  // tapping a chosen color previews it on the main photo
+  row.querySelectorAll("[data-preview]").forEach(el => {
+    el.addEventListener("click", () => {
+      state.activeColor = el.dataset.preview;
+      updateHero(); renderPicked();
     });
   });
 }
@@ -960,7 +1048,7 @@ function goto(step){
   sync();
 }
 function resetToStep1(){
-  state.style = null; state.colors = []; state.split = {};
+  state.style = null; state.colors = []; state.split = {}; state.activeColor = null;
   state.done.delete(1); state.maxStep = 1;
   renderHats();
 }
