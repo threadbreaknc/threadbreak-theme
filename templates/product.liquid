@@ -221,7 +221,27 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
   .product-desc ul{margin:0 0 1.1em;padding-left:20px}
   .product-desc li{margin-bottom:.45em;line-height:1.6}
   .product-desc strong{color:#14121C}
+  .bundle-trust{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:16px 0 12px;padding:11px 14px;background:#F3EFFC;border:1px solid #E2E0EA;border-radius:11px;text-decoration:none;color:#14121C;transition:border-color .15s}
+  .bundle-trust:hover{border-color:#5028AA}
+  .bt-stars{color:#F5C518;font-size:17px;letter-spacing:2px;flex:0 0 auto}
+  .bt-text{font-size:13.5px;color:#3d3a4a}
+  .bt-text strong{color:#14121C}
+  .bundle-trust-points{list-style:none;margin:0 0 4px;padding:0;display:grid;gap:6px}
+  .bundle-trust-points li{font-size:13.5px;color:#3d3a4a;line-height:1.5;padding-left:23px;position:relative}
+  .bundle-trust-points li::before{content:"\2713";position:absolute;left:0;top:0;color:#1E9E5A;font-weight:700}
 </style>
+{%- assign jm = shop.metafields.judgeme -%}
+<a href="/pages/reviews" class="bundle-trust">
+  <span class="bt-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+  <span class="bt-text"><strong>{{ jm.all_reviews_rating | default: 5.0 | round: 1 }} out of 5</strong> from {{ jm.all_reviews_count | default: 45 }} verified customer reviews</span>
+</a>
+<ul class="bundle-trust-points">
+  <li>Free logo digitizing, no setup fee</li>
+  <li>No stitch limits, detailed logos cost the same</li>
+  <li>Free digital mockup before we stitch</li>
+  <li>Free shipping anywhere in the USA</li>
+  <li>Embroidered in-house in Burlington, NC</li>
+</ul>
 <div class="bundle-opts">
 <div class="bundle-opt">
 <label class="bundle-opt-label" for="logo-placement">Front logo placement <span class="bundle-req">*</span></label>

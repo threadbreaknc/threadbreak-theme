@@ -58,17 +58,13 @@
               {%- if product.compare_at_price > product.price -%}
                 <s class="coll-price-was">{{ product.compare_at_price | money }}</s>
               {%- endif -%}
-              {%- comment -%} colour count for bundle products {%- endcomment -%}
-              {%- for opt in product.options_with_values -%}
-                {%- if opt.name == "Color" and opt.values.size > 1 -%}
-                  {%- assign cc = opt.values.size -%}
-                  {%- for v in opt.values -%}
-                    {%- assign vd = v | downcase -%}
-                    {%- if vd contains "mix" -%}{%- assign cc = cc | minus: 1 -%}{%- endif -%}
-                  {%- endfor -%}
-                  <span class="coll-colors"><span class="coll-wheel"></span>{{ cc }} colors</span>
-                {%- endif -%}
-              {%- endfor -%}
+              {%- comment -%}
+                Colour count for bundle products. Each variant is one colour, so the
+                variant count is the colour count and works reliably on collection pages.
+              {%- endcomment -%}
+              {%- if product.type == "Custom Hat Bundle" and product.variants.size > 1 -%}
+                <span class="coll-colors"><span class="coll-wheel"></span>{{ product.variants.size }} colors</span>
+              {%- endif -%}
               {%- if product.variants.size > 1 -%}
                 <span class="coll-variants">{{ product.variants.size }} styles</span>
               {%- endif -%}
