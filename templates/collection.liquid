@@ -5,24 +5,13 @@
     <div class="collection-hero-bg"></div>
     <div class="collection-hero-content">
       <h1>{{ collection.title | upcase }}</h1>
-      <p class="collection-hero-sub">Sports & culture inspired designs, free shipping on every order.</p>
+      {%- if collection.description != blank -%}
+        <div class="collection-hero-sub">{{ collection.description }}</div>
+      {%- else -%}
+        <p class="collection-hero-sub">Free shipping on every order.</p>
+      {%- endif -%}
     </div>
   </section>
-
-  <!-- TICKER -->
-  <div class="ticker" aria-hidden="true">
-    <div class="ticker-wrap">
-      <span>Premium Hats</span><span class="ticker-sep">✦</span>
-      <span>Free Shipping</span><span class="ticker-sep">✦</span>
-            <span>Custom Orders Available</span><span class="ticker-sep">✦</span>
-      <span>Premium Hats</span><span class="ticker-sep">✦</span>
-      <span>Free Shipping</span><span class="ticker-sep">✦</span>
-            <span>Custom Orders Available</span><span class="ticker-sep">✦</span>
-      <span>Premium Hats</span><span class="ticker-sep">✦</span>
-      <span>Free Shipping</span><span class="ticker-sep">✦</span>
-            <span>Custom Orders Available</span><span class="ticker-sep">✦</span>
-    </div>
-  </div>
 
   <!-- SORT + COUNT BAR -->
   <div class="collection-bar">
