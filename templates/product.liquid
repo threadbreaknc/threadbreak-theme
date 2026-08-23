@@ -213,6 +213,8 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
   .opt-dd-opt.is-mix .opt-dd-name,.swatch.is-mix{font-weight:700}
   /* product description needs real spacing between paragraphs */
   .product-desc p{margin:0 0 1.1em;line-height:1.65}
+  .product-desc h3{font-size:16px;font-weight:700;color:#14121C;margin:1.8em 0 .7em}
+  .product-desc h3:first-child{margin-top:0}
   .product-desc p:last-child{margin-bottom:0}
   .product-desc ul{margin:0 0 1.1em;padding-left:20px}
   .product-desc li{margin-bottom:.45em;line-height:1.6}
@@ -228,23 +230,7 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 <option value="Right panel">Right panel</option>
 </select>
 </div>
-<div class="bundle-opt" id="mixSplitWrap" hidden>
-<label class="bundle-opt-label" for="mix-split">Which colors, and how many of each? <span class="bundle-req">*</span></label>
-<textarea id="mix-split" name="properties[Color split]" class="bundle-select" rows="2" placeholder="Example: 5 Black, 5 Charcoal/White"></textarea>
-<p class="bundle-hint">Split your order across any colors you like, at no extra charge. We'll confirm on your mockup.</p>
-</div>
-<div class="bundle-opt">
-<label class="bundle-opt-label" for="logo-file">Upload your logo <span class="bundle-req">*</span></label>
-<input type="file" id="logo-file" name="properties[Logo file]" class="bundle-file" accept="image/*,.pdf,.ai,.eps,.svg,.png,.jpg,.jpeg" required>
-<p class="bundle-hint">Front embroidery. PNG, JPG, PDF, AI, EPS, or SVG. We'll confirm your design before stitching.</p>
-<div class="bundle-notice">
-<span class="bundle-notice-icon">!</span>
-<div>
-<p><strong>Embroidery Notice:</strong> AI-generated and highly detailed logos don't always translate well to embroidery. If your design isn't suitable, we'll recommend the best solution, such as simplifying the artwork, using a DTF transfer, or a patch to ensure the best possible result.</p>
-<button type="button" class="bundle-en-toggle" onclick="var ex=document.getElementById('bundleEnExample');var sh=ex.hasAttribute('hidden');if(sh){ex.removeAttribute('hidden');this.setAttribute('aria-expanded','true');this.firstChild.textContent='Hide example';}else{ex.setAttribute('hidden','');this.setAttribute('aria-expanded','false');this.firstChild.textContent='View example';}" aria-expanded="false">View example</button>
-<div class="bundle-en-example" id="bundleEnExample" hidden>
-<img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ChatGPT_Image_Aug_14_2026_at_10_40_32_PM.png?v=1786761670" alt="Example showing how a detailed logo simplifies for embroidery" loading="lazy">
-</div>
+
 </div>
 </div>
 </div>
@@ -456,15 +442,6 @@ document.querySelectorAll('.swatch, .opt-dd-opt').forEach(function(swatch) {
         trigger.setAttribute('aria-expanded','false');
       }
       menu.setAttribute('hidden','');
-    }
-
-    // mix option reveals the split field
-    var mixWrap = document.getElementById('mixSplitWrap');
-    if (mixWrap) {
-      var isMix = swatch.dataset.isMix === '1';
-      if (isMix) mixWrap.removeAttribute('hidden'); else mixWrap.setAttribute('hidden','');
-      var mi = document.getElementById('mix-split');
-      if (mi) { mi.required = isMix; if (!isMix) mi.value = ''; }
     }
 
     // sale banner for discounted variants
