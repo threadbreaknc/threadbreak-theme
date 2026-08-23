@@ -50,6 +50,23 @@
             {%- unless product.available -%}
               <div class="coll-badge coll-badge-sold">Sold Out</div>
             {%- endunless -%}
+            {%- comment -%} brand mark for hat packages {%- endcomment -%}
+            {%- if product.type == "Custom Hat Bundle" -%}
+              {%- assign vt = product.vendor | append: " " | append: product.title | downcase -%}
+              {%- assign blogo = "" -%}{%- assign balt = "" -%}
+              {%- if vt contains "richardson" -%}
+                {%- assign blogo = "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/richardson.png?v=1787437321" -%}{%- assign balt = "Richardson" -%}
+              {%- elsif vt contains "yupoong" or vt contains "yp classics" -%}
+                {%- assign blogo = "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yupoong.png?v=1787437321" -%}{%- assign balt = "Yupoong" -%}
+              {%- elsif vt contains "atonal" -%}
+                {%- assign blogo = "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/atonal.png?v=1787437321" -%}{%- assign balt = "Atonal" -%}
+              {%- elsif vt contains "otto" -%}
+                {%- assign blogo = "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/otoo.png?v=1787437321" -%}{%- assign balt = "Otto" -%}
+              {%- endif -%}
+              {%- if blogo != blank -%}
+                <img class="coll-brand" src="{{ blogo }}" alt="{{ balt }}" loading="lazy">
+              {%- endif -%}
+            {%- endif -%}
           </div>
           <div class="coll-info">
             <h3 class="coll-name">{{ product.title }}</h3>

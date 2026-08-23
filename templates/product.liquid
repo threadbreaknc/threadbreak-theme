@@ -23,7 +23,33 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
 
 <!-- INFO -->
 <div class="product-info">
-<h1 class="product-title">{{ product.title }}</h1>
+{%- comment -%} brand mark, matched off vendor or title {%- endcomment -%}
+{%- assign brand_logo = "" -%}
+{%- assign brand_alt = "" -%}
+{%- assign vt = product.vendor | append: " " | append: product.title | downcase -%}
+{%- if vt contains "richardson" -%}
+  {%- assign brand_logo = "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/richardson.png?v=1787437321" -%}{%- assign brand_alt = "Richardson" -%}
+{%- elsif vt contains "yupoong" or vt contains "yp classics" -%}
+  {%- assign brand_logo = "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yupoong.png?v=1787437321" -%}{%- assign brand_alt = "Yupoong" -%}
+{%- elsif vt contains "atonal" -%}
+  {%- assign brand_logo = "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/atonal.png?v=1787437321" -%}{%- assign brand_alt = "Atonal" -%}
+{%- elsif vt contains "otto" -%}
+  {%- assign brand_logo = "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/otoo.png?v=1787437321" -%}{%- assign brand_alt = "Otto" -%}
+{%- endif -%}
+
+<div class="title-row">
+  <h1 class="product-title">{{ product.title }}</h1>
+  {%- if brand_logo != blank -%}
+    <img class="title-brand" src="{{ brand_logo }}" alt="{{ brand_alt }}" loading="lazy">
+  {%- endif -%}
+</div>
+{%- if is_bundle -%}
+  {%- assign jm = shop.metafields.judgeme -%}
+  <a href="/pages/reviews" class="bundle-trust">
+    <span class="bt-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+    <span class="bt-text"><strong>{{ jm.all_reviews_rating | default: 5.0 | round: 1 }} out of 5</strong> from {{ jm.all_reviews_count | default: 45 }} verified customer reviews</span>
+  </a>
+{%- endif -%}
 
 {%- assign is_apparel = false -%}
 {%- assign is_premade = false -%}
@@ -229,12 +255,10 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
   .bundle-trust-points{list-style:none;margin:0 0 4px;padding:0;display:grid;gap:6px}
   .bundle-trust-points li{font-size:13.5px;color:#3d3a4a;line-height:1.5;padding-left:23px;position:relative}
   .bundle-trust-points li::before{content:"\2713";position:absolute;left:0;top:0;color:#1E9E5A;font-weight:700}
+  .title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+  .title-brand{height:44px;width:auto;max-width:140px;object-fit:contain;flex:0 0 auto;margin-top:4px}
+  @media(max-width:600px){.title-brand{height:32px;max-width:100px}}
 </style>
-{%- assign jm = shop.metafields.judgeme -%}
-<a href="/pages/reviews" class="bundle-trust">
-  <span class="bt-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-  <span class="bt-text"><strong>{{ jm.all_reviews_rating | default: 5.0 | round: 1 }} out of 5</strong> from {{ jm.all_reviews_count | default: 45 }} verified customer reviews</span>
-</a>
 <ul class="bundle-trust-points">
   <li>Free logo digitizing, no setup fee</li>
   <li>No stitch limits, detailed logos cost the same</li>
