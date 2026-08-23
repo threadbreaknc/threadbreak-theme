@@ -1,28 +1,3 @@
-{%- assign selected_variant = product.selected_or_first_available_variant -%}
-<div class="product-page">
-
-<section class="product-main">
-
-<!-- GALLERY -->
-<div class="product-gallery">
-<div class="product-gallery-main">
-<img src="{{ selected_variant.featured_image | default: product.featured_image | img_url: '800x800', crop: 'center' }}"
-alt="{{ product.title | escape }}"
-id="product-main-img"
-class="product-main-img">
-</div>
-<div class="product-thumbs">
-{%- for image in product.images limit: 6 -%}
-<button class="product-thumb{% if forloop.first %} active{% endif %}"
-data-src="{{ image | img_url: '800x800', crop: 'center' }}">
-<img src="{{ image | img_url: '160x160', crop: 'center' }}" alt="{{ product.title | escape }}">
-</button>
-{%- endfor -%}
-</div>
-</div>
-
-<!-- INFO -->
-<div class="product-info">
 {%- comment -%} brand mark, matched off vendor or title {%- endcomment -%}
 {%- assign brand_logo = "" -%}
 {%- assign brand_alt = "" -%}
@@ -37,12 +12,35 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
   {%- assign brand_logo = "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/otoo.png?v=1787437321" -%}{%- assign brand_alt = "Otto" -%}
 {%- endif -%}
 
-<div class="title-row">
-  <h1 class="product-title">{{ product.title }}</h1>
-  {%- if brand_logo != blank -%}
-    <img class="title-brand" src="{{ brand_logo }}" alt="{{ brand_alt }}" loading="lazy">
-  {%- endif -%}
+{%- assign selected_variant = product.selected_or_first_available_variant -%}
+<div class="product-page">
+
+<section class="product-main">
+
+<!-- GALLERY -->
+<div class="product-gallery">
+<div class="product-gallery-main">
+<img src="{{ selected_variant.featured_image | default: product.featured_image | img_url: '800x800', crop: 'center' }}"
+alt="{{ product.title | escape }}"
+id="product-main-img"
+class="product-main-img">
+{%- if brand_logo != blank -%}
+<img class="gallery-brand" src="{{ brand_logo }}" alt="{{ brand_alt }}" loading="lazy">
+{%- endif -%}
 </div>
+<div class="product-thumbs">
+{%- for image in product.images limit: 6 -%}
+<button class="product-thumb{% if forloop.first %} active{% endif %}"
+data-src="{{ image | img_url: '800x800', crop: 'center' }}">
+<img src="{{ image | img_url: '160x160', crop: 'center' }}" alt="{{ product.title | escape }}">
+</button>
+{%- endfor -%}
+</div>
+</div>
+
+<!-- INFO -->
+<div class="product-info">
+<h1 class="product-title">{{ product.title }}</h1>
 {%- assign title_is_bundle = false -%}
 {%- if product.type == 'Custom Hat Bundle' -%}{%- assign title_is_bundle = true -%}{%- endif -%}
 {%- if title_is_bundle -%}
@@ -254,12 +252,15 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
   .bt-stars{color:#F5C518;font-size:17px;letter-spacing:2px;flex:0 0 auto}
   .bt-text{font-size:13.5px;color:#3d3a4a}
   .bt-text strong{color:#14121C}
-  .bundle-incl{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 2px}
-  .bundle-incl span{font-size:12px;color:#3d3a4a;background:#F3EFFC;border:1px solid #E2E0EA;border-radius:999px;padding:4px 10px;white-space:nowrap}
-  .bundle-incl span::before{content:"\2713";color:#1E9E5A;font-weight:700;margin-right:5px}
-  .title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
-  .title-brand{height:76px;width:auto;max-width:230px;object-fit:contain;flex:0 0 auto;margin-top:2px}
-  @media(max-width:600px){.title-brand{height:52px;max-width:150px}}
+  .product-gallery-main{position:relative}
+  .gallery-brand{position:absolute;top:14px;right:14px;height:52px;width:auto;max-width:170px;object-fit:contain;z-index:3;
+    background:rgba(255,255,255,.95);border-radius:9px;padding:7px 11px;box-shadow:0 2px 9px rgba(20,18,28,.15)}
+  @media(max-width:600px){.gallery-brand{height:38px;max-width:120px;padding:5px 8px;top:10px;right:10px}}
+  /* tighter vertical rhythm between title, rating and price */
+  .product-title{margin-bottom:8px}
+  .bundle-trust{margin:0 0 10px}
+  .product-price-row{margin:0 0 10px}
+  .bundle-incl{margin:12px 0 2px;font-size:12.5px;color:#6B6A78;line-height:1.5}
 </style>
 <div class="bundle-opts">
 <div class="bundle-opt">
@@ -292,14 +293,7 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 {%- endif -%}
 
 {%- if is_bundle -%}
-<div class="bundle-incl">
-  <span>Free digitizing</span>
-  <span>No setup fee</span>
-  <span>No stitch limits</span>
-  <span>Free mockup</span>
-  <span>Free US shipping</span>
-  <span>Made in Burlington, NC</span>
-</div>
+<p class="bundle-incl">Free digitizing &middot; Free US shipping &middot; Made in Burlington, NC</p>
 {%- endif -%}
 
 {%- if is_clearance -%}
