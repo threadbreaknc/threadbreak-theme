@@ -78,6 +78,15 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
 {%- endcomment -%}
 {%- assign many = false -%}
 {%- if option.values.size > 8 -%}{%- assign many = true -%}{%- endif -%}
+{%- comment -%} alphabetical, with any "Mix" option pushed to the end {%- endcomment -%}
+{%- assign sorted_values = option.values | sort -%}
+{%- assign mix_value = "" -%}
+{%- for v in sorted_values -%}
+  {%- assign vd = v | downcase -%}
+  {%- if vd contains "mix" -%}{%- assign mix_value = v -%}{%- endif -%}
+{%- endfor -%}
+{%- assign color_count = option.values.size -%}
+{%- if mix_value != "" -%}{%- assign color_count = color_count | minus: 1 -%}{%- endif -%}
 
 <div class="option-swatches{% if many %} as-dropdown{% endif %}">
 {%- if many -%}
@@ -89,7 +98,8 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
   <div class="opt-dd-menu" id="optdd-menu-{{ forloop.index0 }}" hidden>
 {%- endif -%}
 
-{%- for value in option.values -%}
+{%- for value in sorted_values -%}
+{%- if value == mix_value -%}{%- continue -%}{%- endif -%}
 {%- assign opt_idx = forloop.parentloop.index0 -%}
 {%- for variant in product.variants -%}
 {%- if variant.option1 == value or variant.option2 == value -%}
@@ -114,10 +124,34 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 {%- endfor -%}
 {%- endfor -%}
 
+{%- if mix_value != "" -%}
+  {%- for variant in product.variants -%}
+  {%- if variant.option1 == mix_value -%}
+  <button type="button"
+  class="{% if many %}opt-dd-opt{% else %}swatch{% endif %} is-mix{% if mix_value == option.selected_value %} active{% endif %}"
+  data-value="{{ mix_value | escape }}"
+  data-option-index="0"
+  data-variant-id="{{ variant.id }}"
+  data-variant-price="{{ variant.price }}"
+  data-variant-compare="{{ variant.compare_at_price | default: 0 }}"
+  data-variant-available="{{ variant.available }}"
+  data-is-mix="1"
+  data-variant-image="{% if variant.featured_image %}{{ variant.featured_image | img_url: '800x800', crop: 'center' }}{% endif %}"
+  data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | img_url: '96x96', crop: 'center' }}{% endif %}">
+  {%- if many -%}<span class="opt-dd-wheel"></span>{%- endif -%}
+  <span class="opt-dd-name">Mix colors</span>
+  </button>
+  {%- break -%}
+  {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}
 {%- if many -%}
   </div>
 {%- endif -%}
 </div>
+{%- if option.name == "Color" -%}
+<p class="color-count"><span class="color-wheel"></span>{{ color_count }} colors available{% if mix_value != "" %} &middot; mix any of them{% endif %}</p>
+{%- endif -%}
 </div>
 {%- endfor -%}
 {%- endunless -%}
@@ -172,6 +206,17 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
   .sale-banner{display:flex;align-items:center;gap:10px;background:#FDECEC;border:1.5px solid #C62828;border-left:5px solid #C62828;border-radius:11px;padding:12px 15px;margin:14px 0;font-size:14px;line-height:1.5}
   .sale-banner strong{color:#C62828}
   .sale-banner .sb-save{background:#C62828;color:#fff;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700;white-space:nowrap}
+  .color-wheel,.opt-dd-wheel{width:18px;height:18px;border-radius:50%;flex:0 0 auto;display:inline-block;vertical-align:-4px;border:1px solid rgba(0,0,0,.12);
+    background:conic-gradient(#e23b3b,#e2a13b,#d7e23b,#4ce23b,#3be2c0,#3b8fe2,#7a3be2,#e23bc0,#e23b3b)}
+  .opt-dd-wheel{width:44px;height:44px;border-radius:7px;vertical-align:middle}
+  .color-count{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:13px;color:#6B6A78}
+  .opt-dd-opt.is-mix .opt-dd-name,.swatch.is-mix{font-weight:700}
+  /* product description needs real spacing between paragraphs */
+  .product-desc p{margin:0 0 1.1em;line-height:1.65}
+  .product-desc p:last-child{margin-bottom:0}
+  .product-desc ul{margin:0 0 1.1em;padding-left:20px}
+  .product-desc li{margin-bottom:.45em;line-height:1.6}
+  .product-desc strong{color:#14121C}
 </style>
 <div class="bundle-opts">
 <div class="bundle-opt">
@@ -182,6 +227,11 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 <option value="Left panel">Left panel</option>
 <option value="Right panel">Right panel</option>
 </select>
+</div>
+<div class="bundle-opt" id="mixSplitWrap" hidden>
+<label class="bundle-opt-label" for="mix-split">Which colors, and how many of each? <span class="bundle-req">*</span></label>
+<textarea id="mix-split" name="properties[Color split]" class="bundle-select" rows="2" placeholder="Example: 5 Black, 5 Charcoal/White"></textarea>
+<p class="bundle-hint">Split your order across any colors you like, at no extra charge. We'll confirm on your mockup.</p>
 </div>
 <div class="bundle-opt">
 <label class="bundle-opt-label" for="logo-file">Upload your logo <span class="bundle-req">*</span></label>
@@ -406,6 +456,15 @@ document.querySelectorAll('.swatch, .opt-dd-opt').forEach(function(swatch) {
         trigger.setAttribute('aria-expanded','false');
       }
       menu.setAttribute('hidden','');
+    }
+
+    // mix option reveals the split field
+    var mixWrap = document.getElementById('mixSplitWrap');
+    if (mixWrap) {
+      var isMix = swatch.dataset.isMix === '1';
+      if (isMix) mixWrap.removeAttribute('hidden'); else mixWrap.setAttribute('hidden','');
+      var mi = document.getElementById('mix-split');
+      if (mi) { mi.required = isMix; if (!isMix) mi.value = ''; }
     }
 
     // sale banner for discounted variants
