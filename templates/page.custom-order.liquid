@@ -8,32 +8,32 @@
 {%- endcomment -%}
 <div id="tbco">
 <style>
-  #tbco{position:relative;z-index:1;padding-top:5.5rem;max-width:100%;overflow-x:clip;font-family:'DM Sans',sans-serif;
+  #tbco{position:relative;z-index:1;padding-top:4.5rem;max-width:100%;overflow-x:clip;font-family:'DM Sans',sans-serif;
     --purple:#5028AA;--purple2:#6234c9;--purple-dark:#3D1E85;--ink:#14121C;--ice:#F3EFFC;--white:#fff;--line:#E2E0EA;--muted:#6B6A78;--good:#1E9E5A;color:var(--ink)}
   #tbco *{box-sizing:border-box;margin:0;padding:0}
   #tbco .wrap{max-width:880px;margin:0 auto;padding:0 20px}
   /* the form itself gets more room than the prose-width hero */
   #tbco .form-wrap{max-width:1180px;margin:0 auto;padding:0 20px}
   #tbco .bar-in{max-width:1180px}
-  #tbco header{position:relative;overflow:hidden;background:var(--ink);color:var(--white);padding:56px 0 48px}
+  #tbco header{position:relative;overflow:hidden;background:var(--ink);color:var(--white);padding:38px 0 30px}
   #tbco .hero-photos{position:absolute;inset:0;display:flex;z-index:0;opacity:.5}
   #tbco .hero-photos div{flex:1;background-size:cover;background-position:center;min-width:0}
   #tbco .hero-photos div:not(:first-child){-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%);mask-image:linear-gradient(90deg,transparent,#000 12%);margin-left:-6%}
   #tbco header::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,var(--ink) 0%,rgba(20,18,28,.7) 42%,rgba(20,18,28,.32) 100%)}
   #tbco header .wrap{position:relative;z-index:2}
   @media(max-width:640px){#tbco .hero-photos div:nth-child(n+4){display:none}#tbco header::after{background:linear-gradient(180deg,rgba(20,18,28,.72),rgba(20,18,28,.9))}}
-  #tbco h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(44px,8vw,76px);line-height:.95;letter-spacing:.01em;margin:10px 0 14px}
+  #tbco h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,58px);line-height:.95;letter-spacing:.01em;margin:0 0 10px}
   #tbco h1 em{font-style:normal;color:#7F5FD8}
-  #tbco .sub{font-size:16px;line-height:1.6;color:#D9D6E4;max-width:620px}
-  #tbco .props{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:22px}
-  #tbco .props span{font-size:14px;font-weight:500;color:#EDEAF7}
+  #tbco .sub{font-size:15px;line-height:1.55;color:#D9D6E4;max-width:560px}
+  #tbco .props{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:14px}
+  #tbco .props span{font-size:13px;font-weight:500;color:#EDEAF7}
   #tbco .props span::before{content:"\2713";color:#7F5FD8;font-weight:700;margin-right:7px}
   #tbco .tbco-textus{display:none !important;align-items:center;justify-content:center;gap:10px;text-align:center;margin:40px 0 22px;padding:15px 22px;background:var(--purple);border:1.5px solid var(--purple);border-radius:12px;text-decoration:none;color:#fff;font-size:14.5px}
   #tbco .tbco-textus-icon{display:inline-flex;color:#fff;flex:none}
   #tbco .tbco-textus strong{color:#fff;font-weight:700;white-space:nowrap}
 
   /* progress rail */
-  #tbco .rail{display:flex;gap:6px;margin:34px 0 22px;flex-wrap:wrap;position:sticky;top:74px;z-index:50;
+  #tbco .rail{display:flex;gap:6px;margin:20px 0 18px;flex-wrap:wrap;position:sticky;top:74px;z-index:50;
     background:rgba(255,255,255,.97);backdrop-filter:blur(6px);padding:12px;border-radius:12px;
     box-shadow:0 6px 18px rgba(20,18,28,.10);border:1px solid var(--line)}
   @media(max-width:640px){
@@ -282,7 +282,7 @@
   </div>
   <div class="wrap">
     <h1>Your logo.<br>Our <em>stitches.</em></h1>
-    <p class="sub">Custom embroidered hats, stitched in-house on name-brand blanks. Pick a style, tell us the quantity, and check out. We send a free mockup for approval before anything hits a machine.</p>
+    <p class="sub">Custom embroidered hats on name-brand blanks. Free mockup before anything hits a machine.</p>
     <div class="props">
       <span>Embroidered in Burlington, NC</span>
       <span>Free shipping anywhere in the USA</span>
