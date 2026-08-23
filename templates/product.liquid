@@ -43,7 +43,9 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
     <img class="title-brand" src="{{ brand_logo }}" alt="{{ brand_alt }}" loading="lazy">
   {%- endif -%}
 </div>
-{%- if is_bundle -%}
+{%- assign title_is_bundle = false -%}
+{%- if product.type == 'Custom Hat Bundle' -%}{%- assign title_is_bundle = true -%}{%- endif -%}
+{%- if title_is_bundle -%}
   {%- assign jm = shop.metafields.judgeme -%}
   <a href="/pages/reviews" class="bundle-trust">
     <span class="bt-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
@@ -256,8 +258,8 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
   .bundle-trust-points li{font-size:13.5px;color:#3d3a4a;line-height:1.5;padding-left:23px;position:relative}
   .bundle-trust-points li::before{content:"\2713";position:absolute;left:0;top:0;color:#1E9E5A;font-weight:700}
   .title-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
-  .title-brand{height:44px;width:auto;max-width:140px;object-fit:contain;flex:0 0 auto;margin-top:4px}
-  @media(max-width:600px){.title-brand{height:32px;max-width:100px}}
+  .title-brand{height:76px;width:auto;max-width:230px;object-fit:contain;flex:0 0 auto;margin-top:2px}
+  @media(max-width:600px){.title-brand{height:52px;max-width:150px}}
 </style>
 <ul class="bundle-trust-points">
   <li>Free logo digitizing, no setup fee</li>
