@@ -47,9 +47,23 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
 <p class="product-price" id="product-price">{{ selected_variant.price | money }}</p>
 {%- if selected_variant.compare_at_price > selected_variant.price -%}
 <s class="product-price-was">{{ selected_variant.compare_at_price | money }}</s>
+{%- else -%}
+<s class="product-price-was" style="display:none"></s>
 {%- endif -%}
 
 </div>
+{%- assign any_sale = false -%}
+{%- for v in product.variants -%}{%- if v.compare_at_price > v.price -%}{%- assign any_sale = true -%}{%- endif -%}{%- endfor -%}
+{%- if any_sale -%}
+<div class="sale-banner" id="saleBanner"{% unless selected_variant.compare_at_price > selected_variant.price %} style="display:none"{% endunless %}>
+  {%- if selected_variant.compare_at_price > selected_variant.price -%}
+    {%- assign save = selected_variant.compare_at_price | minus: selected_variant.price | divided_by: 100 -%}
+    <span class="sb-save">Save ${{ save }}</span>
+    <span><strong>{{ selected_variant.title }}</strong> is on sale, was {{ selected_variant.compare_at_price | money }}. Limited stock at this price.</span>
+  {%- endif -%}
+</div>
+{%- endif -%}
+
 
 {%- form 'product', product, id: 'product-form', enctype: 'multipart/form-data' -%}
 <input type="hidden" name="id" id="variant-id" value="{{ selected_variant.id }}">
@@ -58,25 +72,51 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
 {%- for option in product.options_with_values -%}
 <div class="product-option">
 <p class="option-label">{{ option.name }}: <span class="option-selected" id="option-{{ forloop.index0 }}-label">{{ option.selected_value }}</span></p>
-<div class="option-swatches">
+{%- comment -%}
+  Many colors would make a wall of buttons, so anything over 8 values renders as a
+  thumbnail dropdown instead. Same data attributes either way, so the JS is shared.
+{%- endcomment -%}
+{%- assign many = false -%}
+{%- if option.values.size > 8 -%}{%- assign many = true -%}{%- endif -%}
+
+<div class="option-swatches{% if many %} as-dropdown{% endif %}">
+{%- if many -%}
+  <button type="button" class="opt-dd-btn" data-optdd="{{ forloop.index0 }}" aria-expanded="false">
+    <span class="opt-dd-thumb-wrap" id="optdd-thumb-{{ forloop.index0 }}"></span>
+    <span class="opt-dd-current">{{ option.selected_value }}</span>
+    <svg class="opt-dd-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+  </button>
+  <div class="opt-dd-menu" id="optdd-menu-{{ forloop.index0 }}" hidden>
+{%- endif -%}
+
 {%- for value in option.values -%}
 {%- assign opt_idx = forloop.parentloop.index0 -%}
 {%- for variant in product.variants -%}
 {%- if variant.option1 == value or variant.option2 == value -%}
+{%- assign on_sale = false -%}
+{%- if variant.compare_at_price > variant.price -%}{%- assign on_sale = true -%}{%- endif -%}
 <button type="button"
-class="swatch{% if value == option.selected_value %} active{% endif %}"
+class="{% if many %}opt-dd-opt{% else %}swatch{% endif %}{% if value == option.selected_value %} active{% endif %}{% if on_sale %} is-sale{% endif %}"
 data-value="{{ value | escape }}"
 data-option-index="{{ opt_idx }}"
 data-variant-id="{{ variant.id }}"
 data-variant-price="{{ variant.price }}"
+data-variant-compare="{{ variant.compare_at_price | default: 0 }}"
 data-variant-available="{{ variant.available }}"
-data-variant-image="{% if variant.featured_image %}{{ variant.featured_image | img_url: '800x800', crop: 'center' }}{% endif %}">
-{{ value }}
+data-variant-image="{% if variant.featured_image %}{{ variant.featured_image | img_url: '800x800', crop: 'center' }}{% endif %}"
+data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | img_url: '96x96', crop: 'center' }}{% endif %}">
+{%- if many and variant.featured_image -%}<img class="opt-dd-thumb" src="{{ variant.featured_image | img_url: '96x96', crop: 'center' }}" alt="{{ value | escape }}" loading="lazy">{%- endif -%}
+<span class="opt-dd-name">{{ value }}</span>
+{%- if on_sale -%}<span class="opt-sale-tag">Sale</span>{%- endif -%}
 </button>
 {%- break -%}
 {%- endif -%}
 {%- endfor -%}
 {%- endfor -%}
+
+{%- if many -%}
+  </div>
+{%- endif -%}
 </div>
 </div>
 {%- endfor -%}
@@ -108,6 +148,30 @@ data-variant-image="{% if variant.featured_image %}{{ variant.featured_image | i
   .fit-specs li{font-size:14px;line-height:1.6;color:#3d3a4a;margin-bottom:6px;}
   .fit-specs-note{font-size:13px;color:#6B6A78;margin:10px 0 0;}
   .product-price-was{margin-left:8px;font-size:0.8em;color:#8b8996;text-decoration:line-through;}
+  /* thumbnail dropdown for options with many values */
+  .option-swatches.as-dropdown{position:relative;max-width:420px}
+  .opt-dd-btn{width:100%;display:flex;align-items:center;gap:11px;background:#fff;border:1.5px solid #E2E0EA;border-radius:11px;padding:9px 13px;font-family:inherit;font-size:15px;cursor:pointer;text-align:left;color:#14121C}
+  .opt-dd-btn:hover{border-color:#B7A6EE}
+  .opt-dd-current{flex:1}
+  .opt-dd-chev{flex:0 0 auto;transition:transform .18s}
+  .opt-dd-btn[aria-expanded="true"] .opt-dd-chev{transform:rotate(180deg)}
+  .opt-dd-thumb-wrap img{width:40px;height:40px;object-fit:contain;border-radius:7px;border:1px solid #E2E0EA;display:block}
+  .opt-dd-menu{position:absolute;z-index:40;top:calc(100% + 6px);left:0;right:0;max-height:300px;overflow-y:auto;background:#fff;border:1.5px solid #E2E0EA;border-radius:12px;box-shadow:0 14px 34px rgba(20,18,28,.16);scrollbar-width:thin}
+  .opt-dd-menu::-webkit-scrollbar{width:9px}
+  .opt-dd-menu::-webkit-scrollbar-thumb{background:#B7A6EE;border-radius:9px;border:2px solid #fff}
+  .opt-dd-opt{width:100%;display:flex;align-items:center;gap:11px;padding:8px 12px;background:none;border:none;border-bottom:1px solid #f2f1f6;font-family:inherit;font-size:14px;cursor:pointer;text-align:left;color:#14121C}
+  .opt-dd-opt:last-child{border-bottom:none}
+  .opt-dd-opt:hover{background:#F3EFFC}
+  .opt-dd-opt.active{background:#eee9fb;font-weight:600}
+  .opt-dd-opt img{width:44px;height:44px;object-fit:contain;border-radius:7px;border:1px solid #E2E0EA;flex:0 0 auto}
+  .opt-dd-name{flex:1}
+  /* sale styling */
+  .opt-sale-tag{background:#C62828;color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;border-radius:999px;padding:2px 8px;flex:0 0 auto}
+  .opt-dd-opt.is-sale .opt-dd-name{color:#C62828;font-weight:700}
+  .swatch.is-sale{border-color:#C62828;color:#C62828;font-weight:700}
+  .sale-banner{display:flex;align-items:center;gap:10px;background:#FDECEC;border:1.5px solid #C62828;border-left:5px solid #C62828;border-radius:11px;padding:12px 15px;margin:14px 0;font-size:14px;line-height:1.5}
+  .sale-banner strong{color:#C62828}
+  .sale-banner .sb-save{background:#C62828;color:#fff;border-radius:999px;padding:3px 10px;font-size:12px;font-weight:700;white-space:nowrap}
 </style>
 <div class="bundle-opts">
 <div class="bundle-opt">
@@ -293,12 +357,70 @@ document.querySelectorAll('.product-thumb').forEach(function(thumb) {
 });
 
 // Swatch click - update variant ID, image, label, AND PRICE
-document.querySelectorAll('.swatch').forEach(function(swatch) {
+// open/close the thumbnail dropdowns
+document.querySelectorAll('.opt-dd-btn').forEach(function(btn){
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var menu = document.getElementById('optdd-menu-' + btn.dataset.optdd);
+    if (!menu) return;
+    var open = !menu.hasAttribute('hidden');
+    document.querySelectorAll('.opt-dd-menu').forEach(function(m){ m.setAttribute('hidden',''); });
+    document.querySelectorAll('.opt-dd-btn').forEach(function(b){ b.setAttribute('aria-expanded','false'); });
+    if (!open) { menu.removeAttribute('hidden'); btn.setAttribute('aria-expanded','true'); }
+  });
+});
+document.addEventListener('click', function(){
+  document.querySelectorAll('.opt-dd-menu').forEach(function(m){ m.setAttribute('hidden',''); });
+  document.querySelectorAll('.opt-dd-btn').forEach(function(b){ b.setAttribute('aria-expanded','false'); });
+});
+document.querySelectorAll('.opt-dd-menu').forEach(function(m){ m.addEventListener('click', function(e){ e.stopPropagation(); }); });
+
+// seed the dropdown trigger with the initially selected thumbnail
+document.querySelectorAll('.option-swatches.as-dropdown').forEach(function(wrap){
+  var active = wrap.querySelector('.opt-dd-opt.active') || wrap.querySelector('.opt-dd-opt');
+  var trigger = wrap.querySelector('.opt-dd-btn');
+  if (active && trigger) {
+    var th = active.dataset.variantThumb;
+    var tw = trigger.querySelector('.opt-dd-thumb-wrap');
+    if (tw && th) tw.innerHTML = '<img src="' + th + '" alt="">';
+  }
+});
+
+document.querySelectorAll('.swatch, .opt-dd-opt').forEach(function(swatch) {
   swatch.addEventListener('click', function() {
     if (swatch.disabled) return;
     var optIdx = swatch.dataset.optionIndex;
-    document.querySelectorAll('.swatch[data-option-index="' + optIdx + '"]').forEach(function(s) { s.classList.remove('active'); });
+    document.querySelectorAll('.swatch[data-option-index="' + optIdx + '"], .opt-dd-opt[data-option-index="' + optIdx + '"]').forEach(function(s) { s.classList.remove('active'); });
     swatch.classList.add('active');
+
+    // dropdown: reflect the pick on the trigger button, then close
+    var menu = swatch.closest('.opt-dd-menu');
+    if (menu) {
+      var wrap = swatch.closest('.option-swatches');
+      var trigger = wrap.querySelector('.opt-dd-btn');
+      if (trigger) {
+        trigger.querySelector('.opt-dd-current').textContent = swatch.dataset.value;
+        var tw = trigger.querySelector('.opt-dd-thumb-wrap');
+        var th = swatch.dataset.variantThumb;
+        if (tw) tw.innerHTML = th ? '<img src="' + th + '" alt="">' : '';
+        trigger.setAttribute('aria-expanded','false');
+      }
+      menu.setAttribute('hidden','');
+    }
+
+    // sale banner for discounted variants
+    var cmp = parseInt(swatch.dataset.variantCompare || '0');
+    var pr = parseInt(swatch.dataset.variantPrice || '0');
+    var banner = document.getElementById('saleBanner');
+    if (banner) {
+      if (cmp > pr) {
+        var save = ((cmp - pr) / 100).toFixed(0);
+        banner.innerHTML = '<span class="sb-save">Save $' + save + '</span><span><strong>' + swatch.dataset.value + '</strong> is on sale, was $' + (cmp/100).toFixed(2).replace(/\.00$/,'') + '. Limited stock at this price.</span>';
+        banner.style.display = 'flex';
+      } else {
+        banner.style.display = 'none';
+      }
+    }
 
     // Update hidden variant ID
     var variantId = swatch.dataset.variantId;
@@ -324,6 +446,12 @@ document.querySelectorAll('.swatch').forEach(function(swatch) {
       var dollars = (parseInt(price) / 100).toFixed(2);
       var priceEl = document.getElementById('product-price');
       if (priceEl) priceEl.textContent = '$' + dollars;
+      var wasEl = document.querySelector('.product-price-was');
+      var cmpv = parseInt(swatch.dataset.variantCompare || '0');
+      if (wasEl) {
+        if (cmpv > parseInt(price)) { wasEl.textContent = '$' + (cmpv/100).toFixed(2); wasEl.style.display = ''; }
+        else { wasEl.style.display = 'none'; }
+      }
     }
 
     // Update ATC availability
