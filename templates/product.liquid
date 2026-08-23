@@ -165,6 +165,8 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 .bundle-select:focus,.bundle-file:focus{outline:2px solid #5028AA;border-color:#5028AA}
 .bundle-file{padding:10px 14px}
 .bundle-hint{font-size:13px;color:#6B6A78;margin:6px 0 0;line-height:1.5}
+.bundle-hint a{color:#5028AA;font-weight:600;text-decoration:underline}
+.bundle-hint strong{color:#14121C}
 .bundle-notice{margin-top:12px;background:#F3EFFC;border-left:5px solid #5028AA;border-radius:8px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start}
 .bundle-notice-icon{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#5028AA;color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;line-height:1}
 .bundle-notice p{margin:0;font-size:13px;line-height:1.55;color:#14121C}
@@ -222,13 +224,15 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 </style>
 <div class="bundle-opts">
 <div class="bundle-opt">
-<label class="bundle-opt-label" for="logo-placement">Logo placement <span class="bundle-req">*</span></label>
-<select id="logo-placement" name="properties[Logo placement]" class="bundle-select" required>
+<label class="bundle-opt-label" for="logo-placement">Front logo placement <span class="bundle-req">*</span></label>
+<select id="logo-placement" name="properties[Front logo placement]" class="bundle-select" required>
 <option value="">Choose placement...</option>
-<option value="Centered front">Centered front</option>
+<option value="Centered">Centered</option>
 <option value="Left panel">Left panel</option>
 <option value="Right panel">Right panel</option>
 </select>
+<p class="bundle-hint">Left and right are as <strong>you see the hat</strong>, not as the wearer sees it. Picture the hat facing you: the left panel is on your left.</p>
+<p class="bundle-hint">This package includes front embroidery only. Need a logo on the side or back? Build it on our <a href="/pages/custom-order">custom order page</a>.</p>
 </div>
 <div class="bundle-opt">
 <label class="bundle-opt-label" for="logo-file">Upload your logo <span class="bundle-req">*</span></label>
