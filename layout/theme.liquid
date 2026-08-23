@@ -130,10 +130,11 @@
   .footer-social .soc:hover{color:#fff !important;border-color:var(--purple,#5028aa) !important;background:rgba(80,40,170,0.25);}
   .footer-social .soc svg{width:16px;height:16px;display:block;}
   /* colour count + rainbow wheel on collection cards (collection.liquid has no style block) */
-  /* square PNGs with the wordmark inset, so size the square not the mark */
-  .coll-brand{position:absolute;top:2px;right:2px;width:86px;height:86px;object-fit:contain;z-index:2;
+  /* square PNGs with the wordmark inset, so size the square not the mark.
+     Card clips overflow, so keep the offset small enough that nothing is cut. */
+  .coll-brand{position:absolute;top:-6px;right:0;width:86px;height:86px;object-fit:contain;z-index:2;
     mix-blend-mode:multiply;pointer-events:none;}
-  @media(max-width:600px){.coll-brand{width:64px;height:64px;top:2px;right:2px;}}
+  @media(max-width:600px){.coll-brand{width:64px;height:64px;top:-5px;right:0;}}
   .coll-colors{display:inline-flex;align-items:center;gap:6px;margin-left:10px;font-size:12.5px;color:#6B6A78;white-space:nowrap;}
   .coll-wheel{width:15px;height:15px;border-radius:50%;display:inline-block;flex:0 0 auto;border:1px solid rgba(0,0,0,.12);
     background:conic-gradient(#e23b3b,#e2a13b,#d7e23b,#4ce23b,#3be2c0,#3b8fe2,#7a3be2,#e23bc0,#e23b3b);}
