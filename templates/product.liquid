@@ -253,9 +253,11 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
   .bt-text{font-size:13.5px;color:#3d3a4a}
   .bt-text strong{color:#14121C}
   .product-gallery-main{position:relative}
-  .gallery-brand{position:absolute;top:14px;right:14px;height:52px;width:auto;max-width:170px;object-fit:contain;z-index:3;
-    background:rgba(255,255,255,.95);border-radius:9px;padding:7px 11px;box-shadow:0 2px 9px rgba(20,18,28,.15)}
-  @media(max-width:600px){.gallery-brand{height:38px;max-width:120px;padding:5px 8px;top:10px;right:10px}}
+  /* the logo PNGs are 1:1 squares with the wordmark inset, so the box has to be
+     sized for the square, not the mark. No chip or padding, the art carries itself. */
+  .gallery-brand{position:absolute;top:6px;right:6px;width:132px;height:132px;object-fit:contain;z-index:3;
+    mix-blend-mode:multiply;pointer-events:none}
+  @media(max-width:600px){.gallery-brand{width:92px;height:92px;top:4px;right:4px}}
   /* tighter vertical rhythm between title, rating and price */
   .product-title{margin-bottom:8px}
   .bundle-trust{margin:0 0 10px}
