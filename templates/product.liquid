@@ -102,7 +102,18 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
   Many colors would make a wall of buttons, so anything over 8 values renders as a
   thumbnail dropdown instead. Same data attributes either way, so the JS is shared.
 {%- endcomment -%}
+{%- comment -%}
+  Use the thumbnail dropdown whenever the variants actually have photos, rather
+  than guessing from how many colors there are. A 3-color hat benefits from
+  seeing the colorway just as much as a 17-color one.
+{%- endcomment -%}
 {%- assign many = false -%}
+{%- assign has_variant_photos = false -%}
+{%- for v in product.variants -%}
+  {%- if v.featured_image -%}{%- assign has_variant_photos = true -%}{%- break -%}{%- endif -%}
+{%- endfor -%}
+{%- if has_variant_photos and option.name == "Color" -%}{%- assign many = true -%}{%- endif -%}
+{%- comment -%} no photos to show, so a long list still reads better as a dropdown {%- endcomment -%}
 {%- if option.values.size > 8 -%}{%- assign many = true -%}{%- endif -%}
 {%- comment -%} alphabetical, with any "Mix" option pushed to the end {%- endcomment -%}
 {%- assign sorted_values = option.values | sort -%}
