@@ -88,7 +88,14 @@
             </div>
           </div>
         </a>
-        {%- if product.available -%}
+        {%- comment -%}
+          Custom hat packages need a color, a logo file and a placement, so a
+          one-click add would create an unfulfillable order. Send them to the
+          product page instead.
+        {%- endcomment -%}
+        {%- if product.type == "Custom Hat Bundle" -%}
+          <a href="{{ product.url }}" class="coll-atc coll-atc-link">Customize This Package</a>
+        {%- elsif product.available -%}
           <button class="coll-atc" data-variant="{{ product.variants.first.id }}" onclick="collAddToCart(event, this)">Add to Cart</button>
         {%- else -%}
           <button class="coll-atc coll-atc-disabled" disabled>Sold Out</button>
