@@ -52,7 +52,16 @@
                 </div>
               {%- endif -%}
               <span class="cart-item-total">{{ item.line_price | money }}</span>
-              <a href="{{ item.url_to_remove }}" class="cart-item-remove">✕</a>
+              {%- comment -%}
+                Remove by line item key, not by position. A line number goes stale as
+                soon as the cart changes, and the GET /cart/change?line= fallback is
+                not reliably accepted, which is what produced the "no valid id or line
+                parameter" error page. url_to_remove is Shopify's own key-based link.
+              {%- endcomment -%}
+              <a href="{{ item.url_to_remove }}"
+                 class="cart-item-remove"
+                 data-remove-key="{{ item.key }}"
+                 aria-label="Remove {{ item.product.title | escape }}">✕</a>
             </div>
           </div>
         </div>
@@ -93,3 +102,32 @@
 </div>
 
 {%- endif -%}
+
+<script>
+(function(){
+  // Remove by line item key. A positional index goes stale the moment the cart
+  // changes, and the plain GET /cart/change?line= fallback is what produced the
+  // "no valid id or line parameter" error page.
+  document.querySelectorAll('.cart-item-remove[data-remove-key]').forEach(function(link){
+    link.addEventListener('click', function(e){
+      e.preventDefault();
+      if (link.dataset.busy) return;
+      link.dataset.busy = '1';
+      link.style.opacity = '.4';
+      fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: link.dataset.removeKey, quantity: 0 })
+      })
+      .then(function(res){
+        if (!res.ok) throw new Error('remove failed');
+        window.location.href = '/cart';
+      })
+      .catch(function(){
+        // fall back to the plain link if the API call fails
+        window.location.href = link.getAttribute('href');
+      });
+    });
+  });
+})();
+</script>
