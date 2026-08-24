@@ -106,14 +106,17 @@
   #main-nav.scrolled .nav-logo-full.nav-logo-img{height:42px !important;}
   @media(max-width:700px){ #main-nav.scrolled .nav-logo-full.nav-logo-img{height:38px !important;} }
   /* collapse the free-shipping banner when scrolled down */
-  .shipping-banner{transition:max-height .3s ease, padding .3s ease, opacity .3s ease;max-height:60px;}
-  body.tb-scrolled .shipping-banner{max-height:0 !important;padding-top:0 !important;padding-bottom:0 !important;opacity:0;}
+  .shipping-banner{transition:transform .28s ease, opacity .28s ease;}
+  body.tb-scrolled .shipping-banner{transform:translateY(-100%);opacity:0;pointer-events:none;}
   /* nav is offset below the banner; pull it up and reclaim the space when collapsed */
-  #main-nav{transition:top .3s ease, padding .3s ease;}
-  body{transition:padding-top .3s ease;}
+  #main-nav{transition:top .28s ease;}
   body.tb-scrolled #main-nav{top:0 !important;}
-  body.tb-scrolled{padding-top:70px !important;}
-  @media(max-width:600px){ body.tb-scrolled{padding-top:60px !important;} }
+  {%- comment -%}
+    The banner and nav are both position:fixed, so collapsing the banner does not
+    move the document. Changing body padding DID move it, which is what made the
+    page jump on the way down and again on the way back up. Padding now stays
+    constant and only the fixed nav slides.
+  {%- endcomment -%}
   #shopify-section-header,
   .shopify-section-header,
   header[role="banner"],
@@ -500,7 +503,7 @@
   // Collapsing the banner changes the page height, which nudges the scroll
   // position. With a single threshold that pushes you back across the line and
   // the class flickers on and off. Separate add/remove points stop the loop.
-  var ADD_AT = 120, REMOVE_AT = 30;
+  var ADD_AT = 60, REMOVE_AT = 20;
   var ticking = false, on = false;
   function update(){
     var y = window.pageYOffset;
