@@ -23,7 +23,7 @@
   <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
   <link rel="apple-touch-icon" href="{{ settings.favicon | image_url: width: 180, height: 180 }}">
 {%- else -%}
-  <link rel="icon" type="image/png" href="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/threadbreak-icon.png">
+  <link rel="icon" type="image/png" href="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tbstar-notext.png?v=1787534858">
 {%- endif -%}
 
 {%- comment -%} ===== SEO: Open Graph + Twitter ===== {%- endcomment -%}
@@ -59,6 +59,7 @@
     "addressRegion": "NC",
     "addressCountry": "US"
   },
+  "logo": "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tbstar-notext.png?v=1787534858",
   "areaServed": "US",
   "priceRange": "$$",
   "aggregateRating": {
@@ -88,7 +89,10 @@
   /* full threadbreak wordmark logo, override theme's square/black-filter rules */
   .nav-brand{display:flex;align-items:center;height:100%;}
   .nav-logo-full.nav-logo-img{height:56px !important;width:auto !important;display:block;object-fit:contain;align-self:center;filter:none !important;animation:none !important;position:relative;top:2px;}
-  .footer-logo-full.footer-logo{height:80px !important;width:auto !important;display:block;object-fit:contain;filter:none !important;}
+  /* one logo file for both placements: the footer sits on the dark band, so the
+     mark is forced to solid white rather than needing a second artwork file. */
+  .footer-logo-full.footer-logo{height:80px !important;width:auto !important;display:block;object-fit:contain;
+    filter:brightness(0) invert(1) !important;}
   @media(max-width:700px){ .nav-logo-full.nav-logo-img{height:50px !important;} .footer-logo-full.footer-logo{height:64px !important;} }
   /* keep the Place a Custom Order button text white on hover */
   .nav-links a.nav-cta,
@@ -250,7 +254,7 @@
 </div>
 <nav id="main-nav">
   <a href="/" class="nav-brand">
-    <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tb-logo-dark.png?v=1785009640" alt="{{ shop.name }}" class="nav-logo-img nav-logo-full">
+    <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tbstar-notext.png?v=1787534858" alt="{{ shop.name }}" class="nav-logo-img nav-logo-full">
   </a>
   <ul class="nav-links">
     <li><a href="/">Home</a></li>
@@ -301,7 +305,7 @@
 <footer>
   <div class="footer-grid">
     <div class="footer-brand-row">
-      <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tb-logo-light.png?v=1785009640" alt="{{ shop.name }}" class="footer-logo footer-logo-full">
+      <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tbstar-notext.png?v=1787534858" alt="{{ shop.name }}" class="footer-logo footer-logo-full">
     </div>
     <div class="footer-nav-groups">
       <div class="footer-col">
