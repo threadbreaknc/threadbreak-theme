@@ -7,11 +7,32 @@
       <h1>{{ collection.title | upcase }}</h1>
       {%- if collection.description != blank -%}
         <div class="collection-hero-sub">{{ collection.description }}</div>
-      {%- else -%}
-        <p class="collection-hero-sub">Free shipping on every order.</p>
       {%- endif -%}
     </div>
   </section>
+
+{%- comment -%}
+  Brand filter for hat packages. Shopify's sort_by has no vendor option, and with
+  25+ packages "show me the Richardsons" is the question people actually have.
+  Filtering happens client side so there is no page reload.
+{%- endcomment -%}
+{%- assign is_pkg = false -%}
+{%- if collection.handle == "custom-hat-packages" -%}{%- assign is_pkg = true -%}{%- endif -%}
+{%- if is_pkg -%}
+  {%- assign vendor_list = "" -%}
+  {%- for product in collection.products -%}
+    {%- unless vendor_list contains product.vendor -%}
+      {%- assign vendor_list = vendor_list | append: product.vendor | append: "|" -%}
+    {%- endunless -%}
+  {%- endfor -%}
+  {%- assign vendors = vendor_list | split: "|" | sort -%}
+  <div class="brand-filter" id="brandFilter">
+    <button type="button" class="brand-chip on" data-brand="all">All brands</button>
+    {%- for v in vendors -%}
+      {%- if v != blank -%}<button type="button" class="brand-chip" data-brand="{{ v | escape }}">{{ v }}</button>{%- endif -%}
+    {%- endfor -%}
+  </div>
+{%- endif -%}
 
   <!-- SORT + COUNT BAR -->
   <div class="collection-bar">
@@ -31,7 +52,7 @@
   <!-- PRODUCT GRID -->
   <div class="collection-grid">
     {%- for product in collection.products -%}
-      <div class="coll-card">
+      <div class="coll-card" data-vendor="{{ product.vendor | escape }}">
         <a href="{{ product.url }}" class="coll-card-link">
           <div class="coll-img-wrap">
             {%- if product.featured_image -%}
@@ -158,3 +179,21 @@
   </section>
 
 </div>
+
+<script>
+(function(){
+  var wrap = document.getElementById('brandFilter');
+  if (!wrap) return;
+  var cards = document.querySelectorAll('.coll-card[data-vendor]');
+  wrap.addEventListener('click', function(e){
+    var btn = e.target.closest('.brand-chip');
+    if (!btn) return;
+    var brand = btn.dataset.brand;
+    wrap.querySelectorAll('.brand-chip').forEach(function(b){ b.classList.toggle('on', b === btn); });
+    cards.forEach(function(card){
+      var show = brand === 'all' || card.dataset.vendor === brand;
+      card.style.display = show ? '' : 'none';
+    });
+  });
+})();
+</script>

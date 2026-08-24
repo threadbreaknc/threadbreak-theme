@@ -148,6 +148,12 @@
   @media(min-width:1500px){ .collection-grid{ grid-template-columns:repeat(5,1fr) !important; } }
   /* package cards link to the product page rather than quick-adding */
   .coll-atc-link{display:block;text-align:center;text-decoration:none;}
+  /* brand filter chips on the packages collection */
+  .brand-filter{display:flex;flex-wrap:wrap;gap:8px;max-width:1200px;margin:0 auto;padding:0 2rem 4px;}
+  .brand-chip{background:#fff;border:1.5px solid #E2E0EA;border-radius:999px;padding:7px 15px;font-family:inherit;font-size:13.5px;color:#14121C;cursor:pointer;transition:.15s;}
+  .brand-chip:hover{border-color:#B7A6EE;}
+  .brand-chip.on{background:#5028AA;border-color:#5028AA;color:#fff;font-weight:600;}
+  @media(max-width:600px){ .brand-filter{padding:0 1.25rem 4px;} .brand-chip{font-size:12.5px;padding:6px 12px;} }
   .coll-colors{display:inline-flex;align-items:center;gap:6px;margin-left:10px;font-size:12.5px;color:#6B6A78;white-space:nowrap;}
   .coll-wheel{width:15px;height:15px;border-radius:50%;display:inline-block;flex:0 0 auto;border:1px solid rgba(0,0,0,.12);
     background:conic-gradient(#e23b3b,#e2a13b,#d7e23b,#4ce23b,#3be2c0,#3b8fe2,#7a3be2,#e23bc0,#e23b3b);}
@@ -491,10 +497,15 @@
 </script>
 <script>
 (function(){
-  var ticking = false;
+  // Collapsing the banner changes the page height, which nudges the scroll
+  // position. With a single threshold that pushes you back across the line and
+  // the class flickers on and off. Separate add/remove points stop the loop.
+  var ADD_AT = 120, REMOVE_AT = 30;
+  var ticking = false, on = false;
   function update(){
-    if (window.pageYOffset > 60) document.body.classList.add('tb-scrolled');
-    else document.body.classList.remove('tb-scrolled');
+    var y = window.pageYOffset;
+    if (!on && y > ADD_AT){ document.body.classList.add('tb-scrolled'); on = true; }
+    else if (on && y < REMOVE_AT){ document.body.classList.remove('tb-scrolled'); on = false; }
     ticking = false;
   }
   window.addEventListener('scroll', function(){
