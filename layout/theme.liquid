@@ -151,12 +151,28 @@
   @media(min-width:1500px){ .collection-grid{ grid-template-columns:repeat(5,1fr) !important; } }
   /* package cards link to the product page rather than quick-adding */
   .coll-atc-link{display:block;text-align:center;text-decoration:none;}
-  /* brand filter sits in the sort bar and matches the sort control */
-  .collection-bar{flex-wrap:wrap;gap:10px 18px;}
-  .brand-sort{display:flex;align-items:center;gap:8px;}
+  /* brand filter dropdown with logos, sits in the collection bar */
+  .collection-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:nowrap;}
+  .brand-dd{position:relative;flex:0 0 auto;}
+  .brand-dd-btn{display:flex;align-items:center;gap:9px;background:#fff;border:1.5px solid #E2E0EA;border-radius:10px;
+    padding:8px 13px;font-family:inherit;font-size:14px;color:#14121C;cursor:pointer;min-width:150px;text-align:left;}
+  .brand-dd-btn:hover{border-color:#B7A6EE;}
+  .brand-dd-current{flex:1;white-space:nowrap;}
+  .brand-dd-chev{flex:0 0 auto;transition:transform .18s;}
+  .brand-dd-btn[aria-expanded="true"] .brand-dd-chev{transform:rotate(180deg);}
+  .brand-dd-menu{position:absolute;z-index:60;top:calc(100% + 6px);right:0;min-width:210px;background:#fff;
+    border:1.5px solid #E2E0EA;border-radius:12px;box-shadow:0 14px 34px rgba(20,18,28,.16);overflow:hidden;}
+  .brand-dd-opt{width:100%;display:flex;align-items:center;gap:11px;padding:9px 13px;background:none;border:none;
+    border-bottom:1px solid #f2f1f6;font-family:inherit;font-size:14px;color:#14121C;cursor:pointer;text-align:left;}
+  .brand-dd-opt:last-child{border-bottom:none;}
+  .brand-dd-opt:hover{background:#F3EFFC;}
+  .brand-dd-opt.on{background:#eee9fb;font-weight:600;}
+  .brand-dd-opt img{width:62px;height:30px;object-fit:contain;flex:0 0 auto;}
+  .brand-dd-opt span{flex:1;}
   @media(max-width:600px){
-    .collection-bar{gap:8px 12px;}
-    .brand-sort .sort-select,.collection-sort .sort-select{font-size:13px;}
+    .collection-bar{gap:8px;}
+    .brand-dd-btn{min-width:0;font-size:13px;padding:7px 11px;}
+    .brand-dd-menu{min-width:190px;}
   }
   .coll-colors{display:inline-flex;align-items:center;gap:6px;margin-left:10px;font-size:12.5px;color:#6B6A78;white-space:nowrap;}
   .coll-wheel{width:15px;height:15px;border-radius:50%;display:inline-block;flex:0 0 auto;border:1px solid rgba(0,0,0,.12);

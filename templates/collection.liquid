@@ -15,9 +15,9 @@
   <div class="collection-bar">
     <p class="collection-count">{{ collection.products_count }} Products</p>
     {%- comment -%}
-      Brand filter for hat packages. Shopify's sort_by has no vendor option, and
-      with 25+ packages "show me the Richardsons" is the real question. Filters
-      client side, and sits alongside Sort so it reads as one control group.
+      Brand filter for hat packages, with the brand marks shown in the list. A
+      native select cannot render images, so this is a small custom dropdown.
+      Sort is hidden here since the collection is already ordered by price.
     {%- endcomment -%}
     {%- assign is_pkg = false -%}
     {%- if collection.handle == "custom-hat-packages" -%}{%- assign is_pkg = true -%}{%- endif -%}
@@ -29,16 +29,31 @@
         {%- endunless -%}
       {%- endfor -%}
       {%- assign vendors = vendor_list | split: "|" | sort -%}
-      <div class="collection-sort brand-sort">
-        <label for="brand-by" class="sort-label">Brand</label>
-        <select id="brand-by" class="sort-select">
-          <option value="all">All brands</option>
+      <div class="brand-dd" id="brandDD">
+        <button type="button" class="brand-dd-btn" id="brandDDBtn" aria-expanded="false">
+          <span class="brand-dd-current">All brands</span>
+          <svg class="brand-dd-chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="brand-dd-menu" id="brandDDMenu" hidden>
+          <button type="button" class="brand-dd-opt on" data-brand="all"><span>All brands</span></button>
           {%- for v in vendors -%}
-            {%- if v != blank -%}<option value="{{ v | escape }}">{{ v }}</option>{%- endif -%}
+            {%- if v != blank -%}
+              {%- assign vl = v | downcase -%}
+              {%- assign blogo = "" -%}
+              {%- if vl contains "richardson" -%}{%- assign blogo = "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/richardson.png?v=1787437321" -%}
+              {%- elsif vl contains "yupoong" -%}{%- assign blogo = "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yupoong.png?v=1787437321" -%}
+              {%- elsif vl contains "atonal" -%}{%- assign blogo = "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/atonal.png?v=1787437321" -%}
+              {%- elsif vl contains "otto" -%}{%- assign blogo = "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/otoo.png?v=1787437321" -%}
+              {%- endif -%}
+              <button type="button" class="brand-dd-opt" data-brand="{{ v | escape }}">
+                {%- if blogo != blank -%}<img src="{{ blogo }}" alt="{{ v }}" loading="lazy">{%- endif -%}
+                <span>{{ v }}</span>
+              </button>
+            {%- endif -%}
           {%- endfor -%}
-        </select>
+        </div>
       </div>
-    {%- endif -%}
+    {%- else -%}
     <form class="collection-sort">
       <label for="sort-by" class="sort-label">Sort</label>
       <select name="sort_by" id="sort-by" class="sort-select" onchange="this.form.submit()">
@@ -49,6 +64,7 @@
         <option value="price-descending" {% if collection.sort_by == 'price-descending' %}selected{% endif %}>Price High-Low</option>
       </select>
     </form>
+    {%- endif -%}
   </div>
 
   <!-- PRODUCT GRID -->
@@ -184,18 +200,37 @@
 
 <script>
 (function(){
-  var sel = document.getElementById('brand-by');
-  if (!sel) return;
+  var dd = document.getElementById('brandDD');
+  if (!dd) return;
+  var btn = document.getElementById('brandDDBtn');
+  var menu = document.getElementById('brandDDMenu');
+  var label = dd.querySelector('.brand-dd-current');
   var cards = document.querySelectorAll('.coll-card[data-vendor]');
   var countEl = document.querySelector('.collection-count');
-  sel.addEventListener('change', function(){
-    var brand = sel.value, shown = 0;
-    cards.forEach(function(card){
-      var show = brand === 'all' || card.dataset.vendor === brand;
-      card.style.display = show ? '' : 'none';
-      if (show) shown++;
+
+  function close(){ menu.setAttribute('hidden',''); btn.setAttribute('aria-expanded','false'); }
+  btn.addEventListener('click', function(e){
+    e.stopPropagation();
+    var open = !menu.hasAttribute('hidden');
+    if (open) close();
+    else { menu.removeAttribute('hidden'); btn.setAttribute('aria-expanded','true'); }
+  });
+  document.addEventListener('click', close);
+  menu.addEventListener('click', function(e){ e.stopPropagation(); });
+
+  menu.querySelectorAll('.brand-dd-opt').forEach(function(opt){
+    opt.addEventListener('click', function(){
+      var brand = opt.dataset.brand, shown = 0;
+      menu.querySelectorAll('.brand-dd-opt').forEach(function(o){ o.classList.toggle('on', o === opt); });
+      label.textContent = opt.querySelector('span').textContent;
+      cards.forEach(function(card){
+        var show = brand === 'all' || card.dataset.vendor === brand;
+        card.style.display = show ? '' : 'none';
+        if (show) shown++;
+      });
+      if (countEl) countEl.textContent = shown + (shown === 1 ? ' Product' : ' Products');
+      close();
     });
-    if (countEl) countEl.textContent = shown + (shown === 1 ? ' Product' : ' Products');
   });
 })();
 </script>
