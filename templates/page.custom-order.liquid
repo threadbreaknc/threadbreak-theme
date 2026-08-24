@@ -164,7 +164,7 @@
   #tbco .qty-row{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
   #tbco .field{display:flex;flex-direction:column;gap:6px}
   #tbco .field label{font-size:13px;font-weight:600}
-  #tbco .field input,#tbco .field select,#tbco .field textarea{font-family:inherit;font-size:14.5px;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+  #tbco .field input,#tbco .field select,#tbco .field textarea{font-family:inherit;font-size:16px;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
   #tbco .field input:focus,#tbco .field textarea:focus{outline:none;border-color:var(--purple)}
   #tbco .qty-input{width:130px}
   #tbco .price-now{display:flex;gap:26px;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:12px;padding:14px 18px;margin-top:16px}
@@ -179,7 +179,7 @@
   #tbco .split-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-top:1px solid var(--line)}
   #tbco .split-row img{width:38px;height:38px;object-fit:contain;border-radius:7px;border:1px solid var(--line)}
   #tbco .split-row .nm{flex:1;font-size:13.5px}
-  #tbco .split-row input{width:88px;font-family:inherit;font-size:14px;padding:8px 10px;border:1.5px solid var(--line);border-radius:9px}
+  #tbco .split-row input{width:88px;font-family:inherit;font-size:16px;padding:8px 10px;border:1.5px solid var(--line);border-radius:9px}
   #tbco .split-total{display:flex;justify-content:space-between;padding:11px 14px;border-top:1.5px solid var(--line);font-size:13.5px;font-weight:700;background:#fafafa}
   #tbco .split-total.bad{color:#c33}
 
@@ -211,7 +211,7 @@
   #tbco .up-tag{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:var(--purple);color:#fff;border-radius:999px;padding:2px 8px}
   #tbco .up-tag.inc{background:var(--good)}
   #tbco .up-slot-sub{font-size:11.5px;color:var(--muted);margin-bottom:9px}
-  #tbco .up-slot input{width:100%;font-family:inherit;font-size:12.5px}
+  #tbco .up-slot input{width:100%;font-family:inherit;font-size:16px}
   #tbco .up-have{font-size:12px;color:var(--good);font-weight:600;margin-top:5px}
   #tbco .embroidery-notice{display:flex;gap:12px;align-items:flex-start;background:var(--ice);border:1.5px solid var(--purple);border-left:5px solid var(--purple);border-radius:12px;padding:14px 16px;margin-top:18px}
   #tbco .embroidery-notice p{font-size:13px;line-height:1.55;margin:0}
@@ -267,7 +267,30 @@
   #tbco .bar-cta{margin-left:auto;background:var(--purple);color:#fff;border:none;border-radius:10px;padding:11px 22px;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.04em;cursor:pointer}
   #tbco .bar-cta:hover{background:var(--purple2)}
   #tbco .bar-cta:disabled{opacity:.45;cursor:not-allowed}
-  @media(max-width:640px){#tbco .bar-hide-sm{display:none}#tbco .tbstep-sum{display:none}}
+  @media(max-width:640px){
+    #tbco .bar-hide-sm{display:none}
+    #tbco .tbstep-sum{display:none}
+    /* trim the chrome so more of the actual form fits on a phone screen */
+    #tbco .tbstep-head{padding:14px 15px}
+    #tbco .tbstep-head h2{font-size:20px}
+    #tbco .tbstep-body{padding:0 15px 16px}
+    #tbco .tbstep-hint{font-size:13px;margin-bottom:12px}
+    #tbco .tbstep{margin-bottom:10px;border-radius:14px}
+    #tbco .fld{margin-top:15px;margin-bottom:6px}
+    #tbco .hint{font-size:12px;margin-top:7px}
+    #tbco .info-panel,#tbco .art-note{padding:13px}
+    #tbco .embroidery-notice,#tbco .proof-note{padding:12px 13px}
+    #tbco .next,#tbco .back{padding:12px 20px;font-size:18px;margin-top:16px}
+    #tbco .price-now{padding:12px 14px;gap:18px}
+    #tbco .price-now .pn-v{font-size:23px}
+    #tbco .uploads{gap:10px}
+    #tbco .up-slot{padding:12px}
+    #tbco .colorpanel{padding:13px}
+    /* compact sticky bar leaves more room for content */
+    #tbco .bar-in{padding:9px 15px;gap:14px}
+    #tbco .bar-stat .v{font-size:19px}
+    #tbco .bar-cta{padding:9px 18px;font-size:16px}
+  }
 
 </style>
 
@@ -818,7 +841,7 @@ function renderHats(){
   const grid = $("hats");
   grid.classList.toggle("picking", picking);
 
-  grid.innerHTML = sorted.map(s => {
+  grid.innerHTML = sorted.map((s, idx) => {
     const on = state.style && state.style.id === s.id;
     const badge = BADGES[s.id] ? '<div class="hat-badge">' + BADGES[s.id] + '</div>' : "";
     const low = s.tiers[s.tiers.length - 1][1];
@@ -827,9 +850,11 @@ function renderHats(){
 
     if (!on){
       const lg = brandLogo(s);
+      // the first row paints immediately; everything below the fold defers
+      const eager = idx < 4;
       return '<div class="hat" data-hat="' + s.id + '">' + badge +
         '<div class="hat-imgwrap">' +
-          '<img class="hat-img" src="' + s.imgs[0] + '" alt="' + nameOf(s) + '" loading="lazy">' +
+          '<img class="hat-img" src="' + s.imgs[0] + '" alt="' + nameOf(s) + '" loading="' + (eager ? 'eager' : 'lazy') + '" decoding="async" fetchpriority="' + (eager ? 'high' : 'low') + '">' +
           (lg ? '<img class="hat-logo" src="' + lg.src + '" alt="' + lg.alt + '" loading="lazy">' : '') +
         '</div>' +
         '<div class="hat-info">' +
