@@ -6,7 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 {%- assign pt = page_title | downcase -%}
 {%- assign sn = shop.name | downcase -%}
-<title>{{ page_title }}{% unless pt contains sn %} | {{ shop.name }}{% endunless %}</title>
+{%- comment -%} shop.name is lowercase; capitalize it for the browser tab and search results {%- endcomment -%}
+<title>{{ page_title }}{% unless pt contains sn %} | {{ shop.name | capitalize }}{% endunless %}</title>
 <meta name="description" content="{{ page_description | escape }}">
 
 {%- comment -%}
