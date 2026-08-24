@@ -39,8 +39,6 @@
   @media(max-width:640px){
     /* compact pinned rail on phones so it never eats the screen */
     #tbco .rail{gap:5px;padding:8px;margin:20px 0 16px;top:64px}
-    #tbco .rail-item{min-width:0;flex:1 1 0;padding:8px 6px;font-size:11.5px;gap:6px;justify-content:center;text-align:center}
-    #tbco .rail-item .dot{width:19px;height:19px;font-size:11px}
   }
   #tbco .rail-item{flex:1 1 0;min-width:120px;display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:11px;background:#fff;border:1.5px solid var(--line);font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer;transition:.18s}
   #tbco .rail-item .dot{width:22px;height:22px;border-radius:50%;background:var(--line);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex:0 0 auto}
@@ -48,6 +46,19 @@
   #tbco .rail-item.done .dot{background:var(--good)}
   #tbco .rail-item.active{border-color:var(--purple);color:var(--purple);box-shadow:0 4px 14px rgba(80,40,170,.12)}
   #tbco .rail-item.active .dot{background:var(--purple)}
+  {%- comment -%}
+    All four steps must fit one line on a phone. These come after the desktop
+    rules so they win, and the labels are shortened in the markup to match.
+  {%- endcomment -%}
+  @media(max-width:640px){
+    #tbco .rail{gap:4px;padding:7px}
+    #tbco .rail-item{min-width:0;flex:1 1 0;padding:7px 3px;font-size:10.5px;gap:4px;
+      flex-direction:column;justify-content:center;text-align:center;line-height:1.2;border-radius:9px}
+    #tbco .rail-item .dot{width:18px;height:18px;font-size:10.5px}
+  }
+  @media(max-width:360px){
+    #tbco .rail-item{font-size:9.5px;padding:6px 2px}
+  }
 
   /* steps */
   #tbco .tbstep{background:#fff;border:1.5px solid var(--line);border-radius:16px;margin-bottom:14px;display:none;opacity:1;transform:none;text-align:left;padding:0;scroll-margin-top:150px}
@@ -1149,7 +1160,11 @@ function resetToStep1(){
   renderHats();
 }
 function renderRail(){
-  const names = ["Hat & colors", "Quantity", "Design", "Review"];
+  // shorter labels on phones so all four steps fit one line
+  const narrow = window.matchMedia("(max-width: 640px)").matches;
+  const names = narrow
+    ? ["Hat", "Qty", "Design", "Review"]
+    : ["Hat & colors", "Quantity", "Design", "Review"];
   $("rail").innerHTML = names.map((n, i) => {
     const step = i + 1;
     const cls = state.step === step ? "active" : (state.done.has(step) ? "done" : "");
