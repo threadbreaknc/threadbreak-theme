@@ -11,32 +11,34 @@
     </div>
   </section>
 
-{%- comment -%}
-  Brand filter for hat packages. Shopify's sort_by has no vendor option, and with
-  25+ packages "show me the Richardsons" is the question people actually have.
-  Filtering happens client side so there is no page reload.
-{%- endcomment -%}
-{%- assign is_pkg = false -%}
-{%- if collection.handle == "custom-hat-packages" -%}{%- assign is_pkg = true -%}{%- endif -%}
-{%- if is_pkg -%}
-  {%- assign vendor_list = "" -%}
-  {%- for product in collection.products -%}
-    {%- unless vendor_list contains product.vendor -%}
-      {%- assign vendor_list = vendor_list | append: product.vendor | append: "|" -%}
-    {%- endunless -%}
-  {%- endfor -%}
-  {%- assign vendors = vendor_list | split: "|" | sort -%}
-  <div class="brand-filter" id="brandFilter">
-    <button type="button" class="brand-chip on" data-brand="all">All brands</button>
-    {%- for v in vendors -%}
-      {%- if v != blank -%}<button type="button" class="brand-chip" data-brand="{{ v | escape }}">{{ v }}</button>{%- endif -%}
-    {%- endfor -%}
-  </div>
-{%- endif -%}
-
   <!-- SORT + COUNT BAR -->
   <div class="collection-bar">
     <p class="collection-count">{{ collection.products_count }} Products</p>
+    {%- comment -%}
+      Brand filter for hat packages. Shopify's sort_by has no vendor option, and
+      with 25+ packages "show me the Richardsons" is the real question. Filters
+      client side, and sits alongside Sort so it reads as one control group.
+    {%- endcomment -%}
+    {%- assign is_pkg = false -%}
+    {%- if collection.handle == "custom-hat-packages" -%}{%- assign is_pkg = true -%}{%- endif -%}
+    {%- if is_pkg -%}
+      {%- assign vendor_list = "" -%}
+      {%- for product in collection.products -%}
+        {%- unless vendor_list contains product.vendor -%}
+          {%- assign vendor_list = vendor_list | append: product.vendor | append: "|" -%}
+        {%- endunless -%}
+      {%- endfor -%}
+      {%- assign vendors = vendor_list | split: "|" | sort -%}
+      <div class="collection-sort brand-sort">
+        <label for="brand-by" class="sort-label">Brand</label>
+        <select id="brand-by" class="sort-select">
+          <option value="all">All brands</option>
+          {%- for v in vendors -%}
+            {%- if v != blank -%}<option value="{{ v | escape }}">{{ v }}</option>{%- endif -%}
+          {%- endfor -%}
+        </select>
+      </div>
+    {%- endif -%}
     <form class="collection-sort">
       <label for="sort-by" class="sort-label">Sort</label>
       <select name="sort_by" id="sort-by" class="sort-select" onchange="this.form.submit()">
@@ -182,18 +184,18 @@
 
 <script>
 (function(){
-  var wrap = document.getElementById('brandFilter');
-  if (!wrap) return;
+  var sel = document.getElementById('brand-by');
+  if (!sel) return;
   var cards = document.querySelectorAll('.coll-card[data-vendor]');
-  wrap.addEventListener('click', function(e){
-    var btn = e.target.closest('.brand-chip');
-    if (!btn) return;
-    var brand = btn.dataset.brand;
-    wrap.querySelectorAll('.brand-chip').forEach(function(b){ b.classList.toggle('on', b === btn); });
+  var countEl = document.querySelector('.collection-count');
+  sel.addEventListener('change', function(){
+    var brand = sel.value, shown = 0;
     cards.forEach(function(card){
       var show = brand === 'all' || card.dataset.vendor === brand;
       card.style.display = show ? '' : 'none';
+      if (show) shown++;
     });
+    if (countEl) countEl.textContent = shown + (shown === 1 ? ' Product' : ' Products');
   });
 })();
 </script>
