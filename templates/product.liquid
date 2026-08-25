@@ -263,6 +263,14 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
   .bt-stars{color:#F5C518;font-size:17px;letter-spacing:2px;flex:0 0 auto}
   .bt-text{font-size:13.5px;color:#3d3a4a}
   .bt-text strong{color:#14121C}
+  /* theme.css wraps thumbs onto a second row on phones; keep them to one
+     scrollable row instead so the gallery reads as a single strip. */
+  @media(max-width:600px){
+    .product-thumbs{flex-wrap:nowrap !important;overflow-x:auto;gap:7px !important;
+      padding-bottom:4px;scrollbar-width:none;-webkit-overflow-scrolling:touch;justify-content:flex-start !important;}
+    .product-thumbs::-webkit-scrollbar{display:none;}
+    .product-thumb{width:56px !important;height:56px !important;flex:0 0 auto;}
+  }
   .product-gallery-main{position:relative}
   /* the logo PNGs are 1:1 squares with the wordmark inset, so the box has to be
      sized for the square, not the mark. No chip or padding, the art carries itself. */
