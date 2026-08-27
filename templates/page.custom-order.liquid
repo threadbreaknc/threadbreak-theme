@@ -330,7 +330,7 @@
     <p class="sub">Custom embroidered hats on name-brand blanks. Free mockup before anything hits a machine.</p>
     <div class="props">
       <span>Embroidered in Burlington, NC</span>
-      <span>Free shipping anywhere in the USA</span>
+      <span>Free shipping to the lower 48</span>
       <span>Local pickup by appointment</span>
     </div>
   </div>
@@ -920,7 +920,7 @@ function renderHats(){
           '<div class="hat-specs">' +
             '<div><b>Sizing:</b> ' + sizingOf(s) + '</div>' +
             (specs.length ? '<div><b>Details:</b> ' + specs.join(", ") + '</div>' : "") +
-            '<div><b>Included:</b> front embroidery, free digitizing, free US shipping</div>' +
+            '<div><b>Included:</b> front embroidery, free digitizing, free shipping to the lower 48</div>' +
           '</div>' +
           '<button type="button" class="hat-change" data-change="1">Choose a different hat</button>' +
         '</div>' +
@@ -1243,7 +1243,7 @@ function sync(){
       pn.innerHTML =
         '<div class="pn"><span class="pn-l">Price per hat</span><span class="pn-v">' + money(each) + '</span></div>' +
         '<div class="pn"><span class="pn-l">' + state.qty + ' hats</span><span class="pn-v">' + money(each * state.qty) + '</span></div>' +
-        '<div class="pn-note">Includes front embroidery, free digitizing, and free US shipping.</div>';
+        '<div class="pn-note">Includes front embroidery, free digitizing, and free shipping to the lower 48.</div>';
     }
   }
   const nt = nextTier();
