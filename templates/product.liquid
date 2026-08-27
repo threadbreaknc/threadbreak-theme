@@ -287,6 +287,14 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
   .product-title{margin-bottom:8px}
   .bundle-trust{margin:0 0 10px}
   .product-price-row{margin:0 0 10px}
+  /* the native file control blends in, so give it a real button */
+  .bundle-file::file-selector-button,
+  .bundle-file::-webkit-file-upload-button{
+    font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.04em;
+    background:#5028AA;color:#fff;border:none;border-radius:9px;
+    padding:9px 18px;margin-right:11px;cursor:pointer;transition:background .15s;}
+  .bundle-file::file-selector-button:hover{background:#6234c9;}
+  .bundle-file{cursor:pointer;font-size:13px;color:#6B6A78;}
 </style>
 <div class="bundle-opts">
 <div class="bundle-opt">
@@ -299,6 +307,19 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 </select>
 <p class="bundle-hint">Left and right are as <strong>you see the hat</strong>, not as the wearer sees it. Picture the hat facing you: the left panel is on your left.</p>
 <p class="bundle-hint">This package includes front embroidery only. Need a logo on the side or back? Build it on our <a href="/pages/custom-order">custom order page</a>.</p>
+</div>
+<div class="bundle-opt">
+<label class="bundle-opt-label" for="proof-method">How should we send your proof? <span class="bundle-req">*</span></label>
+<select id="proof-method" name="properties[Proof delivery]" class="bundle-select" required>
+<option value="">Choose one...</option>
+<option value="Email">Email</option>
+<option value="Text message">Text message</option>
+</select>
+<p class="bundle-hint" id="proof-hint">We'll send your mockup within one business day. Nothing gets stitched until you approve it.</p>
+</div>
+<div class="bundle-opt" id="proof-phone-wrap" hidden>
+<label class="bundle-opt-label" for="proof-phone">Mobile number for your proof <span class="bundle-req">*</span></label>
+<input type="tel" id="proof-phone" name="properties[Proof phone]" class="bundle-select" inputmode="tel" autocomplete="tel" placeholder="(336) 555-0123">
 </div>
 <div class="bundle-opt">
 <label class="bundle-opt-label" for="logo-file">Upload your logo <span class="bundle-req">*</span></label>
@@ -475,6 +496,23 @@ document.querySelectorAll('.product-thumb').forEach(function(thumb) {
 
 // Swatch click - update variant ID, image, label, AND PRICE
 // open/close the thumbnail dropdowns
+// texting a proof needs a number; Shopify's checkout phone is optional
+(function(){
+  var sel = document.getElementById('proof-method');
+  if (!sel) return;
+  var wrap = document.getElementById('proof-phone-wrap');
+  var phone = document.getElementById('proof-phone');
+  var hint = document.getElementById('proof-hint');
+  sel.addEventListener('change', function(){
+    var isText = sel.value === 'Text message';
+    if (wrap){ if (isText) wrap.removeAttribute('hidden'); else { wrap.setAttribute('hidden',''); if (phone) phone.value=''; } }
+    if (phone) phone.required = isText;
+    if (hint) hint.textContent = isText
+      ? "We'll text your mockup from (336) 585-6176 within one business day. Nothing gets stitched until you approve it."
+      : "We'll email your mockup from help@threadbreak.com within one business day. Nothing gets stitched until you approve it.";
+  });
+})();
+
 document.querySelectorAll('.opt-dd-btn').forEach(function(btn){
   btn.addEventListener('click', function(e){
     e.stopPropagation();

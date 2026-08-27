@@ -9,6 +9,8 @@
 {%- comment -%} shop.name is lowercase; capitalize it for the browser tab and search results {%- endcomment -%}
 <title>{{ page_title }}{% unless pt contains sn %} | {{ shop.name | capitalize }}{% endunless %}</title>
 <meta name="description" content="{{ page_description | escape }}">
+{%- comment -%} warm the CDN connection so the hero video starts sooner {%- endcomment -%}
+<link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
 
 {%- comment -%}
   Backend-only products (the custom order form's hat + add-on products) must stay

@@ -222,7 +222,18 @@
   #tbco .up-tag{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:var(--purple);color:#fff;border-radius:999px;padding:2px 8px}
   #tbco .up-tag.inc{background:var(--good)}
   #tbco .up-slot-sub{font-size:11.5px;color:var(--muted);margin-bottom:9px}
-  #tbco .up-slot input{width:100%;font-family:inherit;font-size:16px}
+  #tbco .up-slot input[type="file"]{width:100%;font-family:inherit;font-size:13px;color:var(--muted);cursor:pointer}
+  /* the native control is drab and blends in, so restyle its button */
+  #tbco .up-slot input[type="file"]::file-selector-button{
+    font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.04em;
+    background:var(--purple);color:#fff;border:none;border-radius:9px;
+    padding:9px 18px;margin-right:11px;cursor:pointer;transition:background .15s,transform .15s}
+  #tbco .up-slot input[type="file"]::file-selector-button:hover{background:var(--purple2);transform:translateY(-1px)}
+  #tbco .up-slot input[type="file"]::-webkit-file-upload-button{
+    font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.04em;
+    background:var(--purple);color:#fff;border:none;border-radius:9px;
+    padding:9px 18px;margin-right:11px;cursor:pointer}
+  #tbco .up-slot.has-file{border-style:solid;border-color:var(--good);background:#F3FBF6}
   #tbco .up-have{font-size:12px;color:var(--good);font-weight:600;margin-top:5px}
   #tbco .embroidery-notice{display:flex;gap:12px;align-items:flex-start;background:var(--ice);border:1.5px solid var(--purple);border-left:5px solid var(--purple);border-radius:12px;padding:14px 16px;margin-top:18px}
   #tbco .embroidery-notice p{font-size:13px;line-height:1.55;margin:0}
@@ -411,6 +422,20 @@
       <div class="art-note">
         <p><strong>Thread colors:</strong> Unless you tell us otherwise, we match thread colors to your logo. Want something different, like tone-on-tone or matched to the hat? Just mention it in the notes.</p>
       </div>
+
+      <p class="fld">How should we send your proof? <span style="color:#c33">*</span></p>
+      <div class="field" style="max-width:340px">
+        <select id="proofMethod">
+          <option value="">Choose one...</option>
+          <option value="Email">Email</option>
+          <option value="Text message">Text message</option>
+        </select>
+      </div>
+      <div class="field" id="proofPhoneWrap" style="max-width:340px;margin-top:12px" hidden>
+        <label for="proofPhone">Mobile number for your proof <span style="color:#c33">*</span></label>
+        <input type="tel" id="proofPhone" inputmode="tel" autocomplete="tel" placeholder="(336) 555-0123">
+      </div>
+      <p class="hint" id="proofHint">We'll send your mockup within one business day. Nothing gets stitched until you approve it.</p>
 
       <div class="field" style="margin-top:18px"><label for="notes">Notes</label><textarea id="notes" rows="3" placeholder="Thread colors, deadlines, anything else we should know"></textarea></div>
 
@@ -1077,7 +1102,7 @@ function renderUploads(){
   const chosen = PLACEMENTS.filter(p => state.places.has(p.id));
   host.innerHTML = chosen.map(p => {
     const f = state.files[p.id];
-    return '<div class="up-slot ' + (p.id === "front" ? "req" : "") + '">' +
+    return '<div class="up-slot ' + (p.id === "front" ? "req " : "") + (f ? "has-file" : "") + '">' +
       '<div class="up-slot-label">' + p.label + ' logo ' +
         (p.add ? '<span class="up-tag">+' + money(p.add) + '/hat</span>' : '<span class="up-tag inc">Included</span>') +
       '</div>' +
@@ -1111,6 +1136,10 @@ function renderReview(){
     ["Colors", colorSummary()],
     ["Sizing", state.style ? sizingOf(state.style) : "-"],
     ["Quantity", state.qty || "-"],
+    ["Proof sent by", ($("proofMethod") && $("proofMethod").value)
+      ? ($("proofMethod").value === "Text message" && $("proofPhone") && $("proofPhone").value.trim()
+          ? "Text to " + $("proofPhone").value.trim() : $("proofMethod").value)
+      : "-"],
     ["Decoration", state.deco.label],
     ["Placement", places.join(", ")],
     ["Price per hat", each ? money(each) : "-"],
@@ -1128,6 +1157,15 @@ function canLeave(step){
     if (state.colors.length > 1){
       const t = Object.values(state.split).reduce((a,b) => a + (+b || 0), 0);
       return t === state.qty;
+    }
+    return true;
+  }
+  if (step === 3){
+    const m = $("proofMethod") ? $("proofMethod").value : "";
+    if (!m) return false;
+    if (m === "Text message"){
+      const p = $("proofPhone") ? $("proofPhone").value.replace(/\D/g, "") : "";
+      if (p.length < 10) return false;
     }
     return true;
   }
@@ -1195,6 +1233,7 @@ function sync(){
 
   $("next1").disabled = !canLeave(1);
   $("next2").disabled = !canLeave(2);
+  if ($("next3")) $("next3").disabled = !canLeave(3);
 
   const each = perHat();
   const pn = $("priceNow");
@@ -1246,6 +1285,8 @@ function orderMeta(){
     deco: state.deco.label,
     placements: places.join(", "),
     notes: ($("notes") && $("notes").value.trim()) || "-",
+    proof: ($("proofMethod") && $("proofMethod").value) || "",
+    proofPhone: ($("proofPhone") && $("proofPhone").value.trim()) || "",
     social: ($("noSocial") && $("noSocial").checked) ? "Do NOT share on social" : "OK to share on social",
     estimate: per === null ? "quote" : money(per) + "/hat, " + money(per * state.qty) + " total"
   };
@@ -1322,6 +1363,7 @@ async function submitCheckout(){
     "Placements": meta.placements,
     "Artwork": artNote
   };
+  props["Proof delivery"] = meta.proof + (meta.proof === "Text message" && meta.proofPhone ? " to " + meta.proofPhone : "");
   if (meta.notes !== "-") props["Notes"] = meta.notes;
   props["Social sharing"] = meta.social;
 
@@ -1393,6 +1435,22 @@ document.querySelectorAll("#tbco [data-back]").forEach(b => {
     goto(t);
   });
 });
+
+// Texting a proof needs a mobile number, and Shopify's checkout phone field is
+// optional, so collect it here when they pick text.
+(function(){
+  const sel = $("proofMethod"), wrap = $("proofPhoneWrap"), hint = $("proofHint");
+  if (!sel) return;
+  sel.addEventListener("change", () => {
+    const isText = sel.value === "Text message";
+    if (wrap){ if (isText) wrap.removeAttribute("hidden"); else { wrap.setAttribute("hidden",""); if ($("proofPhone")) $("proofPhone").value = ""; } }
+    if (hint) hint.textContent = isText
+      ? "We'll text your mockup from (336) 585-6176 within one business day. Nothing gets stitched until you approve it."
+      : "We'll email your mockup from help@threadbreak.com within one business day. Nothing gets stitched until you approve it.";
+    sync();
+  });
+  if ($("proofPhone")) $("proofPhone").addEventListener("input", sync);
+})();
 
 bindToggle("puffBtn","puffInfo","What is 3D puff?","Hide");
 bindToggle("enToggle","enExample","View example","Hide example");
