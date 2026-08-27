@@ -204,6 +204,9 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 .bundle-hint{font-size:13px;color:#6B6A78;margin:6px 0 0;line-height:1.5}
 .bundle-hint a{color:#5028AA;font-weight:600;text-decoration:underline}
 .bundle-hint strong{color:#14121C}
+/* a class-level display would beat the browser default [hidden]{display:none},
+   so force it or the proof phone field shows before text is selected */
+.bundle-opt[hidden]{display:none !important}
 .bundle-notice{margin-top:12px;background:#F3EFFC;border-left:5px solid #5028AA;border-radius:8px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start}
 .bundle-notice-icon{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:#5028AA;color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;line-height:1}
 .bundle-notice p{margin:0;font-size:13px;line-height:1.55;color:#14121C}
