@@ -198,7 +198,7 @@
 
   /* canvas preview */
   #tbpo .patch-preview{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:14px;background:var(--ice);border-radius:14px;padding:20px}
-  #tbpo .patch-canvas-box{width:100%;max-width:290px;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:#fff;border:1.5px solid var(--line);box-shadow:0 6px 18px rgba(20,18,28,.08);transition:max-width .25s ease}
+  #tbpo .patch-canvas-box{width:100%;max-width:290px;aspect-ratio:1.633/1;border-radius:14px;overflow:hidden;background:#fff;border:1.5px solid var(--line);box-shadow:0 6px 18px rgba(20,18,28,.08);transition:max-width .25s ease,aspect-ratio .25s ease}
   #tbpo .patch-canvas-box canvas{width:100%;height:100%;display:block}
   #tbpo .patch-canvas-box.size-S{max-width:210px}
   #tbpo .patch-canvas-box.size-M{max-width:290px}
@@ -304,12 +304,8 @@
 
 <header class="tbco-hero">
   <div class="hero-photos" aria-hidden="true">
-    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/brushed_silver_black.jpg?v=1787885403')"></div>
-    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/saddle_tan_black.jpg?v=1787885402')"></div>
-    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/vintage_gray_black.webp?v=1787885403')"></div>
-    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/saddle_red_black.jpg?v=1787885403')"></div>
-    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/rawhide_black.webp?v=1787885402')"></div>
-    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/vintage_sky_blue_black.webp?v=1787885403')"></div>
+    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG-6464.png?v=1787886178')"></div>
+    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/FullSizeRender_2dab9953-4bf4-4da6-921b-88e8233d180a_1600x.heic.jpg?v=1787886178')"></div>
   </div>
   <div class="wrap">
     <h1>Your logo.<br>Laser <em>engraved.</em></h1>
@@ -385,7 +381,7 @@
       <p class="fld">Preview</p>
       <div class="patch-preview" id="patchPreviewWrap">
         <div class="patch-canvas-box" id="patchCanvasBox">
-          <canvas id="patchCanvas" width="480" height="480"></canvas>
+          <canvas id="patchCanvas" width="520" height="318"></canvas>
         </div>
         <div class="patch-controls">
           <div class="field">
@@ -697,16 +693,20 @@ const MATERIALS = [
   { id:"vintage_sky_blue", name:"Vintage Sky Blue", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/vintage_sky_blue_black.webp?v=1787885403" },
   { id:"vintage_caramel_brown", name:"Vintage Caramel Brown", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/vintage_caramel_brown_black.webp?v=1787885402" }
 ];
+// ratio = width / height for the preview canvas. Rectangle/rounded/die-cut share
+// a real patch proportion (4in x 2.45in at Large); circle is always 1:1.
 const SHAPES = [
-  { id:"rectangle", label:"Rectangle" },
-  { id:"rounded",   label:"Rounded rectangle" },
-  { id:"circle",    label:"Circle" },
-  { id:"diecut",    label:"Die cut (follows your logo)" }
+  { id:"rectangle", label:"Rectangle",              ratio:1.633 },
+  { id:"rounded",   label:"Rounded rectangle",      ratio:1.633 },
+  { id:"circle",    label:"Circle",                 ratio:1 },
+  { id:"diecut",    label:"Die cut (follows your logo)", ratio:1.633 }
 ];
+// wide = the size's headline width in inches (Large locked at 4in x 2.45in on a
+// rectangle, per spec). Height/diameter are derived per shape in sizeDimLabel().
 const SIZES = [
-  { id:"S", label:"Small",  dim:"~2in",     add:2.00, variantId:52543282774148 },
-  { id:"M", label:"Medium", dim:"~3in",     add:2.50, variantId:52732410200196 },
-  { id:"L", label:"Large",  dim:"~3.5in+",  add:3.00, variantId:52732410232964 }
+  { id:"S", label:"Small",  wide:2.5,  add:2.00, variantId:52543282774148 },
+  { id:"M", label:"Medium", wide:3.25, add:2.50, variantId:52732410200196 },
+  { id:"L", label:"Large",  wide:4,    add:3.00, variantId:52732410232964 }
 ];
 </script>
 
@@ -1260,6 +1260,16 @@ function renderMaterials(){
     });
   });
 }
+// Real-world caption for a size under the currently selected shape: rectangle/
+// rounded/die-cut show width x height (derived from the shape's ratio), circle
+// shows a diameter.
+function sizeDimLabel(size, shape){
+  const w = size.wide;
+  if (shape.id === "circle") return w + '" diameter';
+  const h = Math.round((w / shape.ratio) * 100) / 100;
+  const hStr = (Math.round(h * 100) / 100).toString();
+  return (shape.id === "diecut" ? "up to " : "") + w + '" x ' + hStr + '"';
+}
 function renderShapes(){
   const host = $("shapes");
   if (!host) return;
@@ -1268,7 +1278,7 @@ function renderShapes(){
   host.querySelectorAll("[data-shape]").forEach(b => {
     b.addEventListener("click", () => {
       state.shape = SHAPES.find(x => x.id === b.dataset.shape);
-      renderShapes(); renderPatchPreview(); sync();
+      renderShapes(); renderSizes(); applyCanvasShape(); sync();
     });
   });
 }
@@ -1277,7 +1287,7 @@ function renderSizes(){
   if (!host) return;
   host.innerHTML = SIZES.map(s =>
     '<button type="button" class="chip ' + (s.id === state.size.id ? "on" : "") + '" data-size="' + s.id + '">' + s.label +
-    ' <span class="size-dim">(' + s.dim + ')</span><span class="tag">+' + money(s.add) + '/hat</span></button>').join("");
+    ' <span class="size-dim">(' + sizeDimLabel(s, state.shape) + ')</span><span class="tag">+' + money(s.add) + '/hat</span></button>').join("");
   host.querySelectorAll("[data-size]").forEach(b => {
     b.addEventListener("click", () => {
       state.size = SIZES.find(x => x.id === b.dataset.size);
@@ -1290,8 +1300,23 @@ function updatePreviewScale(){
   if (!box) return;
   box.className = "patch-canvas-box size-" + state.size.id;
 }
+// Resize the canvas's actual pixel buffer (and the box's aspect-ratio) to match
+// the selected shape's real proportions, so a rectangle patch previews as a
+// rectangle instead of always being forced into a square.
+function applyCanvasShape(){
+  const canvas = $("patchCanvas"), box = $("patchCanvasBox");
+  if (!canvas || !box) return;
+  const ratio = state.shape.ratio || 1;
+  const base = 520;
+  let w, h;
+  if (ratio >= 1){ w = base; h = Math.round(base / ratio); }
+  else { h = base; w = Math.round(base * ratio); }
+  canvas.width = w; canvas.height = h;
+  box.style.aspectRatio = w + " / " + h;
+  renderPatchPreview();
+}
 function renderPatchDesign(){
-  renderMaterials(); renderShapes(); renderSizes(); updatePreviewScale(); renderPatchPreview();
+  renderMaterials(); renderShapes(); renderSizes(); updatePreviewScale(); applyCanvasShape();
 }
 
 /* ---------- review ---------- */
@@ -1308,7 +1333,7 @@ function renderReview(){
       : "-"],
     ["Patch material", state.material.name],
     ["Patch shape", state.shape.label],
-    ["Patch size", state.size.label + " (" + state.size.dim + ")"],
+    ["Patch size", state.size.label + " (" + sizeDimLabel(state.size, state.shape) + ")"],
     ["Price per hat", each ? money(each) : "-"],
     ["Order total", each && state.qty ? money(each * state.qty) : "-"]
   ];
@@ -1435,7 +1460,7 @@ function orderMeta(){
     sizing: state.style ? sizingOf(state.style) : "",
     material: state.material.name,
     shape: state.shape.label,
-    patchSize: state.size.label + " (" + state.size.dim + ")",
+    patchSize: state.size.label + " (" + sizeDimLabel(state.size, state.shape) + ")",
     notes: ($("notes") && $("notes").value.trim()) || "-",
     proof: ($("proofMethod") && $("proofMethod").value) || "",
     proofPhone: ($("proofPhone") && $("proofPhone").value.trim()) || "",
