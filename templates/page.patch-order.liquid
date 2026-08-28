@@ -198,12 +198,13 @@
 
   /* canvas preview */
   #tbpo .patch-preview{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:14px;background:var(--ice);border-radius:14px;padding:20px}
-  #tbpo .patch-canvas-box{width:100%;max-width:290px;aspect-ratio:1.633/1;border-radius:14px;overflow:hidden;background:#fff;border:1.5px solid var(--line);box-shadow:0 6px 18px rgba(20,18,28,.08);transition:max-width .25s ease,aspect-ratio .25s ease}
+  /* Fixed display size regardless of S/M/L — only the shape changes the box's
+     proportions; the actual real-world size is communicated via the size-dim
+     caption on the chip and in the review, not by scaling this preview. */
+  #tbpo .patch-canvas-box{width:100%;max-width:320px;aspect-ratio:1.633/1;border-radius:14px;overflow:hidden;background:#fff;border:1.5px solid var(--line);box-shadow:0 6px 18px rgba(20,18,28,.08);transition:aspect-ratio .25s ease}
   #tbpo .patch-canvas-box canvas{width:100%;height:100%;display:block}
-  #tbpo .patch-canvas-box.size-S{max-width:210px}
-  #tbpo .patch-canvas-box.size-M{max-width:290px}
-  #tbpo .patch-canvas-box.size-L{max-width:360px}
   #tbpo .patch-controls{width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
+  #tbpo .size-hint{font-size:12.5px;color:var(--purple);background:var(--ice);border-radius:9px;padding:9px 12px;margin-top:9px;line-height:1.5}
   #tbpo .patch-controls input[type=range]{width:100%;accent-color:var(--purple)}
   #tbpo .patch-invert{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer}
   #tbpo .patch-invert input{width:16px;height:16px;accent-color:var(--purple);cursor:pointer}
@@ -364,7 +365,7 @@
   <section class="tbstep" data-step="3">
     <div class="tbstep-head"><div class="tbstep-num">3</div><h2>Your patch design</h2><div class="tbstep-sum" id="sum3"></div></div>
     <div class="tbstep-body">
-      <p class="tbstep-hint">Every patch is laser engraved on genuine leatherette. Pick a material, a shape, and a size, then upload your logo to see a live preview of the engraving.</p>
+      <p class="tbstep-hint">Every patch is laser engraved on genuine leatherette. Pick a material, a shape, a placement, and a size, then upload your logo to see a live preview of the engraving.</p>
 
       <p class="fld">Material <button type="button" class="info-btn" id="engraveBtn">How does engraving work?</button></p>
       <div class="matgrid" id="materials"></div>
@@ -375,8 +376,21 @@
       <p class="fld">Shape</p>
       <div class="chips" id="shapes"></div>
 
-      <p class="fld">Size</p>
+      <p class="fld">Placement</p>
+      <div class="chips" id="placements"></div>
+
+      <p class="fld">Size <span style="color:#c33">*</span></p>
       <div class="chips" id="sizes"></div>
+      <div id="sizeHint"></div>
+
+      <p class="fld">Your logo / artwork</p>
+      <div class="up-slot req" id="logoSlot">
+        <div class="up-slot-label">Patch logo <span class="up-tag">Used for the live preview</span></div>
+        <div class="up-slot-sub">PNG, JPG, WEBP, or SVG preview live below. PDF or AI files still work for production, we'll build the mockup by hand.</div>
+        <input type="file" id="logoInput" accept=".png,.jpg,.jpeg,.webp,.gif,.svg,.pdf,.ai">
+        <div class="up-have" id="logoHave" hidden></div>
+      </div>
+      <p class="hint">No file handy? Skip it and email us after.</p>
 
       <p class="fld">Preview</p>
       <div class="patch-preview" id="patchPreviewWrap">
@@ -395,15 +409,6 @@
         </div>
         <p class="hint">This is a live approximation built from your logo and a sample of the material photo, not the exact final engraving. We'll email a real mockup before anything hits the laser.</p>
       </div>
-
-      <p class="fld">Your logo / artwork</p>
-      <div class="up-slot req" id="logoSlot">
-        <div class="up-slot-label">Front patch logo <span class="up-tag">Used for the live preview</span></div>
-        <div class="up-slot-sub">PNG, JPG, WEBP, or SVG preview live above. PDF or AI files still work for production, we'll build the mockup by hand.</div>
-        <input type="file" id="logoInput" accept=".png,.jpg,.jpeg,.webp,.gif,.svg,.pdf,.ai">
-        <div class="up-have" id="logoHave" hidden></div>
-      </div>
-      <p class="hint">No file handy? Skip it and email us after.</p>
 
       <p class="fld">How should we send your proof? <span style="color:#c33">*</span></p>
       <div class="field" style="max-width:340px">
@@ -708,6 +713,11 @@ const SIZES = [
   { id:"M", label:"Medium", wide:3.25, add:2.50, variantId:52732410200196 },
   { id:"L", label:"Large",  wide:4,    add:3.00, variantId:52732410232964 }
 ];
+const PLACEMENTS = [
+  { id:"front", label:"Front (centered)" },
+  { id:"left",  label:"Left panel" },
+  { id:"right", label:"Right panel" }
+];
 </script>
 
 <script>
@@ -775,7 +785,7 @@ const specsOf = s => (s.desc || "").split("·").map(x => x.trim()).filter(x => x
 
 const state = {
   style: null, colors: [], split: {}, qty: null, activeColor: null,
-  material: MATERIALS[0], shape: SHAPES[0], size: SIZES[1],
+  material: MATERIALS[0], shape: SHAPES[0], placement: PLACEMENTS[0], size: null,
   logoFile: null, logoImage: null, threshold: 140, invert: false,
   step: 1, maxStep: 1, done: new Set()
 };
@@ -1201,7 +1211,6 @@ function drawPlaceholderText(ctx, W, H){
   ctx.restore();
 }
 function drawStitchBorder(ctx, shape, W, H){
-  if (shape === "diecut") return;
   ctx.save();
   ctx.strokeStyle = "rgba(20,18,28,.18)";
   ctx.lineWidth = 2;
@@ -1209,6 +1218,23 @@ function drawStitchBorder(ctx, shape, W, H){
   clipPath(ctx, shape, W, H, 10);
   ctx.stroke();
   ctx.restore();
+}
+// Die cut has no fixed geometric edge to stroke, so trace the actual silhouette:
+// dilate the patch's own mask a little further, subtract the mask itself, and
+// what's left is a thin ring right at the cut line.
+function drawDieCutOutline(ctx, mask, W, H){
+  const borderPx = Math.max(2, Math.round(Math.min(W, H) * 0.012));
+  const outer = dieCutMask(mask, borderPx);
+  const ring = document.createElement("canvas");
+  ring.width = W; ring.height = H;
+  const rctx = ring.getContext("2d");
+  rctx.drawImage(outer, 0, 0);
+  rctx.globalCompositeOperation = "destination-out";
+  rctx.drawImage(mask, 0, 0);
+  rctx.globalCompositeOperation = "source-in";
+  rctx.fillStyle = "rgba(20,18,28,.55)";
+  rctx.fillRect(0, 0, W, H);
+  ctx.drawImage(ring, 0, 0);
 }
 function renderPatchPreview(){
   const canvas = $("patchCanvas");
@@ -1241,7 +1267,8 @@ function renderPatchPreview(){
     drawPlaceholderText(ctx, W, H);
   }
 
-  drawStitchBorder(ctx, state.shape.id, W, H);
+  if (state.shape.id === "diecut" && ink) drawDieCutOutline(ctx, mask, W, H);
+  else if (state.shape.id !== "diecut") drawStitchBorder(ctx, state.shape.id, W, H);
 }
 
 /* ---------- step 3: patch design ---------- */
@@ -1282,27 +1309,47 @@ function renderShapes(){
     });
   });
 }
+function renderPlacements(){
+  const host = $("placements");
+  if (!host) return;
+  host.innerHTML = PLACEMENTS.map(p =>
+    '<button type="button" class="chip ' + (p.id === state.placement.id ? "on" : "") + '" data-place="' + p.id + '">' + p.label + '</button>').join("");
+  host.querySelectorAll("[data-place]").forEach(b => {
+    b.addEventListener("click", () => {
+      state.placement = PLACEMENTS.find(x => x.id === b.dataset.place);
+      renderPlacements(); renderSizeHint(); sync();
+    });
+  });
+}
+// Left/right panels are narrow, so a Large non-circle patch usually won't sit
+// right there — nudge toward Small or Medium unless it's a circle.
+function renderSizeHint(){
+  const host = $("sizeHint");
+  if (!host) return;
+  const onSide = state.placement && state.placement.id !== "front";
+  const show = onSide && state.shape.id !== "circle";
+  host.innerHTML = show
+    ? '<div class="size-hint">Left and right panels are narrow — we typically recommend Small or Medium there unless you\'re doing a circle.</div>'
+    : "";
+}
 function renderSizes(){
   const host = $("sizes");
   if (!host) return;
   host.innerHTML = SIZES.map(s =>
-    '<button type="button" class="chip ' + (s.id === state.size.id ? "on" : "") + '" data-size="' + s.id + '">' + s.label +
+    '<button type="button" class="chip ' + (state.size && s.id === state.size.id ? "on" : "") + '" data-size="' + s.id + '">' + s.label +
     ' <span class="size-dim">(' + sizeDimLabel(s, state.shape) + ')</span><span class="tag">+' + money(s.add) + '/hat</span></button>').join("");
   host.querySelectorAll("[data-size]").forEach(b => {
     b.addEventListener("click", () => {
       state.size = SIZES.find(x => x.id === b.dataset.size);
-      renderSizes(); updatePreviewScale(); sync();
+      renderSizes(); sync();
     });
   });
-}
-function updatePreviewScale(){
-  const box = $("patchCanvasBox");
-  if (!box) return;
-  box.className = "patch-canvas-box size-" + state.size.id;
+  renderSizeHint();
 }
 // Resize the canvas's actual pixel buffer (and the box's aspect-ratio) to match
 // the selected shape's real proportions, so a rectangle patch previews as a
-// rectangle instead of always being forced into a square.
+// rectangle instead of always being forced into a square. The box's on-screen
+// size stays fixed regardless of which S/M/L size is chosen (only shape changes it).
 function applyCanvasShape(){
   const canvas = $("patchCanvas"), box = $("patchCanvasBox");
   if (!canvas || !box) return;
@@ -1316,7 +1363,7 @@ function applyCanvasShape(){
   renderPatchPreview();
 }
 function renderPatchDesign(){
-  renderMaterials(); renderShapes(); renderSizes(); updatePreviewScale(); applyCanvasShape();
+  renderMaterials(); renderShapes(); renderPlacements(); renderSizes(); applyCanvasShape();
 }
 
 /* ---------- review ---------- */
@@ -1333,7 +1380,8 @@ function renderReview(){
       : "-"],
     ["Patch material", state.material.name],
     ["Patch shape", state.shape.label],
-    ["Patch size", state.size.label + " (" + sizeDimLabel(state.size, state.shape) + ")"],
+    ["Placement", state.placement.label],
+    ["Patch size", state.size ? (state.size.label + " (" + sizeDimLabel(state.size, state.shape) + ")") : "-"],
     ["Price per hat", each ? money(each) : "-"],
     ["Order total", each && state.qty ? money(each * state.qty) : "-"]
   ];
@@ -1353,6 +1401,7 @@ function canLeave(step){
     return true;
   }
   if (step === 3){
+    if (!state.size) return false;
     const m = $("proofMethod") ? $("proofMethod").value : "";
     if (!m) return false;
     if (m === "Text message"){
@@ -1410,7 +1459,7 @@ function sync(){
     ? nameOf(state.style) + (state.colors.length ? " &middot; " + (state.colors.length === 1 ? state.colors[0] : state.colors.length + " colors") : "")
     : "";
   $("sum2").textContent = state.qty ? state.qty + " hats" : "";
-  $("sum3").textContent = state.material.name + " &middot; " + state.shape.label + " &middot; " + state.size.label;
+  $("sum3").innerHTML = state.material.name + " &middot; " + state.shape.label + " &middot; " + state.placement.label + (state.size ? " &middot; " + state.size.label : "");
   $("sum4").textContent = "";
 
   $("next1").disabled = !canLeave(1);
@@ -1460,7 +1509,8 @@ function orderMeta(){
     sizing: state.style ? sizingOf(state.style) : "",
     material: state.material.name,
     shape: state.shape.label,
-    patchSize: state.size.label + " (" + sizeDimLabel(state.size, state.shape) + ")",
+    placement: state.placement.label,
+    patchSize: state.size ? (state.size.label + " (" + sizeDimLabel(state.size, state.shape) + ")") : "",
     notes: ($("notes") && $("notes").value.trim()) || "-",
     proof: ($("proofMethod") && $("proofMethod").value) || "",
     proofPhone: ($("proofPhone") && $("proofPhone").value.trim()) || "",
@@ -1474,8 +1524,8 @@ async function sendToDrive(type){
   if (!scriptConfigured()) return { ok:false, skipped:true, uploaded:[] };
   const uploaded = [], files = [];
   if (state.logoFile){
-    files.push({ placement: "Front patch", name: state.logoFile.name, mimeType: state.logoFile.type || "application/octet-stream", data: await fileToB64(state.logoFile) });
-    uploaded.push("Front patch");
+    files.push({ placement: state.placement.label, name: state.logoFile.name, mimeType: state.logoFile.type || "application/octet-stream", data: await fileToB64(state.logoFile) });
+    uploaded.push(state.placement.label);
   }
   const body = JSON.stringify({ type: type, meta: orderMeta(), files: files });
 
@@ -1532,6 +1582,7 @@ async function submitCheckout(){
     "Decoration": "Leatherette patch (laser engraved, black)",
     "Patch material": meta.material,
     "Patch shape": meta.shape,
+    "Placement": meta.placement,
     "Patch size": meta.patchSize,
     "Artwork": artNote
   };
