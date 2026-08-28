@@ -209,6 +209,17 @@
   #tbpo .patch-invert{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer}
   #tbpo .patch-invert input{width:16px;height:16px;accent-color:var(--purple);cursor:pointer}
   #tbpo .patch-preview .hint{max-width:380px;text-align:center}
+  /* Two-column layout: preview on the left, the fields that drive it on the right.
+     Mobile stacks with the preview first so the canvas + threshold/invert controls
+     are visible without scrolling. */
+  #tbpo .patch-layout{display:flex;flex-direction:column;gap:8px}
+  #tbpo .patch-layout-preview .patch-preview{margin-top:0}
+  #tbpo .patch-layout-fields .fld:first-child{margin-top:14px}
+  @media(min-width:900px){
+    #tbpo .patch-layout{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:26px;align-items:start}
+    #tbpo .patch-layout-preview{position:sticky;top:18px}
+    #tbpo .patch-layout-fields .fld:first-child{margin-top:0}
+  }
 
   /* step 3 pieces */
   #tbpo .fld{font-size:13.5px;font-weight:700;margin-top:20px;margin-bottom:7px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -367,47 +378,60 @@
     <div class="tbstep-body">
       <p class="tbstep-hint">Every patch is laser engraved on genuine leatherette. Pick a material, a shape, a placement, and a size, then upload your logo to see a live preview of the engraving.</p>
 
-      <p class="fld">Material <button type="button" class="info-btn" id="engraveBtn">How does engraving work?</button></p>
-      <div class="matgrid" id="materials"></div>
-      <div class="info-panel" id="engraveInfo" hidden>
-        <p class="info-note">Our laser burns through the colored top layer of the leatherette to expose the black core underneath, so <strong>every engraved line comes out black</strong> no matter which material you pick. Bold, simple shapes engrave the cleanest; very fine detail or thin lines can lose crispness at small sizes.</p>
-      </div>
-
-      <p class="fld">Shape</p>
-      <div class="chips" id="shapes"></div>
-
-      <p class="fld">Placement</p>
-      <div class="chips" id="placements"></div>
-
-      <p class="fld">Size <span style="color:#c33">*</span></p>
-      <div class="chips" id="sizes"></div>
-      <div id="sizeHint"></div>
-
-      <p class="fld">Your logo / artwork</p>
-      <div class="up-slot req" id="logoSlot">
-        <div class="up-slot-label">Patch logo <span class="up-tag">Used for the live preview</span></div>
-        <div class="up-slot-sub">PNG, JPG, WEBP, or SVG preview live below. PDF or AI files still work for production, we'll build the mockup by hand.</div>
-        <input type="file" id="logoInput" accept=".png,.jpg,.jpeg,.webp,.gif,.svg,.pdf,.ai">
-        <div class="up-have" id="logoHave" hidden></div>
-      </div>
-      <p class="hint">No file handy? Skip it and email us after.</p>
-
-      <p class="fld">Preview</p>
-      <div class="patch-preview" id="patchPreviewWrap">
-        <div class="patch-canvas-box" id="patchCanvasBox">
-          <canvas id="patchCanvas" width="520" height="318"></canvas>
-        </div>
-        <div class="patch-controls">
-          <div class="field">
-            <label for="threshold">Engrave detail (threshold)</label>
-            <input type="range" id="threshold" min="10" max="245" value="140">
+      <div class="patch-layout">
+        <div class="patch-layout-preview">
+          <div class="patch-preview" id="patchPreviewWrap">
+            <div class="patch-canvas-box" id="patchCanvasBox">
+              <canvas id="patchCanvas" width="520" height="318"></canvas>
+            </div>
+            <div class="patch-controls">
+              <div class="field">
+                <label for="threshold">Engrave detail (threshold)</label>
+                <input type="range" id="threshold" min="10" max="245" value="140">
+              </div>
+              <label class="patch-invert">
+                <input type="checkbox" id="invertToggle">
+                <span>Invert (swap engraved / material areas)</span>
+              </label>
+              <div class="field">
+                <label for="edgeSel">Edge finish</label>
+                <select id="edgeSel">
+                  <option value="none">None (clean edge)</option>
+                  <option value="stitch">Faux stitch line</option>
+                  <option value="outline">Outline border</option>
+                </select>
+              </div>
+            </div>
+            <p class="hint">This is a live approximation built from your logo and a sample of the material photo, not the exact final engraving. We'll email a real mockup before anything hits the laser.</p>
           </div>
-          <label class="patch-invert">
-            <input type="checkbox" id="invertToggle">
-            <span>Invert (swap engraved / material areas)</span>
-          </label>
         </div>
-        <p class="hint">This is a live approximation built from your logo and a sample of the material photo, not the exact final engraving. We'll email a real mockup before anything hits the laser.</p>
+
+        <div class="patch-layout-fields">
+          <p class="fld">Your logo / artwork</p>
+          <div class="up-slot req" id="logoSlot">
+            <div class="up-slot-label">Patch logo <span class="up-tag">Used for the live preview</span></div>
+            <div class="up-slot-sub">PNG, JPG, WEBP, or SVG preview live. PDF or AI files still work for production, we'll build the mockup by hand.</div>
+            <input type="file" id="logoInput" accept=".png,.jpg,.jpeg,.webp,.gif,.svg,.pdf,.ai">
+            <div class="up-have" id="logoHave" hidden></div>
+          </div>
+          <p class="hint">No file handy? Skip it and email us after.</p>
+
+          <p class="fld">Material <button type="button" class="info-btn" id="engraveBtn">How does engraving work?</button></p>
+          <div class="matgrid" id="materials"></div>
+          <div class="info-panel" id="engraveInfo" hidden>
+            <p class="info-note">Our laser burns through the colored top layer of the leatherette to expose the black core underneath, so <strong>every engraved line comes out black</strong> no matter which material you pick. Bold, simple shapes engrave the cleanest; very fine detail or thin lines can lose crispness at small sizes.</p>
+          </div>
+
+          <p class="fld">Shape</p>
+          <div class="chips" id="shapes"></div>
+
+          <p class="fld">Placement</p>
+          <div class="chips" id="placements"></div>
+
+          <p class="fld">Size <span style="color:#c33">*</span></p>
+          <div class="chips" id="sizes"></div>
+          <div id="sizeHint"></div>
+        </div>
       </div>
 
       <p class="fld">How should we send your proof? <span style="color:#c33">*</span></p>
@@ -786,7 +810,7 @@ const specsOf = s => (s.desc || "").split("·").map(x => x.trim()).filter(x => x
 const state = {
   style: null, colors: [], split: {}, qty: null, activeColor: null,
   material: MATERIALS[0], shape: SHAPES[0], placement: PLACEMENTS[0], size: null,
-  logoFile: null, logoImage: null, threshold: 140, invert: false,
+  logoFile: null, logoImage: null, threshold: 140, invert: false, edge: "none",
   step: 1, maxStep: 1, done: new Set()
 };
 
@@ -1156,38 +1180,61 @@ function buildInkMask(img, threshold, invert, outW, outH){
   ctx.putImageData(imgd, 0, 0);
   return c;
 }
-// Approximate "die cut": dilate the ink silhouette outward by a margin via blur+threshold.
-function dieCutMask(inkCanvas, marginPx){
+// Tight bounding box of the thresholded ink, so a die cut can hug the artwork.
+function inkBounds(inkCanvas){
   const w = inkCanvas.width, h = inkCanvas.height;
-  const c = document.createElement("canvas");
-  c.width = w; c.height = h;
-  const ctx = c.getContext("2d");
-  ctx.filter = "blur(" + marginPx + "px)";
-  ctx.drawImage(inkCanvas, 0, 0);
-  ctx.filter = "none";
   let id;
-  try { id = ctx.getImageData(0, 0, w, h); } catch(e){ return c; }
+  try { id = inkCanvas.getContext("2d").getImageData(0, 0, w, h); } catch(e){ return null; }
   const d = id.data;
-  for (let i = 0; i < d.length; i += 4){
-    if (d[i + 3] > 18){ d[i] = 0; d[i+1] = 0; d[i+2] = 0; d[i+3] = 255; }
-    else { d[i + 3] = 0; }
+  let minX = w, minY = h, maxX = -1, maxY = -1;
+  for (let y = 0; y < h; y++){
+    const row = y * w * 4;
+    for (let x = 0; x < w; x++){
+      if (d[row + x * 4 + 3] > 8){
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+      }
+    }
   }
-  ctx.putImageData(id, 0, 0);
-  return c;
+  if (maxX < 0) return null;
+  return { x: minX, y: minY, w: maxX - minX + 1, h: maxY - minY + 1 };
 }
-function shapeMask(shape, W, H, ink){
+// Die cut = the artwork's bounding box plus a little padding, with rounded corners.
+function computeDieCutRect(ink, W, H){
+  const b = ink ? inkBounds(ink) : null;
+  const padBase = Math.min(W, H);
+  const pad = Math.max(8, Math.round(padBase * 0.06));
+  let x, y, w, h;
+  if (b){
+    x = b.x - pad; y = b.y - pad; w = b.w + pad * 2; h = b.h + pad * 2;
+  } else {
+    x = W * 0.12; y = H * 0.12; w = W * 0.76; h = H * 0.76;
+  }
+  // keep it inside the canvas
+  const inset = 4;
+  if (x < inset){ w += x - inset; x = inset; }
+  if (y < inset){ h += y - inset; y = inset; }
+  if (x + w > W - inset) w = W - inset - x;
+  if (y + h > H - inset) h = H - inset - y;
+  w = Math.max(12, w); h = Math.max(12, h);
+  const r = Math.max(6, Math.round(Math.min(w, h) * 0.16));
+  return { x: x, y: y, w: w, h: h, r: r };
+}
+function shapeMask(shape, W, H, ink, dieRect){
   const c = document.createElement("canvas");
   c.width = W; c.height = H;
   const ctx = c.getContext("2d");
+  ctx.fillStyle = "#000";
   if (shape === "diecut"){
-    if (ink){ ctx.drawImage(dieCutMask(ink, Math.round(Math.min(W, H) * 0.07)), 0, 0); return c; }
-    // no logo yet: fall back to a rounded-rect placeholder silhouette
-    ctx.fillStyle = "#000";
-    clipPath(ctx, "rounded", W, H, 8);
+    const r = dieRect || computeDieCutRect(ink, W, H);
+    ctx.beginPath();
+    roundRectPath(ctx, r.x, r.y, r.w, r.h, r.r);
+    ctx.closePath();
     ctx.fill();
     return c;
   }
-  ctx.fillStyle = "#000";
   clipPath(ctx, shape, W, H, 8);
   ctx.fill();
   return c;
@@ -1210,31 +1257,37 @@ function drawPlaceholderText(ctx, W, H){
   ctx.fillText("Upload your logo to preview", W / 2, H / 2);
   ctx.restore();
 }
-function drawStitchBorder(ctx, shape, W, H){
+// Optional decorative edge: a dashed "stitch" line or a solid outline, inset just
+// inside the patch edge. Works for the geometric shapes and for the die cut rect.
+function drawShapeBorder(ctx, mode, shape, W, H, dieRect){
+  if (mode === "none") return;
   ctx.save();
-  ctx.strokeStyle = "rgba(20,18,28,.18)";
-  ctx.lineWidth = 2;
-  ctx.setLineDash([4, 3]);
-  clipPath(ctx, shape, W, H, 10);
-  ctx.stroke();
+  ctx.beginPath();
+  if (shape === "diecut"){
+    const r = dieRect || computeDieCutRect(null, W, H);
+    const i = Math.max(3, Math.round(Math.min(W, H) * 0.018));
+    const rw = Math.max(8, r.w - i * 2), rh = Math.max(8, r.h - i * 2);
+    roundRectPath(ctx, r.x + i, r.y + i, rw, rh, Math.max(4, r.r - i));
+    ctx.closePath();
+  } else {
+    clipPath(ctx, shape, W, H, 14);
+  }
+  if (mode === "stitch"){
+    ctx.strokeStyle = "rgba(255,255,255,.72)";
+    ctx.lineWidth = Math.max(1.5, Math.min(W, H) * 0.008);
+    ctx.setLineDash([Math.max(4, Math.min(W, H) * 0.022), Math.max(3, Math.min(W, H) * 0.016)]);
+    ctx.lineCap = "round";
+    ctx.stroke();
+    ctx.strokeStyle = "rgba(20,18,28,.28)";
+    ctx.lineWidth = Math.max(1, Math.min(W, H) * 0.004);
+    ctx.stroke();
+  } else {
+    ctx.setLineDash([]);
+    ctx.strokeStyle = "rgba(20,18,28,.55)";
+    ctx.lineWidth = Math.max(2, Math.min(W, H) * 0.011);
+    ctx.stroke();
+  }
   ctx.restore();
-}
-// Die cut has no fixed geometric edge to stroke, so trace the actual silhouette:
-// dilate the patch's own mask a little further, subtract the mask itself, and
-// what's left is a thin ring right at the cut line.
-function drawDieCutOutline(ctx, mask, W, H){
-  const borderPx = Math.max(2, Math.round(Math.min(W, H) * 0.012));
-  const outer = dieCutMask(mask, borderPx);
-  const ring = document.createElement("canvas");
-  ring.width = W; ring.height = H;
-  const rctx = ring.getContext("2d");
-  rctx.drawImage(outer, 0, 0);
-  rctx.globalCompositeOperation = "destination-out";
-  rctx.drawImage(mask, 0, 0);
-  rctx.globalCompositeOperation = "source-in";
-  rctx.fillStyle = "rgba(20,18,28,.55)";
-  rctx.fillRect(0, 0, W, H);
-  ctx.drawImage(ring, 0, 0);
 }
 function renderPatchPreview(){
   const canvas = $("patchCanvas");
@@ -1245,7 +1298,8 @@ function renderPatchPreview(){
 
   const logoImg = state.logoImage;
   const ink = logoImg ? buildInkMask(logoImg, state.threshold, state.invert, W, H) : null;
-  const mask = shapeMask(state.shape.id, W, H, ink);
+  const dieRect = state.shape.id === "diecut" ? computeDieCutRect(ink, W, H) : null;
+  const mask = shapeMask(state.shape.id, W, H, ink, dieRect);
 
   const matImg = matImageCache[state.material.id];
   const patternSrc = matPatternCanvasCache[state.material.id];
@@ -1267,8 +1321,7 @@ function renderPatchPreview(){
     drawPlaceholderText(ctx, W, H);
   }
 
-  if (state.shape.id === "diecut" && ink) drawDieCutOutline(ctx, mask, W, H);
-  else if (state.shape.id !== "diecut") drawStitchBorder(ctx, state.shape.id, W, H);
+  drawShapeBorder(ctx, state.edge, state.shape.id, W, H, dieRect);
 }
 
 /* ---------- step 3: patch design ---------- */
@@ -1309,6 +1362,7 @@ function renderShapes(){
     });
   });
 }
+function edgeLabel(){ return state.edge === "stitch" ? "Faux stitch line" : (state.edge === "outline" ? "Outline border" : "None"); }
 function renderPlacements(){
   const host = $("placements");
   if (!host) return;
@@ -1381,6 +1435,7 @@ function renderReview(){
     ["Patch material", state.material.name],
     ["Patch shape", state.shape.label],
     ["Placement", state.placement.label],
+    ["Edge finish", edgeLabel()],
     ["Patch size", state.size ? (state.size.label + " (" + sizeDimLabel(state.size, state.shape) + ")") : "-"],
     ["Price per hat", each ? money(each) : "-"],
     ["Order total", each && state.qty ? money(each * state.qty) : "-"]
@@ -1459,7 +1514,7 @@ function sync(){
     ? nameOf(state.style) + (state.colors.length ? " &middot; " + (state.colors.length === 1 ? state.colors[0] : state.colors.length + " colors") : "")
     : "";
   $("sum2").textContent = state.qty ? state.qty + " hats" : "";
-  $("sum3").innerHTML = state.material.name + " &middot; " + state.shape.label + " &middot; " + state.placement.label + (state.size ? " &middot; " + state.size.label : "");
+  $("sum3").innerHTML = state.material.name + " &middot; " + state.shape.label + " &middot; " + state.placement.label + (state.edge !== "none" ? " &middot; " + edgeLabel() : "") + (state.size ? " &middot; " + state.size.label : "");
   $("sum4").textContent = "";
 
   $("next1").disabled = !canLeave(1);
@@ -1479,7 +1534,7 @@ function sync(){
   }
   const nt = nextTier();
   $("nudge").innerHTML = (nt && state.qty)
-    ? '<div class="tier-nudge">Add ' + (nt[0] - state.qty) + ' more and your price drops to ' + money(nt[1] + state.size.add) + '/hat.</div>'
+    ? '<div class="tier-nudge">Add ' + (nt[0] - state.qty) + ' more and your price drops to ' + money(nt[1] + (state.size ? state.size.add : 0)) + '/hat.</div>'
     : "";
 
   $("barQty").textContent = state.qty || 0;
@@ -1510,6 +1565,7 @@ function orderMeta(){
     material: state.material.name,
     shape: state.shape.label,
     placement: state.placement.label,
+    edge: edgeLabel(),
     patchSize: state.size ? (state.size.label + " (" + sizeDimLabel(state.size, state.shape) + ")") : "",
     notes: ($("notes") && $("notes").value.trim()) || "-",
     proof: ($("proofMethod") && $("proofMethod").value) || "",
@@ -1583,6 +1639,7 @@ async function submitCheckout(){
     "Patch material": meta.material,
     "Patch shape": meta.shape,
     "Placement": meta.placement,
+    "Edge finish": meta.edge,
     "Patch size": meta.patchSize,
     "Artwork": artNote
   };
@@ -1687,6 +1744,7 @@ $("logoInput").addEventListener("change", e => {
 });
 $("threshold").addEventListener("input", e => { state.threshold = +e.target.value; renderPatchPreview(); });
 $("invertToggle").addEventListener("change", e => { state.invert = e.target.checked; renderPatchPreview(); });
+$("edgeSel").addEventListener("change", e => { state.edge = e.target.value; renderPatchPreview(); sync(); });
 
 // Texting a proof needs a mobile number, and Shopify's checkout phone field is
 // optional, so collect it here when they pick text.
