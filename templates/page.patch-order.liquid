@@ -20,7 +20,15 @@
   #tbpo .hero-photos div:not(:first-child){-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%);mask-image:linear-gradient(90deg,transparent,#000 12%);margin-left:-6%}
   #tbpo header::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,var(--ink) 0%,rgba(20,18,28,.7) 42%,rgba(20,18,28,.32) 100%)}
   #tbpo header .wrap{position:relative;z-index:2}
-  @media(max-width:640px){#tbpo .hero-photos div:nth-child(n+4){display:none}#tbpo header::after{background:linear-gradient(180deg,rgba(20,18,28,.72),rgba(20,18,28,.9))}}
+  @media(max-width:640px){
+    #tbpo .hero-photos div:nth-child(n+4){display:none}
+    #tbpo header::after{background:linear-gradient(180deg,rgba(20,18,28,.66),rgba(20,18,28,.88))}
+    /* Give the patch photo most of the width on a phone — split evenly it was
+       cropped down to a sliver. Taller header so it isn't a letterbox strip. */
+    #tbpo header{padding:34px 0 20px;min-height:300px}
+    #tbpo .hero-photos div:first-child{flex:0 0 30%}
+    #tbpo .hero-photos div:nth-child(2){flex:1 1 auto;background-size:cover;background-position:60% center}
+  }
   #tbpo h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,58px);line-height:.95;letter-spacing:.01em;margin:0 0 10px}
   #tbpo h1 em{font-style:normal;color:#7F5FD8}
   #tbpo .sub{font-size:15px;line-height:1.55;color:#D9D6E4;max-width:560px}
