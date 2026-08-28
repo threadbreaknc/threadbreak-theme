@@ -2,13 +2,16 @@
  * Threadbreak — patch hat order intake
  * Receives submissions from templates/page.patch-order.liquid
  *
- * SETUP (one time)
- *   1. Set ROOT_FOLDER_ID below to the Drive folder you want orders saved into.
- *      (Open the folder in Drive; the ID is the last chunk of the URL.)
- *   2. Set SHEET_ID to a Google Sheet you want the log written to, or leave it
- *      as "" and the script will create one inside ROOT_FOLDER_ID on first run.
- *   3. Set NOTIFY_EMAIL to where you want the heads-up.
- *   4. Deploy > New deployment > Web app
+ * SETUP
+ *   Nothing is required. On first run the script creates a Drive folder called
+ *   ROOT_FOLDER_NAME (below) in your My Drive and a log sheet inside it, then
+ *   remembers both. Check the execution log — it prints the folder link.
+ *
+ *   To file orders somewhere specific instead, put that folder's ID in
+ *   ROOT_FOLDER_ID (open the folder in Drive; the ID is the last chunk of the
+ *   URL). Same for SHEET_ID if you want an existing sheet.
+ *
+ *   Then: Deploy > New deployment > Web app
  *        Execute as: Me
  *        Who has access: Anyone
  *      Copy the /exec URL into APPS_SCRIPT_URL in page.patch-order.liquid.
@@ -17,10 +20,33 @@
  * to return CORS headers — it just has to accept the POST and not throw.
  */
 
-var ROOT_FOLDER_ID = "PASTE_DRIVE_FOLDER_ID";
-var SHEET_ID       = "";                       // "" = auto-create on first run
-var NOTIFY_EMAIL   = "help@threadbreak.com";
-var SHEET_TAB      = "Patch orders";
+var ROOT_FOLDER_ID   = "";                      // "" = auto-create on first run
+var ROOT_FOLDER_NAME = "Threadbreak patch orders";
+var SHEET_ID         = "";                      // "" = auto-create on first run
+var NOTIFY_EMAIL     = "help@threadbreak.com";
+var SHEET_TAB        = "Patch orders";
+
+/**
+ * The Drive folder orders are filed into. Uses ROOT_FOLDER_ID when you've set
+ * one; otherwise creates ROOT_FOLDER_NAME in My Drive on first run and reuses
+ * it from then on (the ID is cached in script properties).
+ */
+function rootFolder() {
+  if (ROOT_FOLDER_ID && ROOT_FOLDER_ID.indexOf("PASTE") !== 0) {
+    return DriveApp.getFolderById(ROOT_FOLDER_ID);
+  }
+  var props = PropertiesService.getScriptProperties();
+  var known = props.getProperty("ROOT_FOLDER_ID");
+  if (known) {
+    try { return DriveApp.getFolderById(known); } catch (e) { /* deleted — remake below */ }
+  }
+  // reuse a folder of the same name if one is already sitting in My Drive
+  var existing = DriveApp.getFoldersByName(ROOT_FOLDER_NAME);
+  var folder = existing.hasNext() ? existing.next() : DriveApp.createFolder(ROOT_FOLDER_NAME);
+  props.setProperty("ROOT_FOLDER_ID", folder.getId());
+  Logger.log("Filing patch orders into: " + folder.getUrl());
+  return folder;
+}
 
 // Column order for the log. Keys match the `meta` object the page sends.
 var COLUMNS = [
@@ -127,7 +153,10 @@ function testRun() {
     },
     files: []
   });
-  Logger.log("testRun complete — check Drive, the sheet, and " + NOTIFY_EMAIL);
+  Logger.log("testRun complete.");
+  Logger.log("Drive folder: " + rootFolder().getUrl());
+  Logger.log("Log sheet:    " + sheet().getParent().getUrl());
+  Logger.log("Notified:     " + NOTIFY_EMAIL);
 }
 
 function doGet() {
@@ -157,7 +186,7 @@ function handle(payload) {
 }
 
 function makeOrderFolder(meta) {
-  var root = DriveApp.getFolderById(ROOT_FOLDER_ID);
+  var root = rootFolder();
   var stamp = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyy-MM-dd HHmm");
   var label = [stamp, "patch", meta.style || "order", meta.qty ? meta.qty + "pc" : ""]
     .filter(function (p) { return p; })
@@ -185,7 +214,7 @@ function sheet() {
       ss = SpreadsheetApp.openById(known);
     } else {
       ss = SpreadsheetApp.create("Threadbreak patch orders");
-      DriveApp.getFileById(ss.getId()).moveTo(DriveApp.getFolderById(ROOT_FOLDER_ID));
+      DriveApp.getFileById(ss.getId()).moveTo(rootFolder());
       props.setProperty("SHEET_ID", ss.getId());
     }
   }
