@@ -155,8 +155,10 @@
 <style>
   .tb-patch{background:#fff;padding:4.5rem 2rem;}
   .tb-patch-inner{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;}
-  .tb-patch-eyebrow{display:inline-block;text-transform:uppercase;letter-spacing:.14em;font-size:11.5px;font-weight:700;
-    color:#fff;background:#5028AA;border-radius:999px;padding:4px 12px;margin:0 0 14px;}
+  /* theme.css sets a dark colour on paragraphs, so force white on the badge */
+  .tb-patch .tb-patch-eyebrow{display:inline-block;text-transform:uppercase;letter-spacing:.14em;font-size:11.5px;
+    font-weight:700;color:#ffffff !important;background:#5028AA;border-radius:999px;padding:5px 13px;margin:0 0 14px;
+    line-height:1.4;}
   .tb-patch-copy h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,2.9rem);line-height:1.05;margin:0 0 14px;}
   .tb-patch-copy p{font-size:1rem;line-height:1.65;color:#3d3a4a;margin:0 0 18px;}
   .tb-patch-list{list-style:none;margin:0 0 26px;padding:0;display:grid;gap:9px;}
