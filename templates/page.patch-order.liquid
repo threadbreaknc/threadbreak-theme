@@ -34,9 +34,13 @@
   #tbpo .props{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;margin-bottom:0}
   #tbpo .props span{font-size:13px;font-weight:500;color:#EDEAF7}
   #tbpo .props span::before{content:"\2713";color:#7F5FD8;font-weight:700;margin-right:7px}
-  #tbpo .tbco-textus{display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;margin:40px 0 22px;padding:15px 22px;background:var(--purple);border:1.5px solid var(--purple);border-radius:12px;text-decoration:none;color:#fff;font-size:14.5px}
-  #tbpo .tbco-textus-icon{display:inline-flex;color:#fff;flex:none}
-  #tbpo .tbco-textus strong{color:#fff;font-weight:700;white-space:nowrap}
+  /* compact and below the form, so it never pushes the hat grid down */
+  #tbpo .tbco-textus{display:inline-flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;
+    margin:14px auto 0;padding:0;background:none;border:none;text-decoration:none;color:var(--muted);
+    font-size:13.5px;width:100%;text-align:center}
+  #tbpo .tbco-textus:hover{color:var(--purple)}
+  #tbpo .tbco-textus-icon{display:inline-flex;color:var(--purple);flex:none}
+  #tbpo .tbco-textus strong{color:var(--purple);font-weight:700;white-space:nowrap}
 
   /* progress rail */
   #tbpo .rail{display:flex;gap:6px;margin:20px 0 18px;flex-wrap:wrap;position:sticky;top:74px;z-index:50;
@@ -211,7 +215,7 @@
 
   /* canvas preview */
   #tbpo .patch-preview{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:14px;background:var(--ice);border-radius:14px;padding:20px}
-  /* Fixed display size regardless of S/M/L — only the shape changes the box's
+  /* Fixed display size regardless of S/M/L, only the shape changes the box's
      proportions; the actual real-world size is communicated via the size-dim
      caption on the chip and in the review, not by scaling this preview. */
   #tbpo .patch-canvas-box{position:relative;width:100%;max-width:320px;aspect-ratio:1.633/1;border-radius:14px;overflow:hidden;background:#fff;border:1.5px solid var(--line);box-shadow:0 6px 18px rgba(20,18,28,.08);transition:aspect-ratio .25s ease}
@@ -312,11 +316,14 @@
   #tbpo .quote-redirect strong{color:var(--purple);font-weight:700}
 
   /* reviews block */
-  #tbpo .tbco-rating{max-width:520px;margin:32px auto 0;text-align:center;background:var(--ice);border:1px solid var(--line);border-radius:16px;padding:28px 24px}
-  #tbpo .tbco-rating-stars{display:block;font-size:26px;color:#F5C518;letter-spacing:3px;margin-bottom:10px}
-  #tbpo .tbco-rating-score{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--ink);margin:0 0 4px;line-height:1}
-  #tbpo .tbco-rating-count{font-size:14.5px;color:var(--muted);margin:0 0 14px}
-  #tbpo .tbco-rating-link{display:inline-block;font-size:14.5px;font-weight:600;color:var(--purple);text-decoration:underline}
+  /* one compact line with stars and an arrow, same shape as the homepage */
+  #tbpo .tbco-rating{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;
+    margin:30px auto 0;padding:0;background:none;border:none;text-decoration:none;
+    color:var(--muted);font-size:14px;transition:color .15s}
+  #tbpo .tbco-rating:hover{color:var(--ink)}
+  #tbpo .tbco-rating-stars{color:#F5C518;font-size:16px;letter-spacing:2px;flex:none}
+  #tbpo .tbco-rating-arrow{color:var(--purple);font-weight:700;transition:transform .15s}
+  #tbpo .tbco-rating:hover .tbco-rating-arrow{transform:translateX(3px)}
 
   /* sticky bar */
   #tbpo .bar{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;z-index:60;transform:translateY(110%);transition:transform .28s}
@@ -368,13 +375,6 @@
 </header>
 
 <div class="wrap">
-
-  <a href="sms:+13365856176" class="tbco-textus">
-    <span class="tbco-textus-icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-    </span>
-    <span class="tbco-textus-text">Have questions before placing an order? <strong>Text us: (336) 585-6176</strong></span>
-  </a>
 
 </div>
 
@@ -458,7 +458,7 @@
               </div>
             </div>
             <div class="die-note" id="dieNote" hidden>
-              <strong>Heads up:</strong> the die-cut outline here is a rough approximation generated from your image. Your proof will show the real cut line — properly smoothed, with clean curves and even spacing around your artwork.
+              <strong>Heads up:</strong> the die-cut outline here is a rough approximation generated from your image. Your proof will show the real cut line, properly smoothed, with clean curves and even spacing around your artwork.
             </div>
             <p class="hint">This is a live approximation built from your logo and a sample of the material photo, not the exact final engraving. We'll email a real mockup before anything hits the laser.</p>
           </div>
@@ -527,14 +527,20 @@
     </div>
   </section>
   </div>
+  <a href="/pages/reviews" class="tbco-rating">
+    {%- assign jm = shop.metafields.judgeme -%}
+    <span class="tbco-rating-stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+    <span>{{ jm.all_reviews_rating | default: 5.0 | round: 1 }}/5 from {{ jm.all_reviews_count | default: 45 }} verified reviews</span>
+    <span class="tbco-rating-arrow" aria-hidden="true">&rarr;</span>
+  </a>
 
-  <div class="tbco-rating">
-    {% assign jm = shop.metafields.judgeme %}
-    <span class="tbco-rating-stars" role="img" aria-label="{{ jm.all_reviews_rating | default: 5.0 }} out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-    <p class="tbco-rating-score">{{ jm.all_reviews_rating | default: 5.0 | round: 1 }} out of 5</p>
-    <p class="tbco-rating-count">from {{ jm.all_reviews_count | default: 45 }} verified customer reviews</p>
-    <a href="/pages/reviews" class="tbco-rating-link">Read the reviews</a>
-  </div>
+  <a href="sms:+13365856176" class="tbco-textus">
+    <span class="tbco-textus-icon" aria-hidden="true">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+    </span>
+    Questions before you order? <strong>Text us: (336) 585-6176</strong>
+  </a>
+
 
 </div>
 
@@ -1310,7 +1316,7 @@ function dilateMask(src, r){
   return out;
 }
 // Round the corners of an already-solid mask: blur by r, then remap alpha with a
-// steep ramp instead of a hard cutoff. The ramp is the important part — a binary
+// steep ramp instead of a hard cutoff. The ramp is the important part, since a binary
 // 0/255 mask gives the aliased, stair-stepped cut edge; a ~2px ramp reads smooth.
 function roundMask(src, r){
   const w = src.width, h = src.height;
@@ -1343,12 +1349,12 @@ let dieSilCache = null;
 function dieCutSilhouette(logoImg, W, H){
   if (!logoImg) return null;
   // Only depends on the artwork and the canvas size, not the threshold slider,
-  // so cache it — the distance passes are the expensive part of a render.
+  // so cache it, because the distance passes are the expensive part of a render.
   const key = W + "x" + H + ":" + state.logoScale + ":" + state.logoX + ":" + state.logoY;
   if (dieSilCache && dieSilCache.img === logoImg && dieSilCache.key === key) return dieSilCache.canvas;
 
   // Everything below runs at 2x and is scaled down at the end. Supersampling is
-  // what actually kills the stair-stepping — a cut line computed at display
+  // what actually kills the stair-stepping, since a cut line computed at display
   // resolution can only ever be as smooth as one pixel.
   const SS = 2;
   const w = W * SS, h = H * SS;
@@ -1405,7 +1411,7 @@ function dieCutSilhouette(logoImg, W, H){
 }
 // Exact Euclidean distance transform (Felzenszwalb & Huttenlocher). Returns, for
 // every pixel, the distance to the nearest set pixel in `bin`. Exact circles are
-// the whole point — a chamfer or box approximation is what makes offset outlines
+// the whole point, and a chamfer or box approximation is what makes offset outlines
 // look faceted.
 function edt(bin, w, h){
   const INF = 1e20;
@@ -1672,7 +1678,7 @@ function sizeDimLabel(size, shape){
   const hStr = (Math.round(h * 100) / 100).toString();
   return (shape.id === "diecut" ? "up to " : "") + w + '" x ' + hStr + '"';
 }
-// A die cut has no border to decorate — the cut line IS the edge — so the edge
+// A die cut has no border to decorate, the cut line IS the edge, so the edge
 // finish control is disabled (and treated as "none") whenever die cut is picked.
 function isDieCut(){ return state.shape.id === "diecut"; }
 function syncEdgeControl(){
@@ -1725,14 +1731,14 @@ function renderPlacements(){
   });
 }
 // Left/right panels are narrow, so a Large non-circle patch usually won't sit
-// right there — nudge toward Small or Medium unless it's a circle.
+// right there, so nudge toward Small or Medium unless it's a circle.
 function renderSizeHint(){
   const host = $("sizeHint");
   if (!host) return;
   const onSide = state.placement && state.placement.id !== "front";
   const show = onSide && state.shape.id !== "circle";
   host.innerHTML = show
-    ? '<div class="size-hint">Left and right panels are narrow — we typically recommend Small or Medium there unless you\'re doing a circle.</div>'
+    ? '<div class="size-hint">Left and right panels are narrow, so we typically recommend Small or Medium there unless you\'re doing a circle.</div>'
     : "";
 }
 function renderSizes(){
