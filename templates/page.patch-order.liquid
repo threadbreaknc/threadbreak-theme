@@ -1,0 +1,1640 @@
+{%- comment -%} build: patch-v1 {%- endcomment -%}
+{%- comment -%}
+  Custom Patch Hats order page. Four-step wizard mirroring page.custom-order.liquid,
+  namespaced #tbpo. Reuses the same STYLES data (hat blanks + qty tiers) as the
+  embroidery form; the decoration is always a laser-engraved leatherette patch
+  instead of embroidery. Cart add = hat tier variant + patch-size add-on variant,
+  both at order quantity. Sizes live on the "Custom Hat Add-On (per hat)" product.
+{%- endcomment -%}
+<div id="tbpo">
+<style>
+  #tbpo{position:relative;z-index:1;padding-top:6rem;max-width:100%;overflow-x:clip;font-family:'DM Sans',sans-serif;
+    --purple:#5028AA;--purple2:#6234c9;--purple-dark:#3D1E85;--ink:#14121C;--ice:#F3EFFC;--white:#fff;--line:#E2E0EA;--muted:#6B6A78;--good:#1E9E5A;color:var(--ink)}
+  #tbpo *{box-sizing:border-box;margin:0;padding:0}
+  #tbpo .wrap{max-width:880px;margin:0 auto;padding:0 20px}
+  #tbpo .form-wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+  #tbpo .bar-in{max-width:1180px}
+  #tbpo header{position:relative;overflow:hidden;background:var(--ink);color:var(--white);padding:44px 0 20px}
+  #tbpo .hero-photos{position:absolute;inset:0;display:flex;z-index:0;opacity:.5}
+  #tbpo .hero-photos div{flex:1;background-size:cover;background-position:center;min-width:0}
+  #tbpo .hero-photos div:not(:first-child){-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%);mask-image:linear-gradient(90deg,transparent,#000 12%);margin-left:-6%}
+  #tbpo header::after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,var(--ink) 0%,rgba(20,18,28,.7) 42%,rgba(20,18,28,.32) 100%)}
+  #tbpo header .wrap{position:relative;z-index:2}
+  @media(max-width:640px){#tbpo .hero-photos div:nth-child(n+4){display:none}#tbpo header::after{background:linear-gradient(180deg,rgba(20,18,28,.72),rgba(20,18,28,.9))}}
+  #tbpo h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,58px);line-height:.95;letter-spacing:.01em;margin:0 0 10px}
+  #tbpo h1 em{font-style:normal;color:#7F5FD8}
+  #tbpo .sub{font-size:15px;line-height:1.55;color:#D9D6E4;max-width:560px}
+  #tbpo .props{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:12px;margin-bottom:0}
+  #tbpo .props span{font-size:13px;font-weight:500;color:#EDEAF7}
+  #tbpo .props span::before{content:"\2713";color:#7F5FD8;font-weight:700;margin-right:7px}
+  #tbpo .tbco-textus{display:flex;align-items:center;justify-content:center;gap:10px;text-align:center;margin:40px 0 22px;padding:15px 22px;background:var(--purple);border:1.5px solid var(--purple);border-radius:12px;text-decoration:none;color:#fff;font-size:14.5px}
+  #tbpo .tbco-textus-icon{display:inline-flex;color:#fff;flex:none}
+  #tbpo .tbco-textus strong{color:#fff;font-weight:700;white-space:nowrap}
+
+  /* progress rail */
+  #tbpo .rail{display:flex;gap:6px;margin:20px 0 18px;flex-wrap:wrap;position:sticky;top:74px;z-index:50;
+    background:rgba(255,255,255,.97);backdrop-filter:blur(6px);padding:12px;border-radius:12px;
+    box-shadow:0 6px 18px rgba(20,18,28,.10);border:1px solid var(--line)}
+  @media(max-width:640px){#tbpo .rail{gap:5px;padding:8px;margin:20px 0 16px;top:64px}}
+  #tbpo .rail-item{flex:1 1 0;min-width:120px;display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:11px;background:#fff;border:1.5px solid var(--line);font-size:13.5px;font-weight:600;color:var(--muted);cursor:pointer;transition:.18s}
+  #tbpo .rail-item .dot{width:22px;height:22px;border-radius:50%;background:var(--line);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;flex:0 0 auto}
+  #tbpo .rail-item.done{border-color:#B7A6EE;color:var(--ink)}
+  #tbpo .rail-item.done .dot{background:var(--good)}
+  #tbpo .rail-item.active{border-color:var(--purple);color:var(--purple);box-shadow:0 4px 14px rgba(80,40,170,.12)}
+  #tbpo .rail-item.active .dot{background:var(--purple)}
+  @media(max-width:640px){
+    #tbpo .rail{gap:4px;padding:7px}
+    #tbpo .rail-item{min-width:0;flex:1 1 0;padding:7px 3px;font-size:10.5px;gap:4px;
+      flex-direction:column;justify-content:center;text-align:center;line-height:1.2;border-radius:9px}
+    #tbpo .rail-item .dot{width:18px;height:18px;font-size:10.5px}
+  }
+  @media(max-width:360px){#tbpo .rail-item{font-size:9.5px;padding:6px 2px}}
+
+  /* steps */
+  #tbpo .tbstep{background:#fff;border:1.5px solid var(--line);border-radius:16px;margin-bottom:14px;display:none;opacity:1;transform:none;text-align:left;padding:0;scroll-margin-top:150px}
+  #tbpo .tbstep.active{display:block;opacity:1;transform:none;border-color:var(--purple);box-shadow:0 6px 22px rgba(80,40,170,.10)}
+  #tbpo .tbstep::after{content:none}
+  #tbpo .tbstep-head{display:flex;align-items:center;gap:13px;padding:20px 22px}
+  #tbpo .tbstep-num{width:28px;height:28px;border-radius:50%;background:var(--ice);color:var(--purple);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex:0 0 auto}
+  #tbpo .tbstep-head h2{font-family:'Bebas Neue',sans-serif;font-size:23px;letter-spacing:.02em;flex:1}
+  #tbpo .tbstep-sum{font-size:13px;color:var(--muted);text-align:right;max-width:45%}
+  #tbpo .tbstep-body{padding:0 22px 22px}
+  #tbpo .tbstep-hint{font-size:13.5px;color:var(--muted);margin-bottom:16px;line-height:1.55}
+  #tbpo .tbstep-hint strong{color:var(--ink)}
+
+  /* hat grid (identical to embroidery form) */
+  #tbpo .hats{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:13px}
+  #tbpo .hats.picking{grid-template-columns:1fr}
+  #tbpo .hat{border:1.5px solid var(--line);border-radius:13px;background:#fff;cursor:pointer;overflow:hidden;transition:.2s;position:relative;scroll-margin-top:150px}
+  #tbpo .hat:hover{border-color:#B7A6EE;transform:translateY(-2px)}
+  #tbpo .hat.on{border-color:var(--purple);box-shadow:0 6px 22px rgba(80,40,170,.18);overflow:visible;z-index:5}
+  #tbpo .hats.picking .hat{display:none}
+  #tbpo .hats.picking .hat.on{display:grid;cursor:default}
+  #tbpo .hats.picking .hat.on:hover{transform:none}
+  #tbpo .hat-img{width:100%;aspect-ratio:1/1;object-fit:contain;background:#fff;display:block}
+  #tbpo .hat-imgwrap{position:relative}
+  #tbpo .hat-logo{position:absolute;bottom:8px;right:8px;height:30px;width:auto;max-width:112px;object-fit:contain;opacity:.95;
+    background:rgba(255,255,255,.94);border-radius:6px;padding:4px 8px;box-shadow:0 1px 5px rgba(20,18,28,.14)}
+  #tbpo .hat-name-sm{display:none;font-weight:700;font-size:13px;line-height:1.25}
+  #tbpo .hat-titlerow{display:flex;align-items:flex-start;gap:12px}
+  #tbpo .hat-logo-lg{height:52px;width:auto;max-width:170px;object-fit:contain;flex:0 0 auto;margin-top:0}
+  #tbpo .hat-heroimg{width:100%;max-width:250px}
+  #tbpo .hat-heroimg .hat-img{width:100%;max-width:250px;height:auto}
+  #tbpo .hat-herocap{text-align:center;font-size:12px;font-weight:600;color:var(--purple);background:var(--ice);border-radius:8px;padding:5px 8px;margin-top:6px}
+  #tbpo .pchip{cursor:pointer}
+  #tbpo .pchip.on{border-color:var(--purple);background:var(--ice);box-shadow:0 0 0 2px rgba(80,40,170,.14)}
+  #tbpo .hat-info{padding:12px 14px 14px}
+  #tbpo .hat-name{font-weight:700;font-size:14.5px;line-height:1.25}
+  #tbpo .hat-brand{font-size:11.5px;color:var(--muted);margin-top:2px}
+  #tbpo .hat-price{margin-top:7px;font-size:13px;font-weight:700;color:var(--purple)}
+  #tbpo .hat-colors{display:flex;align-items:center;gap:7px;margin-top:8px;font-size:12px;color:var(--muted)}
+  #tbpo .wheel{width:18px;height:18px;border-radius:50%;flex:0 0 auto;border:1px solid rgba(0,0,0,.12);background:conic-gradient(#e23b3b,#e2a13b,#d7e23b,#4ce23b,#3be2c0,#3b8fe2,#7a3be2,#e23bc0,#e23b3b)}
+  #tbpo .hat-badge{position:absolute;top:9px;left:9px;background:var(--purple);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;z-index:2}
+  #tbpo .hat.on{display:grid;grid-template-columns:250px minmax(0,1fr);gap:0 26px;padding:18px;align-items:start}
+  #tbpo .hat.on .hat-heroimg{grid-column:1;grid-row:1 / span 2;position:sticky;top:168px}
+  #tbpo .hat.on .hat-info{grid-column:2;grid-row:1;padding:0}
+  #tbpo .hat.on .hat-expand{grid-column:2;grid-row:2;border-top:none;margin-top:0;padding:0}
+  #tbpo .hat.on .colorpanel{margin-top:16px}
+  @media(max-width:900px){
+    #tbpo .hat.on,#tbpo .hats.picking .hat.on{grid-template-columns:1fr;padding:14px}
+    #tbpo .hat.on .hat-heroimg{grid-column:1;grid-row:1;position:static;max-width:260px;margin:0 auto}
+    #tbpo .hat.on .hat-info{grid-column:1;grid-row:2;padding-top:14px}
+    #tbpo .hat.on .hat-expand{grid-column:1;grid-row:3}
+  }
+  @media(max-width:560px){
+    #tbpo .hat.on,#tbpo .hats.picking .hat.on{display:block;padding:0}
+    #tbpo .hat.on .hat-heroimg{position:static;width:100%;max-width:none}
+    #tbpo .hat.on .hat-img{width:100%}
+    #tbpo .hat.on .hat-info{padding:12px 14px 0}
+    #tbpo .hat.on .hat-expand{padding:0 14px 16px}
+    #tbpo .hats{grid-template-columns:1fr 1fr;gap:10px}
+    #tbpo .hat-info{padding:10px 11px 12px}
+    #tbpo .hat-name{display:none}
+    #tbpo .hat-name-sm{display:block}
+    #tbpo .hat-logo{height:22px;max-width:82px;bottom:6px;right:6px;padding:3px 6px}
+    #tbpo .hat.on .hat-name{display:block;font-size:17px}
+    #tbpo .hat.on .hat-name-sm{display:none}
+    #tbpo .hat-heroimg{width:100%;max-width:250px}
+    #tbpo .hat-logo-lg{height:40px;max-width:130px}
+    #tbpo .hat-brand{font-size:10.5px}
+    #tbpo .hat-price{font-size:12px;margin-top:5px}
+    #tbpo .hat-colors{font-size:11px;margin-top:6px}
+    #tbpo .hat-badge{font-size:9.5px;padding:2px 6px;top:6px;left:6px}
+  }
+  #tbpo .hat-change{display:inline-flex;align-items:center;gap:7px;background:#fff;border:2px solid var(--purple);border-radius:10px;padding:10px 18px;font-family:inherit;font-size:14px;font-weight:600;color:var(--purple);cursor:pointer;margin-top:14px;transition:.16s}
+  #tbpo .hat-change:hover{background:var(--purple);color:#fff}
+  #tbpo .hat-specs{margin-top:10px;font-size:12.5px;color:var(--muted);line-height:1.6}
+  #tbpo .hat-specs b{color:var(--ink);font-weight:600}
+  #tbpo .hat-expand{padding:0 16px 18px;border-top:1px solid var(--line);margin-top:4px}
+
+  /* color dropdown */
+  #tbpo .colorpanel{margin-top:16px;border-radius:12px;background:var(--ice);padding:16px;position:relative;z-index:6}
+  #tbpo .colorpanel h3{font-size:15px;margin-bottom:4px}
+  #tbpo .cp-sub{font-size:12.5px;color:var(--muted);margin-bottom:13px}
+  #tbpo .dd{position:relative;max-width:420px}
+  #tbpo .dd-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1.5px solid var(--line);border-radius:11px;padding:11px 13px;font-family:inherit;font-size:14px;cursor:pointer;text-align:left;color:var(--ink)}
+  #tbpo .dd-btn:hover{border-color:#B7A6EE}
+  #tbpo .dd-btn .chev{transition:transform .18s;flex:0 0 auto}
+  #tbpo .dd.open .dd-btn .chev{transform:rotate(180deg)}
+  #tbpo .dd-menu{display:none;position:absolute;z-index:40;top:calc(100% + 6px);left:0;right:0;max-height:290px;overflow-y:auto;background:#fff;border:1.5px solid var(--line);border-radius:12px;box-shadow:0 14px 34px rgba(20,18,28,.16);scrollbar-width:thin}
+  #tbpo .dd.open .dd-menu{display:block}
+  #tbpo .dd-menu::-webkit-scrollbar{width:9px}
+  #tbpo .dd-menu::-webkit-scrollbar-thumb{background:#B7A6EE;border-radius:9px;border:2px solid #fff}
+  #tbpo .dd-more{display:none;position:absolute;left:1px;right:1px;bottom:1px;z-index:41;pointer-events:none;height:44px;border-radius:0 0 11px 11px;background:linear-gradient(180deg,rgba(255,255,255,0),#fff 72%);align-items:flex-end;justify-content:center;padding-bottom:6px}
+  #tbpo .dd.open .dd-more.on{display:flex}
+  #tbpo .dd-more span{font-size:11px;font-weight:700;color:var(--purple);display:flex;align-items:center;gap:5px}
+  #tbpo .dd-opt{display:flex;align-items:center;gap:11px;padding:9px 12px;cursor:pointer;font-size:13.5px;border-bottom:1px solid #f2f1f6}
+  #tbpo .dd-opt:last-child{border-bottom:none}
+  #tbpo .dd-opt:hover{background:var(--ice)}
+  #tbpo .dd-opt img{width:42px;height:42px;object-fit:contain;border-radius:7px;background:#fff;border:1px solid var(--line);flex:0 0 auto}
+  #tbpo .dd-opt.picked{background:#eee9fb}
+  #tbpo .dd-opt .tick{margin-left:auto;color:var(--purple);font-weight:700}
+  #tbpo .picked-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
+  #tbpo .pchip{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:6px 9px;font-size:13px}
+  #tbpo .pchip img{width:32px;height:32px;object-fit:contain;border-radius:6px}
+  #tbpo .pchip button{background:none;border:none;cursor:pointer;color:var(--muted);font-size:16px;line-height:1;padding:0 2px}
+  #tbpo .pchip button:hover{color:#c33}
+
+  /* fields */
+  #tbpo .qty-row{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
+  #tbpo .field{display:flex;flex-direction:column;gap:6px}
+  #tbpo [hidden]{display:none !important}
+  #tbpo .field label{font-size:13px;font-weight:600}
+  #tbpo .field input,#tbpo .field select,#tbpo .field textarea{font-family:inherit;font-size:16px;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+  #tbpo .field input:focus,#tbpo .field textarea:focus{outline:none;border-color:var(--purple)}
+  #tbpo .qty-input{width:130px}
+  #tbpo .price-now{display:flex;gap:26px;flex-wrap:wrap;background:var(--ink);color:#fff;border-radius:12px;padding:14px 18px;margin-top:16px}
+  #tbpo .price-now .pn{display:flex;flex-direction:column}
+  #tbpo .price-now .pn-l{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+  #tbpo .price-now .pn-v{font-family:'Bebas Neue',sans-serif;font-size:26px;line-height:1.15}
+  #tbpo .price-now .pn-note{margin-left:auto;align-self:center;font-size:12px;color:rgba(255,255,255,.65);max-width:220px;line-height:1.5}
+  @media(max-width:520px){#tbpo .price-now .pn-note{margin-left:0;flex:1 1 100%;max-width:none;margin-top:6px}}
+  #tbpo .tier-nudge{font-size:13px;color:var(--purple);font-weight:600;background:var(--ice);border-radius:9px;padding:9px 12px;margin-top:13px}
+  #tbpo .split{margin-top:18px;border:1.5px solid var(--line);border-radius:12px;overflow:hidden}
+  #tbpo .split-head{background:var(--ice);padding:11px 14px;font-size:13px;font-weight:700}
+  #tbpo .split-row{display:flex;align-items:center;gap:12px;padding:10px 14px;border-top:1px solid var(--line)}
+  #tbpo .split-row img{width:38px;height:38px;object-fit:contain;border-radius:7px;border:1px solid var(--line)}
+  #tbpo .split-row .nm{flex:1;font-size:13.5px}
+  #tbpo .split-row input{width:88px;font-family:inherit;font-size:16px;padding:8px 10px;border:1.5px solid var(--line);border-radius:9px}
+  #tbpo .split-total{display:flex;justify-content:space-between;padding:11px 14px;border-top:1.5px solid var(--line);font-size:13.5px;font-weight:700;background:#fafafa}
+  #tbpo .split-total.bad{color:#c33}
+
+  /* chips */
+  #tbpo .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  #tbpo .chip{background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:9px 14px;font-family:inherit;font-size:13.5px;cursor:pointer;transition:.15s;color:var(--ink)}
+  #tbpo .chip:hover{border-color:#B7A6EE}
+  #tbpo .chip.on{border-color:var(--purple);background:var(--ice);color:var(--purple);font-weight:600}
+  #tbpo .chip .tag{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:var(--purple);color:#fff;border-radius:999px;padding:2px 8px;margin-left:7px;display:inline-block;vertical-align:1px}
+  #tbpo .chip .tag.inc{background:var(--good)}
+  #tbpo .size-dim{font-weight:400;color:var(--muted);font-size:12px;margin-left:4px}
+
+  /* materials */
+  #tbpo .matgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:8px}
+  #tbpo .mat-chip{display:flex;flex-direction:column;align-items:center;gap:6px;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:10px;cursor:pointer;font-family:inherit;transition:.15s}
+  #tbpo .mat-chip:hover{border-color:#B7A6EE}
+  #tbpo .mat-chip.on{border-color:var(--purple);background:var(--ice);box-shadow:0 0 0 2px rgba(80,40,170,.14)}
+  #tbpo .mat-swatch{width:100%;aspect-ratio:1/1;border-radius:9px;background-size:cover;background-position:center;border:1px solid var(--line)}
+  #tbpo .mat-name{font-size:12.5px;font-weight:600;text-align:center;line-height:1.25}
+
+  /* canvas preview */
+  #tbpo .patch-preview{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:14px;background:var(--ice);border-radius:14px;padding:20px}
+  #tbpo .patch-canvas-box{width:100%;max-width:290px;aspect-ratio:1/1;border-radius:14px;overflow:hidden;background:#fff;border:1.5px solid var(--line);box-shadow:0 6px 18px rgba(20,18,28,.08);transition:max-width .25s ease}
+  #tbpo .patch-canvas-box canvas{width:100%;height:100%;display:block}
+  #tbpo .patch-canvas-box.size-S{max-width:210px}
+  #tbpo .patch-canvas-box.size-M{max-width:290px}
+  #tbpo .patch-canvas-box.size-L{max-width:360px}
+  #tbpo .patch-controls{width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
+  #tbpo .patch-controls input[type=range]{width:100%;accent-color:var(--purple)}
+  #tbpo .patch-invert{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);cursor:pointer}
+  #tbpo .patch-invert input{width:16px;height:16px;accent-color:var(--purple);cursor:pointer}
+  #tbpo .patch-preview .hint{max-width:380px;text-align:center}
+
+  /* step 3 pieces */
+  #tbpo .fld{font-size:13.5px;font-weight:700;margin-top:20px;margin-bottom:7px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  #tbpo .info-btn{background:none;border:1px solid var(--line);border-radius:8px;padding:4px 10px;font-family:inherit;font-size:11.5px;font-weight:600;color:var(--purple);cursor:pointer}
+  #tbpo .info-btn:hover{border-color:var(--purple)}
+  #tbpo .info-panel{margin-top:11px;background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:16px}
+  #tbpo .info-note{font-size:12.5px;color:var(--muted);line-height:1.6}
+  #tbpo .info-note strong{color:var(--ink)}
+  #tbpo .hint{font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:9px}
+  #tbpo .up-slot{border:1.5px dashed var(--line);border-radius:12px;padding:14px;background:#fff;margin-top:4px}
+  #tbpo .up-slot.req{border-color:var(--purple);background:var(--ice)}
+  #tbpo .up-slot-label{font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px;margin-bottom:4px;flex-wrap:wrap}
+  #tbpo .up-tag{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:var(--purple);color:#fff;border-radius:999px;padding:2px 8px}
+  #tbpo .up-slot-sub{font-size:11.5px;color:var(--muted);margin-bottom:9px}
+  #tbpo .up-slot input[type="file"]{width:100%;font-family:inherit;font-size:13px;color:var(--muted);cursor:pointer}
+  #tbpo .up-slot input[type="file"]::file-selector-button{
+    font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.04em;
+    background:var(--purple);color:#fff;border:none;border-radius:9px;
+    padding:9px 18px;margin-right:11px;cursor:pointer;transition:background .15s,transform .15s}
+  #tbpo .up-slot input[type="file"]::file-selector-button:hover{background:var(--purple2);transform:translateY(-1px)}
+  #tbpo .up-slot input[type="file"]::-webkit-file-upload-button{
+    font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.04em;
+    background:var(--purple);color:#fff;border:none;border-radius:9px;
+    padding:9px 18px;margin-right:11px;cursor:pointer}
+  #tbpo .up-slot.has-file{border-style:solid;border-color:var(--good);background:#F3FBF6}
+  #tbpo .up-have{font-size:12px;color:var(--good);font-weight:600;margin-top:5px}
+  #tbpo .social-optout{display:flex;gap:9px;align-items:flex-start;margin-top:16px;font-size:12.5px;color:#3d3a4a;line-height:1.55}
+  #tbpo .social-optout input{margin-top:2px;width:17px;height:17px;flex:none;accent-color:var(--purple);cursor:pointer}
+
+  /* review */
+  #tbpo .rev-line{display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+  #tbpo .rev-line span:first-child{color:var(--muted);flex:0 0 auto}
+  #tbpo .rev-line strong{text-align:right}
+  #tbpo .proof-note{display:flex;gap:12px;align-items:flex-start;background:var(--ice);border:1.5px solid var(--purple);border-left:5px solid var(--purple);border-radius:12px;padding:14px 16px;margin-top:18px}
+  #tbpo .proof-note p{font-size:13px;line-height:1.55;margin:0}
+  #tbpo .proof-note strong{color:var(--purple)}
+  #tbpo .en-icon{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+  #tbpo .cart-err{display:none;margin-top:14px;background:#FDECEC;border:1.5px solid #E3A2A2;color:#8B2E2E;border-radius:10px;padding:12px 14px;font-size:13.5px}
+  #tbpo .cart-err.show{display:block}
+  #tbpo .upload-progress{display:none;margin-top:14px}
+  #tbpo .up-bar{height:10px;background:var(--ice);border-radius:6px;overflow:hidden}
+  #tbpo .up-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--purple),#8B6FD4);border-radius:6px;transition:width .2s ease}
+  #tbpo .up-label{font-size:12.5px;color:var(--muted);margin-top:6px}
+
+  /* buttons */
+  #tbpo .next{margin-top:20px;background:var(--purple);color:#fff;border:none;border-radius:11px;padding:13px 26px;font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:.04em;cursor:pointer;transition:.18s}
+  #tbpo .next:hover{background:var(--purple2);transform:translateY(-1px)}
+  #tbpo .next:disabled{opacity:.4;cursor:not-allowed;transform:none}
+  #tbpo .back{margin-top:20px;margin-right:10px;background:none;color:var(--muted);border:1.5px solid var(--line);border-radius:11px;padding:13px 20px;font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:.04em;cursor:pointer}
+  #tbpo .back:hover{border-color:#B7A6EE;color:var(--ink)}
+  #tbpo .btn-row{display:flex;align-items:center;flex-wrap:wrap}
+  #tbpo .quote-redirect{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;text-align:center;margin:20px 0 4px;padding:16px 20px;background:var(--ice);border:2px solid var(--purple);border-radius:12px;text-decoration:none;color:var(--ink);font-size:15px}
+  #tbpo .quote-redirect strong{color:var(--purple);font-weight:700}
+
+  /* reviews block */
+  #tbpo .tbco-rating{max-width:520px;margin:32px auto 0;text-align:center;background:var(--ice);border:1px solid var(--line);border-radius:16px;padding:28px 24px}
+  #tbpo .tbco-rating-stars{display:block;font-size:26px;color:#F5C518;letter-spacing:3px;margin-bottom:10px}
+  #tbpo .tbco-rating-score{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--ink);margin:0 0 4px;line-height:1}
+  #tbpo .tbco-rating-count{font-size:14.5px;color:var(--muted);margin:0 0 14px}
+  #tbpo .tbco-rating-link{display:inline-block;font-size:14.5px;font-weight:600;color:var(--purple);text-decoration:underline}
+
+  /* sticky bar */
+  #tbpo .bar{position:fixed;left:0;right:0;bottom:0;background:var(--ink);color:#fff;z-index:60;transform:translateY(110%);transition:transform .28s}
+  #tbpo .bar.show{transform:none}
+  #tbpo .bar-in{max-width:880px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:18px}
+  #tbpo .bar-stat .l{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+  #tbpo .bar-stat .v{font-family:'Bebas Neue',sans-serif;font-size:22px;line-height:1.1}
+  #tbpo .bar-cta{margin-left:auto;background:var(--purple);color:#fff;border:none;border-radius:10px;padding:11px 22px;font-family:'Bebas Neue',sans-serif;font-size:17px;letter-spacing:.04em;cursor:pointer}
+  #tbpo .bar-cta:hover{background:var(--purple2)}
+  #tbpo .bar-cta:disabled{opacity:.45;cursor:not-allowed}
+  @media(max-width:640px){
+    #tbpo .bar-hide-sm{display:none}
+    #tbpo .tbstep-sum{display:none}
+    #tbpo .tbstep-head{padding:14px 15px}
+    #tbpo .tbstep-head h2{font-size:20px}
+    #tbpo .tbstep-body{padding:0 15px 16px}
+    #tbpo .tbstep-hint{font-size:13px;margin-bottom:12px}
+    #tbpo .tbstep{margin-bottom:10px;border-radius:14px}
+    #tbpo .fld{margin-top:15px;margin-bottom:6px}
+    #tbpo .hint{font-size:12px;margin-top:7px}
+    #tbpo .info-panel{padding:13px}
+    #tbpo .proof-note{padding:12px 13px}
+    #tbpo .next,#tbpo .back{padding:12px 20px;font-size:18px;margin-top:16px}
+    #tbpo .price-now{padding:12px 14px;gap:18px}
+    #tbpo .price-now .pn-v{font-size:23px}
+    #tbpo .up-slot{padding:12px}
+    #tbpo .colorpanel{padding:13px}
+    #tbpo .bar-in{padding:9px 15px;gap:14px}
+    #tbpo .bar-stat .v{font-size:19px}
+    #tbpo .bar-cta{padding:9px 18px;font-size:16px}
+  }
+
+</style>
+
+<header class="tbco-hero">
+  <div class="hero-photos" aria-hidden="true">
+    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/brushed_silver_black.jpg?v=1787885403')"></div>
+    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/saddle_tan_black.jpg?v=1787885402')"></div>
+    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/vintage_gray_black.webp?v=1787885403')"></div>
+    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/saddle_red_black.jpg?v=1787885403')"></div>
+    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/rawhide_black.webp?v=1787885402')"></div>
+    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/vintage_sky_blue_black.webp?v=1787885403')"></div>
+  </div>
+  <div class="wrap">
+    <h1>Your logo.<br>Laser <em>engraved.</em></h1>
+    <p class="sub">Custom leatherette patch hats on name-brand blanks. Free mockup before anything hits the laser.</p>
+    <div class="props">
+      <span>Engraved in Burlington, NC</span>
+      <span>Free shipping to the lower 48</span>
+      <span>Local pickup by appointment</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <a href="sms:+13365856176" class="tbco-textus">
+    <span class="tbco-textus-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+    </span>
+    <span class="tbco-textus-text">Have questions before placing an order? <strong>Text us: (336) 585-6176</strong></span>
+  </a>
+
+</div>
+
+<div class="form-wrap">
+
+  <div class="rail" id="rail"></div>
+
+  <div id="tbFormSteps">
+  <!-- STEP 1: hat + colors -->
+  <section class="tbstep active" data-step="1">
+    <div class="tbstep-head"><div class="tbstep-num">1</div><h2>Choose your hat</h2><div class="tbstep-sum" id="sum1"></div></div>
+    <div class="tbstep-body">
+      <p class="tbstep-hint">Every leatherette patch attaches to the front panel. Pick a style, then choose your colors right below it. You'll pick your patch material, shape, and size in step 3.</p>
+      <div class="hats" id="hats"></div>
+      <a href="/pages/quote" class="quote-redirect">Don't see what you're looking for? <strong>Get a custom quote instead</strong></a>
+      <div class="btn-row"><button type="button" class="next" id="next1" disabled>Choose Quantity</button></div>
+    </div>
+  </section>
+
+  <!-- STEP 2: quantity -->
+  <section class="tbstep" data-step="2">
+    <div class="tbstep-head"><div class="tbstep-num">2</div><h2>How many?</h2><div class="tbstep-sum" id="sum2"></div></div>
+    <div class="tbstep-body">
+      <p class="tbstep-hint"><strong>5 hat minimum.</strong> Wholesale pricing starts at 10, with additional volume discounts at 24+. Mixed colors all count toward the same total.</p>
+      <div class="qty-row">
+        <div class="field"><label for="qty">Total quantity (5 minimum)</label><input class="qty-input" id="qty" type="number" min="5" step="1" inputmode="numeric" placeholder="5"></div>
+      </div>
+      <div class="price-now" id="priceNow"></div>
+      <div id="nudge"></div>
+      <div id="splitHost"></div>
+      <div class="btn-row"><button type="button" class="back" data-back="1">Back</button><button type="button" class="next" id="next2" disabled>Design Your Patch</button></div>
+    </div>
+  </section>
+
+  <!-- STEP 3: patch design -->
+  <section class="tbstep" data-step="3">
+    <div class="tbstep-head"><div class="tbstep-num">3</div><h2>Your patch design</h2><div class="tbstep-sum" id="sum3"></div></div>
+    <div class="tbstep-body">
+      <p class="tbstep-hint">Every patch is laser engraved on genuine leatherette. Pick a material, a shape, and a size, then upload your logo to see a live preview of the engraving.</p>
+
+      <p class="fld">Material <button type="button" class="info-btn" id="engraveBtn">How does engraving work?</button></p>
+      <div class="matgrid" id="materials"></div>
+      <div class="info-panel" id="engraveInfo" hidden>
+        <p class="info-note">Our laser burns through the colored top layer of the leatherette to expose the black core underneath, so <strong>every engraved line comes out black</strong> no matter which material you pick. Bold, simple shapes engrave the cleanest; very fine detail or thin lines can lose crispness at small sizes.</p>
+      </div>
+
+      <p class="fld">Shape</p>
+      <div class="chips" id="shapes"></div>
+
+      <p class="fld">Size</p>
+      <div class="chips" id="sizes"></div>
+
+      <p class="fld">Preview</p>
+      <div class="patch-preview" id="patchPreviewWrap">
+        <div class="patch-canvas-box" id="patchCanvasBox">
+          <canvas id="patchCanvas" width="480" height="480"></canvas>
+        </div>
+        <div class="patch-controls">
+          <div class="field">
+            <label for="threshold">Engrave detail (threshold)</label>
+            <input type="range" id="threshold" min="10" max="245" value="140">
+          </div>
+          <label class="patch-invert">
+            <input type="checkbox" id="invertToggle">
+            <span>Invert (swap engraved / material areas)</span>
+          </label>
+        </div>
+        <p class="hint">This is a live approximation built from your logo and a sample of the material photo, not the exact final engraving. We'll email a real mockup before anything hits the laser.</p>
+      </div>
+
+      <p class="fld">Your logo / artwork</p>
+      <div class="up-slot req" id="logoSlot">
+        <div class="up-slot-label">Front patch logo <span class="up-tag">Used for the live preview</span></div>
+        <div class="up-slot-sub">PNG, JPG, WEBP, or SVG preview live above. PDF or AI files still work for production, we'll build the mockup by hand.</div>
+        <input type="file" id="logoInput" accept=".png,.jpg,.jpeg,.webp,.gif,.svg,.pdf,.ai">
+        <div class="up-have" id="logoHave" hidden></div>
+      </div>
+      <p class="hint">No file handy? Skip it and email us after.</p>
+
+      <p class="fld">How should we send your proof? <span style="color:#c33">*</span></p>
+      <div class="field" style="max-width:340px">
+        <select id="proofMethod">
+          <option value="">Choose one...</option>
+          <option value="Email">Email</option>
+          <option value="Text message">Text message</option>
+        </select>
+      </div>
+      <div class="field" id="proofPhoneWrap" style="max-width:340px;margin-top:12px" hidden>
+        <label for="proofPhone">Mobile number for your proof <span style="color:#c33">*</span></label>
+        <input type="tel" id="proofPhone" inputmode="tel" autocomplete="tel" placeholder="(336) 555-0123">
+      </div>
+      <p class="hint" id="proofHint">We'll send your mockup within one business day. Nothing gets engraved until you approve it.</p>
+
+      <div class="field" style="margin-top:18px"><label for="notes">Notes</label><textarea id="notes" rows="3" placeholder="Placement preferences, deadlines, anything else we should know"></textarea></div>
+
+      <label class="social-optout">
+        <input type="checkbox" id="noSocial">
+        <span><strong>Keep my finished order private.</strong> Leave this unchecked if you're comfortable with us featuring your finished hats in our portfolio or on social media.</span>
+      </label>
+
+      <div class="btn-row"><button type="button" class="back" data-back="2">Back</button><button type="button" class="next" id="next3">Review Order</button></div>
+    </div>
+  </section>
+
+  <!-- STEP 4: review -->
+  <section class="tbstep" data-step="4">
+    <div class="tbstep-head"><div class="tbstep-num">4</div><h2>Review</h2><div class="tbstep-sum" id="sum4"></div></div>
+    <div class="tbstep-body">
+      <div id="review"></div>
+
+      <div class="proof-note">
+        <span class="en-icon" aria-hidden="true">!</span>
+        <div><p><strong>Keep an eye on your email.</strong> We'll send your digital mockup from help@threadbreak.com within one business day. We can't start production until you approve it, so please watch your inbox and spam folder.</p></div>
+      </div>
+
+      <div class="upload-progress" id="uploadProgress">
+        <div class="up-bar"><div class="up-fill" id="upFill"></div></div>
+        <div class="up-label" id="upLabel">Working...</div>
+      </div>
+      <div class="cart-err" id="cartErr">Something went wrong adding this to your cart. Please try again, or email help@threadbreak.com and we'll sort it out.</div>
+
+      <div class="btn-row"><button type="button" class="back" data-back="3">Back</button><button type="button" class="next" id="checkout">Add to Cart</button></div>
+      <p class="hint">Production typically takes 2-3 weeks after mockup approval. Shipping transit time is additional.</p>
+    </div>
+  </section>
+  </div>
+
+  <div class="tbco-rating">
+    {% assign jm = shop.metafields.judgeme %}
+    <span class="tbco-rating-stars" role="img" aria-label="{{ jm.all_reviews_rating | default: 5.0 }} out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+    <p class="tbco-rating-score">{{ jm.all_reviews_rating | default: 5.0 | round: 1 }} out of 5</p>
+    <p class="tbco-rating-count">from {{ jm.all_reviews_count | default: 45 }} verified customer reviews</p>
+    <a href="/pages/reviews" class="tbco-rating-link">Read the reviews</a>
+  </div>
+
+</div>
+
+<div class="bar" id="bar">
+  <div class="bar-in">
+    <div class="bar-stat"><div class="l">Qty</div><div class="v" id="barQty">0</div></div>
+    <div class="bar-stat bar-hide-sm"><div class="l">Per hat</div><div class="v" id="barEach">-</div></div>
+    <div class="bar-stat"><div class="l">Total</div><div class="v" id="barTotal">-</div></div>
+    <button type="button" class="bar-cta" id="barCta">Continue</button>
+  </div>
+</div>
+</div>
+
+<script>
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuCYOYP96-fhmSnVsPYHuPi0LT1segF4291MGeHJ4eWCW_FONn7deif6Wj81CD_Yox/exec";
+const STYLES = [
+  { id:"otto", name:"Otto 5-Panel Mid Profile", brand:"Otto Cap 31-069", desc:"Snapback · one size fits most", popular:99, features:"Mid-profile 5-panel with a structured front, pre-curved visor, and adjustable snapback. A versatile everyday cap that takes embroidery cleanly. 100% cotton twill.",
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue-natural.jpg?v=1785628631","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-natural.jpg?v=1785628631","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black.jpg?v=1785628632","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-red-otto.jpg?v=1785628631"],
+    colors:["Black","White","Grey","Red","Pink","Camo","Neon Orange","Neon Yellow","Royal Blue","Black/White","Black/Red","Red/Black","Black/Grey","Black/Khaki","Black/Natural","Black/Royal Blue","Red/White","Red/Natural","Royal Blue/Natural","Royal Blue/White","Dark Green/Natural","Charcoal Grey/Black"],
+    colorImgs:{
+      "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black.jpg?v=1785628632",
+      "White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/white.jpg?v=1785628631",
+      "Grey":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/grey.jpg?v=1785628631",
+      "Red":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/red.jpg?v=1785628631",
+      "Pink":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/pink.jpg?v=1785628631",
+      "Camo":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/camo.jpg?v=1785628632",
+      "Neon Orange":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/neon-orange.jpg?v=1785628632",
+      "Neon Yellow":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/neon-yello.jpg?v=1785628631",
+      "Royal Blue":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue.jpg?v=1785628631",
+      "Black/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-white-otto.jpg?v=1785628632",
+      "Black/Red":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-red-otto.jpg?v=1785628631",
+      "Red/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-red.jpg?v=1785628632",
+      "Black/Grey":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-grey.jpg?v=1785628631",
+      "Black/Khaki":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-khaki.jpg?v=1785628631",
+      "Black/Natural":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-natural.jpg?v=1785628631",
+      "Black/Royal Blue":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-royal-blue.jpg?v=1785628632",
+      "Red/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/red-white-otto.jpg?v=1785628631",
+      "Red/Natural":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/red-natural.jpg?v=1785628631",
+      "Royal Blue/Natural":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue-natural.jpg?v=1785628631",
+      "Royal Blue/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue-white-otto.jpg?v=1785628631",
+      "Dark Green/Natural":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/dark_green-natural.jpg?v=1785628631",
+      "Charcoal Grey/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-grey-black.jpg?v=1785628631"
+    },
+    tiers:[[5,24,52662448521348],[10,19,52559807807620],[24,17,52559807840388],[48,15,52559807873156],[96,14,52559807905924]] },
+  { id:"atonal", name:"Atonal Camo A-Frame", brand:"Atonal A590P", desc:"Snapback · 100% cotton · one size fits most", popular:99, features:"Six-panel A-frame with a tall, structured front that gives logos room to stand out. All-over tonal camo, 100% cotton, adjustable snapback.",
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590p_NaturalFieldCamo001_jpg_02583279-95d6-49dd-8bc8-36bb3e0e8aff.webp?v=1785629359","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590p_FieldCamo001_webp.jpg?v=1785629359","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590P_BlackFieldCamp001_jpg_b9bafb49-b972-4b12-ab31-f6af5ff99e53.webp?v=1785629359"],
+    colors:["Natural/Field Camo","Field Camo","Black/Field Camo"],
+    colorImgs:{
+      "Natural/Field Camo":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590p_NaturalFieldCamo001_jpg_02583279-95d6-49dd-8bc8-36bb3e0e8aff.webp?v=1785629359",
+      "Field Camo":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590p_FieldCamo001_webp.jpg?v=1785629359",
+      "Black/Field Camo":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A590P_BlackFieldCamp001_jpg_b9bafb49-b972-4b12-ab31-f6af5ff99e53.webp?v=1785629359"
+    },
+    tiers:[[5,24,52662448586884],[10,20,52559807971460],[24,18,52559808004228],[48,16,52559808036996],[96,15,52559808069764]] },
+  { id:"atonal_a500r", name:"Atonal A500R Rope Snapback", brand:"Atonal A500R", desc:"Pinch-front rope snapback · one size fits most", popular:99, features:"Pinch-front rope snapback with a clean flat brim and decorative front rope. A modern lifestyle look that embroiders well above the rope line.",
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/gold-black.jpg?v=1785794799","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black.webp?v=1785794799","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/cardinal-white.jpg?v=1785794799","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/sage-white.jpg?v=1785794799"],
+    colors:["Black","Black/White","Black/Red","Gold/Black","Charcoal/Gold","Cardinal/White","Sage/White","Bone/Medium Blue/Gold","Cream/Copper/Black","Bone/Seafoam/Black"],
+    colorImgs:{
+      "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black.webp?v=1785794799",
+      "Black/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-white.webp?v=1785794799",
+      "Black/Red":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-red.webp?v=1785794799",
+      "Gold/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/gold-black.jpg?v=1785794799",
+      "Charcoal/Gold":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-gold.jpg?v=1785794799",
+      "Cardinal/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/cardinal-white.jpg?v=1785794799",
+      "Sage/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/sage-white.jpg?v=1785794799",
+      "Bone/Medium Blue/Gold":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/bone-medium_blue-gold.webp?v=1785794799",
+      "Cream/Copper/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/cream-copper-black.webp?v=1785794799",
+      "Bone/Seafoam/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/bone-seafoam-black.jpg?v=1785794799"
+    },
+    tiers:[[5,24,52662448652420],[10,20,52589230063748],[24,18,52589230096516],[48,16,52589230129284],[96,15,52589230162052]] },
+  { id:"rich112", name:"Richardson 112 6-Panel Trucker", brand:"Richardson 112", desc:"6-panel snapback · one size fits most", popular:99, features:"The most requested trucker in the industry. Structured mid-profile front, foam-backed panels, mesh back for breathability, snapback closure. Holds a crisp stitch.",
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-neon-yellow.jpg?v=1785626679","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-white-red.jpg?v=1785626680","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/all-black.jpg?v=1785626679","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue-white.jpg?v=1785626680"],
+    colors:["Black/White/Red","Black","White","Black/White","Black/Charcoal","Charcoal/Black","Charcoal/Neon Blue","Charcoal/Neon Green","Charcoal/Neon Yellow","Charcoal/Neon Orange","Heather Grey/White","Heather Grey/Black","Loden/Black","Red/Black","Red/White","Royal Blue/Black","Royal Blue/White","Orange/Black","Purple/White","Hot Pink/White","Hot Pink/Black","White/Navy","White/Black","Charcoal/White"],
+    colorImgs:{
+      "Black/White/Red":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-white-red.jpg?v=1785626680",
+      "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/all-black.jpg?v=1785626679",
+      "White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/all-white.jpg?v=1785626680",
+      "Black/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-white.jpg?v=1785626680",
+      "Black/Charcoal":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-charcoal.jpg?v=1785626679",
+      "Charcoal/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-black.jpg?v=1785626679",
+      "Charcoal/Neon Blue":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-neon-blue.jpg?v=1785626680",
+      "Charcoal/Neon Green":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-neon-green.jpg?v=1785626680",
+      "Charcoal/Neon Yellow":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-neon-yellow.jpg?v=1785626679",
+      "Charcoal/Neon Orange":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal-neon-orange.jpg?v=1785626680",
+      "Heather Grey/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/heather-grey-white.jpg?v=1785626680",
+      "Heather Grey/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/heather-grey-black.jpg?v=1785626680",
+      "Loden/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/loden-black.jpg?v=1785626679",
+      "Red/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/red-black.jpg?v=1785626680",
+      "Red/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/red-white.jpg?v=1785626680",
+      "Royal Blue/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue-black.jpg?v=1785626680",
+      "Royal Blue/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal-blue-white.jpg?v=1785626680",
+      "Orange/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/orange-black.jpg?v=1785626680",
+      "Purple/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/purple-white.jpg?v=1785626680",
+      "Hot Pink/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/hot-pink-white.jpg?v=1785626680",
+      "Hot Pink/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/hot-pink-black.jpg?v=1785626680",
+      "White/Navy":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/white-navy.jpg?v=1785626680",
+      "White/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/white-black.jpg?v=1785626680",
+      "Charcoal/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-charcoal_white.jpg?v=1785794877"
+    },
+    tiers:[[5,28,52662448717956],[10,22,52559808135300],[24,20,52559808168068],[48,18,52559808200836],[96,17,52559808233604]] },
+  { id:"rich112_5p", name:"Richardson 112 5-Panel Trucker", brand:"Richardson 112", desc:"5-panel snapback · one size fits most", popular:99, features:"Five-panel version of the classic 112 with a seamless front for larger, uninterrupted designs. Mesh back, structured front, snapback.",
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-loden_green-black.jpg?v=1785794828","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-black.jpg?v=1785794828","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-charcoal-white.jpg?v=1785794828","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-cobaltblue-gray.jpg?v=1785794828"],
+    colors:["Black","Black/White","Charcoal/Black","Charcoal/White","Heather Grey/Black","Loden Green/Black","Cobalt Blue/Gray","Khaki/Coffee"],
+    colorImgs:{
+      "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-black.jpg?v=1785794828",
+      "Black/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-black-white.jpg?v=1785794828",
+      "Charcoal/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-charcoal-black.jpg?v=1785794828",
+      "Charcoal/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-charcoal-white.jpg?v=1785794828",
+      "Heather Grey/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-heathergrey-black.jpg?v=1785794828",
+      "Loden Green/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-loden_green-black.jpg?v=1785794828",
+      "Cobalt Blue/Gray":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-cobaltblue-gray.jpg?v=1785794828",
+      "Khaki/Coffee":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-khaki-coffee.jpg?v=1785794828"
+    },
+    tiers:[[5,28,52662448783492],[10,22,52589229801604],[24,20,52589229834372],[48,18,52589229867140],[96,17,52589229899908]] },
+  { id:"rich112p", name:"Richardson 112 Printed 5-Panel", brand:"Richardson 112P", desc:"Printed camo 5-panel trucker · one size fits most", popular:99, features:"The 112 trucker with a factory-printed camo/pattern front, so your logo sits over a ready-made backdrop. Structured front, mesh back, snapback.",
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-realtree-neon-yellow.jpg?v=1785626680","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-green-camo.jpg?v=1785626679","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-mossy-oak-habitat-brown.jpg?v=1785626680","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-realtree-neon-pink.jpg?v=1785626680"],
+    colors:["Realtree/Neon Yellow","Green Camo/White","Green Camo/Black","Mossy Oak Habitat/Brown","Realtree/Neon Pink","Admiral Duck Camo/Blue"],
+    colorImgs:{
+      "Realtree/Neon Yellow":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-realtree-neon-yellow.jpg?v=1785626680",
+      "Green Camo/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-green-camo-white.jpg?v=1785626680",
+      "Green Camo/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-green-camo.jpg?v=1785626679",
+      "Mossy Oak Habitat/Brown":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-mossy-oak-habitat-brown.jpg?v=1785626680",
+      "Realtree/Neon Pink":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-realtree-neon-pink.jpg?v=1785626680",
+      "Admiral Duck Camo/Blue":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/fp-adirmal-duck-camo-blue.jpg?v=1785626680"
+    },
+    tiers:[[5,28,52662448849028],[10,23,52582676103300],[24,21,52582676136068],[48,19,52582676168836],[96,18,52582676201604]] },
+  { id:"yupoong", name:"Yupoong Classic 5-Panel Trucker", brand:"YP Classics 6006", desc:"Flat bill snapback · one size fits most", popular:99, features:"Flat-bill snapback with a structured front and clean six-panel crown. A streetwear staple that shows off bold, detailed embroidery.",
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/carolina_blue_white.jpg?v=1785629359","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black_e6045cde-21cd-4a15-928d-9d8a8f3b5edc.jpg?v=1785629360","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/carolina_blue_white.jpg?v=1785629359","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/green_camo_black.jpg?v=1785629359"],
+    colors:["Black","White","Red","Pink","Navy Blue","Charcoal/Black","Charcoal/White","Black/White","Black/White/Black","Heather Grey/Black","Heather Grey/White","Carolina Blue/White","Green Camo/Black","Red/Black","Red/White","Royal/White","Silver/Black"],
+    colorImgs:{
+      "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black_e6045cde-21cd-4a15-928d-9d8a8f3b5edc.jpg?v=1785629360",
+      "White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/white_45b10869-34dd-4c87-b82b-eda4870acea3.jpg?v=1785629359",
+      "Red":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/red_6229c61a-98f9-4e8d-bc2f-e4e9fa153675.jpg?v=1785629359",
+      "Pink":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/pink_6e906a97-f2ec-49a7-9016-f194afffb3cb.jpg?v=1785629359",
+      "Navy Blue":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/navy_blue.jpg?v=1785629359",
+      "Charcoal/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal_black.jpg?v=1785629359",
+      "Charcoal/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charcoal_white.jpg?v=1785629359",
+      "Black/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black_white.jpg?v=1785629359",
+      "Black/White/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black_white_black.jpg?v=1785629359",
+      "Heather Grey/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/heather_grey_black.jpg?v=1785629359",
+      "Heather Grey/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/heather_grey_white.jpg?v=1785629359",
+      "Carolina Blue/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/carolina_blue_white.jpg?v=1785629359",
+      "Green Camo/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/green_camo_black.jpg?v=1785629359",
+      "Red/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/red_black.jpg?v=1785629359",
+      "Red/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/red_white.jpg?v=1785629359",
+      "Royal/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/royal_white.jpg?v=1785629359",
+      "Silver/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/silver_black.jpg?v=1785629359"
+    },
+    tiers:[[5,28,52662448914564],[10,22,52559808299140],[24,20,52559808331908],[48,18,52559808364676],[96,17,52559808397444]] },
+  { id:"yp6606", name:"Yupoong 6606 Retro Trucker", brand:"YP Classics 6606", desc:"Mesh back trucker · one size fits most", popular:95, features:"Retro trucker with a taller crown and wide flat-ish front that gives artwork room to breathe. Mesh back, Permacurv visor, snapback. The classic trucker silhouette.",
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_royal_white.jpg?v=1787188971","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_royal_white.jpg?v=1787188971","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_green_camo.jpg?v=1787188971","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_turqoise_white.jpg?v=1787188971"],
+    colors:["Black","Black/White","Blue/Silver","Brown/Khaki","Charcoal/Black","Charcoal/Neon Orange","Green Camo","Heather Grey/Black","Navy/White","Red/Black","Red/White","Royal/White","Turquoise/White","White"],
+    colorImgs:{
+      "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ypblack.jpg?v=1787188971",
+      "Black/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ypblackwhite.jpg?v=1787188971",
+      "Blue/Silver":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_blue_silver.jpg?v=1787188971",
+      "Brown/Khaki":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_brown_khaki.jpg?v=1787188971",
+      "Charcoal/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_charc_black.jpg?v=1787188971",
+      "Charcoal/Neon Orange":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/charc_neon_orange_yp.jpg?v=1787188971",
+      "Green Camo":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_green_camo.jpg?v=1787188971",
+      "Heather Grey/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_heather_grey_black.jpg?v=1787188971",
+      "Navy/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_navy_white.jpg?v=1787188971",
+      "Red/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_red_black.jpg?v=1787188971",
+      "Red/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_red_white.jpg?v=1787188971",
+      "Royal/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_royal_white.jpg?v=1787188971",
+      "Turquoise/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp_turqoise_white.jpg?v=1787188971",
+      "White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ypwhite.jpg?v=1787188971"
+    },
+    tiers:[[5,24,52668568305796],[10,19,52668568338564],[24,17,52668568371332],[48,15,52668568404100],[96,14,52668568436868]] },
+  { id:"rich168", name:"Richardson 168 7-Panel Trucker", brand:"Richardson", desc:"7-panel mesh trucker · one size fits most", popular:94, features:"Seven-panel trucker with a distinctive paneled front and mesh back. A trendier take on the classic trucker with extra seams for a modern look.",
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_royal_black.jpg?v=1787188971","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_royal_black.jpg?v=1787188971","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_loden_green.jpg?v=1787188971","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_quarry_grey.jpg?v=1787188971"],
+    colors:["Black","Black Camo","Brown/Khaki","Caramel","Charcoal","Charcoal/Black","Charcoal/White/Black","Dark Green/Black","Heather Grey/Black","Loden/Green","Navy","Pale Khaki","Pale Khaki/Loden","Quarry Grey","Red/Black","Royal/Black","White"],
+    colorImgs:{
+      "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_black.jpg?v=1787188971",
+      "Black Camo":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_black_camo.jpg?v=1787188971",
+      "Brown/Khaki":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_brown_khaki.jpg?v=1787188971",
+      "Caramel":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_carmel.jpg?v=1787188971",
+      "Charcoal":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_charcoal.jpg?v=1787188971",
+      "Charcoal/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_charcoal_black.jpg?v=1787188971",
+      "Charcoal/White/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_charcoal_white_black.jpg?v=1787188971",
+      "Dark Green/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_dark_green_black.jpg?v=1787188971",
+      "Heather Grey/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_heather_grey_black.jpg?v=1787188971",
+      "Loden/Green":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_loden_green.jpg?v=1787188971",
+      "Navy":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_navy.jpg?v=1787188971",
+      "Pale Khaki":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_pale_khaki.jpg?v=1787188971",
+      "Pale Khaki/Loden":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_pale_khaki_loden.jpg?v=1787188971",
+      "Quarry Grey":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_quarry_grey.jpg?v=1787188971",
+      "Red/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_red_black.jpg?v=1787188971",
+      "Royal/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_royal_black.jpg?v=1787188971",
+      "White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r7_white.jpg?v=1787188971"
+    },
+    tiers:[[5,28,52668568502404],[10,22,52668568535172],[24,20,52668568567940],[48,18,52668568600708],[96,17,52668568633476]] },
+  { id:"rich256", name:"Richardson 256 Umpqua Rope", brand:"Richardson", desc:"Rope brim · UPF 50+ · one size fits most", popular:93, features:"Golf and outdoor-inspired rope cap with a flat brim, front rope, and UPF 50+ sun protection. Lightweight cotton-nylon with a flip-up stay. A premium lifestyle hat.",
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/256_loden_amber_gold.jpg?v=1787188971","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/256_navy_white.jpg?v=1787188971","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/256_loden_amber_gold.jpg?v=1787188971","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/256_dusty_blue_white.jpg?v=1787188971"],
+    colors:["Birch/Black","Biscuit/Black","Black","Black/White","Cardinal","Charcoal/White","Dusty Blue/White","Dusty Red/White","Loden/Amber Gold","Midnight Navy/White","Navy/Red","Navy/White","Red/White","White/Black"],
+    colorImgs:{
+      "Birch/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r256_birch_black.jpg?v=1787188971",
+      "Biscuit/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r256_biscuit_black.jpg?v=1787188971",
+      "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r256_black.jpg?v=1787188971",
+      "Black/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r256_black_white.jpg?v=1787188971",
+      "Cardinal":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r256_cardinal.jpg?v=1787188971",
+      "Charcoal/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/r256_charcoal_white.jpg?v=1787188971",
+      "Dusty Blue/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/256_dusty_blue_white.jpg?v=1787188971",
+      "Dusty Red/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/256_dusty_red_white.jpg?v=1787188971",
+      "Loden/Amber Gold":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/256_loden_amber_gold.jpg?v=1787188971",
+      "Midnight Navy/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/256_midnight_navy_white.jpg?v=1787188971",
+      "Navy/Red":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/256_navy_red.jpg?v=1787188971",
+      "Navy/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/256_navy_white.jpg?v=1787188971",
+      "Red/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/256_red_white.jpg?v=1787188971",
+      "White/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/256_white_black.jpg?v=1787188971"
+    },
+    tiers:[[5,32,52668568699012],[10,26,52668568731780],[24,24,52668568764548],[48,22,52668568797316],[96,21,52668568830084]] },
+  { id:"otto120", name:"Otto 120 Comfy Fit Club 5-Panel", brand:"Otto Comfy Fit 120", desc:"Premium perforated 5-panel · gray under-visor · one size fits most", popular:96, features:"Premium Comfy Fit Club Collection cap. Perforated 5-panel mid-profile with a soft, breathable build and a gray under-visor. Our top-tier blank for a refined, retail-quality look that shows off detailed embroidery.",
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/120_navy.jpg?v=1787191190","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/120_khaki.jpg?v=1787191190","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/120_char_gray.jpg?v=1787191190","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/120_gray.jpg?v=1787191190"],
+    colors:["Black","Charcoal Gray","Gray","Khaki","Navy","White"],
+    colorImgs:{
+      "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/120_black.jpg?v=1787191190",
+      "Charcoal Gray":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/120_char_gray.jpg?v=1787191190",
+      "Gray":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/120_gray.jpg?v=1787191190",
+      "Khaki":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/120_khaki.jpg?v=1787191190",
+      "Navy":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/120_navy.jpg?v=1787191190",
+      "White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/120_white.jpg?v=1787191190"
+    },
+    tiers:[[5,36,52668967878788],[10,30,52668967911556],[24,28,52668967944324],[48,26,52668967977092],[96,25,52668968009860]] },
+];
+const MATERIALS = [
+  { id:"brushed_silver", name:"Brushed Silver", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/brushed_silver_black.jpg?v=1787885403" },
+  { id:"saddle_tan", name:"Saddle Tan", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/saddle_tan_black.jpg?v=1787885402" },
+  { id:"vintage_gray", name:"Vintage Gray", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/vintage_gray_black.webp?v=1787885403" },
+  { id:"saddle_red", name:"Saddle Red", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/saddle_red_black.jpg?v=1787885403" },
+  { id:"rawhide", name:"Rawhide", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/rawhide_black.webp?v=1787885402" },
+  { id:"vintage_sky_blue", name:"Vintage Sky Blue", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/vintage_sky_blue_black.webp?v=1787885403" },
+  { id:"vintage_caramel_brown", name:"Vintage Caramel Brown", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/vintage_caramel_brown_black.webp?v=1787885402" }
+];
+const SHAPES = [
+  { id:"rectangle", label:"Rectangle" },
+  { id:"rounded",   label:"Rounded rectangle" },
+  { id:"circle",    label:"Circle" },
+  { id:"diecut",    label:"Die cut (follows your logo)" }
+];
+const SIZES = [
+  { id:"S", label:"Small",  dim:"~2in",     add:2.00, variantId:52543282774148 },
+  { id:"M", label:"Medium", dim:"~3in",     add:2.50, variantId:52732410200196 },
+  { id:"L", label:"Large",  dim:"~3.5in+",  add:3.00, variantId:52732410232964 }
+];
+</script>
+
+<script>
+(function(){
+"use strict";
+const $ = id => document.getElementById(id);
+const money = n => "$" + (Math.round(n * 100) / 100).toFixed(2).replace(/\.00$/, "");
+
+// Brand-alphabetical, but the popular Richardson 112s lead their brand group.
+const RANK = { rich112: 0, rich112_5p: 1, rich112p: 2 };
+const sorted = STYLES.slice().sort((a, b) => {
+  const brand = a.brand.split(" ")[0].localeCompare(b.brand.split(" ")[0]);
+  if (brand !== 0) return brand;
+  const ra = RANK[a.id] != null ? RANK[a.id] : 50;
+  const rb = RANK[b.id] != null ? RANK[b.id] : 50;
+  if (ra !== rb) return ra - rb;
+  return a.brand.localeCompare(b.brand);
+});
+
+const BADGES = { rich112: "Most popular", otto: "Best value", atonal_a500r: "Premium rope" };
+
+const CLEAN_NAME = {
+  otto: "Otto 5-Panel Mid Profile",
+  atonal: "Atonal Camo A-Frame",
+  atonal_a500r: "Atonal Rope Snapback",
+  rich112: "Richardson 6-Panel Trucker",
+  rich112_5p: "Richardson 5-Panel Trucker",
+  rich112p: "Richardson Printed 5-Panel",
+  yupoong: "Yupoong Flat Bill Trucker",
+  yp6606: "Yupoong Retro Trucker",
+  rich168: "Richardson 7-Panel Trucker",
+  rich256: "Richardson Umpqua Rope Hat",
+  otto120: "Otto Comfy Fit 5-Panel"
+};
+const nameOf = s => CLEAN_NAME[s.id] || s.name;
+
+const SHORT_NAME = {
+  otto: "5-Panel Mid Profile",
+  atonal: "Camo A-Frame",
+  atonal_a500r: "Rope Snapback",
+  rich112: "6-Panel Trucker",
+  rich112_5p: "5-Panel Trucker",
+  rich112p: "Printed 5-Panel",
+  yupoong: "Flat Bill Trucker",
+  yp6606: "Retro Trucker",
+  rich168: "7-Panel Trucker",
+  rich256: "Umpqua Rope Hat",
+  otto120: "Comfy Fit 5-Panel"
+};
+const shortOf = s => SHORT_NAME[s.id] || nameOf(s);
+
+const BRAND_LOGOS = [
+  { test: /richardson/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/richardson.png?v=1787437321", alt: "Richardson" },
+  { test: /yupoong|yp classics/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yupoong.png?v=1787437321", alt: "Yupoong" },
+  { test: /atonal/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/atonal.png?v=1787437321", alt: "Atonal" },
+  { test: /otto/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/otoo.png?v=1787437321", alt: "Otto" }
+];
+function brandLogo(s){
+  const hit = BRAND_LOGOS.find(b => b.test.test(s.brand) || b.test.test(s.name));
+  return hit || null;
+}
+const sizingOf = s => (/^rich/i.test(s.id) || /richardson/i.test(s.brand))
+  ? "One size fits most (standard M/L)" : "One size fits most";
+const specsOf = s => (s.desc || "").split("·").map(x => x.trim()).filter(x => x && !/size|fits/i.test(x));
+
+const state = {
+  style: null, colors: [], split: {}, qty: null, activeColor: null,
+  material: MATERIALS[0], shape: SHAPES[0], size: SIZES[1],
+  logoFile: null, logoImage: null, threshold: 140, invert: false,
+  step: 1, maxStep: 1, done: new Set()
+};
+
+/* ---------- pricing ---------- */
+function tierFor(style, qty){
+  if (!style || !qty) return null;
+  let t = style.tiers[0];
+  for (const tier of style.tiers) if (qty >= tier[0]) t = tier;
+  return t;
+}
+function perHat(){
+  const t = tierFor(state.style, state.qty);
+  if (!t) return null;
+  return t[1] + (state.size ? state.size.add : 0);
+}
+function nextTier(){
+  if (!state.style || !state.qty) return null;
+  for (const t of state.style.tiers) if (t[0] > state.qty) return t;
+  return null;
+}
+function colorSummary(){
+  if (!state.colors.length) return "Not specified";
+  if (state.colors.length === 1) return state.colors[0];
+  return state.colors.map(c => c + " x" + (state.split[c] || 0)).join(", ");
+}
+function colorImg(style, color){
+  if (style.colorImgs && style.colorImgs[color]) return style.colorImgs[color];
+  return style.imgs[0];
+}
+
+// Native scroll-behavior:smooth is fast and snappy. This eases over a longer
+// duration so the page glides instead of jumping, and always stops far enough
+// down that the sticky header and the full step rail stay on screen.
+const HEADER_H = () => (window.innerWidth <= 600 ? 60 : 70);
+function railBottom(){
+  const rail = document.getElementById("rail");
+  if (!rail) return HEADER_H() + 70;
+  return HEADER_H() + rail.getBoundingClientRect().height + 22;
+}
+let scrollAnim = null;
+["wheel","touchstart","keydown"].forEach(ev =>
+  window.addEventListener(ev, () => {
+    if (scrollAnim){ cancelAnimationFrame(scrollAnim); scrollAnim = null; }
+  }, { passive: true }));
+
+function easeScrollTo(targetY, duration){
+  if (scrollAnim) cancelAnimationFrame(scrollAnim);
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+    window.scrollTo(0, Math.max(0, targetY));
+    return;
+  }
+  const startY = window.scrollY;
+  const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+  const endY = Math.max(0, Math.min(targetY, maxY));
+  const dist = endY - startY;
+  if (Math.abs(dist) < 4) return;
+  const dur = duration || 850;
+  const t0 = performance.now();
+  const ease = t => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
+  function frame(now){
+    const t = Math.min(1, (now - t0) / dur);
+    window.scrollTo(0, startY + dist * ease(t));
+    if (t < 1) scrollAnim = requestAnimationFrame(frame);
+    else scrollAnim = null;
+  }
+  scrollAnim = requestAnimationFrame(frame);
+}
+function easeScrollToEl(el, duration){
+  if (!el) return;
+  const y = window.scrollY + el.getBoundingClientRect().top - railBottom();
+  easeScrollTo(y, duration);
+}
+
+/* ---------- step 1: hats ---------- */
+function renderHats(){
+  const picking = !!state.style;
+  const grid = $("hats");
+  grid.classList.toggle("picking", picking);
+
+  grid.innerHTML = sorted.map((s, idx) => {
+    const on = state.style && state.style.id === s.id;
+    const badge = BADGES[s.id] ? '<div class="hat-badge">' + BADGES[s.id] + '</div>' : "";
+    const low = s.tiers[s.tiers.length - 1][1];
+    const five = (s.tiers.find(t => t[0] === 5) || s.tiers[0])[1];
+    const ten = (s.tiers.find(t => t[0] === 10) || s.tiers[0])[1];
+
+    if (!on){
+      const lg = brandLogo(s);
+      const eager = idx < 4;
+      return '<div class="hat" data-hat="' + s.id + '">' + badge +
+        '<div class="hat-imgwrap">' +
+          '<img class="hat-img" src="' + s.imgs[0] + '" alt="' + nameOf(s) + '" loading="' + (eager ? 'eager' : 'lazy') + '" decoding="async" fetchpriority="' + (eager ? 'high' : 'low') + '">' +
+          (lg ? '<img class="hat-logo" src="' + lg.src + '" alt="' + lg.alt + '" loading="lazy">' : '') +
+        '</div>' +
+        '<div class="hat-info">' +
+          '<div class="hat-name">' + nameOf(s) + '</div>' +
+          '<div class="hat-name-sm">' + shortOf(s) + '</div>' +
+          '<div class="hat-brand">' + s.brand + '</div>' +
+          '<div class="hat-price">As low as ' + money(low) + '/hat</div>' +
+          '<div class="hat-colors"><span class="wheel"></span>' + s.colors.length + ' colors</div>' +
+        '</div></div>';
+    }
+    const specs = specsOf(s);
+    const lg = brandLogo(s);
+    const shown = state.activeColor && s.colors.indexOf(state.activeColor) > -1 ? state.activeColor : null;
+    const heroSrc = shown ? colorImg(s, shown) : s.imgs[0];
+    return '<div class="hat on" data-hat="' + s.id + '">' + badge +
+        '<div class="hat-heroimg">' +
+          '<img class="hat-img" id="hatHero" src="' + heroSrc + '" alt="' + nameOf(s) + '" loading="lazy" onerror="this.onerror=null;this.src=\'' + s.imgs[0] + '\'">' +
+          '<div class="hat-herocap" id="hatHeroCap">' + (shown ? shown : "Pick a color to preview") + '</div>' +
+        '</div>' +
+        '<div class="hat-info">' +
+          '<div class="hat-titlerow">' +
+            (lg ? '<img class="hat-logo-lg" src="' + lg.src + '" alt="' + lg.alt + '">' : '') +
+            '<div><div class="hat-name" style="font-size:19px">' + nameOf(s) + '</div>' +
+            '<div class="hat-brand">' + s.brand + '</div></div>' +
+          '</div>' +
+          '<div class="hat-price">' + money(five) + ' each at 5 &middot; ' + money(ten) + ' each at 10 &middot; as low as ' + money(low) + '</div>' +
+          '<div class="hat-specs">' +
+            '<div><b>Sizing:</b> ' + sizingOf(s) + '</div>' +
+            (specs.length ? '<div><b>Details:</b> ' + specs.join(", ") + '</div>' : "") +
+            '<div><b>Included:</b> free proof mockup, free shipping to the lower 48</div>' +
+          '</div>' +
+          '<button type="button" class="hat-change" data-change="1">Choose a different hat</button>' +
+        '</div>' +
+      '<div class="hat-expand" id="colorHost"></div></div>';
+  }).join("");
+
+  grid.querySelectorAll("[data-hat]").forEach(el => {
+    el.addEventListener("click", ev => {
+      if (ev.target.closest(".hat-expand") || ev.target.closest("[data-change]")) return;
+      const s = STYLES.find(x => x.id === el.dataset.hat);
+      if (state.style && state.style.id === s.id) return;
+      state.style = s; state.colors = []; state.split = {}; state.activeColor = null;
+      renderHats(); sync();
+      requestAnimationFrame(() => easeScrollToEl(document.querySelector("#tbpo .hat.on"), 900));
+    });
+  });
+  const chg = grid.querySelector("[data-change]");
+  if (chg) chg.addEventListener("click", ev => {
+    ev.stopPropagation();
+    state.style = null; state.colors = []; state.split = {}; state.activeColor = null;
+    renderHats(); sync();
+    requestAnimationFrame(() => easeScrollToEl(document.getElementById("hats"), 900));
+  });
+  if (picking) renderColorPanel();
+}
+
+/* ---------- color dropdown ---------- */
+function renderColorPanel(){
+  const host = $("colorHost");
+  if (!host || !state.style) return;
+  const s = state.style;
+  host.innerHTML =
+    '<div class="colorpanel">' +
+      '<h3>Choose your colors</h3>' +
+      '<p class="cp-sub">Available in ' + s.colors.length + ' colors. Pick one or as many as you like, mixing costs nothing extra.</p>' +
+      '<div class="dd" id="dd">' +
+        '<button type="button" class="dd-btn" id="ddBtn"><span id="ddLabel">Select a color</span>' +
+        '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></button>' +
+        '<div class="dd-more" id="ddMore"><span>Scroll for more colors <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></span></div>' +
+        '<div class="dd-menu" id="ddMenu">' +
+          s.colors.map(c =>
+            '<div class="dd-opt ' + (state.colors.indexOf(c) > -1 ? "picked" : "") + '" data-color="' + c + '">' +
+              '<img src="' + colorImg(s, c) + '" alt="' + c + '" loading="lazy" onerror="this.onerror=null;this.src=\'' + s.imgs[0] + '\'">' +
+              '<span>' + c + '</span>' +
+              (state.colors.indexOf(c) > -1 ? '<span class="tick">&#10003;</span>' : "") +
+            '</div>').join("") +
+        '</div>' +
+      '</div>' +
+      '<div class="picked-row" id="pickedRow"></div>' +
+    '</div>';
+
+  const dd = $("dd"), menu = $("ddMenu"), more = $("ddMore");
+  function cue(){
+    if (!menu || !more) return;
+    more.classList.toggle("on", menu.scrollHeight - menu.scrollTop - menu.clientHeight > 12);
+  }
+  if (menu) menu.addEventListener("scroll", cue);
+  $("ddBtn").addEventListener("click", e => { e.stopPropagation(); dd.classList.toggle("open"); setTimeout(cue, 20); });
+  menu.addEventListener("click", e => e.stopPropagation());
+  document.addEventListener("click", () => { if (dd) dd.classList.remove("open"); });
+
+  host.querySelectorAll("[data-color]").forEach(opt => {
+    opt.addEventListener("click", () => {
+      const c = opt.dataset.color;
+      const i = state.colors.indexOf(c);
+      if (i === -1){ state.colors.push(c); state.activeColor = c; }
+      else {
+        state.colors.splice(i,1); delete state.split[c];
+        if (state.activeColor === c) state.activeColor = state.colors[state.colors.length-1] || null;
+      }
+      updateHero();
+      renderColorPanel(); renderSplit(); sync();
+    });
+  });
+  renderPicked();
+}
+function updateHero(){
+  const img = document.getElementById("hatHero");
+  const cap = document.getElementById("hatHeroCap");
+  if (!img || !state.style) return;
+  const c = state.activeColor;
+  img.src = (c && state.style.colors.indexOf(c) > -1) ? colorImg(state.style, c) : state.style.imgs[0];
+  if (cap) cap.textContent = c || "Pick a color to preview";
+}
+
+function renderPicked(){
+  const row = $("pickedRow");
+  if (!row) return;
+  if (!state.colors.length){ row.innerHTML = ""; $("ddLabel").textContent = "Select a color"; return; }
+  $("ddLabel").textContent = state.colors.length === 1 ? state.colors[0] : state.colors.length + " colors selected";
+  row.innerHTML = state.colors.map(c =>
+    '<span class="pchip' + (state.activeColor === c ? ' on' : '') + '" data-preview="' + c + '">' +
+    '<img src="' + colorImg(state.style, c) + '" alt="' + c + '" onerror="this.onerror=null;this.src=\'' + state.style.imgs[0] + '\'">' +
+    c + '<button type="button" data-remove="' + c + '" aria-label="Remove ' + c + '">&times;</button></span>').join("");
+  row.querySelectorAll("[data-remove]").forEach(b => {
+    b.addEventListener("click", ev => {
+      ev.stopPropagation();
+      const c = b.dataset.remove;
+      state.colors = state.colors.filter(x => x !== c);
+      delete state.split[c];
+      if (state.activeColor === c) state.activeColor = state.colors[state.colors.length-1] || null;
+      updateHero();
+      renderColorPanel(); renderSplit(); sync();
+    });
+  });
+  row.querySelectorAll("[data-preview]").forEach(el => {
+    el.addEventListener("click", () => {
+      state.activeColor = el.dataset.preview;
+      updateHero(); renderPicked();
+    });
+  });
+}
+
+/* ---------- step 2: quantity + split ---------- */
+function renderSplit(){
+  const host = $("splitHost");
+  if (!host) return;
+  if (state.colors.length < 2){ host.innerHTML = ""; return; }
+  const total = Object.values(state.split).reduce((a,b) => a + (+b || 0), 0);
+  const target = state.qty || 0;
+  const bad = target && total !== target;
+  host.innerHTML =
+    '<div class="split"><div class="split-head">How many of each color?</div>' +
+    state.colors.map(c =>
+      '<div class="split-row"><img src="' + colorImg(state.style, c) + '" alt="' + c + '" onerror="this.onerror=null;this.src=\'' + state.style.imgs[0] + '\'">' +
+      '<span class="nm">' + c + '</span>' +
+      '<input type="number" min="0" inputmode="numeric" data-split="' + c + '" value="' + (state.split[c] != null ? state.split[c] : "") + '" placeholder="0"></div>').join("") +
+    '<div class="split-total ' + (bad ? "bad" : "") + '"><span>Allocated</span><span>' + total +
+    (target ? " of " + target : "") + (bad ? " (needs to match)" : "") + '</span></div></div>';
+  host.querySelectorAll("[data-split]").forEach(inp => {
+    inp.addEventListener("input", () => { state.split[inp.dataset.split] = +inp.value || 0; renderSplit(); sync(); });
+  });
+}
+function evenSplit(){
+  if (state.colors.length < 2 || !state.qty) return;
+  const base = Math.floor(state.qty / state.colors.length);
+  let rem = state.qty - base * state.colors.length;
+  state.colors.forEach(c => { state.split[c] = base + (rem-- > 0 ? 1 : 0); });
+}
+
+/* ---------- material preload + uniform-strip sampling ---------- */
+const matImageCache = {}, matRegionCache = {}, matPatternCanvasCache = {};
+function findUniformRegion(img){
+  const w = img.naturalWidth, h = img.naturalHeight;
+  if (!w || !h) return { x:0, y:0, w:1, h:1 };
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  const ctx = c.getContext("2d");
+  ctx.drawImage(img, 0, 0);
+  // Sample the central 80% of the photo in a grid, avoiding any edge framing.
+  const marginX = Math.round(w * 0.1), marginY = Math.round(h * 0.1);
+  const areaW = w - marginX * 2, areaH = h - marginY * 2;
+  const cols = 6, rows = 6;
+  const cw = Math.max(8, Math.floor(areaW / cols)), ch = Math.max(8, Math.floor(areaH / rows));
+  let best = null;
+  for (let ry = 0; ry < rows; ry++){
+    for (let rx = 0; rx < cols; rx++){
+      const x = marginX + rx * cw, y = marginY + ry * ch;
+      if (x + cw > w || y + ch > h) continue;
+      let data;
+      try { data = ctx.getImageData(x, y, cw, ch).data; } catch(e){ continue; }
+      let n = 0, sum = 0, sumsq = 0;
+      for (let i = 0; i < data.length; i += 16){
+        const l = 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
+        sum += l; sumsq += l*l; n++;
+      }
+      if (!n) continue;
+      const mean = sum / n;
+      const variance = Math.max(0, sumsq / n - mean * mean);
+      if (!best || variance < best.variance) best = { x, y, w: cw, h: ch, variance, mean };
+    }
+  }
+  return best || { x: marginX, y: marginY, w: areaW || w, h: areaH || h };
+}
+function regionCanvas(img, region){
+  const c = document.createElement("canvas");
+  c.width = Math.max(1, region.w); c.height = Math.max(1, region.h);
+  const ctx = c.getContext("2d");
+  ctx.drawImage(img, region.x, region.y, region.w, region.h, 0, 0, region.w, region.h);
+  return c;
+}
+function preloadMaterials(){
+  MATERIALS.forEach(m => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      matImageCache[m.id] = img;
+      try {
+        const region = findUniformRegion(img);
+        matRegionCache[m.id] = region;
+        matPatternCanvasCache[m.id] = regionCanvas(img, region);
+      } catch(e){ /* CORS or decode failure: fall back to flat swatch color below */ }
+      if (state.material.id === m.id) renderPatchPreview();
+    };
+    img.onerror = () => {};
+    img.src = m.swatch;
+  });
+}
+
+/* ---------- canvas engraving preview ---------- */
+function roundRectPath(ctx, x, y, w, h, r){
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+}
+function clipPath(ctx, shape, w, h, inset){
+  ctx.beginPath();
+  if (shape === "circle"){
+    const r = Math.min(w, h) / 2 - inset;
+    ctx.arc(w / 2, h / 2, r, 0, Math.PI * 2);
+  } else if (shape === "rounded"){
+    const rad = Math.min(w, h) * 0.14;
+    roundRectPath(ctx, inset, inset, w - 2 * inset, h - 2 * inset, rad);
+  } else {
+    ctx.rect(inset, inset, w - 2 * inset, h - 2 * inset);
+  }
+  ctx.closePath();
+}
+// Threshold the logo to pure black/white ink on transparency, letterboxed to fit.
+function buildInkMask(img, threshold, invert, outW, outH){
+  const c = document.createElement("canvas");
+  c.width = outW; c.height = outH;
+  const ctx = c.getContext("2d");
+  const pad = 0.86;
+  const scale = Math.min((outW * pad) / img.naturalWidth, (outH * pad) / img.naturalHeight);
+  const dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
+  const dx = (outW - dw) / 2, dy = (outH - dh) / 2;
+  ctx.clearRect(0, 0, outW, outH);
+  ctx.drawImage(img, dx, dy, dw, dh);
+  let imgd;
+  try { imgd = ctx.getImageData(0, 0, outW, outH); } catch(e){ return c; }
+  const d = imgd.data;
+  for (let i = 0; i < d.length; i += 4){
+    const a = d[i + 3];
+    let ink = false;
+    if (a >= 10){
+      const l = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
+      ink = invert ? (l > threshold) : (l < threshold);
+    }
+    if (ink){ d[i] = 0; d[i+1] = 0; d[i+2] = 0; d[i+3] = 255; }
+    else { d[i] = 0; d[i+1] = 0; d[i+2] = 0; d[i+3] = 0; }
+  }
+  ctx.putImageData(imgd, 0, 0);
+  return c;
+}
+// Approximate "die cut": dilate the ink silhouette outward by a margin via blur+threshold.
+function dieCutMask(inkCanvas, marginPx){
+  const w = inkCanvas.width, h = inkCanvas.height;
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  const ctx = c.getContext("2d");
+  ctx.filter = "blur(" + marginPx + "px)";
+  ctx.drawImage(inkCanvas, 0, 0);
+  ctx.filter = "none";
+  let id;
+  try { id = ctx.getImageData(0, 0, w, h); } catch(e){ return c; }
+  const d = id.data;
+  for (let i = 0; i < d.length; i += 4){
+    if (d[i + 3] > 18){ d[i] = 0; d[i+1] = 0; d[i+2] = 0; d[i+3] = 255; }
+    else { d[i + 3] = 0; }
+  }
+  ctx.putImageData(id, 0, 0);
+  return c;
+}
+function shapeMask(shape, W, H, ink){
+  const c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const ctx = c.getContext("2d");
+  if (shape === "diecut"){
+    if (ink){ ctx.drawImage(dieCutMask(ink, Math.round(Math.min(W, H) * 0.07)), 0, 0); return c; }
+    // no logo yet: fall back to a rounded-rect placeholder silhouette
+    ctx.fillStyle = "#000";
+    clipPath(ctx, "rounded", W, H, 8);
+    ctx.fill();
+    return c;
+  }
+  ctx.fillStyle = "#000";
+  clipPath(ctx, shape, W, H, 8);
+  ctx.fill();
+  return c;
+}
+function compositeLayer(paintFn, mask){
+  const c = document.createElement("canvas");
+  c.width = mask.width; c.height = mask.height;
+  const ctx = c.getContext("2d");
+  paintFn(ctx);
+  ctx.globalCompositeOperation = "destination-in";
+  ctx.drawImage(mask, 0, 0);
+  return c;
+}
+function drawPlaceholderText(ctx, W, H){
+  ctx.save();
+  ctx.fillStyle = "rgba(20,18,28,.5)";
+  ctx.font = "600 15px DM Sans, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText("Upload your logo to preview", W / 2, H / 2);
+  ctx.restore();
+}
+function drawStitchBorder(ctx, shape, W, H){
+  if (shape === "diecut") return;
+  ctx.save();
+  ctx.strokeStyle = "rgba(20,18,28,.18)";
+  ctx.lineWidth = 2;
+  ctx.setLineDash([4, 3]);
+  clipPath(ctx, shape, W, H, 10);
+  ctx.stroke();
+  ctx.restore();
+}
+function renderPatchPreview(){
+  const canvas = $("patchCanvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  const logoImg = state.logoImage;
+  const ink = logoImg ? buildInkMask(logoImg, state.threshold, state.invert, W, H) : null;
+  const mask = shapeMask(state.shape.id, W, H, ink);
+
+  const matImg = matImageCache[state.material.id];
+  const patternSrc = matPatternCanvasCache[state.material.id];
+  const matLayer = compositeLayer(mctx => {
+    if (matImg && patternSrc){
+      mctx.fillStyle = mctx.createPattern(patternSrc, "repeat");
+      mctx.fillRect(0, 0, W, H);
+    } else {
+      mctx.fillStyle = "#cfc9dd";
+      mctx.fillRect(0, 0, W, H);
+    }
+  }, mask);
+  ctx.drawImage(matLayer, 0, 0);
+
+  if (ink){
+    const inkLayer = compositeLayer(ictx => { ictx.drawImage(ink, 0, 0); }, mask);
+    ctx.drawImage(inkLayer, 0, 0);
+  } else {
+    drawPlaceholderText(ctx, W, H);
+  }
+
+  drawStitchBorder(ctx, state.shape.id, W, H);
+}
+
+/* ---------- step 3: patch design ---------- */
+function renderMaterials(){
+  const host = $("materials");
+  if (!host) return;
+  host.innerHTML = MATERIALS.map(m =>
+    '<button type="button" class="mat-chip ' + (m.id === state.material.id ? "on" : "") + '" data-mat="' + m.id + '">' +
+      '<span class="mat-swatch" style="background-image:url(\'' + m.swatch + '\')"></span>' +
+      '<span class="mat-name">' + m.name + '</span>' +
+    '</button>').join("");
+  host.querySelectorAll("[data-mat]").forEach(b => {
+    b.addEventListener("click", () => {
+      state.material = MATERIALS.find(x => x.id === b.dataset.mat);
+      renderMaterials(); renderPatchPreview(); sync();
+    });
+  });
+}
+function renderShapes(){
+  const host = $("shapes");
+  if (!host) return;
+  host.innerHTML = SHAPES.map(s =>
+    '<button type="button" class="chip ' + (s.id === state.shape.id ? "on" : "") + '" data-shape="' + s.id + '">' + s.label + '</button>').join("");
+  host.querySelectorAll("[data-shape]").forEach(b => {
+    b.addEventListener("click", () => {
+      state.shape = SHAPES.find(x => x.id === b.dataset.shape);
+      renderShapes(); renderPatchPreview(); sync();
+    });
+  });
+}
+function renderSizes(){
+  const host = $("sizes");
+  if (!host) return;
+  host.innerHTML = SIZES.map(s =>
+    '<button type="button" class="chip ' + (s.id === state.size.id ? "on" : "") + '" data-size="' + s.id + '">' + s.label +
+    ' <span class="size-dim">(' + s.dim + ')</span><span class="tag">+' + money(s.add) + '/hat</span></button>').join("");
+  host.querySelectorAll("[data-size]").forEach(b => {
+    b.addEventListener("click", () => {
+      state.size = SIZES.find(x => x.id === b.dataset.size);
+      renderSizes(); updatePreviewScale(); sync();
+    });
+  });
+}
+function updatePreviewScale(){
+  const box = $("patchCanvasBox");
+  if (!box) return;
+  box.className = "patch-canvas-box size-" + state.size.id;
+}
+function renderPatchDesign(){
+  renderMaterials(); renderShapes(); renderSizes(); updatePreviewScale(); renderPatchPreview();
+}
+
+/* ---------- review ---------- */
+function renderReview(){
+  const each = perHat();
+  const rows = [
+    ["Hat", state.style ? nameOf(state.style) + " (" + state.style.brand + ")" : "-"],
+    ["Colors", colorSummary()],
+    ["Sizing", state.style ? sizingOf(state.style) : "-"],
+    ["Quantity", state.qty || "-"],
+    ["Proof sent by", ($("proofMethod") && $("proofMethod").value)
+      ? ($("proofMethod").value === "Text message" && $("proofPhone") && $("proofPhone").value.trim()
+          ? "Text to " + $("proofPhone").value.trim() : $("proofMethod").value)
+      : "-"],
+    ["Patch material", state.material.name],
+    ["Patch shape", state.shape.label],
+    ["Patch size", state.size.label + " (" + state.size.dim + ")"],
+    ["Price per hat", each ? money(each) : "-"],
+    ["Order total", each && state.qty ? money(each * state.qty) : "-"]
+  ];
+  $("review").innerHTML = rows.map(r =>
+    '<div class="rev-line"><span>' + r[0] + '</span><strong>' + r[1] + '</strong></div>').join("");
+}
+
+/* ---------- step machinery ---------- */
+function canLeave(step){
+  if (step === 1) return !!state.style && state.colors.length > 0;
+  if (step === 2){
+    if (!state.qty || state.qty < 5) return false;
+    if (state.colors.length > 1){
+      const t = Object.values(state.split).reduce((a,b) => a + (+b || 0), 0);
+      return t === state.qty;
+    }
+    return true;
+  }
+  if (step === 3){
+    const m = $("proofMethod") ? $("proofMethod").value : "";
+    if (!m) return false;
+    if (m === "Text message"){
+      const p = $("proofPhone") ? $("proofPhone").value.replace(/\D/g, "") : "";
+      if (p.length < 10) return false;
+    }
+    return true;
+  }
+  return true;
+}
+function goto(step){
+  state.step = step;
+  if (step > state.maxStep) state.maxStep = step;
+  if (step === 1) renderHats();
+  if (step === 2) renderSplit();
+  if (step === 3) renderPatchDesign();
+  document.querySelectorAll("#tbpo .tbstep").forEach(sec => {
+    sec.classList.toggle("active", +sec.dataset.step === step);
+  });
+  if (step === 4) renderReview();
+  renderRail();
+  requestAnimationFrame(() => {
+    const sec = document.querySelector('#tbpo .tbstep.active');
+    if (sec) easeScrollToEl(sec, 800);
+  });
+  sync();
+}
+function renderRail(){
+  const narrow = window.matchMedia("(max-width: 640px)").matches;
+  const names = narrow
+    ? ["Hat", "Qty", "Design", "Review"]
+    : ["Hat & colors", "Quantity", "Patch design", "Review"];
+  $("rail").innerHTML = names.map((n, i) => {
+    const step = i + 1;
+    const cls = state.step === step ? "active" : (state.done.has(step) ? "done" : "");
+    const mark = (state.done.has(step) && state.step !== step) ? "&#10003;" : step;
+    return '<div class="rail-item ' + cls + '" data-goto="' + step + '"><span class="dot">' + mark + '</span>' + n + '</div>';
+  }).join("");
+  $("rail").querySelectorAll("[data-goto]").forEach(el => {
+    const t = +el.dataset.goto;
+    const reachable = t <= state.maxStep || (t === state.step + 1 && canLeave(state.step));
+    el.style.opacity = reachable ? "1" : ".45";
+    el.style.cursor = reachable ? "pointer" : "not-allowed";
+    el.addEventListener("click", () => {
+      if (!reachable) return;
+      if (t > state.step){ state.done.add(state.step); if (state.colors.length > 1) evenSplit(); renderSplit(); }
+      goto(t);
+    });
+  });
+}
+
+/* ---------- summaries + sticky bar ---------- */
+function sync(){
+  $("sum1").innerHTML = state.style
+    ? nameOf(state.style) + (state.colors.length ? " &middot; " + (state.colors.length === 1 ? state.colors[0] : state.colors.length + " colors") : "")
+    : "";
+  $("sum2").textContent = state.qty ? state.qty + " hats" : "";
+  $("sum3").textContent = state.material.name + " &middot; " + state.shape.label + " &middot; " + state.size.label;
+  $("sum4").textContent = "";
+
+  $("next1").disabled = !canLeave(1);
+  $("next2").disabled = !canLeave(2);
+  if ($("next3")) $("next3").disabled = !canLeave(3);
+
+  const each = perHat();
+  const pn = $("priceNow");
+  if (pn){
+    pn.style.display = (each && state.qty) ? "flex" : "none";
+    if (each && state.qty){
+      pn.innerHTML =
+        '<div class="pn"><span class="pn-l">Price per hat</span><span class="pn-v">' + money(each) + '</span></div>' +
+        '<div class="pn"><span class="pn-l">' + state.qty + ' hats</span><span class="pn-v">' + money(each * state.qty) + '</span></div>' +
+        '<div class="pn-note">Includes the ' + state.size.label.toLowerCase() + ' leatherette patch, laser engraved in black, and free shipping to the lower 48.</div>';
+    }
+  }
+  const nt = nextTier();
+  $("nudge").innerHTML = (nt && state.qty)
+    ? '<div class="tier-nudge">Add ' + (nt[0] - state.qty) + ' more and your price drops to ' + money(nt[1] + state.size.add) + '/hat.</div>'
+    : "";
+
+  $("barQty").textContent = state.qty || 0;
+  $("barEach").textContent = each ? money(each) : "-";
+  $("barTotal").textContent = each && state.qty ? money(each * state.qty) : "-";
+  $("bar").classList.toggle("show", !!state.style);
+  $("barCta").textContent = state.step === 4 ? "Add to Cart" : "Continue";
+  $("barCta").disabled = state.step < 4 && !canLeave(state.step);
+}
+
+/* ---------- Apps Script + cart plumbing ---------- */
+function fileToB64(file){
+  return new Promise((res, rej) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result.split(",")[1]);
+    r.onerror = () => rej(new Error("read failed"));
+    r.readAsDataURL(file);
+  });
+}
+function orderMeta(){
+  const per = perHat();
+  return {
+    name: "", email: "", phone: "",
+    style: state.style ? state.style.name : "",
+    color: colorSummary(),
+    qty: state.qty,
+    sizing: state.style ? sizingOf(state.style) : "",
+    material: state.material.name,
+    shape: state.shape.label,
+    patchSize: state.size.label + " (" + state.size.dim + ")",
+    notes: ($("notes") && $("notes").value.trim()) || "-",
+    proof: ($("proofMethod") && $("proofMethod").value) || "",
+    proofPhone: ($("proofPhone") && $("proofPhone").value.trim()) || "",
+    social: ($("noSocial") && $("noSocial").checked) ? "Do NOT share on social" : "OK to share on social",
+    estimate: per === null ? "quote" : money(per) + "/hat, " + money(per * state.qty) + " total"
+  };
+}
+function scriptConfigured(){ return APPS_SCRIPT_URL && APPS_SCRIPT_URL.indexOf("PASTE") !== 0; }
+
+async function sendToDrive(type){
+  if (!scriptConfigured()) return { ok:false, skipped:true, uploaded:[] };
+  const uploaded = [], files = [];
+  if (state.logoFile){
+    files.push({ placement: "Front patch", name: state.logoFile.name, mimeType: state.logoFile.type || "application/octet-stream", data: await fileToB64(state.logoFile) });
+    uploaded.push("Front patch");
+  }
+  const body = JSON.stringify({ type: type, meta: orderMeta(), files: files });
+
+  const box = $("uploadProgress"), fill = $("upFill"), label = $("upLabel");
+  const hasLogo = files.length > 0;
+  const workingText = hasLogo ? "Sending your logo..." : "Submitting...";
+  const doneText = hasLogo ? "Logo sent" : "Submitted";
+  if (box) box.style.display = "block";
+  if (label) label.textContent = workingText;
+  let simPct = 8;
+  if (fill) fill.style.width = simPct + "%";
+  const simTimer = setInterval(() => {
+    if (simPct < 90){ simPct += Math.max(1, (90 - simPct) * 0.08); if (fill) fill.style.width = simPct + "%"; }
+  }, 200);
+
+  return new Promise(resolve => {
+    const finish = result => {
+      clearInterval(simTimer);
+      if (fill) fill.style.width = "100%";
+      if (label) label.textContent = doneText;
+      setTimeout(() => resolve(result), 300);
+    };
+    fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: body
+    })
+    .then(() => finish({ ok:true, uploaded:uploaded }))
+    .catch(() => { clearInterval(simTimer); resolve({ ok:false, uploaded:uploaded }); });
+  });
+}
+
+async function submitCheckout(){
+  const btn = $("checkout");
+  btn.disabled = true;
+  $("cartErr").classList.remove("show");
+
+  let artNote = "Customer will email logo to help@threadbreak.com";
+  if (state.logoFile){
+    btn.textContent = "Sending logo...";
+    const up = await sendToDrive("patch-order-artwork");
+    artNote = up.ok ? ("Uploaded (" + up.uploaded.join(", ") + ")") : "ACTION: email customer for logo (upload not received)";
+  } else {
+    await sendToDrive("patch-order-details");
+  }
+
+  btn.textContent = "Adding...";
+  const meta = orderMeta();
+  const tier = tierFor(state.style, state.qty);
+  const props = {
+    "Hat Color(s)": meta.color,
+    "Sizing": meta.sizing,
+    "Decoration": "Leatherette patch (laser engraved, black)",
+    "Patch material": meta.material,
+    "Patch shape": meta.shape,
+    "Patch size": meta.patchSize,
+    "Artwork": artNote
+  };
+  props["Proof delivery"] = meta.proof + (meta.proof === "Text message" && meta.proofPhone ? " to " + meta.proofPhone : "");
+  if (meta.notes !== "-") props["Notes"] = meta.notes;
+  props["Social sharing"] = meta.social;
+
+  const items = [
+    { id: tier[2], quantity: state.qty, properties: props },
+    { id: state.size.variantId, quantity: state.qty, properties: { "Applies to": state.style.name, "Patch size": state.size.label } }
+  ];
+
+  try {
+    const res = await fetch("/cart/add.js", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items: items })
+    });
+    if (!res.ok){
+      let detail = "";
+      try { const j = await res.json(); detail = j.description || j.message || ""; } catch(_) {}
+      throw new Error(detail || ("cart add failed (" + res.status + ")"));
+    }
+    window.location.href = "/checkout";
+  } catch (e) {
+    btn.disabled = false; btn.textContent = "Add to Cart";
+    const box = $("cartErr");
+    const msg = (e && e.message) ? e.message : "";
+    box.innerHTML = "Something went wrong adding this to your cart. Please try again, or email help@threadbreak.com and we'll sort it out."
+      + (msg ? '<br><span style="font-size:12px;opacity:.8">Details: ' + msg + '</span>' : "");
+    box.classList.add("show");
+    box.scrollIntoView({ behavior:"smooth", block:"center" });
+    console.error("[tbpo] cart add failed", e, items);
+  }
+}
+
+/* ---------- wire up ---------- */
+function bindToggle(btnId, panelId, showText, hideText){
+  const b = $(btnId), p = $(panelId);
+  if (!b || !p) return;
+  b.addEventListener("click", () => {
+    const hidden = p.hasAttribute("hidden");
+    if (hidden){ p.removeAttribute("hidden"); b.textContent = hideText; }
+    else { p.setAttribute("hidden",""); b.textContent = showText; }
+  });
+}
+
+$("qty").addEventListener("input", e => {
+  state.qty = +e.target.value || null;
+  if (state.colors.length > 1) evenSplit();
+  renderSplit(); sync();
+});
+$("next1").addEventListener("click", () => { state.done.add(1); if (state.colors.length > 1) evenSplit(); renderSplit(); goto(2); });
+$("next2").addEventListener("click", () => { state.done.add(2); goto(3); });
+$("next3").addEventListener("click", () => { state.done.add(3); goto(4); });
+$("checkout").addEventListener("click", submitCheckout);
+$("barCta").addEventListener("click", () => {
+  if (state.step === 4){ submitCheckout(); return; }
+  if (!canLeave(state.step)) return;
+  state.done.add(state.step);
+  if (state.step === 1 && state.colors.length > 1){ evenSplit(); renderSplit(); }
+  goto(Math.min(state.step + 1, 4));
+});
+document.querySelectorAll("#tbpo [data-back]").forEach(b => {
+  b.addEventListener("click", () => {
+    const t = +b.dataset.back;
+    goto(t);
+  });
+});
+
+$("logoInput").addEventListener("change", e => {
+  const file = e.target.files && e.target.files[0];
+  const slot = $("logoSlot"), have = $("logoHave");
+  if (!file){
+    state.logoFile = null; state.logoImage = null;
+    if (slot) slot.classList.remove("has-file");
+    if (have){ have.hidden = true; have.textContent = ""; }
+    renderPatchPreview();
+    return;
+  }
+  if (file.size > 10 * 1024 * 1024){
+    alert("That file is over 10 MB. Please send a smaller file or email it to help@threadbreak.com.");
+    e.target.value = ""; return;
+  }
+  state.logoFile = file;
+  if (slot) slot.classList.add("has-file");
+  if (have){ have.hidden = false; have.textContent = "Attached: " + file.name; }
+
+  if (/^image\/(png|jpe?g|webp|gif|svg\+xml)$/i.test(file.type) || /\.(png|jpe?g|webp|gif|svg)$/i.test(file.name)){
+    const reader = new FileReader();
+    reader.onload = ev => {
+      const img = new Image();
+      img.onload = () => { state.logoImage = img; renderPatchPreview(); };
+      img.onerror = () => { state.logoImage = null; renderPatchPreview(); };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  } else {
+    state.logoImage = null;
+    renderPatchPreview();
+  }
+});
+$("threshold").addEventListener("input", e => { state.threshold = +e.target.value; renderPatchPreview(); });
+$("invertToggle").addEventListener("change", e => { state.invert = e.target.checked; renderPatchPreview(); });
+
+// Texting a proof needs a mobile number, and Shopify's checkout phone field is
+// optional, so collect it here when they pick text.
+(function(){
+  const sel = $("proofMethod"), wrap = $("proofPhoneWrap"), hint = $("proofHint");
+  if (!sel) return;
+  sel.addEventListener("change", () => {
+    const isText = sel.value === "Text message";
+    if (wrap){ if (isText) wrap.removeAttribute("hidden"); else { wrap.setAttribute("hidden",""); if ($("proofPhone")) $("proofPhone").value = ""; } }
+    if (hint) hint.textContent = isText
+      ? "We'll text your mockup from (336) 585-6176 within one business day. Nothing gets engraved until you approve it."
+      : "We'll email your mockup from help@threadbreak.com within one business day. Nothing gets engraved until you approve it.";
+    sync();
+  });
+  if ($("proofPhone")) $("proofPhone").addEventListener("input", sync);
+})();
+
+bindToggle("engraveBtn","engraveInfo","How does engraving work?","Hide");
+
+renderHats();
+preloadMaterials();
+renderPatchDesign();
+renderRail();
+sync();
+})();
+
+</script>
