@@ -226,6 +226,7 @@
   #tbpo .ctl-note{font-weight:400;font-size:11.5px;color:var(--muted);margin-left:6px}
   #tbpo .ctl-reset{align-self:flex-start;background:none;border:1px solid var(--line);border-radius:8px;padding:6px 11px;font:inherit;font-size:12.5px;color:var(--purple);cursor:pointer}
   #tbpo .ctl-reset:hover{background:#fff}
+  #tbpo .die-note{align-self:stretch;font-size:12.5px;line-height:1.5;color:var(--purple);background:#fff;border:1px solid #DCD3F6;border-left:3px solid var(--purple);border-radius:9px;padding:10px 12px}
   #tbpo .field.is-off{opacity:.45}
   #tbpo .field.is-off select{cursor:not-allowed}
   #tbpo .patch-canvas-box{cursor:grab;touch-action:none}
@@ -430,6 +431,9 @@
                   <option value="outline">Outline border</option>
                 </select>
               </div>
+            </div>
+            <div class="die-note" id="dieNote" hidden>
+              <strong>Heads up:</strong> the die-cut outline here is a rough approximation generated from your image. Your proof will show the real cut line — properly smoothed, with clean curves and even spacing around your artwork.
             </div>
             <p class="hint">This is a live approximation built from your logo and a sample of the material photo, not the exact final engraving. We'll email a real mockup before anything hits the laser.</p>
           </div>
@@ -1323,21 +1327,112 @@ let dieSilCache = null;
 function dieCutSilhouette(logoImg, W, H){
   if (!logoImg) return null;
   // Only depends on the artwork and the canvas size, not the threshold slider,
-  // so cache it — the dilation pass is the expensive part of a render.
+  // so cache it — the distance passes are the expensive part of a render.
   const key = W + "x" + H + ":" + state.logoScale + ":" + state.logoX + ":" + state.logoY;
   if (dieSilCache && dieSilCache.img === logoImg && dieSilCache.key === key) return dieSilCache.canvas;
-  const sil = buildSilhouette(logoImg, W, H);
-  const base = Math.min(W, H);
-  // Padding is deliberately small — just enough leather to hold the shape.
-  const pad = Math.max(2, Math.round(base * 0.018));
-  // The rounding radius is set independently of the padding, so the corners stay
-  // soft even though the border is thin. Dilate past the target by the radius,
-  // then the blur+ramp pass rounds and settles it back to `pad`.
-  const round = Math.max(4, Math.round(base * 0.038));
-  const grown = dilateMask(sil, pad + round);
-  const out = roundMask(grown, round);
-  dieSilCache = { img: logoImg, key: key, canvas: out };
-  return out;
+
+  // Everything below runs at 2x and is scaled down at the end. Supersampling is
+  // what actually kills the stair-stepping — a cut line computed at display
+  // resolution can only ever be as smooth as one pixel.
+  const SS = 2;
+  const w = W * SS, h = H * SS;
+  const sil = buildSilhouette(logoImg, w, h);
+  let id;
+  try { id = sil.getContext("2d").getImageData(0, 0, w, h); } catch(e){ return null; }
+  const n = w * h;
+  const ink = new Uint8Array(n);
+  let anyInk = false;
+  for (let i = 0, j = 0; j < n; i += 4, j++){
+    if (id.data[i + 3] > 8){ ink[j] = 1; anyInk = true; }
+  }
+  if (!anyInk) return null;
+
+  const base = Math.min(w, h);
+  const pad   = Math.max(2, Math.round(base * 0.018));   // leather left around the art
+  const round = Math.max(4, Math.round(base * 0.045));   // corner radius
+
+  // Grow by pad + round, then pull back in by round. Because both steps use a
+  // true circular distance, the result is a genuine rounded offset of the logo
+  // rather than the box-filter approximation this used before.
+  const outside = edt(ink, w, h);                        // distance to nearest ink
+  const grown = new Uint8Array(n);
+  const growR = pad + round;
+  for (let j = 0; j < n; j++) grown[j] = outside[j] <= growR ? 1 : 0;
+
+  // distance from the grown shape's exterior, so we can shrink it back by `round`
+  const holes = new Uint8Array(n);
+  for (let j = 0; j < n; j++) holes[j] = grown[j] ? 0 : 1;
+  const inside = edt(holes, w, h);
+
+  const big = document.createElement("canvas");
+  big.width = w; big.height = h;
+  const bctx = big.getContext("2d");
+  const out = bctx.createImageData(w, h);
+  const od = out.data;
+  for (let i = 0, j = 0; j < n; i += 4, j++){
+    // fractional coverage at the boundary = free anti-aliasing
+    let cov = inside[j] - round + 0.5;
+    cov = cov < 0 ? 0 : (cov > 1 ? 1 : cov);
+    od[i] = 0; od[i+1] = 0; od[i+2] = 0; od[i+3] = Math.round(cov * 255);
+  }
+  bctx.putImageData(out, 0, 0);
+
+  const c = document.createElement("canvas");
+  c.width = W; c.height = H;
+  const ctx = c.getContext("2d");
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(big, 0, 0, W, H);
+
+  dieSilCache = { img: logoImg, key: key, canvas: c };
+  return c;
+}
+// Exact Euclidean distance transform (Felzenszwalb & Huttenlocher). Returns, for
+// every pixel, the distance to the nearest set pixel in `bin`. Exact circles are
+// the whole point — a chamfer or box approximation is what makes offset outlines
+// look faceted.
+function edt(bin, w, h){
+  const INF = 1e20;
+  const f = new Float64Array(Math.max(w, h));
+  const d = new Float64Array(Math.max(w, h));
+  const v = new Int32Array(Math.max(w, h));
+  const z = new Float64Array(Math.max(w, h) + 1);
+  const grid = new Float64Array(w * h);
+  for (let j = 0; j < w * h; j++) grid[j] = bin[j] ? 0 : INF;
+
+  function pass(len, get, set){
+    for (let q = 0; q < len; q++) f[q] = get(q);
+    let k = 0;
+    v[0] = 0; z[0] = -INF; z[1] = INF;
+    for (let q = 1; q < len; q++){
+      let s;
+      while (true){
+        const p = v[k];
+        s = ((f[q] + q*q) - (f[p] + p*p)) / (2*q - 2*p);
+        if (s <= z[k]) k--; else break;
+      }
+      k++;
+      v[k] = q; z[k] = s; z[k+1] = INF;
+    }
+    k = 0;
+    for (let q = 0; q < len; q++){
+      while (z[k+1] < q) k++;
+      const p = v[k];
+      d[q] = (q - p) * (q - p) + f[p];
+    }
+    for (let q = 0; q < len; q++) set(q, d[q]);
+  }
+
+  for (let y = 0; y < h; y++){
+    const row = y * w;
+    pass(w, q => grid[row + q], (q, val) => { grid[row + q] = val; });
+  }
+  for (let x = 0; x < w; x++){
+    pass(h, q => grid[q * w + x], (q, val) => { grid[q * w + x] = val; });
+  }
+  const outArr = new Float32Array(w * h);
+  for (let j = 0; j < w * h; j++) outArr[j] = Math.sqrt(grid[j]);
+  return outArr;
 }
 // Tight bounding box of the thresholded ink, so a die cut can hug the artwork.
 function inkBounds(inkCanvas){
@@ -1565,6 +1660,8 @@ function sizeDimLabel(size, shape){
 // finish control is disabled (and treated as "none") whenever die cut is picked.
 function isDieCut(){ return state.shape.id === "diecut"; }
 function syncEdgeControl(){
+  const note = $("dieNote");
+  if (note) note.hidden = !isDieCut();
   const sel = $("edgeSel");
   if (!sel) return;
   const die = isDieCut();
