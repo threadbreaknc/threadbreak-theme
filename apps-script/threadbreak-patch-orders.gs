@@ -62,6 +62,14 @@ var COLUMNS = [
 
 function doPost(e) {
   try {
+    if (!e || !e.postData || !e.postData.contents) {
+      // Almost always means someone pressed Run in the editor instead of posting.
+      // Use testRun() below to exercise the script by hand.
+      throw new Error(
+        "No POST body. If you clicked Run in the editor, run testRun() instead — " +
+        "doPost only works when the form actually submits to the /exec URL."
+      );
+    }
     var payload = JSON.parse(e.postData.contents);
     handle(payload);
     return ContentService.createTextOutput(JSON.stringify({ ok: true }))
@@ -74,6 +82,52 @@ function doPost(e) {
     return ContentService.createTextOutput(JSON.stringify({ ok: false }))
       .setMimeType(ContentService.MimeType.JSON);
   }
+}
+
+/**
+ * Run THIS (not doPost) to test the script by hand from the editor.
+ * It files a fake order so you can confirm the Drive folder, the sheet row and
+ * the notification email all land where you expect. Delete the test folder and
+ * sheet row afterwards.
+ */
+function testRun() {
+  handle({
+    type: "patch-order-test",
+    meta: {
+      submittedAt: new Date().toISOString(),
+      style: "TEST - Richardson 112",
+      color: "Black / Charcoal",
+      colorSplit: '{"Black":6,"Charcoal":6}',
+      qty: 12,
+      sizing: "One size, adjustable",
+      material: "Vintage Caramel Brown",
+      shape: "Die cut (follows your logo)",
+      placement: "Front (centered)",
+      edge: "None (die cut edge)",
+      patchSizeLabel: "Medium",
+      patchDims: '3.25" wide',
+      sizeUpcharge: "$2.50/hat",
+      tierPrice: "$24.00",
+      perHat: "$26.50",
+      orderTotal: "$318.00",
+      hatVariantId: "0000000000",
+      sizeVariantId: "52732410200196",
+      threshold: "140",
+      invert: "No",
+      logoScale: "100%",
+      logoOffset: "0%, 0%",
+      logoFileName: "test-logo.png",
+      hasMockup: "No",
+      proof: "Email",
+      proofPhone: "",
+      social: "OK to share on social",
+      notes: "This is a test row from testRun().",
+      estimate: "$26.50/hat, $318.00 total",
+      pageUrl: "editor test"
+    },
+    files: []
+  });
+  Logger.log("testRun complete — check Drive, the sheet, and " + NOTIFY_EMAIL);
 }
 
 function doGet() {
@@ -185,8 +239,11 @@ function notify(meta, files) {
 
 function logFailure(err, e) {
   try {
-    var tab = sheet().getParent().getSheetByName("Errors") ||
-              sheet().getParent().insertSheet("Errors");
-    tab.appendRow([new Date(), String(err), e && e.postData ? String(e.postData.contents).slice(0, 4000) : ""]);
+    var ss = sheet().getParent();
+    var tab = ss.getSheetByName("Errors") || ss.insertSheet("Errors");
+    if (tab.getLastRow() === 0) tab.appendRow(["When", "Error", "Body"]);
+    var body = "";
+    try { body = String(e.postData.contents).slice(0, 4000); } catch (_) { body = "(no body)"; }
+    tab.appendRow([new Date(), String(err), body]);
   } catch (_) { /* nothing else we can do */ }
 }
