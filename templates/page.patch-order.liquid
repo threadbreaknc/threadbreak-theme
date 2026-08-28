@@ -210,6 +210,11 @@
   #tbpo .patch-invert input{width:16px;height:16px;accent-color:var(--purple);cursor:pointer}
   #tbpo .patch-preview .hint{max-width:380px;text-align:center}
   #tbpo .patch-preview .fld-tight{margin:2px 0 0;align-self:stretch}
+  #tbpo .ctl-note{font-weight:400;font-size:11.5px;color:var(--muted);margin-left:6px}
+  #tbpo .ctl-reset{align-self:flex-start;background:none;border:1px solid var(--line);border-radius:8px;padding:6px 11px;font:inherit;font-size:12.5px;color:var(--purple);cursor:pointer}
+  #tbpo .ctl-reset:hover{background:#fff}
+  #tbpo .patch-canvas-box{cursor:grab;touch-action:none}
+  #tbpo .patch-canvas-box.dragging{cursor:grabbing}
   #tbpo .patch-preview .chips{align-self:stretch;justify-content:center}
   /* Two-column layout: preview on the left, the fields that drive it on the right.
      Mobile stacks with the preview first so the canvas + threshold/invert controls
@@ -393,6 +398,11 @@
                 <label for="threshold">Engrave detail (threshold)</label>
                 <input type="range" id="threshold" min="10" max="245" value="140">
               </div>
+              <div class="field">
+                <label for="logoScale">Logo size <span class="ctl-note">drag the logo in the preview to move it</span></label>
+                <input type="range" id="logoScale" min="40" max="150" value="100">
+              </div>
+              <button type="button" class="ctl-reset" id="resetLogo">Recenter logo</button>
               <label class="patch-invert">
                 <input type="checkbox" id="invertToggle">
                 <span>Invert (swap engraved / material areas)</span>
@@ -817,6 +827,9 @@ const state = {
   // the customer reaches step 3; sizeChosen tracks the still-required pick.
   size: SIZES[0], sizeChosen: false,
   logoFile: null, logoImage: null, threshold: 140, invert: false, edge: "none",
+  // logo transform: scale is a fraction of the fitted size, x/y are offsets as a
+  // fraction of the canvas (0,0 = centered)
+  logoScale: 1, logoX: 0, logoY: 0,
   step: 1, maxStep: 1, done: new Set()
 };
 
@@ -1168,17 +1181,23 @@ function clipPath(ctx, shape, w, h, inset){
   }
   ctx.closePath();
 }
+// Single source of truth for where the artwork sits, so the engraved ink and the
+// die-cut silhouette are always derived from the exact same placement.
+function drawLogoInto(ctx, img, outW, outH){
+  const pad = 0.86 * (state.logoScale || 1);
+  const scale = Math.min((outW * pad) / img.naturalWidth, (outH * pad) / img.naturalHeight);
+  const dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
+  const dx = (outW - dw) / 2 + outW * (state.logoX || 0);
+  const dy = (outH - dh) / 2 + outH * (state.logoY || 0);
+  ctx.drawImage(img, dx, dy, dw, dh);
+}
 // Threshold the logo to pure black/white ink on transparency, letterboxed to fit.
 function buildInkMask(img, threshold, invert, outW, outH){
   const c = document.createElement("canvas");
   c.width = outW; c.height = outH;
   const ctx = c.getContext("2d");
-  const pad = 0.86;
-  const scale = Math.min((outW * pad) / img.naturalWidth, (outH * pad) / img.naturalHeight);
-  const dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
-  const dx = (outW - dw) / 2, dy = (outH - dh) / 2;
   ctx.clearRect(0, 0, outW, outH);
-  ctx.drawImage(img, dx, dy, dw, dh);
+  drawLogoInto(ctx, img, outW, outH);
   let imgd;
   try { imgd = ctx.getImageData(0, 0, outW, outH); } catch(e){ return c; }
   const d = imgd.data;
@@ -1202,10 +1221,7 @@ function buildSilhouette(img, outW, outH){
   const c = document.createElement("canvas");
   c.width = outW; c.height = outH;
   const ctx = c.getContext("2d");
-  const pad = 0.86;
-  const scale = Math.min((outW * pad) / img.naturalWidth, (outH * pad) / img.naturalHeight);
-  const dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
-  ctx.drawImage(img, (outW - dw) / 2, (outH - dh) / 2, dw, dh);
+  drawLogoInto(ctx, img, outW, outH);
   let id;
   try { id = ctx.getImageData(0, 0, outW, outH); } catch(e){ return c; }
   const d = id.data;
@@ -1287,12 +1303,16 @@ function dieCutSilhouette(logoImg, W, H){
   if (!logoImg) return null;
   // Only depends on the artwork and the canvas size, not the threshold slider,
   // so cache it — the dilation pass is the expensive part of a render.
-  if (dieSilCache && dieSilCache.img === logoImg && dieSilCache.w === W && dieSilCache.h === H) return dieSilCache.canvas;
+  const key = W + "x" + H + ":" + state.logoScale + ":" + state.logoX + ":" + state.logoY;
+  if (dieSilCache && dieSilCache.img === logoImg && dieSilCache.key === key) return dieSilCache.canvas;
   const sil = buildSilhouette(logoImg, W, H);
   const pad = Math.max(6, Math.round(Math.min(W, H) * 0.055));
-  const grown = dilateMask(sil, pad);
-  const out = roundMask(grown, Math.max(2, Math.round(pad * 0.55)));
-  dieSilCache = { img: logoImg, w: W, h: H, canvas: out };
+  // Dilate a touch past the target, then round hard and settle back. Two rounding
+  // passes at different radii knock the square corners off the max filter and
+  // leave a genuinely smooth cut line rather than a chamfered one.
+  const grown = dilateMask(sil, pad + Math.round(pad * 0.35));
+  const out = roundMask(roundMask(grown, Math.max(3, Math.round(pad * 1.15))), Math.max(2, Math.round(pad * 0.5)));
+  dieSilCache = { img: logoImg, key: key, canvas: out };
   return out;
 }
 // Tight bounding box of the thresholded ink, so a die cut can hug the artwork.
@@ -1379,7 +1399,7 @@ function drawPlaceholderText(ctx, W, H){
 function drawShapeBorder(ctx, mode, shape, W, H, dieRect, dieSil){
   if (mode === "none") return;
   const base = Math.min(W, H);
-  const lw = mode === "stitch" ? Math.max(2.5, base * 0.014) : Math.max(3.5, base * 0.02);
+  const lw = mode === "stitch" ? Math.max(2, base * 0.0095) : Math.max(2.5, base * 0.013);
   // Die cut with real artwork has no geometric edge to stroke, so inset-stroke
   // its own silhouette: shrink the mask by the line width and subtract.
   if (shape === "diecut" && dieSil){
@@ -1739,19 +1759,55 @@ function orderMeta(){
     proof: ($("proofMethod") && $("proofMethod").value) || "",
     proofPhone: ($("proofPhone") && $("proofPhone").value.trim()) || "",
     social: ($("noSocial") && $("noSocial").checked) ? "Do NOT share on social" : "OK to share on social",
-    estimate: per === null ? "quote" : money(per) + "/hat, " + money(per * state.qty) + " total"
+    estimate: per === null ? "quote" : money(per) + "/hat, " + money(per * state.qty) + " total",
+    // production detail: everything needed to rebuild this patch exactly
+    colorSplit: state.colors.length > 1 ? JSON.stringify(state.split) : "",
+    patchSizeLabel: state.sizeChosen ? state.size.label : "Small (default)",
+    patchDims: state.size ? sizeDimLabel(state.size, state.shape) : "",
+    sizeUpcharge: state.size ? money(state.size.add) + "/hat" : "",
+    perHat: per === null ? "" : money(per),
+    orderTotal: (per === null || !state.qty) ? "" : money(per * state.qty),
+    tierPrice: (function(){ const t = tierFor(state.style, state.qty); return t ? money(t[1]) : ""; })(),
+    hatVariantId: (function(){ const t = tierFor(state.style, state.qty); return t ? String(t[2]) : ""; })(),
+    sizeVariantId: state.size ? String(state.size.variantId) : "",
+    threshold: String(state.threshold),
+    invert: state.invert ? "Yes" : "No",
+    logoScale: Math.round((state.logoScale || 1) * 100) + "%",
+    logoOffset: Math.round((state.logoX || 0) * 100) + "%, " + Math.round((state.logoY || 0) * 100) + "%",
+    logoFileName: state.logoFile ? state.logoFile.name : "",
+    hasMockup: "",
+    submittedAt: new Date().toISOString(),
+    pageUrl: (typeof window !== "undefined" && window.location) ? window.location.href : ""
   };
 }
 function scriptConfigured(){ return APPS_SCRIPT_URL && APPS_SCRIPT_URL.indexOf("PASTE") !== 0; }
 
+// Snapshot of exactly what the customer saw when they hit Add to Cart. Can throw
+// if the material photo tainted the canvas, so it degrades to "no mockup".
+function mockupB64(){
+  const canvas = $("patchCanvas");
+  if (!canvas || !state.logoImage) return null;
+  try {
+    const url = canvas.toDataURL("image/png");
+    if (!url || url.indexOf(",") < 0) return null;
+    return url.split(",")[1];
+  } catch(e){ return null; }
+}
 async function sendToDrive(type){
   if (!scriptConfigured()) return { ok:false, skipped:true, uploaded:[] };
   const uploaded = [], files = [];
   if (state.logoFile){
-    files.push({ placement: state.placement.label, name: state.logoFile.name, mimeType: state.logoFile.type || "application/octet-stream", data: await fileToB64(state.logoFile) });
+    files.push({ kind: "artwork", placement: state.placement.label, name: state.logoFile.name, mimeType: state.logoFile.type || "application/octet-stream", data: await fileToB64(state.logoFile) });
     uploaded.push(state.placement.label);
   }
-  const body = JSON.stringify({ type: type, meta: orderMeta(), files: files });
+  const shot = mockupB64();
+  if (shot){
+    files.push({ kind: "mockup", placement: state.placement.label, name: "mockup-preview.png", mimeType: "image/png", data: shot });
+    uploaded.push("mockup");
+  }
+  const meta = orderMeta();
+  meta.hasMockup = shot ? "Yes" : "No";
+  const body = JSON.stringify({ type: type, meta: meta, files: files });
 
   const box = $("uploadProgress"), fill = $("upFill"), label = $("upLabel");
   const hasLogo = files.length > 0;
@@ -1809,7 +1865,9 @@ async function submitCheckout(){
     "Placement": meta.placement,
     "Edge finish": meta.edge,
     "Patch size": meta.patchSize,
-    "Artwork": artNote
+    "Artwork": artNote,
+    "Logo size": meta.logoScale,
+    "Logo offset": meta.logoOffset
   };
   props["Proof delivery"] = meta.proof + (meta.proof === "Text message" && meta.proofPhone ? " to " + meta.proofPhone : "");
   if (meta.notes !== "-") props["Notes"] = meta.notes;
@@ -1893,6 +1951,9 @@ $("logoInput").addEventListener("change", e => {
     e.target.value = ""; return;
   }
   state.logoFile = file;
+  // new artwork starts centered at full size
+  state.logoScale = 1; state.logoX = 0; state.logoY = 0;
+  if ($("logoScale")) $("logoScale").value = 100;
   if (slot) slot.classList.add("has-file");
   if (have){ have.hidden = false; have.textContent = "Attached: " + file.name; }
 
@@ -1913,6 +1974,40 @@ $("logoInput").addEventListener("change", e => {
 $("threshold").addEventListener("input", e => { state.threshold = +e.target.value; renderPatchPreview(); });
 $("invertToggle").addEventListener("change", e => { state.invert = e.target.checked; renderPatchPreview(); });
 $("edgeSel").addEventListener("change", e => { state.edge = e.target.value; renderPatchPreview(); sync(); });
+$("logoScale").addEventListener("input", e => { state.logoScale = +e.target.value / 100; renderPatchPreview(); });
+$("resetLogo").addEventListener("click", () => {
+  state.logoScale = 1; state.logoX = 0; state.logoY = 0;
+  $("logoScale").value = 100;
+  renderPatchPreview();
+});
+// Drag the artwork around inside the patch. Offsets are stored as a fraction of
+// the canvas so they survive the canvas resizing when the shape changes.
+(function enableLogoDrag(){
+  const box = $("patchCanvasBox");
+  if (!box) return;
+  let drag = null;
+  box.addEventListener("pointerdown", e => {
+    if (!state.logoImage) return;
+    const r = box.getBoundingClientRect();
+    drag = { px: e.clientX, py: e.clientY, ox: state.logoX, oy: state.logoY, w: r.width, h: r.height };
+    box.classList.add("dragging");
+    box.setPointerCapture(e.pointerId);
+  });
+  box.addEventListener("pointermove", e => {
+    if (!drag) return;
+    state.logoX = Math.max(-0.45, Math.min(0.45, drag.ox + (e.clientX - drag.px) / drag.w));
+    state.logoY = Math.max(-0.45, Math.min(0.45, drag.oy + (e.clientY - drag.py) / drag.h));
+    renderPatchPreview();
+  });
+  const end = e => {
+    if (!drag) return;
+    drag = null;
+    box.classList.remove("dragging");
+    try { box.releasePointerCapture(e.pointerId); } catch(_){}
+  };
+  box.addEventListener("pointerup", end);
+  box.addEventListener("pointercancel", end);
+})();
 
 // Texting a proof needs a mobile number, and Shopify's checkout phone field is
 // optional, so collect it here when they pick text.
