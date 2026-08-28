@@ -147,10 +147,13 @@
   /* square PNGs with the wordmark inset, so size the square not the mark.
      Card clips overflow, so keep the offset small enough that nothing is cut. */
   /* dropdown items explain who each path is for */
-  .nav-dd-wide{min-width:280px;}
-  .nav-dd-wide a{display:block;line-height:1.35;padding-top:9px;padding-bottom:9px;}
-  .nav-dd-wide a strong{display:block;font-weight:700;}
-  .nav-dd-wide a span{display:block;font-size:11.5px;color:#6B6A78;font-weight:400;margin-top:2px;}
+  .nav-dd-wide{min-width:272px;}
+  .nav-dd-wide a{display:block;line-height:1.3;padding-top:8px;padding-bottom:8px;}
+  .nav-dd-wide a strong{display:block;font-weight:700;letter-spacing:0.01em;}
+  /* the menu's 0.02em tracking is too loose at this size, so tighten the
+     description line and let it sit closer under the label */
+  .nav-dd-wide a span{display:block;font-size:11px;color:#6B6A78;font-weight:400;
+    letter-spacing:0;line-height:1.25;margin-top:1px;}
   .nav-dd-wide a:hover span{color:#5028AA;}
   .coll-brand{position:absolute;top:-6px;right:0;width:86px;height:86px;object-fit:contain;z-index:2;
     mix-blend-mode:multiply;pointer-events:none;}
