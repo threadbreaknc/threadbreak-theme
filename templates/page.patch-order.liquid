@@ -214,7 +214,7 @@
   /* Fixed display size regardless of S/M/L — only the shape changes the box's
      proportions; the actual real-world size is communicated via the size-dim
      caption on the chip and in the review, not by scaling this preview. */
-  #tbpo .patch-canvas-box{width:100%;max-width:320px;aspect-ratio:1.633/1;border-radius:14px;overflow:hidden;background:#fff;border:1.5px solid var(--line);box-shadow:0 6px 18px rgba(20,18,28,.08);transition:aspect-ratio .25s ease}
+  #tbpo .patch-canvas-box{position:relative;width:100%;max-width:320px;aspect-ratio:1.633/1;border-radius:14px;overflow:hidden;background:#fff;border:1.5px solid var(--line);box-shadow:0 6px 18px rgba(20,18,28,.08);transition:aspect-ratio .25s ease}
   #tbpo .patch-canvas-box canvas{width:100%;height:100%;display:block}
   #tbpo .patch-controls{width:100%;max-width:380px;display:flex;flex-direction:column;gap:10px}
   #tbpo .size-hint{font-size:12.5px;color:var(--purple);background:var(--ice);border-radius:9px;padding:9px 12px;margin-top:9px;line-height:1.5}
@@ -226,6 +226,20 @@
   #tbpo .ctl-note{font-weight:400;font-size:11.5px;color:var(--muted);margin-left:6px}
   #tbpo .ctl-reset{align-self:flex-start;background:none;border:1px solid var(--line);border-radius:8px;padding:6px 11px;font:inherit;font-size:12.5px;color:var(--purple);cursor:pointer}
   #tbpo .ctl-reset:hover{background:#fff}
+  /* upload target sits on the canvas itself instead of a separate slot */
+  #tbpo .canvas-drop{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;padding:14px;background:var(--ice);border:1.5px dashed var(--purple);border-radius:14px;cursor:pointer;transition:.15s}
+  #tbpo .canvas-drop:hover,#tbpo .canvas-drop.over{background:#EFE9FF;border-color:var(--purple2)}
+  /* display:flex would otherwise beat the [hidden] attribute */
+  #tbpo .canvas-drop[hidden],#tbpo .file-bar[hidden]{display:none}
+  #tbpo .canvas-drop-i{font-size:24px;line-height:1;color:var(--purple);font-weight:700}
+  #tbpo .canvas-drop-t{font-size:13.5px;font-weight:700;color:var(--purple)}
+  #tbpo .canvas-drop-s{font-size:11.5px;color:var(--muted)}
+  #tbpo .file-bar{align-self:stretch;display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#F3FBF6;border:1px solid var(--good);border-radius:10px;padding:7px 10px}
+  #tbpo .file-bar-name{flex:1;min-width:120px;font-size:12.5px;font-weight:600;color:var(--good);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #tbpo .file-bar-btn{background:#fff;border:1px solid var(--line);border-radius:7px;padding:4px 10px;font:inherit;font-size:12px;font-weight:600;color:var(--purple);cursor:pointer}
+  #tbpo .file-bar-btn:hover{border-color:var(--purple)}
+  #tbpo .file-bar-btn.danger{color:#c33}
+  #tbpo .file-bar-btn.danger:hover{border-color:#c33}
   #tbpo .die-note{align-self:stretch;font-size:12.5px;line-height:1.5;color:var(--purple);background:#fff;border:1px solid #DCD3F6;border-left:3px solid var(--purple);border-radius:9px;padding:10px 12px}
   #tbpo .field.is-off{opacity:.45}
   #tbpo .field.is-off select{cursor:not-allowed}
@@ -406,6 +420,17 @@
           <div class="patch-preview" id="patchPreviewWrap">
             <div class="patch-canvas-box" id="patchCanvasBox">
               <canvas id="patchCanvas" width="520" height="318"></canvas>
+              <div class="canvas-drop" id="canvasDrop">
+                <span class="canvas-drop-i" aria-hidden="true">+</span>
+                <span class="canvas-drop-t">Click to upload your logo</span>
+                <span class="canvas-drop-s">or drop a file here &middot; PNG, JPG, WEBP, SVG</span>
+              </div>
+            </div>
+            <input type="file" id="logoInput" accept=".png,.jpg,.jpeg,.webp,.gif,.svg,.pdf,.ai" hidden>
+            <div class="file-bar" id="fileBar" hidden>
+              <span class="file-bar-name" id="logoHave"></span>
+              <button type="button" class="file-bar-btn" id="replaceLogo">Replace</button>
+              <button type="button" class="file-bar-btn danger" id="removeLogo">Remove</button>
             </div>
             <p class="fld fld-tight">Patch style</p>
             <div class="chips" id="shapes"></div>
@@ -440,15 +465,6 @@
         </div>
 
         <div class="patch-layout-fields">
-          <p class="fld">Your logo / artwork</p>
-          <div class="up-slot req" id="logoSlot">
-            <div class="up-slot-label">Patch logo <span class="up-tag">Used for the live preview</span></div>
-            <div class="up-slot-sub">PNG, JPG, WEBP, or SVG preview live. PDF or AI files still work for production, we'll build the mockup by hand.</div>
-            <input type="file" id="logoInput" accept=".png,.jpg,.jpeg,.webp,.gif,.svg,.pdf,.ai">
-            <div class="up-have" id="logoHave" hidden></div>
-          </div>
-          <p class="hint">No file handy? Skip it and email us after.</p>
-
           <p class="fld">Material <button type="button" class="info-btn" id="engraveBtn">How does engraving work?</button></p>
           <div class="matgrid" id="materials"></div>
           <div class="info-panel" id="engraveInfo" hidden>
@@ -461,29 +477,29 @@
           <p class="fld">Size <span style="color:#c33">*</span></p>
           <div class="chips" id="sizes"></div>
           <div id="sizeHint"></div>
+
+          <p class="fld">How should we send your proof? <span style="color:#c33">*</span></p>
+          <div class="field" style="max-width:340px">
+            <select id="proofMethod">
+              <option value="">Choose one...</option>
+              <option value="Email">Email</option>
+              <option value="Text message">Text message</option>
+            </select>
+          </div>
+          <div class="field" id="proofPhoneWrap" style="max-width:340px;margin-top:12px" hidden>
+            <label for="proofPhone">Mobile number for your proof <span style="color:#c33">*</span></label>
+            <input type="tel" id="proofPhone" inputmode="tel" autocomplete="tel" placeholder="(336) 555-0123">
+          </div>
+          <p class="hint" id="proofHint">We'll send your mockup within one business day. Nothing gets engraved until you approve it.</p>
+
+          <div class="field" style="margin-top:18px"><label for="notes">Notes</label><textarea id="notes" rows="3" placeholder="Placement preferences, deadlines, anything else we should know"></textarea></div>
+
+          <label class="social-optout">
+            <input type="checkbox" id="noSocial">
+            <span><strong>Keep my finished order private.</strong> Leave this unchecked if you're comfortable with us featuring your finished hats in our portfolio or on social media.</span>
+          </label>
         </div>
       </div>
-
-      <p class="fld">How should we send your proof? <span style="color:#c33">*</span></p>
-      <div class="field" style="max-width:340px">
-        <select id="proofMethod">
-          <option value="">Choose one...</option>
-          <option value="Email">Email</option>
-          <option value="Text message">Text message</option>
-        </select>
-      </div>
-      <div class="field" id="proofPhoneWrap" style="max-width:340px;margin-top:12px" hidden>
-        <label for="proofPhone">Mobile number for your proof <span style="color:#c33">*</span></label>
-        <input type="tel" id="proofPhone" inputmode="tel" autocomplete="tel" placeholder="(336) 555-0123">
-      </div>
-      <p class="hint" id="proofHint">We'll send your mockup within one business day. Nothing gets engraved until you approve it.</p>
-
-      <div class="field" style="margin-top:18px"><label for="notes">Notes</label><textarea id="notes" rows="3" placeholder="Placement preferences, deadlines, anything else we should know"></textarea></div>
-
-      <label class="social-optout">
-        <input type="checkbox" id="noSocial">
-        <span><strong>Keep my finished order private.</strong> Leave this unchecked if you're comfortable with us featuring your finished hats in our portfolio or on social media.</span>
-      </label>
 
       <div class="btn-row"><button type="button" class="back" data-back="2">Back</button><button type="button" class="next" id="next3">Review Order</button></div>
     </div>
@@ -1671,6 +1687,15 @@ function syncEdgeControl(){
   if (wrap) wrap.classList.toggle("is-off", die);
 }
 function effectiveEdge(){ return isDieCut() ? "none" : state.edge; }
+// Show the drop target only while there's no artwork; the file bar takes over
+// once there is, so replacing or removing doesn't need its own section.
+function syncFileUI(){
+  const drop = $("canvasDrop"), bar = $("fileBar"), have = $("logoHave");
+  const f = state.logoFile;
+  if (drop) drop.hidden = !!f;
+  if (bar) bar.hidden = !f;
+  if (have) have.textContent = f ? f.name : "";
+}
 function renderShapes(){
   const host = $("shapes");
   if (!host) return;
@@ -1742,7 +1767,7 @@ function applyCanvasShape(){
   renderPatchPreview();
 }
 function renderPatchDesign(){
-  renderMaterials(); renderShapes(); renderPlacements(); renderSizes(); syncEdgeControl(); applyCanvasShape();
+  renderMaterials(); renderShapes(); renderPlacements(); renderSizes(); syncEdgeControl(); syncFileUI(); applyCanvasShape();
 }
 
 /* ---------- review ---------- */
@@ -2073,13 +2098,40 @@ document.querySelectorAll("#tbpo [data-back]").forEach(b => {
   });
 });
 
+// Clicking or dropping onto the canvas is the upload control now. The file bar
+// under it handles replacing and removing.
+(function enableCanvasUpload(){
+  const drop = $("canvasDrop"), input = $("logoInput"), box = $("patchCanvasBox");
+  if (!drop || !input || !box) return;
+  drop.addEventListener("click", () => input.click());
+  const rep = $("replaceLogo"), rem = $("removeLogo");
+  if (rep) rep.addEventListener("click", () => input.click());
+  if (rem) rem.addEventListener("click", () => {
+    input.value = "";
+    input.dispatchEvent(new Event("change"));
+  });
+  ["dragenter","dragover"].forEach(t => box.addEventListener(t, e => {
+    e.preventDefault(); drop.classList.add("over");
+  }));
+  ["dragleave","drop"].forEach(t => box.addEventListener(t, e => {
+    e.preventDefault(); drop.classList.remove("over");
+  }));
+  box.addEventListener("drop", e => {
+    const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (!f) return;
+    const dt = new DataTransfer();
+    dt.items.add(f);
+    input.files = dt.files;
+    input.dispatchEvent(new Event("change"));
+  });
+})();
 $("logoInput").addEventListener("change", e => {
   const file = e.target.files && e.target.files[0];
-  const slot = $("logoSlot"), have = $("logoHave");
   if (!file){
     state.logoFile = null; state.logoImage = null;
-    if (slot) slot.classList.remove("has-file");
-    if (have){ have.hidden = true; have.textContent = ""; }
+    state.logoScale = 1; state.logoX = 0; state.logoY = 0;
+    if ($("logoScale")) $("logoScale").value = 100;
+    syncFileUI();
     renderPatchPreview();
     return;
   }
@@ -2091,8 +2143,7 @@ $("logoInput").addEventListener("change", e => {
   // new artwork starts centered at full size
   state.logoScale = 1; state.logoX = 0; state.logoY = 0;
   if ($("logoScale")) $("logoScale").value = 100;
-  if (slot) slot.classList.add("has-file");
-  if (have){ have.hidden = false; have.textContent = "Attached: " + file.name; }
+  syncFileUI();
 
   if (/^image\/(png|jpe?g|webp|gif|svg\+xml)$/i.test(file.type) || /\.(png|jpe?g|webp|gif|svg)$/i.test(file.name)){
     const reader = new FileReader();
