@@ -128,13 +128,21 @@ if (heroImg) {
 }
 
 // ── SCROLL REVEAL ──
+// rootMargin extends the trigger zone below the fold so sections start
+// fading in while they're still off-screen, instead of popping in empty
+// after a fast scroll flick (the old -30px margin meant a section had to
+// already be 30px INTO the viewport before its 0.75s fade even started).
 const revs = document.querySelectorAll('.reveal,.step');
+const revReduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const ro = new IntersectionObserver(entries => {
   entries.forEach(e => {
-    if (e.isIntersecting) setTimeout(() => e.target.classList.add('visible'), Number(e.target.dataset.delay || 0));
+    if (!e.isIntersecting) return;
+    if (revReduceMotion) e.target.classList.add('visible');
+    else setTimeout(() => e.target.classList.add('visible'), Number(e.target.dataset.delay || 0));
+    ro.unobserve(e.target);
   });
-}, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
-revs.forEach(el => ro.observe(el));
+}, { threshold: 0.01, rootMargin: '0px 0px 20% 0px' });
+revs.forEach(el => revReduceMotion ? el.classList.add('visible') : ro.observe(el));
 
 // ── STEP CIRCLE HIGHLIGHT ON SCROLL ──
 const stepEls = document.querySelectorAll('.step');

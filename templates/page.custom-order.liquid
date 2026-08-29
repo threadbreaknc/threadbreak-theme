@@ -64,6 +64,13 @@
     #tbco .rail-item{font-size:9.5px;padding:6px 2px}
   }
 
+  /* tap lock: briefly ignore taps elsewhere in the form while a collapse
+     (picking a hat, switching hats) is settling the scroll position, so a
+     fast second tap can't land on the wrong control underneath it. The
+     just-selected card is exempted so color-picking isn't blocked. */
+  #tbco .tap-lock > *{pointer-events:none}
+  #tbco .tap-lock .tap-lock-keep{pointer-events:auto}
+
   /* steps */
   #tbco .tbstep{background:#fff;border:1.5px solid var(--line);border-radius:16px;margin-bottom:14px;display:none;opacity:1;transform:none;text-align:left;padding:0;scroll-margin-top:150px}
   #tbco .tbstep.active{display:block;opacity:1;transform:none;border-color:var(--purple);box-shadow:0 6px 22px rgba(80,40,170,.10)}
@@ -81,6 +88,7 @@
   #tbco .hats.picking{grid-template-columns:1fr}
   #tbco .hat{border:1.5px solid var(--line);border-radius:13px;background:#fff;cursor:pointer;overflow:hidden;transition:.2s;position:relative;scroll-margin-top:150px}
   #tbco .hat:hover{border-color:#B7A6EE;transform:translateY(-2px)}
+  #tbco .hat:focus-visible{outline:2.5px solid var(--purple);outline-offset:2px}
   #tbco .hat.on{border-color:var(--purple);box-shadow:0 6px 22px rgba(80,40,170,.18);overflow:visible;z-index:5}
   #tbco .hats.picking .hat{display:none}
   #tbco .hats.picking .hat.on{display:grid;cursor:default}
@@ -160,11 +168,11 @@
   #tbco .dd.open .dd-menu{display:block}
   #tbco .dd-menu::-webkit-scrollbar{width:9px}
   #tbco .dd-menu::-webkit-scrollbar-thumb{background:#B7A6EE;border-radius:9px;border:2px solid #fff}
-  #tbco .dd-more{display:none;position:absolute;left:1px;right:1px;bottom:1px;z-index:41;pointer-events:none;height:44px;border-radius:0 0 11px 11px;background:linear-gradient(180deg,rgba(255,255,255,0),#fff 72%);align-items:flex-end;justify-content:center;padding-bottom:6px}
+  #tbco .dd-more{display:none;position:sticky;left:0;right:0;bottom:0;height:40px;margin-bottom:-40px;z-index:41;pointer-events:none;border-radius:0 0 11px 11px;background:linear-gradient(180deg,rgba(255,255,255,0),#fff 72%);align-items:flex-end;justify-content:center;padding-bottom:6px}
   #tbco .dd.open .dd-more.on{display:flex}
   #tbco .dd-more span{font-size:11px;font-weight:700;color:var(--purple);display:flex;align-items:center;gap:5px}
   #tbco .dd-opt{display:flex;align-items:center;gap:11px;padding:9px 12px;cursor:pointer;font-size:13.5px;border-bottom:1px solid #f2f1f6}
-  #tbco .dd-opt:last-child{border-bottom:none}
+  #tbco .dd-opt:last-of-type{border-bottom:none}
   #tbco .dd-opt:hover{background:var(--ice)}
   #tbco .dd-opt img{width:42px;height:42px;object-fit:contain;border-radius:7px;background:#fff;border:1px solid var(--line);flex:0 0 auto}
   #tbco .dd-opt.picked{background:#eee9fb}
@@ -373,7 +381,7 @@
     <div class="tbstep-body">
       <p class="tbstep-hint"><strong>5 hat minimum.</strong> Wholesale pricing starts at 10, with additional volume discounts at 24+. Mixed colors all count toward the same total.</p>
       <div class="qty-row">
-        <div class="field"><label for="qty">Total quantity (5 minimum)</label><input class="qty-input" id="qty" type="number" min="5" step="1" inputmode="numeric" placeholder="5"></div>
+        <div class="field"><label for="qty">Total quantity (5 minimum)</label><input class="qty-input" id="qty" type="number" min="5" step="1" inputmode="numeric" value="5"></div>
       </div>
       <div class="price-now" id="priceNow"></div>
       <div id="nudge"></div>
@@ -792,7 +800,7 @@ const sizingOf = s => (/^rich/i.test(s.id) || /richardson/i.test(s.brand))
 const specsOf = s => (s.desc || "").split("\u00b7").map(x => x.trim()).filter(x => x && !/size|fits/i.test(x));
 
 const state = {
-  style: null, colors: [], split: {}, qty: null, activeColor: null,
+  style: null, colors: [], split: {}, qty: 5, activeColor: null,
   deco: DECOS[0], places: new Set(["front"]), frontPos: "Center front",
   files: { front:null, side:null, back:null },
   step: 1, maxStep: 1, done: new Set()
@@ -880,6 +888,39 @@ function easeScrollToEl(el, duration){
   easeScrollTo(y, duration);
 }
 
+// Briefly ignore taps on everything in the form except `keepSelector` while
+// a layout settles. Selecting a hat collapses the grid instantly, and a
+// second tap that lands mid-collapse used to hit whatever slid underneath
+// it (often the "get a quote instead" link) instead of the thing the
+// visitor meant to hit.
+let tapLockTimer = null;
+function lockTaps(ms, keepSelector){
+  const root = document.getElementById("tbFormSteps");
+  if (!root) return;
+  root.classList.add("tap-lock");
+  root.querySelectorAll(".tap-lock-keep").forEach(el => el.classList.remove("tap-lock-keep"));
+  if (keepSelector) root.querySelectorAll(keepSelector).forEach(el => el.classList.add("tap-lock-keep"));
+  if (tapLockTimer) clearTimeout(tapLockTimer);
+  tapLockTimer = setTimeout(() => root.classList.remove("tap-lock"), ms);
+}
+
+// Call right after a synchronous DOM change (like the hat grid collapsing)
+// that may have shifted `targetSel` away from where the tapped element used
+// to be. Cancels out the instant jump first so nothing visibly moves under
+// the visitor's thumb, locks out stray taps elsewhere for a beat, then
+// eases the rest of the way into place only if it's actually needed.
+function settleAfterCollapse(beforeTop, targetSel){
+  const target = document.querySelector(targetSel);
+  if (!target) return;
+  const jump = target.getBoundingClientRect().top - beforeTop;
+  if (Math.abs(jump) > 1) window.scrollBy(0, jump);
+  lockTaps(380, targetSel);
+  requestAnimationFrame(() => {
+    const y = window.scrollY + target.getBoundingClientRect().top - railBottom();
+    if (Math.abs(y - window.scrollY) > 24) easeScrollTo(y, 420);
+  });
+}
+
 /* ---------- step 1: hats ---------- */
 function renderHats(){
   const picking = !!state.style;
@@ -897,7 +938,7 @@ function renderHats(){
       const lg = brandLogo(s);
       // the first row paints immediately; everything below the fold defers
       const eager = idx < 4;
-      return '<div class="hat" data-hat="' + s.id + '">' + badge +
+      return '<div class="hat" data-hat="' + s.id + '" role="button" tabindex="0" aria-label="Select ' + nameOf(s) + ', as low as ' + money(low) + ' per hat">' + badge +
         '<div class="hat-imgwrap">' +
           '<img class="hat-img" src="' + s.imgs[0] + '" alt="' + nameOf(s) + '" loading="' + (eager ? 'eager' : 'lazy') + '" decoding="async" fetchpriority="' + (eager ? 'high' : 'low') + '">' +
           (lg ? '<img class="hat-logo" src="' + lg.src + '" alt="' + lg.alt + '" loading="lazy">' : '') +
@@ -937,23 +978,33 @@ function renderHats(){
   }).join("");
 
   grid.querySelectorAll("[data-hat]").forEach(el => {
-    el.addEventListener("click", ev => {
+    const pick = ev => {
       if (ev.target.closest(".hat-expand") || ev.target.closest("[data-change]")) return;
       const s = STYLES.find(x => x.id === el.dataset.hat);
       if (state.style && state.style.id === s.id) return;
+      // Remember where the tapped card sat on screen before the grid
+      // collapses out from under it.
+      const beforeTop = el.getBoundingClientRect().top;
       state.style = s; state.colors = []; state.split = {}; state.activeColor = null;
       renderHats(); sync();
-      // The grid collapses to one card, so the page gets shorter. Only correct the
-      // scroll position if that leaves the card outside the viewport; otherwise stay put.
-      requestAnimationFrame(() => easeScrollToEl(document.querySelector("#tbco .hat.on"), 900));
+      settleAfterCollapse(beforeTop, "#tbco .hat.on");
+    };
+    el.addEventListener("click", pick);
+    // Closed cards carry role="button"/tabindex so they're reachable and
+    // operable from a keyboard, not just by mouse/touch.
+    el.addEventListener("keydown", ev => {
+      if (ev.key !== "Enter" && ev.key !== " ") return;
+      ev.preventDefault();
+      pick(ev);
     });
   });
   const chg = grid.querySelector("[data-change]");
   if (chg) chg.addEventListener("click", ev => {
     ev.stopPropagation();
+    const beforeTop = chg.getBoundingClientRect().top;
     state.style = null; state.colors = []; state.split = {}; state.activeColor = null;
     renderHats(); sync();
-    requestAnimationFrame(() => easeScrollToEl(document.getElementById("hats"), 900));
+    settleAfterCollapse(beforeTop, "#hats");
   });
   if (picking) renderColorPanel();
 }
@@ -970,14 +1021,17 @@ function renderColorPanel(){
       '<div class="dd" id="dd">' +
         '<button type="button" class="dd-btn" id="ddBtn"><span id="ddLabel">Select a color</span>' +
         '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></button>' +
-        '<div class="dd-more" id="ddMore"><span>Scroll for more colors <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></span></div>' +
         '<div class="dd-menu" id="ddMenu">' +
-          s.colors.map(c =>
+          s.colors.map((c, i) =>
             '<div class="dd-opt ' + (state.colors.indexOf(c) > -1 ? "picked" : "") + '" data-color="' + c + '">' +
-              '<img src="' + colorImg(s, c) + '" alt="' + c + '" loading="lazy" onerror="this.onerror=null;this.src=\'' + s.imgs[0] + '\'">' +
+              '<img src="' + colorImg(s, c) + '" alt="' + c + '" loading="' + (i < 8 ? "eager" : "lazy") + '" decoding="async" onerror="this.onerror=null;this.src=\'' + s.imgs[0] + '\'">' +
               '<span>' + c + '</span>' +
               (state.colors.indexOf(c) > -1 ? '<span class="tick">&#10003;</span>' : "") +
             '</div>').join("") +
+          // lives inside #ddMenu so "sticky" pins it to the bottom of the
+          // actual scrollable list, not the collapsed #dd wrapper -- that
+          // mismatch was what made it float over the closed button.
+          '<div class="dd-more" id="ddMore"><span>Scroll for more colors <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M6 9l6 6 6-6"/></svg></span></div>' +
         '</div>' +
       '</div>' +
       '<div class="picked-row" id="pickedRow"></div>' +
@@ -1195,7 +1249,7 @@ function goto(step){
   // Land on the top of the active step, offset so the pinned rail never covers it.
   requestAnimationFrame(() => {
     const sec = document.querySelector('#tbco .tbstep.active');
-    if (sec) easeScrollToEl(sec, 800);
+    if (sec) easeScrollToEl(sec, 500);
   });
   sync();
 }
@@ -1350,6 +1404,12 @@ async function sendToDrive(type){
 async function submitCheckout(){
   const btn = $("checkout");
   btn.disabled = true;
+  // Give instant feedback right where the tap happened, before the first
+  // await -- previously the button text only changed on the "has a logo
+  // file" path, so submitting with no file attached (or a slow network)
+  // left the button reading "Add to Cart" for several seconds and looking
+  // unresponsive.
+  btn.textContent = "Adding...";
   $("cartErr").classList.remove("show");
 
   const hasFiles = activeUploadSlots().some(p => state.files[p]);

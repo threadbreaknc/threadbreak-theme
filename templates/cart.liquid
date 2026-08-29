@@ -14,7 +14,13 @@
       <p class="cart-hero-nudge">You're almost there. Free shipping to the lower 48.</p>
     </div>
     <div class="cart-progress-wrap">
-      <p class="cart-progress-label">{{ cart.item_count }} item{% if cart.item_count > 1 %}s{% endif %} in your cart &middot; you're one step from done</p>
+      {%- comment -%}
+        cart.item_count sums quantity across every line (a qty-24 custom
+        order plus one hat reads as "25 items"), which doesn't match what
+        the customer sees below. cart.items.size counts cart lines instead,
+        matching the rows actually listed.
+      {%- endcomment -%}
+      <p class="cart-progress-label">{{ cart.items.size }} item{% if cart.items.size > 1 %}s{% endif %} in your cart &middot; you're one step from done</p>
       <div class="cart-progress-bar"><div class="cart-progress-fill"></div></div>
     </div>
   </section>
