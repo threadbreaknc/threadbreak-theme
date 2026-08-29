@@ -1834,9 +1834,16 @@ function goto(step){
   });
   if (step === 4) renderReview();
   renderRail();
+  // Only move the page if the new step actually landed somewhere the visitor
+  // can't already see. Forcing a scroll on every Continue/Back tap read as
+  // the page auto-scrolling on its own even when nothing needed to move.
   requestAnimationFrame(() => {
     const sec = document.querySelector('#tbpo .tbstep.active');
-    if (sec) easeScrollToEl(sec, 800);
+    if (!sec) return;
+    const top = sec.getBoundingClientRect().top;
+    const visibleFrom = railBottom();
+    const visibleTo = window.innerHeight - 60;
+    if (top < visibleFrom - 4 || top > visibleTo) easeScrollToEl(sec, 500);
   });
   sync();
 }

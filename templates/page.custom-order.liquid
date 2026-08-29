@@ -1246,10 +1246,18 @@ function goto(step){
   });
   if (step === 4) renderReview();
   renderRail();
-  // Land on the top of the active step, offset so the pinned rail never covers it.
+  // Only move the page if the new step actually landed somewhere the visitor
+  // can't already see (e.g. they scrolled down to re-check something, or the
+  // previous step was much taller/shorter). Most Continue/Back taps don't
+  // need to move the viewport at all, and forcing it every time read as the
+  // page auto-scrolling on its own.
   requestAnimationFrame(() => {
     const sec = document.querySelector('#tbco .tbstep.active');
-    if (sec) easeScrollToEl(sec, 500);
+    if (!sec) return;
+    const top = sec.getBoundingClientRect().top;
+    const visibleFrom = railBottom();
+    const visibleTo = window.innerHeight - 60;
+    if (top < visibleFrom - 4 || top > visibleTo) easeScrollToEl(sec, 500);
   });
   sync();
 }
