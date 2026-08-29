@@ -250,10 +250,13 @@ h1.hero-h1 .accent{
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;position:relative;}
 .step{
   text-align:center;padding:0 2rem;position:relative;
-  opacity:0;transform:translateY(30px);
-  transition:opacity 0.6s ease,transform 0.6s ease;
+  opacity:0;transform:translateY(16px);
+  transition:opacity 0.4s ease,transform 0.4s ease;
 }
 .step.visible{opacity:1;transform:translateY(0);}
+@media (prefers-reduced-motion: reduce){
+  .step{opacity:1;transform:none;transition:none}
+}
 .step::after{content:'→';position:absolute;top:2rem;right:-0.5rem;font-size:1rem;color:rgba(155,89,212,0.25);}
 .step:last-child::after{display:none;}
 .step-num{
@@ -324,9 +327,14 @@ footer{
 .footer-brand p{display:none;}
 
 /* ── REVEAL ── */
-.reveal{opacity:0;transform:translateY(35px);transition:opacity 0.75s ease,transform 0.75s ease;}
+/* Shorter, smaller-travel fade so a fast scroll flick outruns it less
+   often; paired with the earlier IntersectionObserver trigger in theme.js. */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity 0.4s ease,transform 0.4s ease;}
 .reveal.visible{opacity:1;transform:translateY(0);}
-.reveal-d1{transition-delay:0.1s;}.reveal-d2{transition-delay:0.22s;}.reveal-d3{transition-delay:0.38s;}
+.reveal-d1{transition-delay:0.06s;}.reveal-d2{transition-delay:0.12s;}.reveal-d3{transition-delay:0.18s;}
+@media (prefers-reduced-motion: reduce){
+  .reveal{opacity:1;transform:none;transition:none}
+}
 
 @keyframes fadeUp{to{opacity:1;transform:translateY(0);}}
 @keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
