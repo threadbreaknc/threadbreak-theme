@@ -7900,3 +7900,26 @@ body:has(.product-page) .jdgm-preview-badge { display: block; }
   .qis-inner { grid-template-columns: 1fr; gap: 2rem; }
   .qis-divider { display: none; }
 }
+
+/* ── PRODUCT GALLERY BRAND BADGE (all product templates) ──
+   The brand-logo PNGs (Otto/Yupoong/Atonal) are 1:1 squares with the
+   wordmark inset small, so this box has to be sized for the badge, not
+   stretched to fill the gallery. Without this, `.product-gallery-main img`
+   above (width:100%/height:100% inside the 640px media query) applies to
+   this image too and blows the logo up to fill the whole product photo.
+   This used to only be defined inside product.liquid's Custom Hat Bundle
+   block, so every non-bundle product (pre-made hats, etc.) shipped with
+   the logo stretched edge-to-edge on mobile. */
+.product-gallery-main { position: relative; }
+.product-gallery-main img.gallery-brand {
+  position: absolute; top: -14px; right: 4px;
+  width: 132px !important; height: 132px !important; max-width: 132px !important;
+  object-fit: contain !important; z-index: 3; mix-blend-mode: multiply;
+  pointer-events: none; display: block;
+}
+@media (max-width: 600px) {
+  .product-gallery-main img.gallery-brand {
+    width: 92px !important; height: 92px !important; max-width: 92px !important;
+    top: -8px; right: 2px;
+  }
+}

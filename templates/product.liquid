@@ -274,18 +274,8 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
     .product-thumbs::-webkit-scrollbar{display:none;}
     .product-thumb{width:56px !important;height:56px !important;flex:0 0 auto;}
   }
-  .product-gallery-main{position:relative}
-  /* the logo PNGs are 1:1 squares with the wordmark inset, so the box has to be
-     sized for the square, not the mark. No chip or padding, the art carries itself. */
-  /* theme.css has `.product-gallery-main img{width:100%}` inside a mobile query, which
-     outranks a bare class and stretched the logo across the hat. Match its specificity
-     and force the size so the mark stays a badge at every width. */
-  .product-gallery-main img.gallery-brand{position:absolute;top:-14px;right:4px;
-    width:132px !important;height:132px !important;max-width:132px !important;object-fit:contain !important;
-    z-index:3;mix-blend-mode:multiply;pointer-events:none;display:block}
-  @media(max-width:600px){
-    .product-gallery-main img.gallery-brand{width:92px !important;height:92px !important;max-width:92px !important;top:-8px;right:2px}
-  }
+  /* .gallery-brand badge sizing now lives in theme.css (global) so it applies
+     to every product template, not just Custom Hat Bundle pages. */
   /* tighter vertical rhythm between title, rating and price */
   .product-title{margin-bottom:8px}
   .bundle-trust{margin:0 0 10px}
