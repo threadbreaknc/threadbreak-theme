@@ -486,6 +486,25 @@
     return;
   }
 
+  // Keep the FAB clear of the order-builder's sticky Continue bar
+  // (id="bar" on the custom order + patch order pages, shown once a
+  // hat/patch is picked). Without this the "10% off" button sits at a
+  // fixed bottom offset and the bar slides up right on top of it.
+  var stickyBar = document.getElementById('bar');
+  if (stickyBar) {
+    var repositionFab = function () {
+      if (stickyBar.classList.contains('show')) {
+        var h = Math.round(stickyBar.getBoundingClientRect().height);
+        fab.style.bottom = 'calc(' + h + 'px + 14px)';
+      } else {
+        fab.style.bottom = '';
+      }
+    };
+    repositionFab();
+    new MutationObserver(repositionFab).observe(stickyBar, { attributes: true, attributeFilter: ['class'] });
+    window.addEventListener('resize', repositionFab);
+  }
+
   // FAB opens popup
   fab.addEventListener('click', function() {
     overlay.classList.remove('nl-hidden');
