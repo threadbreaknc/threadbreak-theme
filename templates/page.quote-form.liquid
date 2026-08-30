@@ -113,7 +113,8 @@
 
     <div class="q-field">
       <label for="qQty">How many? <span class="q-req">*</span></label>
-      <input type="number" id="qQty" min="1" inputmode="numeric" placeholder="Total quantity">
+      <input type="number" id="qQty" min="5" inputmode="numeric" placeholder="Total quantity (5 minimum)">
+      <p class="q-hint">We have a 5 hat minimum per order.</p>
     </div>
 
     <div class="q-field">
@@ -285,14 +286,20 @@
   }
 
   function validate(){
-    var fieldsOk = val("qStyle") && val("qColor") && val("qQty") && val("qName") &&
+    // Quote requests below the 5 hat minimum used to sail straight through -
+    // qQty just had to be non-empty, so "2" validated fine.
+    var qtyVal = val("qQty");
+    var qtyOk = qtyVal && parseInt(qtyVal, 10) >= 5;
+    var fieldsOk = val("qStyle") && val("qColor") && qtyOk && val("qName") &&
              /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val("qEmail"));
     var ok = fieldsOk;
     var errEl = $("qErr");
-    errEl.textContent = "Please fill in the required fields so we can quote your order.";
+    errEl.textContent = (qtyVal && !qtyOk)
+      ? "We have a 5 hat minimum per order - please enter 5 or more."
+      : "Please fill in the required fields so we can quote your order.";
     errEl.classList.toggle("show", !ok);
     if (!ok){
-      var first = !val("qStyle") ? "qStyle" : !val("qColor") ? "qColor" : !val("qQty") ? "qQty" :
+      var first = !val("qStyle") ? "qStyle" : !val("qColor") ? "qColor" : !qtyOk ? "qQty" :
                   !val("qName") ? "qName" : "qEmail";
       $(first).focus(); $(first).scrollIntoView({ behavior:"smooth", block:"center" });
     }
