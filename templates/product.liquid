@@ -218,11 +218,6 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 .bundle-en-example img{max-width:100%;border-radius:10px;border:1px solid #E2E0EA;display:block}
   .leadtime-notice{margin:14px 0 4px;font-size:14px;color:#3d3a4a;background:#F3EFFC;border:1px solid #E2E0EA;border-radius:10px;padding:10px 14px;}
   .leadtime-notice strong{color:#5028AA;}
-  .fit-specs{margin:22px 0 0;padding:18px 20px;background:#fff;border:1px solid #E2E0EA;border-radius:12px;}
-  .fit-specs-head{font-weight:700;font-size:15px;margin:0 0 10px;color:#14121C;}
-  .fit-specs ul{margin:0;padding-left:18px;}
-  .fit-specs li{font-size:14px;line-height:1.6;color:#3d3a4a;margin-bottom:6px;}
-  .fit-specs-note{font-size:13px;color:#6B6A78;margin:10px 0 0;}
   .product-price-was{margin-left:8px;font-size:0.8em;color:#8b8996;text-decoration:line-through;}
   /* thumbnail dropdown for options with many values */
   .option-swatches.as-dropdown{position:relative;max-width:420px}
@@ -335,7 +330,7 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 {%- if is_clearance -%}
 <p class="leadtime-notice">Ready to ship &middot; <strong>sold as-is</strong>, each hat has a disclosed cosmetic or production issue</p>
 {%- elsif is_premade -%}
-<p class="leadtime-notice">Embroidered to order &middot; ships in <strong>2-5 business days</strong></p>
+<p class="leadtime-notice"><strong>Made to order</strong></p>
 {%- elsif is_apparel -%}
 <p class="leadtime-notice">Printed to order &middot; ships in <strong>2-5 business days</strong></p>
 {%- endif -%}
@@ -386,15 +381,6 @@ Free shipping
 
 <div class="product-desc">{{ product.description }}</div>
 
-<div class="fit-specs">
-  <p class="fit-specs-head">Fit &amp; sizing</p>
-  <ul>
-    <li><strong>One size fits most adults.</strong> Adjustable snapback closure, generally fits about 6 5/8 to 7 5/8.</li>
-    <li>Structured crown that holds its shape.</li>
-    <li>Embroidered in-house in Burlington, NC.</li>
-  </ul>
-  <p class="fit-specs-note">Head sizes vary. If you are near the top of that range, the snapback opens to its widest setting.</p>
-</div>
 </div>
 
 </div>
