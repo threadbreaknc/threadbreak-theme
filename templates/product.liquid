@@ -229,7 +229,7 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
   .opt-dd-chev{flex:0 0 auto;transition:transform .18s}
   .opt-dd-btn[aria-expanded="true"] .opt-dd-chev{transform:rotate(180deg)}
   .opt-dd-thumb-wrap img{width:40px;height:40px;object-fit:contain;border-radius:7px;border:1px solid #E2E0EA;display:block}
-  .opt-dd-menu{position:absolute;z-index:40;top:calc(100% + 6px);left:0;right:0;max-height:300px;overflow-y:auto;background:#fff;border:1.5px solid #E2E0EA;border-radius:12px;box-shadow:0 14px 34px rgba(20,18,28,.16);scrollbar-width:thin}
+  .opt-dd-menu{position:absolute;z-index:200;top:calc(100% + 6px);left:0;right:0;max-height:300px;overflow-y:auto;background:#fff;border:1.5px solid #E2E0EA;border-radius:12px;box-shadow:0 14px 34px rgba(20,18,28,.16);scrollbar-width:thin}
   .opt-dd-menu::-webkit-scrollbar{width:9px}
   .opt-dd-menu::-webkit-scrollbar-thumb{background:#B7A6EE;border-radius:9px;border:2px solid #fff}
   .opt-dd-opt{width:100%;display:flex;align-items:center;gap:11px;padding:8px 12px;background:none;border:none;border-bottom:1px solid #f2f1f6;font-family:inherit;font-size:14px;cursor:pointer;text-align:left;color:#14121C}
@@ -289,7 +289,7 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
   .pbo-layout{display:flex;flex-direction:column;gap:6px}
   @media(min-width:900px){
     .pbo-layout{display:grid;grid-template-columns:minmax(260px,320px) 1fr;gap:24px;align-items:start}
-    .pbo-layout-preview{position:sticky;top:18px}
+    .pbo-layout-preview{position:sticky;top:18px;z-index:1}
   }
   .pbo-canvas-wrap{margin-top:14px;display:flex;flex-direction:column;align-items:center;gap:10px;background:#F3EFFC;border-radius:14px;padding:18px}
   .pbo-canvas-box{position:relative;width:100%;max-width:300px;aspect-ratio:1.633;border-radius:14px;overflow:hidden;background:#fff;border:1.5px solid #E2E0EA;transition:aspect-ratio .2s ease;cursor:grab;touch-action:none}
@@ -416,7 +416,7 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 </div>
 </div>
 <p class="pbo-die-note" id="pboDieNote" hidden><strong>Heads up:</strong> the die-cut outline here is a rough approximation generated from your logo. Your proof will show the real cut line, properly smoothed.</p>
-<p class="bundle-hint" style="text-align:center">This is a live approximation built from your logo and a sample of the material photo, not the exact final engraving. We'll email a real mockup before anything hits the laser.</p>
+<p class="bundle-hint" style="text-align:center">This is a live approximation built from your logo and a sample of the material photo, not the exact final engraving.</p>
 </div>
 </div>
 
@@ -437,9 +437,23 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 </div>
 
 <div class="bundle-opt">
-<label class="bundle-opt-label">Patch size</label>
-<p class="bundle-hint"><strong>Medium</strong> is the fixed size for this promo package.</p>
-<input type="hidden" name="properties[Patch size]" value="Medium">
+<label class="bundle-opt-label">Placement <span class="bundle-req">*</span></label>
+<div class="pbo-chips" id="pboPlacements"></div>
+<input type="hidden" name="properties[Patch placement]" id="pboPlacementInput" value="Front center">
+</div>
+
+<div class="bundle-opt">
+<label class="bundle-opt-label" for="pbo-proof-method">How should we send your proof? <span class="bundle-req">*</span></label>
+<select id="pbo-proof-method" name="properties[Proof delivery]" class="bundle-select" required>
+<option value="">Choose one...</option>
+<option value="Email">Email</option>
+<option value="Text message">Text message</option>
+</select>
+<p class="bundle-hint" id="pbo-proof-hint">We'll send your proof within one business day. Nothing gets engraved until you approve it.</p>
+</div>
+<div class="bundle-opt" id="pbo-proof-phone-wrap" hidden>
+<label class="bundle-opt-label" for="pbo-proof-phone">Mobile number for your proof <span class="bundle-req">*</span></label>
+<input type="tel" id="pbo-proof-phone" name="properties[Proof phone]" class="bundle-select" inputmode="tel" autocomplete="tel" placeholder="(336) 555-0123">
 </div>
 </div>
 </div>
@@ -467,9 +481,14 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
     { id:"circle",    label:"Circle", ratio:1 },
     { id:"diecut",    label:"Die cut (follows your logo)", ratio:1.633 }
   ];
+  var PLACEMENTS = [
+    { id:"center", label:"Front center" },
+    { id:"left",   label:"Front left" },
+    { id:"right",  label:"Front right" }
+  ];
 
   var state = {
-    material: MATERIALS[0], shape: SHAPES[0],
+    material: MATERIALS[0], shape: SHAPES[0], placement: PLACEMENTS[0],
     logoFile: null, logoImage: null, threshold: 140, invert: false, edge: "none",
     logoScale: 1, logoX: 0, logoY: 0
   };
@@ -987,6 +1006,19 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
       });
     });
   }
+  function renderPlacements(){
+    var host = $("pboPlacements");
+    host.innerHTML = PLACEMENTS.map(function(p){
+      return '<button type="button" class="pbo-chip' + (p.id === state.placement.id ? ' on' : '') + '" data-place="' + p.id + '">' + p.label + '</button>';
+    }).join("");
+    host.querySelectorAll("[data-place]").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        state.placement = PLACEMENTS.filter(function(p){ return p.id === btn.dataset.place; })[0];
+        $("pboPlacementInput").value = state.placement.label;
+        renderPlacements();
+      });
+    });
+  }
 
   /* ---------- upload + controls ---------- */
   (function enableCanvasUpload(){
@@ -1095,9 +1127,24 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
     });
   })();
 
+  (function enableProofToggle(){
+    var sel = $("pbo-proof-method");
+    if (!sel) return;
+    var wrap = $("pbo-proof-phone-wrap"), phone = $("pbo-proof-phone"), hint = $("pbo-proof-hint");
+    sel.addEventListener("change", function(){
+      var isText = sel.value === "Text message";
+      if (wrap){ if (isText) wrap.removeAttribute("hidden"); else { wrap.setAttribute("hidden",""); if (phone) phone.value = ""; } }
+      if (phone) phone.required = isText;
+      if (hint) hint.textContent = isText
+        ? "We'll text your proof from (336) 585-6176 within one business day. Nothing gets engraved until you approve it."
+        : "We'll email your proof from help@threadbreak.com within one business day. Nothing gets engraved until you approve it.";
+    });
+  })();
+
   preloadMaterials();
   renderMaterials();
   renderShapes();
+  renderPlacements();
   syncEdgeControl();
   syncFileUI();
   applyCanvasShape();
