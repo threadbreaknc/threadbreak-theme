@@ -398,6 +398,10 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 <button type="button" class="pbo-file-bar-btn danger" id="pboRemove">Remove</button>
 </div>
 <div class="pbo-controls">
+<label class="pbo-invert">
+<input type="checkbox" id="pbo-invert">
+<span>Invert (swap engraved / material areas)</span>
+</label>
 <div>
 <label class="bundle-opt-label" for="pbo-threshold" style="margin-bottom:2px">Engrave detail (threshold)</label>
 <input type="range" id="pbo-threshold" min="10" max="245" value="140">
@@ -407,10 +411,6 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 <input type="range" id="pbo-logoscale" min="40" max="150" value="100">
 </div>
 <button type="button" class="pbo-reset" id="pbo-reset">Recenter logo</button>
-<label class="pbo-invert">
-<input type="checkbox" id="pbo-invert">
-<span>Invert (swap engraved / material areas)</span>
-</label>
 <div class="pbo-field-edge">
 <label class="bundle-opt-label" for="pbo-edge" style="margin-bottom:2px">Edge finish</label>
 <select id="pbo-edge" class="bundle-select">
