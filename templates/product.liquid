@@ -292,9 +292,11 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
   .bundle-file{cursor:pointer;font-size:13px;color:#6B6A78;}
   /* Custom Patch Bundle: full patch designer, same options as the standalone patch order page */
   .pbo-layout{display:flex;flex-direction:column;gap:6px}
+  .pbo-layout-fields{display:flex;flex-direction:column;gap:26px;margin-top:22px}
   @media(min-width:900px){
     .pbo-layout{display:grid;grid-template-columns:minmax(260px,320px) 1fr;gap:24px;align-items:start}
     .pbo-layout-preview{position:sticky;top:18px;z-index:1}
+    .pbo-layout-fields{margin-top:0}
   }
   .pbo-canvas-wrap{margin-top:14px;display:flex;flex-direction:column;align-items:center;gap:10px;background:#F3EFFC;border-radius:14px;padding:18px}
   .pbo-canvas-box{position:relative;width:100%;max-width:300px;aspect-ratio:1.633;border-radius:14px;overflow:hidden;background:#fff;border:1.5px solid #E2E0EA;transition:aspect-ratio .2s ease;cursor:grab;touch-action:none}
