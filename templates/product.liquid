@@ -42,7 +42,7 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
 <div class="product-info">
 <h1 class="product-title">{{ product.title }}</h1>
 {%- assign title_is_bundle = false -%}
-{%- if product.type == 'Custom Hat Bundle' -%}{%- assign title_is_bundle = true -%}{%- endif -%}
+{%- if product.type == 'Custom Hat Bundle' or product.type == 'Custom Patch Bundle' -%}{%- assign title_is_bundle = true -%}{%- endif -%}
 {%- if title_is_bundle -%}
   {%- assign jm = shop.metafields.judgeme -%}
   <a href="/pages/reviews" class="bundle-trust">
@@ -56,6 +56,8 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
 {%- assign is_clearance = false -%}
 {%- assign is_bundle = false -%}
 {%- if product.type == 'Custom Hat Bundle' -%}{%- assign is_bundle = true -%}{%- endif -%}
+{%- assign is_patch_bundle = false -%}
+{%- if product.type == 'Custom Patch Bundle' -%}{%- assign is_patch_bundle = true -%}{%- endif -%}
 {%- for col in product.collections -%}
   {%- if col.handle == 'apparel' -%}{%- assign is_apparel = true -%}{%- endif -%}
   {%- if col.handle == 'pre-made-hats' -%}{%- assign is_premade = true -%}{%- endif -%}
@@ -193,7 +195,7 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 {%- endfor -%}
 {%- endunless -%}
 
-{%- if is_bundle -%}
+{%- if is_bundle or is_patch_bundle -%}
 <style>
 .bundle-opts{margin:18px 0;display:flex;flex-direction:column;gap:16px}
 .bundle-opt-label{display:block;font-weight:600;font-size:15px;margin-bottom:6px;color:#14121C}
@@ -283,7 +285,24 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
     padding:9px 18px;margin-right:11px;cursor:pointer;transition:background .15s;}
   .bundle-file::file-selector-button:hover{background:#6234c9;}
   .bundle-file{cursor:pointer;font-size:13px;color:#6B6A78;}
+  /* Custom Patch Bundle: simplified patch designer */
+  .pbo-canvas-wrap{margin-top:14px;display:flex;flex-direction:column;align-items:center;gap:12px;background:#F3EFFC;border-radius:14px;padding:18px}
+  .pbo-canvas-box{position:relative;width:100%;max-width:300px;aspect-ratio:1.633;border-radius:14px;overflow:hidden;background:#fff;border:1.5px solid #E2E0EA;transition:aspect-ratio .2s ease}
+  .pbo-canvas-box canvas{width:100%;height:100%;display:block}
+  .pbo-controls{width:100%;max-width:340px;display:flex;flex-direction:column;gap:6px}
+  .pbo-controls input[type=range]{width:100%;accent-color:#5028AA}
+  .pbo-matgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;margin-top:6px}
+  .pbo-mat-chip{display:flex;flex-direction:column;align-items:center;gap:5px;background:#fff;border:1.5px solid #E2E0EA;border-radius:11px;padding:8px;cursor:pointer;font-family:inherit;transition:.15s}
+  .pbo-mat-chip:hover{border-color:#B7A6EE}
+  .pbo-mat-chip.on{border-color:#5028AA;background:#F3EFFC;box-shadow:0 0 0 2px rgba(80,40,170,.14)}
+  .pbo-mat-swatch{width:100%;aspect-ratio:1;border-radius:8px;background-size:cover;background-position:center;border:1px solid #E2E0EA}
+  .pbo-mat-name{font-size:11px;font-weight:600;text-align:center;line-height:1.2}
+  .pbo-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+  .pbo-chip{background:#fff;border:1.5px solid #E2E0EA;border-radius:10px;padding:8px 13px;font-family:inherit;font-size:13.5px;cursor:pointer;color:#14121C;transition:.15s}
+  .pbo-chip:hover{border-color:#B7A6EE}
+  .pbo-chip.on{border-color:#5028AA;background:#F3EFFC;color:#5028AA;font-weight:600}
 </style>
+{%- if is_bundle -%}
 <div class="bundle-opts">
 <div class="bundle-opt">
 <label class="bundle-opt-label" for="logo-placement">Front logo placement <span class="bundle-req">*</span></label>
@@ -325,6 +344,210 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 </div>
 </div>
 </div>
+{%- endif -%}
+
+{%- if is_patch_bundle -%}
+<div class="bundle-opts">
+<div class="bundle-opt">
+<label class="bundle-opt-label">Patch material <span class="bundle-req">*</span></label>
+<div class="pbo-matgrid" id="pboMaterials"></div>
+<input type="hidden" name="properties[Patch material]" id="pboMaterialInput" value="Brushed Silver">
+</div>
+
+<div class="bundle-opt">
+<label class="bundle-opt-label">Patch shape <span class="bundle-req">*</span></label>
+<div class="pbo-chips" id="pboShapes"></div>
+<input type="hidden" name="properties[Patch shape]" id="pboShapeInput" value="Rectangle">
+</div>
+
+<div class="bundle-opt">
+<label class="bundle-opt-label">Patch size</label>
+<p class="bundle-hint"><strong>Medium</strong> is the fixed size for this promo package.</p>
+<input type="hidden" name="properties[Patch size]" value="Medium">
+</div>
+
+<div class="bundle-opt">
+<label class="bundle-opt-label" for="pbo-artwork">Upload your logo <span class="bundle-req">*</span></label>
+<input type="file" id="pbo-artwork" name="properties[Artwork]" class="bundle-file" accept="image/*,.pdf,.ai,.eps,.svg,.png,.jpg,.jpeg" required>
+<p class="bundle-hint">Front engraving. PNG, JPG, PDF, AI, EPS, or SVG. We'll confirm your design before engraving.</p>
+
+<div class="pbo-canvas-wrap">
+<div class="pbo-canvas-box" id="pboCanvasBox">
+<canvas id="pboCanvas" width="520" height="318"></canvas>
+</div>
+<div class="pbo-controls">
+<label class="bundle-opt-label" for="pbo-threshold" style="margin-bottom:0">Engrave detail (threshold)</label>
+<input type="range" id="pbo-threshold" min="10" max="245" value="140">
+</div>
+<p class="bundle-hint" style="text-align:center">This is a live approximation of the engraving, not the exact final result. We'll email a real mockup before anything hits the laser.</p>
+</div>
+</div>
+</div>
+
+<script>
+(function(){
+  var canvas = document.getElementById("pboCanvas");
+  if (!canvas) return;
+
+  var PBO_MATERIALS = [
+    { id:"brushed_silver", name:"Brushed Silver", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/brushed_silver_black.jpg?v=1787885403" },
+    { id:"saddle_tan", name:"Saddle Tan", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/saddle_tan_black.jpg?v=1787885402" },
+    { id:"vintage_gray", name:"Vintage Gray", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/vintage_gray_black.webp?v=1787885403" },
+    { id:"saddle_red", name:"Saddle Red", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/saddle_red_black.jpg?v=1787885403" },
+    { id:"rawhide", name:"Rawhide", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/rawhide_black.webp?v=1787885402" },
+    { id:"vintage_sky_blue", name:"Vintage Sky Blue", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/vintage_sky_blue_black.webp?v=1787885403" },
+    { id:"vintage_caramel_brown", name:"Vintage Caramel Brown", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/vintage_caramel_brown_black.webp?v=1787885402" }
+  ];
+  var PBO_SHAPES = [
+    { id:"rectangle", label:"Rectangle", ratio:1.633 },
+    { id:"rounded", label:"Rounded rectangle", ratio:1.633 },
+    { id:"circle", label:"Circle", ratio:1 }
+  ];
+
+  var state = { material: PBO_MATERIALS[0], shape: PBO_SHAPES[0], threshold: 140, logoImage: null };
+  var matCache = {};
+
+  function preloadMaterials(){
+    PBO_MATERIALS.forEach(function(m){
+      var img = new Image();
+      img.crossOrigin = "anonymous";
+      img.onload = function(){ matCache[m.id] = img; if (state.material.id === m.id) draw(); };
+      img.src = m.swatch;
+    });
+  }
+
+  function roundRectPath(ctx, x, y, w, h, r){
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+  }
+  function clipPath(ctx, shapeId, w, h, inset){
+    ctx.beginPath();
+    if (shapeId === "circle"){
+      var r = Math.min(w, h) / 2 - inset;
+      ctx.arc(w / 2, h / 2, r, 0, Math.PI * 2);
+    } else if (shapeId === "rounded"){
+      var rad = Math.min(w, h) * 0.14;
+      roundRectPath(ctx, inset, inset, w - 2 * inset, h - 2 * inset, rad);
+    } else {
+      ctx.rect(inset, inset, w - 2 * inset, h - 2 * inset);
+    }
+    ctx.closePath();
+  }
+  function drawLogoInto(ctx, img, outW, outH){
+    var pad = 0.86;
+    var scale = Math.min((outW * pad) / img.naturalWidth, (outH * pad) / img.naturalHeight);
+    var dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
+    ctx.drawImage(img, (outW - dw) / 2, (outH - dh) / 2, dw, dh);
+  }
+  function buildInkMask(img, threshold, outW, outH){
+    var c = document.createElement("canvas");
+    c.width = outW; c.height = outH;
+    var ctx = c.getContext("2d");
+    drawLogoInto(ctx, img, outW, outH);
+    var imgd;
+    try { imgd = ctx.getImageData(0, 0, outW, outH); } catch(e){ return c; }
+    var d = imgd.data;
+    for (var i = 0; i < d.length; i += 4){
+      var a = d[i + 3];
+      var ink = false;
+      if (a >= 10){
+        var l = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
+        ink = l < threshold;
+      }
+      if (ink){ d[i] = 0; d[i+1] = 0; d[i+2] = 0; d[i+3] = 255; }
+      else { d[i] = 0; d[i+1] = 0; d[i+2] = 0; d[i+3] = 0; }
+    }
+    ctx.putImageData(imgd, 0, 0);
+    return c;
+  }
+
+  function draw(){
+    var W = canvas.width, H = canvas.height;
+    var ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, W, H);
+    ctx.save();
+    clipPath(ctx, state.shape.id, W, H, 2);
+    ctx.clip();
+    var matImg = matCache[state.material.id];
+    if (matImg){
+      var s = Math.max(W / matImg.naturalWidth, H / matImg.naturalHeight);
+      var dw = matImg.naturalWidth * s, dh = matImg.naturalHeight * s;
+      ctx.drawImage(matImg, (W - dw) / 2, (H - dh) / 2, dw, dh);
+    } else {
+      ctx.fillStyle = "#cfa06a";
+      ctx.fillRect(0, 0, W, H);
+    }
+    if (state.logoImage){
+      ctx.drawImage(buildInkMask(state.logoImage, state.threshold, W, H), 0, 0);
+    }
+    ctx.restore();
+  }
+
+  function renderMaterials(){
+    var host = document.getElementById("pboMaterials");
+    host.innerHTML = PBO_MATERIALS.map(function(m){
+      return '<button type="button" class="pbo-mat-chip' + (m.id === state.material.id ? ' on' : '') + '" data-mat="' + m.id + '">' +
+        '<span class="pbo-mat-swatch" style="background-image:url(\'' + m.swatch + '\')"></span>' +
+        '<span class="pbo-mat-name">' + m.name + '</span></button>';
+    }).join("");
+    host.querySelectorAll(".pbo-mat-chip").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        state.material = PBO_MATERIALS.filter(function(m){ return m.id === btn.dataset.mat; })[0];
+        document.getElementById("pboMaterialInput").value = state.material.name;
+        host.querySelectorAll(".pbo-mat-chip").forEach(function(b){ b.classList.remove("on"); });
+        btn.classList.add("on");
+        draw();
+      });
+    });
+  }
+
+  function renderShapes(){
+    var host = document.getElementById("pboShapes");
+    host.innerHTML = PBO_SHAPES.map(function(s){
+      return '<button type="button" class="pbo-chip' + (s.id === state.shape.id ? ' on' : '') + '" data-shape="' + s.id + '">' + s.label + '</button>';
+    }).join("");
+    host.querySelectorAll(".pbo-chip").forEach(function(btn){
+      btn.addEventListener("click", function(){
+        state.shape = PBO_SHAPES.filter(function(s){ return s.id === btn.dataset.shape; })[0];
+        document.getElementById("pboShapeInput").value = state.shape.label;
+        host.querySelectorAll(".pbo-chip").forEach(function(b){ b.classList.remove("on"); });
+        btn.classList.add("on");
+        var box = document.getElementById("pboCanvasBox");
+        box.style.aspectRatio = state.shape.ratio;
+        canvas.width = state.shape.ratio === 1 ? 400 : 520;
+        canvas.height = state.shape.ratio === 1 ? 400 : 318;
+        draw();
+      });
+    });
+  }
+
+  document.getElementById("pbo-artwork").addEventListener("change", function(e){
+    var file = e.target.files[0];
+    if (!file || !file.type.match(/^image\//)) return;
+    var reader = new FileReader();
+    reader.onload = function(ev){
+      var img = new Image();
+      img.onload = function(){ state.logoImage = img; draw(); };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById("pbo-threshold").addEventListener("input", function(e){
+    state.threshold = +e.target.value;
+    draw();
+  });
+
+  preloadMaterials();
+  renderMaterials();
+  renderShapes();
+  draw();
+})();
+</script>
+{%- endif -%}
 {%- endif -%}
 
 {%- if is_clearance -%}
