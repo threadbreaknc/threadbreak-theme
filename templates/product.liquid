@@ -285,12 +285,34 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
     padding:9px 18px;margin-right:11px;cursor:pointer;transition:background .15s;}
   .bundle-file::file-selector-button:hover{background:#6234c9;}
   .bundle-file{cursor:pointer;font-size:13px;color:#6B6A78;}
-  /* Custom Patch Bundle: simplified patch designer */
-  .pbo-canvas-wrap{margin-top:14px;display:flex;flex-direction:column;align-items:center;gap:12px;background:#F3EFFC;border-radius:14px;padding:18px}
-  .pbo-canvas-box{position:relative;width:100%;max-width:300px;aspect-ratio:1.633;border-radius:14px;overflow:hidden;background:#fff;border:1.5px solid #E2E0EA;transition:aspect-ratio .2s ease}
+  /* Custom Patch Bundle: full patch designer, same options as the standalone patch order page */
+  .pbo-layout{display:flex;flex-direction:column;gap:6px}
+  @media(min-width:900px){
+    .pbo-layout{display:grid;grid-template-columns:minmax(260px,320px) 1fr;gap:24px;align-items:start}
+    .pbo-layout-preview{position:sticky;top:18px}
+  }
+  .pbo-canvas-wrap{margin-top:14px;display:flex;flex-direction:column;align-items:center;gap:10px;background:#F3EFFC;border-radius:14px;padding:18px}
+  .pbo-canvas-box{position:relative;width:100%;max-width:300px;aspect-ratio:1.633;border-radius:14px;overflow:hidden;background:#fff;border:1.5px solid #E2E0EA;transition:aspect-ratio .2s ease;cursor:grab;touch-action:none}
+  .pbo-canvas-box.dragging{cursor:grabbing}
   .pbo-canvas-box canvas{width:100%;height:100%;display:block}
-  .pbo-controls{width:100%;max-width:340px;display:flex;flex-direction:column;gap:6px}
+  .pbo-canvas-drop{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;text-align:center;padding:14px;background:#F3EFFC;border:1.5px dashed #5028AA;border-radius:14px;cursor:pointer;transition:.15s}
+  .pbo-canvas-drop:hover,.pbo-canvas-drop.over{background:#EFE9FF;border-color:#6234c9}
+  .pbo-canvas-drop[hidden]{display:none}
+  .pbo-canvas-drop-i{font-size:22px;line-height:1;color:#5028AA;font-weight:700}
+  .pbo-canvas-drop-t{font-size:13px;font-weight:700;color:#5028AA}
+  .pbo-canvas-drop-s{font-size:11px;color:#6B6A78}
+  .pbo-file-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#F3FBF6;border:1px solid #1E9E5A;border-radius:10px;padding:7px 10px;width:100%;max-width:300px}
+  .pbo-file-bar[hidden]{display:none}
+  .pbo-file-bar-name{flex:1;min-width:100px;font-size:12px;font-weight:600;color:#1E9E5A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pbo-file-bar-btn{background:#fff;border:1px solid #E2E0EA;border-radius:7px;padding:4px 9px;font:inherit;font-size:11.5px;font-weight:600;color:#5028AA;cursor:pointer}
+  .pbo-file-bar-btn.danger{color:#c33}
+  .pbo-controls{width:100%;max-width:300px;display:flex;flex-direction:column;gap:10px}
   .pbo-controls input[type=range]{width:100%;accent-color:#5028AA}
+  .pbo-ctl-note{font-weight:400;font-size:11px;color:#6B6A78;margin-left:4px}
+  .pbo-reset{align-self:flex-start;background:none;border:1px solid #E2E0EA;border-radius:8px;padding:6px 11px;font:inherit;font-size:12px;color:#5028AA;cursor:pointer}
+  .pbo-reset:hover{background:#fff}
+  .pbo-invert{display:flex;align-items:center;gap:8px;font-size:12.5px;color:#6B6A78;cursor:pointer}
+  .pbo-invert input{width:15px;height:15px;accent-color:#5028AA;cursor:pointer}
   .pbo-matgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;margin-top:6px}
   .pbo-mat-chip{display:flex;flex-direction:column;align-items:center;gap:5px;background:#fff;border:1.5px solid #E2E0EA;border-radius:11px;padding:8px;cursor:pointer;font-family:inherit;transition:.15s}
   .pbo-mat-chip:hover{border-color:#B7A6EE}
@@ -301,6 +323,11 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
   .pbo-chip{background:#fff;border:1.5px solid #E2E0EA;border-radius:10px;padding:8px 13px;font-family:inherit;font-size:13.5px;cursor:pointer;color:#14121C;transition:.15s}
   .pbo-chip:hover{border-color:#B7A6EE}
   .pbo-chip.on{border-color:#5028AA;background:#F3EFFC;color:#5028AA;font-weight:600}
+  .pbo-info-btn{background:none;border:1px solid #E2E0EA;border-radius:8px;padding:3px 9px;font-family:inherit;font-size:11px;font-weight:600;color:#5028AA;cursor:pointer;margin-left:8px}
+  .pbo-info-btn:hover{border-color:#5028AA}
+  .pbo-info-panel{margin-top:10px;background:#fff;border:1.5px solid #E2E0EA;border-radius:12px;padding:13px}
+  .pbo-die-note{margin-top:8px;font-size:12px;line-height:1.5;color:#5028AA;background:#fff;border:1px solid #DCD3F6;border-left:3px solid #5028AA;border-radius:9px;padding:9px 11px;width:100%;max-width:300px}
+  .pbo-field-off select{opacity:.45;cursor:not-allowed}
 </style>
 {%- if is_bundle -%}
 <div class="bundle-opts">
@@ -348,9 +375,58 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 
 {%- if is_patch_bundle -%}
 <div class="bundle-opts">
+<div class="pbo-layout">
+<div class="pbo-layout-preview">
+<div class="pbo-canvas-wrap">
+<div class="pbo-canvas-box" id="pboCanvasBox">
+<canvas id="pboCanvas" width="520" height="318"></canvas>
+<div class="pbo-canvas-drop" id="pboCanvasDrop">
+<span class="pbo-canvas-drop-i" aria-hidden="true">+</span>
+<span class="pbo-canvas-drop-t">Click to upload your logo</span>
+<span class="pbo-canvas-drop-s">or drop a file here. PNG, JPG, WEBP, or SVG</span>
+</div>
+</div>
+<input type="file" id="pbo-artwork" name="properties[Artwork]" accept=".png,.jpg,.jpeg,.webp,.gif,.svg,.pdf,.ai" hidden required>
+<div class="pbo-file-bar" id="pboFileBar" hidden>
+<span class="pbo-file-bar-name" id="pboFileName"></span>
+<button type="button" class="pbo-file-bar-btn" id="pboReplace">Replace</button>
+<button type="button" class="pbo-file-bar-btn danger" id="pboRemove">Remove</button>
+</div>
+<div class="pbo-controls">
+<div>
+<label class="bundle-opt-label" for="pbo-threshold" style="margin-bottom:2px">Engrave detail (threshold)</label>
+<input type="range" id="pbo-threshold" min="10" max="245" value="140">
+</div>
+<div>
+<label class="bundle-opt-label" for="pbo-logoscale" style="margin-bottom:2px">Logo size <span class="pbo-ctl-note">drag the logo in the preview to move it</span></label>
+<input type="range" id="pbo-logoscale" min="40" max="150" value="100">
+</div>
+<button type="button" class="pbo-reset" id="pbo-reset">Recenter logo</button>
+<label class="pbo-invert">
+<input type="checkbox" id="pbo-invert">
+<span>Invert (swap engraved / material areas)</span>
+</label>
+<div class="pbo-field-edge">
+<label class="bundle-opt-label" for="pbo-edge" style="margin-bottom:2px">Edge finish</label>
+<select id="pbo-edge" class="bundle-select">
+<option value="none">None (clean edge)</option>
+<option value="stitch">Faux stitch line</option>
+<option value="outline">Outline border</option>
+</select>
+</div>
+</div>
+<p class="pbo-die-note" id="pboDieNote" hidden><strong>Heads up:</strong> the die-cut outline here is a rough approximation generated from your logo. Your proof will show the real cut line, properly smoothed.</p>
+<p class="bundle-hint" style="text-align:center">This is a live approximation built from your logo and a sample of the material photo, not the exact final engraving. We'll email a real mockup before anything hits the laser.</p>
+</div>
+</div>
+
+<div class="pbo-layout-fields">
 <div class="bundle-opt">
-<label class="bundle-opt-label">Patch material <span class="bundle-req">*</span></label>
+<label class="bundle-opt-label">Patch material <span class="bundle-req">*</span> <button type="button" class="pbo-info-btn" id="pbo-engrave-btn">How does engraving work?</button></label>
 <div class="pbo-matgrid" id="pboMaterials"></div>
+<div class="pbo-info-panel" id="pbo-engrave-info" hidden>
+<p class="bundle-hint">Our laser burns through the colored top layer of the leatherette to expose the black core underneath, so every engraved line comes out black no matter which material you pick. Bold, simple shapes engrave the cleanest, very fine detail can lose crispness at small sizes.</p>
+</div>
 <input type="hidden" name="properties[Patch material]" id="pboMaterialInput" value="Brushed Silver">
 </div>
 
@@ -365,57 +441,105 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 <p class="bundle-hint"><strong>Medium</strong> is the fixed size for this promo package.</p>
 <input type="hidden" name="properties[Patch size]" value="Medium">
 </div>
-
-<div class="bundle-opt">
-<label class="bundle-opt-label" for="pbo-artwork">Upload your logo <span class="bundle-req">*</span></label>
-<input type="file" id="pbo-artwork" name="properties[Artwork]" class="bundle-file" accept="image/*,.pdf,.ai,.eps,.svg,.png,.jpg,.jpeg" required>
-<p class="bundle-hint">Front engraving. PNG, JPG, PDF, AI, EPS, or SVG. We'll confirm your design before engraving.</p>
-
-<div class="pbo-canvas-wrap">
-<div class="pbo-canvas-box" id="pboCanvasBox">
-<canvas id="pboCanvas" width="520" height="318"></canvas>
-</div>
-<div class="pbo-controls">
-<label class="bundle-opt-label" for="pbo-threshold" style="margin-bottom:0">Engrave detail (threshold)</label>
-<input type="range" id="pbo-threshold" min="10" max="245" value="140">
-</div>
-<p class="bundle-hint" style="text-align:center">This is a live approximation of the engraving, not the exact final result. We'll email a real mockup before anything hits the laser.</p>
 </div>
 </div>
 </div>
 
 <script>
 (function(){
+  "use strict";
   var canvas = document.getElementById("pboCanvas");
   if (!canvas) return;
+  var $ = function(id){ return document.getElementById(id); };
 
-  var PBO_MATERIALS = [
+  var MATERIALS = [
     { id:"brushed_silver", name:"Brushed Silver", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/brushed_silver_black.jpg?v=1787885403" },
     { id:"saddle_tan", name:"Saddle Tan", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/saddle_tan_black.jpg?v=1787885402" },
     { id:"vintage_gray", name:"Vintage Gray", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/vintage_gray_black.webp?v=1787885403" },
     { id:"saddle_red", name:"Saddle Red", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/saddle_red_black.jpg?v=1787885403" },
     { id:"rawhide", name:"Rawhide", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/rawhide_black.webp?v=1787885402" },
     { id:"vintage_sky_blue", name:"Vintage Sky Blue", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/vintage_sky_blue_black.webp?v=1787885403" },
-    { id:"vintage_caramel_brown", name:"Vintage Caramel Brown", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/vintage_caramel_brown_black.webp?v=1787885402" }
+    { id:"vintage_caramel_brown", name:"Vintage Caramel Brown", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/vintage_caramel_brown_black.webp?v=1787885402", sample:{ cx:0.5, cy:0.78, w:0.42, h:0.22 } }
   ];
-  var PBO_SHAPES = [
+  var SHAPES = [
     { id:"rectangle", label:"Rectangle", ratio:1.633 },
-    { id:"rounded", label:"Rounded rectangle", ratio:1.633 },
-    { id:"circle", label:"Circle", ratio:1 }
+    { id:"rounded",   label:"Rounded rectangle", ratio:1.633 },
+    { id:"circle",    label:"Circle", ratio:1 },
+    { id:"diecut",    label:"Die cut (follows your logo)", ratio:1.633 }
   ];
 
-  var state = { material: PBO_MATERIALS[0], shape: PBO_SHAPES[0], threshold: 140, logoImage: null };
-  var matCache = {};
+  var state = {
+    material: MATERIALS[0], shape: SHAPES[0],
+    logoFile: null, logoImage: null, threshold: 140, invert: false, edge: "none",
+    logoScale: 1, logoX: 0, logoY: 0
+  };
 
+  /* ---------- material preload + uniform-strip sampling ---------- */
+  var matImageCache = {}, matPatternCanvasCache = {};
+  function findUniformRegion(img){
+    var w = img.naturalWidth, h = img.naturalHeight;
+    if (!w || !h) return { x:0, y:0, w:1, h:1 };
+    var c = document.createElement("canvas");
+    c.width = w; c.height = h;
+    var ctx = c.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    var marginX = Math.round(w * 0.1), marginY = Math.round(h * 0.1);
+    var areaW = w - marginX * 2, areaH = h - marginY * 2;
+    var cols = 6, rows = 6;
+    var cw = Math.max(8, Math.floor(areaW / cols)), ch = Math.max(8, Math.floor(areaH / rows));
+    var best = null;
+    for (var ry = 0; ry < rows; ry++){
+      for (var rx = 0; rx < cols; rx++){
+        var x = marginX + rx * cw, y = marginY + ry * ch;
+        if (x + cw > w || y + ch > h) continue;
+        var data;
+        try { data = ctx.getImageData(x, y, cw, ch).data; } catch(e){ continue; }
+        var n = 0, sum = 0, sumsq = 0;
+        for (var i = 0; i < data.length; i += 16){
+          var l = 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
+          sum += l; sumsq += l*l; n++;
+        }
+        if (!n) continue;
+        var mean = sum / n;
+        var variance = Math.max(0, sumsq / n - mean * mean);
+        if (!best || variance < best.variance) best = { x:x, y:y, w:cw, h:ch, variance:variance, mean:mean };
+      }
+    }
+    return best || { x: marginX, y: marginY, w: areaW || w, h: areaH || h };
+  }
+  function explicitRegion(img, f){
+    var W = img.naturalWidth, H = img.naturalHeight;
+    var w = Math.max(8, Math.round(W * f.w)), h = Math.max(8, Math.round(H * f.h));
+    var x = Math.round(W * f.cx - w / 2), y = Math.round(H * f.cy - h / 2);
+    x = Math.max(0, Math.min(W - w, x));
+    y = Math.max(0, Math.min(H - h, y));
+    return { x:x, y:y, w:w, h:h };
+  }
+  function regionCanvas(img, region){
+    var c = document.createElement("canvas");
+    c.width = Math.max(1, region.w); c.height = Math.max(1, region.h);
+    var ctx = c.getContext("2d");
+    ctx.drawImage(img, region.x, region.y, region.w, region.h, 0, 0, region.w, region.h);
+    return c;
+  }
   function preloadMaterials(){
-    PBO_MATERIALS.forEach(function(m){
+    MATERIALS.forEach(function(m){
       var img = new Image();
       img.crossOrigin = "anonymous";
-      img.onload = function(){ matCache[m.id] = img; if (state.material.id === m.id) draw(); };
+      img.onload = function(){
+        matImageCache[m.id] = img;
+        try {
+          var region = m.sample ? explicitRegion(img, m.sample) : findUniformRegion(img);
+          matPatternCanvasCache[m.id] = regionCanvas(img, region);
+        } catch(e){ /* CORS or decode failure: fall back to a flat fill below */ }
+        if (state.material.id === m.id) draw();
+      };
+      img.onerror = function(){};
       img.src = m.swatch;
     });
   }
 
+  /* ---------- canvas engraving preview ---------- */
   function roundRectPath(ctx, x, y, w, h, r){
     ctx.moveTo(x + r, y);
     ctx.arcTo(x + w, y, x + w, y + h, r);
@@ -423,12 +547,12 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
     ctx.arcTo(x, y + h, x, y, r);
     ctx.arcTo(x, y, x + w, y, r);
   }
-  function clipPath(ctx, shapeId, w, h, inset){
+  function clipPath(ctx, shape, w, h, inset){
     ctx.beginPath();
-    if (shapeId === "circle"){
+    if (shape === "circle"){
       var r = Math.min(w, h) / 2 - inset;
       ctx.arc(w / 2, h / 2, r, 0, Math.PI * 2);
-    } else if (shapeId === "rounded"){
+    } else if (shape === "rounded"){
       var rad = Math.min(w, h) * 0.14;
       roundRectPath(ctx, inset, inset, w - 2 * inset, h - 2 * inset, rad);
     } else {
@@ -437,15 +561,18 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
     ctx.closePath();
   }
   function drawLogoInto(ctx, img, outW, outH){
-    var pad = 0.86;
+    var pad = 0.86 * (state.logoScale || 1);
     var scale = Math.min((outW * pad) / img.naturalWidth, (outH * pad) / img.naturalHeight);
     var dw = img.naturalWidth * scale, dh = img.naturalHeight * scale;
-    ctx.drawImage(img, (outW - dw) / 2, (outH - dh) / 2, dw, dh);
+    var dx = (outW - dw) / 2 + outW * (state.logoX || 0);
+    var dy = (outH - dh) / 2 + outH * (state.logoY || 0);
+    ctx.drawImage(img, dx, dy, dw, dh);
   }
-  function buildInkMask(img, threshold, outW, outH){
+  function buildInkMask(img, threshold, invert, outW, outH){
     var c = document.createElement("canvas");
     c.width = outW; c.height = outH;
     var ctx = c.getContext("2d");
+    ctx.clearRect(0, 0, outW, outH);
     drawLogoInto(ctx, img, outW, outH);
     var imgd;
     try { imgd = ctx.getImageData(0, 0, outW, outH); } catch(e){ return c; }
@@ -455,7 +582,7 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
       var ink = false;
       if (a >= 10){
         var l = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
-        ink = l < threshold;
+        ink = invert ? (l > threshold) : (l < threshold);
       }
       if (ink){ d[i] = 0; d[i+1] = 0; d[i+2] = 0; d[i+3] = 255; }
       else { d[i] = 0; d[i+1] = 0; d[i+2] = 0; d[i+3] = 0; }
@@ -463,88 +590,517 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
     ctx.putImageData(imgd, 0, 0);
     return c;
   }
+  function buildSilhouette(img, outW, outH){
+    var c = document.createElement("canvas");
+    c.width = outW; c.height = outH;
+    var ctx = c.getContext("2d");
+    drawLogoInto(ctx, img, outW, outH);
+    var id;
+    try { id = ctx.getImageData(0, 0, outW, outH); } catch(e){ return c; }
+    var d = id.data;
+    for (var i = 0; i < d.length; i += 4){
+      var a = d[i + 3];
+      var l = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
+      var on = a >= 12 && l < 242;
+      d[i] = 0; d[i+1] = 0; d[i+2] = 0; d[i+3] = on ? 255 : 0;
+    }
+    ctx.putImageData(id, 0, 0);
+    return c;
+  }
+  function dilateMask(src, r){
+    var w = src.width, h = src.height;
+    var out = document.createElement("canvas");
+    out.width = w; out.height = h;
+    var octx = out.getContext("2d");
+    if (r < 1){ octx.drawImage(src, 0, 0); return out; }
+    var id;
+    try { id = src.getContext("2d").getImageData(0, 0, w, h); } catch(e){ octx.drawImage(src, 0, 0); return out; }
+    var a = new Uint8Array(w * h), tmp = new Uint8Array(w * h);
+    var d = id.data;
+    var i, j;
+    for (i = 0, j = 0; j < w * h; i += 4, j++) a[j] = d[i + 3] > 8 ? 1 : 0;
+    for (var y = 0; y < h; y++){
+      var row = y * w;
+      for (var x = 0; x < w; x++){
+        var on = 0;
+        var x0 = Math.max(0, x - r), x1 = Math.min(w - 1, x + r);
+        for (var k = x0; k <= x1; k++) if (a[row + k]){ on = 1; break; }
+        tmp[row + x] = on;
+      }
+    }
+    for (var x2 = 0; x2 < w; x2++){
+      for (var y2 = 0; y2 < h; y2++){
+        var on2 = 0;
+        var y0 = Math.max(0, y2 - r), y1 = Math.min(h - 1, y2 + r);
+        for (var k2 = y0; k2 <= y1; k2++) if (tmp[k2 * w + x2]){ on2 = 1; break; }
+        a[y2 * w + x2] = on2;
+      }
+    }
+    var od = octx.createImageData(w, h);
+    var p = od.data;
+    for (i = 0, j = 0; j < w * h; i += 4, j++){
+      p[i] = 0; p[i+1] = 0; p[i+2] = 0; p[i+3] = a[j] ? 255 : 0;
+    }
+    octx.putImageData(od, 0, 0);
+    return out;
+  }
+  function edt(bin, w, h){
+    var INF = 1e20;
+    var f = new Float64Array(Math.max(w, h));
+    var d = new Float64Array(Math.max(w, h));
+    var v = new Int32Array(Math.max(w, h));
+    var z = new Float64Array(Math.max(w, h) + 1);
+    var grid = new Float64Array(w * h);
+    for (var j = 0; j < w * h; j++) grid[j] = bin[j] ? 0 : INF;
+
+    function pass(len, get, set){
+      for (var q = 0; q < len; q++) f[q] = get(q);
+      var k = 0;
+      v[0] = 0; z[0] = -INF; z[1] = INF;
+      for (var q2 = 1; q2 < len; q2++){
+        var s;
+        while (true){
+          var r = v[k];
+          s = ((f[q2] + q2*q2) - (f[r] + r*r)) / (2*q2 - 2*r);
+          if (s <= z[k]){ k--; if (k < 0) break; } else break;
+        }
+        k++; v[k] = q2; z[k] = s; z[k+1] = INF;
+      }
+      k = 0;
+      for (var q3 = 0; q3 < len; q3++){
+        while (z[k+1] < q3) k++;
+        var r2 = v[k];
+        set(q3, (q3 - r2) * (q3 - r2) + f[r2]);
+      }
+    }
+    for (var y = 0; y < h; y++){
+      pass(w, function(x){ return grid[y*w + x]; }, function(x, val){ grid[y*w + x] = val; });
+    }
+    var col = new Float64Array(h);
+    for (var x = 0; x < w; x++){
+      (function(x){
+        pass(h, function(y){ return grid[y*w + x]; }, function(y, val){ col[y] = val; });
+        for (var y2 = 0; y2 < h; y2++) grid[y2*w + x] = col[y2];
+      })(x);
+    }
+    var out = new Float64Array(w * h);
+    for (var i = 0; i < w * h; i++) out[i] = Math.sqrt(grid[i]);
+    return out;
+  }
+  var dieSilCache = null;
+  function dieCutSilhouette(logoImg, W, H){
+    if (!logoImg) return null;
+    var key = W + "x" + H + ":" + state.logoScale + ":" + state.logoX + ":" + state.logoY;
+    if (dieSilCache && dieSilCache.img === logoImg && dieSilCache.key === key) return dieSilCache.canvas;
+
+    var SS = 2;
+    var w = W * SS, h = H * SS;
+    var sil = buildSilhouette(logoImg, w, h);
+    var id;
+    try { id = sil.getContext("2d").getImageData(0, 0, w, h); } catch(e){ return null; }
+    var n = w * h;
+    var ink = new Uint8Array(n);
+    var anyInk = false;
+    for (var i = 0, j = 0; j < n; i += 4, j++){
+      if (id.data[i + 3] > 8){ ink[j] = 1; anyInk = true; }
+    }
+    if (!anyInk) return null;
+
+    var base = Math.min(w, h);
+    var pad = Math.max(2, Math.round(base * 0.018));
+    var round = Math.max(4, Math.round(base * 0.045));
+
+    var outside = edt(ink, w, h);
+    var grown = new Uint8Array(n);
+    var growR = pad + round;
+    for (j = 0; j < n; j++) grown[j] = outside[j] <= growR ? 1 : 0;
+
+    var holes = new Uint8Array(n);
+    for (j = 0; j < n; j++) holes[j] = grown[j] ? 0 : 1;
+    var inside = edt(holes, w, h);
+
+    var big = document.createElement("canvas");
+    big.width = w; big.height = h;
+    var bctx = big.getContext("2d");
+    var out = bctx.createImageData(w, h);
+    var od = out.data;
+    for (i = 0, j = 0; j < n; i += 4, j++){
+      var cov = inside[j] - round + 0.5;
+      cov = cov < 0 ? 0 : (cov > 1 ? 1 : cov);
+      od[i] = 0; od[i+1] = 0; od[i+2] = 0; od[i+3] = Math.round(cov * 255);
+    }
+    bctx.putImageData(out, 0, 0);
+
+    var c = document.createElement("canvas");
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(big, 0, 0, W, H);
+
+    dieSilCache = { img: logoImg, key: key, canvas: c };
+    return c;
+  }
+  function inkBounds(inkCanvas){
+    var w = inkCanvas.width, h = inkCanvas.height;
+    var id;
+    try { id = inkCanvas.getContext("2d").getImageData(0, 0, w, h); } catch(e){ return null; }
+    var d = id.data;
+    var minX = w, minY = h, maxX = -1, maxY = -1;
+    for (var y = 0; y < h; y++){
+      var row = y * w * 4;
+      for (var x = 0; x < w; x++){
+        if (d[row + x * 4 + 3] > 8){
+          if (x < minX) minX = x;
+          if (x > maxX) maxX = x;
+          if (y < minY) minY = y;
+          if (y > maxY) maxY = y;
+        }
+      }
+    }
+    if (maxX < 0) return null;
+    return { x: minX, y: minY, w: maxX - minX + 1, h: maxY - minY + 1 };
+  }
+  function computeDieCutRect(ink, W, H){
+    var b = ink ? inkBounds(ink) : null;
+    var padBase = Math.min(W, H);
+    var pad = Math.max(8, Math.round(padBase * 0.06));
+    var x, y, w, h;
+    if (b){
+      x = b.x - pad; y = b.y - pad; w = b.w + pad * 2; h = b.h + pad * 2;
+    } else {
+      x = W * 0.12; y = H * 0.12; w = W * 0.76; h = H * 0.76;
+    }
+    var inset = 4;
+    if (x < inset){ w += x - inset; x = inset; }
+    if (y < inset){ h += y - inset; y = inset; }
+    if (x + w > W - inset) w = W - inset - x;
+    if (y + h > H - inset) h = H - inset - y;
+    w = Math.max(12, w); h = Math.max(12, h);
+    var r = Math.max(6, Math.round(Math.min(w, h) * 0.16));
+    return { x:x, y:y, w:w, h:h, r:r };
+  }
+  function shapeMask(shape, W, H, ink, dieRect, dieSil){
+    var c = document.createElement("canvas");
+    c.width = W; c.height = H;
+    var ctx = c.getContext("2d");
+    ctx.fillStyle = "#000";
+    if (shape === "diecut"){
+      if (dieSil){ ctx.drawImage(dieSil, 0, 0); return c; }
+      var r = dieRect || computeDieCutRect(ink, W, H);
+      ctx.beginPath();
+      roundRectPath(ctx, r.x, r.y, r.w, r.h, r.r);
+      ctx.closePath();
+      ctx.fill();
+      return c;
+    }
+    clipPath(ctx, shape, W, H, 8);
+    ctx.fill();
+    return c;
+  }
+  function compositeLayer(paintFn, mask){
+    var c = document.createElement("canvas");
+    c.width = mask.width; c.height = mask.height;
+    var ctx = c.getContext("2d");
+    paintFn(ctx);
+    ctx.globalCompositeOperation = "destination-in";
+    ctx.drawImage(mask, 0, 0);
+    return c;
+  }
+  function drawPlaceholderText(ctx, W, H){
+    ctx.save();
+    ctx.fillStyle = "rgba(20,18,28,.5)";
+    ctx.font = "600 15px DM Sans, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("Upload your logo to preview", W / 2, H / 2);
+    ctx.restore();
+  }
+  function erodeMask(src, r){
+    var w = src.width, h = src.height;
+    var inv = document.createElement("canvas");
+    inv.width = w; inv.height = h;
+    var ictx = inv.getContext("2d");
+    ictx.fillStyle = "#000";
+    ictx.fillRect(0, 0, w, h);
+    ictx.globalCompositeOperation = "destination-out";
+    ictx.drawImage(src, 0, 0);
+    var grown = dilateMask(inv, r);
+    var out = document.createElement("canvas");
+    out.width = w; out.height = h;
+    var octx = out.getContext("2d");
+    octx.drawImage(src, 0, 0);
+    octx.globalCompositeOperation = "destination-out";
+    octx.drawImage(grown, 0, 0);
+    return out;
+  }
+  function drawShapeBorder(ctx, mode, shape, W, H, dieRect, dieSil){
+    if (mode === "none") return;
+    var base = Math.min(W, H);
+    var lw = mode === "stitch" ? Math.max(2, base * 0.0095) : Math.max(2.5, base * 0.013);
+    if (shape === "diecut" && dieSil){
+      var inset = Math.round(lw * 1.6);
+      var ring = document.createElement("canvas");
+      ring.width = W; ring.height = H;
+      var rctx = ring.getContext("2d");
+      rctx.drawImage(dieSil, 0, 0);
+      rctx.globalCompositeOperation = "destination-out";
+      rctx.drawImage(erodeMask(dieSil, inset), 0, 0);
+      rctx.globalCompositeOperation = "source-in";
+      rctx.fillStyle = "#141117";
+      rctx.fillRect(0, 0, W, H);
+      if (mode === "stitch"){
+        rctx.globalCompositeOperation = "destination-out";
+        var step = Math.max(8, base * 0.038), gap = step * 0.42;
+        for (var d = 0; d < W + H; d += step){
+          rctx.save();
+          rctx.lineWidth = gap;
+          rctx.strokeStyle = "#000";
+          rctx.beginPath();
+          rctx.moveTo(d, 0); rctx.lineTo(d - H, H);
+          rctx.stroke();
+          rctx.restore();
+        }
+      }
+      ctx.drawImage(ring, 0, 0);
+      return;
+    }
+    ctx.save();
+    ctx.beginPath();
+    if (shape === "diecut"){
+      var r = dieRect || computeDieCutRect(null, W, H);
+      var i = Math.max(3, Math.round(base * 0.018));
+      roundRectPath(ctx, r.x + i, r.y + i, Math.max(8, r.w - i * 2), Math.max(8, r.h - i * 2), Math.max(4, r.r - i));
+      ctx.closePath();
+    } else {
+      clipPath(ctx, shape, W, H, Math.round(base * 0.045));
+    }
+    ctx.strokeStyle = "#141117";
+    ctx.lineWidth = lw;
+    if (mode === "stitch"){
+      ctx.setLineDash([Math.max(5, base * 0.028), Math.max(4, base * 0.02)]);
+      ctx.lineCap = "round";
+    } else {
+      ctx.setLineDash([]);
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
 
   function draw(){
     var W = canvas.width, H = canvas.height;
     var ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, W, H);
-    ctx.save();
-    clipPath(ctx, state.shape.id, W, H, 2);
-    ctx.clip();
-    var matImg = matCache[state.material.id];
-    if (matImg){
-      var s = Math.max(W / matImg.naturalWidth, H / matImg.naturalHeight);
-      var dw = matImg.naturalWidth * s, dh = matImg.naturalHeight * s;
-      ctx.drawImage(matImg, (W - dw) / 2, (H - dh) / 2, dw, dh);
+
+    var logoImg = state.logoImage;
+    var ink = logoImg ? buildInkMask(logoImg, state.threshold, state.invert, W, H) : null;
+    var isDie = state.shape.id === "diecut";
+    var dieSil = isDie ? dieCutSilhouette(logoImg, W, H) : null;
+    var dieRect = isDie && !dieSil ? computeDieCutRect(ink, W, H) : null;
+    var mask = shapeMask(state.shape.id, W, H, ink, dieRect, dieSil);
+
+    var patternSrc = matPatternCanvasCache[state.material.id];
+    var matLayer = compositeLayer(function(mctx){
+      if (patternSrc){
+        var sw = patternSrc.width, sh = patternSrc.height;
+        var scale = Math.max(W / sw, H / sh);
+        var dw = sw * scale, dh = sh * scale;
+        mctx.drawImage(patternSrc, (W - dw) / 2, (H - dh) / 2, dw, dh);
+      } else {
+        mctx.fillStyle = "#cfc9dd";
+        mctx.fillRect(0, 0, W, H);
+      }
+    }, mask);
+    ctx.drawImage(matLayer, 0, 0);
+
+    if (ink){
+      var inkLayer = compositeLayer(function(ictx){ ictx.drawImage(ink, 0, 0); }, mask);
+      ctx.drawImage(inkLayer, 0, 0);
     } else {
-      ctx.fillStyle = "#cfa06a";
-      ctx.fillRect(0, 0, W, H);
+      drawPlaceholderText(ctx, W, H);
     }
-    if (state.logoImage){
-      ctx.drawImage(buildInkMask(state.logoImage, state.threshold, W, H), 0, 0);
-    }
-    ctx.restore();
+
+    drawShapeBorder(ctx, effectiveEdge(), state.shape.id, W, H, dieRect, dieSil);
+  }
+
+  function isDieCut(){ return state.shape.id === "diecut"; }
+  function effectiveEdge(){ return isDieCut() ? "none" : state.edge; }
+  function syncEdgeControl(){
+    var note = $("pboDieNote");
+    if (note) note.hidden = !isDieCut();
+    var sel = $("pbo-edge");
+    if (!sel) return;
+    var die = isDieCut();
+    sel.disabled = die;
+    sel.value = die ? "none" : state.edge;
+    var wrap = sel.closest(".pbo-field-edge");
+    if (wrap) wrap.classList.toggle("pbo-field-off", die);
+  }
+  function syncFileUI(){
+    var drop = $("pboCanvasDrop"), bar = $("pboFileBar"), have = $("pboFileName");
+    var f = state.logoFile;
+    if (drop) drop.hidden = !!f;
+    if (bar) bar.hidden = !f;
+    if (have) have.textContent = f ? f.name : "";
+  }
+  function applyCanvasShape(){
+    var box = $("pboCanvasBox");
+    if (!canvas || !box) return;
+    var ratio = state.shape.ratio || 1;
+    var base = 520;
+    var w, h;
+    if (ratio >= 1){ w = base; h = Math.round(base / ratio); }
+    else { h = base; w = Math.round(base * ratio); }
+    canvas.width = w; canvas.height = h;
+    box.style.aspectRatio = w + " / " + h;
+    draw();
   }
 
   function renderMaterials(){
-    var host = document.getElementById("pboMaterials");
-    host.innerHTML = PBO_MATERIALS.map(function(m){
+    var host = $("pboMaterials");
+    host.innerHTML = MATERIALS.map(function(m){
       return '<button type="button" class="pbo-mat-chip' + (m.id === state.material.id ? ' on' : '') + '" data-mat="' + m.id + '">' +
         '<span class="pbo-mat-swatch" style="background-image:url(\'' + m.swatch + '\')"></span>' +
         '<span class="pbo-mat-name">' + m.name + '</span></button>';
     }).join("");
-    host.querySelectorAll(".pbo-mat-chip").forEach(function(btn){
+    host.querySelectorAll("[data-mat]").forEach(function(btn){
       btn.addEventListener("click", function(){
-        state.material = PBO_MATERIALS.filter(function(m){ return m.id === btn.dataset.mat; })[0];
-        document.getElementById("pboMaterialInput").value = state.material.name;
-        host.querySelectorAll(".pbo-mat-chip").forEach(function(b){ b.classList.remove("on"); });
-        btn.classList.add("on");
+        state.material = MATERIALS.filter(function(m){ return m.id === btn.dataset.mat; })[0];
+        $("pboMaterialInput").value = state.material.name;
+        renderMaterials();
         draw();
       });
     });
   }
-
   function renderShapes(){
-    var host = document.getElementById("pboShapes");
-    host.innerHTML = PBO_SHAPES.map(function(s){
+    var host = $("pboShapes");
+    host.innerHTML = SHAPES.map(function(s){
       return '<button type="button" class="pbo-chip' + (s.id === state.shape.id ? ' on' : '') + '" data-shape="' + s.id + '">' + s.label + '</button>';
     }).join("");
-    host.querySelectorAll(".pbo-chip").forEach(function(btn){
+    host.querySelectorAll("[data-shape]").forEach(function(btn){
       btn.addEventListener("click", function(){
-        state.shape = PBO_SHAPES.filter(function(s){ return s.id === btn.dataset.shape; })[0];
-        document.getElementById("pboShapeInput").value = state.shape.label;
-        host.querySelectorAll(".pbo-chip").forEach(function(b){ b.classList.remove("on"); });
-        btn.classList.add("on");
-        var box = document.getElementById("pboCanvasBox");
-        box.style.aspectRatio = state.shape.ratio;
-        canvas.width = state.shape.ratio === 1 ? 400 : 520;
-        canvas.height = state.shape.ratio === 1 ? 400 : 318;
-        draw();
+        state.shape = SHAPES.filter(function(s){ return s.id === btn.dataset.shape; })[0];
+        $("pboShapeInput").value = state.shape.label;
+        renderShapes();
+        syncEdgeControl();
+        applyCanvasShape();
       });
     });
   }
 
-  document.getElementById("pbo-artwork").addEventListener("change", function(e){
-    var file = e.target.files[0];
-    if (!file || !file.type.match(/^image\//)) return;
-    var reader = new FileReader();
-    reader.onload = function(ev){
-      var img = new Image();
-      img.onload = function(){ state.logoImage = img; draw(); };
-      img.src = ev.target.result;
-    };
-    reader.readAsDataURL(file);
+  /* ---------- upload + controls ---------- */
+  (function enableCanvasUpload(){
+    var drop = $("pboCanvasDrop"), input = $("pbo-artwork"), box = $("pboCanvasBox");
+    if (!drop || !input || !box) return;
+    drop.addEventListener("click", function(){ input.click(); });
+    var rep = $("pboReplace"), rem = $("pboRemove");
+    if (rep) rep.addEventListener("click", function(){ input.click(); });
+    if (rem) rem.addEventListener("click", function(){
+      input.value = "";
+      input.dispatchEvent(new Event("change"));
+    });
+    ["dragenter","dragover"].forEach(function(t){ box.addEventListener(t, function(e){
+      e.preventDefault(); drop.classList.add("over");
+    }); });
+    ["dragleave","drop"].forEach(function(t){ box.addEventListener(t, function(e){
+      e.preventDefault(); drop.classList.remove("over");
+    }); });
+    box.addEventListener("drop", function(e){
+      var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (!f) return;
+      var dt = new DataTransfer();
+      dt.items.add(f);
+      input.files = dt.files;
+      input.dispatchEvent(new Event("change"));
+    });
+  })();
+
+  $("pbo-artwork").addEventListener("change", function(e){
+    var file = e.target.files && e.target.files[0];
+    if (!file){
+      state.logoFile = null; state.logoImage = null;
+      state.logoScale = 1; state.logoX = 0; state.logoY = 0;
+      if ($("pbo-logoscale")) $("pbo-logoscale").value = 100;
+      syncFileUI();
+      draw();
+      return;
+    }
+    if (file.size > 10 * 1024 * 1024){
+      alert("That file is over 10 MB. Please send a smaller file or email it to help@threadbreak.com.");
+      e.target.value = ""; return;
+    }
+    state.logoFile = file;
+    state.logoScale = 1; state.logoX = 0; state.logoY = 0;
+    if ($("pbo-logoscale")) $("pbo-logoscale").value = 100;
+    syncFileUI();
+
+    if (/^image\/(png|jpe?g|webp|gif|svg\+xml)$/i.test(file.type) || /\.(png|jpe?g|webp|gif|svg)$/i.test(file.name)){
+      var reader = new FileReader();
+      reader.onload = function(ev){
+        var img = new Image();
+        img.onload = function(){ state.logoImage = img; draw(); };
+        img.onerror = function(){ state.logoImage = null; draw(); };
+        img.src = ev.target.result;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      state.logoImage = null;
+      draw();
+    }
   });
 
-  document.getElementById("pbo-threshold").addEventListener("input", function(e){
-    state.threshold = +e.target.value;
+  $("pbo-threshold").addEventListener("input", function(e){ state.threshold = +e.target.value; draw(); });
+  $("pbo-invert").addEventListener("change", function(e){ state.invert = e.target.checked; draw(); });
+  $("pbo-edge").addEventListener("change", function(e){ state.edge = e.target.value; draw(); });
+  $("pbo-logoscale").addEventListener("input", function(e){ state.logoScale = +e.target.value / 100; draw(); });
+  $("pbo-reset").addEventListener("click", function(){
+    state.logoScale = 1; state.logoX = 0; state.logoY = 0;
+    $("pbo-logoscale").value = 100;
     draw();
   });
+
+  (function enableLogoDrag(){
+    var box = $("pboCanvasBox");
+    if (!box) return;
+    var drag = null;
+    box.addEventListener("pointerdown", function(e){
+      if (!state.logoImage) return;
+      var r = box.getBoundingClientRect();
+      drag = { px: e.clientX, py: e.clientY, ox: state.logoX, oy: state.logoY, w: r.width, h: r.height };
+      box.classList.add("dragging");
+      box.setPointerCapture(e.pointerId);
+    });
+    box.addEventListener("pointermove", function(e){
+      if (!drag) return;
+      state.logoX = Math.max(-0.45, Math.min(0.45, drag.ox + (e.clientX - drag.px) / drag.w));
+      state.logoY = Math.max(-0.45, Math.min(0.45, drag.oy + (e.clientY - drag.py) / drag.h));
+      draw();
+    });
+    var end = function(e){
+      if (!drag) return;
+      drag = null;
+      box.classList.remove("dragging");
+      try { box.releasePointerCapture(e.pointerId); } catch(err){}
+    };
+    box.addEventListener("pointerup", end);
+    box.addEventListener("pointercancel", end);
+  })();
+
+  (function enableInfoToggle(){
+    var btn = $("pbo-engrave-btn"), panel = $("pbo-engrave-info");
+    if (!btn || !panel) return;
+    btn.addEventListener("click", function(){
+      var open = panel.hidden;
+      panel.hidden = !open;
+    });
+  })();
 
   preloadMaterials();
   renderMaterials();
   renderShapes();
-  draw();
+  syncEdgeControl();
+  syncFileUI();
+  applyCanvasShape();
 })();
 </script>
 {%- endif -%}
