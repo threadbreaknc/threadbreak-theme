@@ -222,6 +222,11 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
   .leadtime-notice strong{color:#5028AA;}
   .product-price-was{margin-left:8px;font-size:0.8em;color:#8b8996;text-decoration:line-through;}
   /* thumbnail dropdown for options with many values */
+  /* .product-option already gets a transform from its fadeUp entrance animation,
+     which quietly creates its own stacking context. Without an explicit z-index
+     here, that context ranks below the sticky patch preview panel no matter what
+     z-index the dropdown menu itself uses, so the open menu renders underneath it. */
+  .product-option{position:relative;z-index:5}
   .option-swatches.as-dropdown{position:relative;max-width:420px}
   .opt-dd-btn{width:100%;display:flex;align-items:center;gap:11px;background:#fff;border:1.5px solid #E2E0EA;border-radius:11px;padding:9px 13px;font-family:inherit;font-size:15px;cursor:pointer;text-align:left;color:#14121C}
   .opt-dd-btn:hover{border-color:#B7A6EE}
