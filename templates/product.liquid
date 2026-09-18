@@ -48,6 +48,7 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
   <a href="/pages/reviews" class="bundle-trust">
     <span class="bt-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
     <span class="bt-text"><strong>{{ jm.all_reviews_rating | default: 5.0 | round: 1 }} out of 5</strong> from {{ jm.all_reviews_count | default: 45 }} verified customer reviews</span>
+    <span class="bt-arrow" aria-hidden="true">&rarr;</span>
   </a>
 {%- endif -%}
 
@@ -282,6 +283,8 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
   .bt-stars{color:#F5C518;font-size:17px;letter-spacing:2px;flex:0 0 auto}
   .bt-text{font-size:13.5px;color:#3d3a4a}
   .bt-text strong{color:#14121C}
+  .bt-arrow{margin-left:auto;flex:0 0 auto;color:#5028AA;font-weight:700;transition:transform .15s}
+  .bundle-trust:hover .bt-arrow{transform:translateX(3px)}
   /* theme.css wraps thumbs onto a second row on phones; keep them to one
      scrollable row instead so the gallery reads as a single strip. */
   @media(max-width:600px){
