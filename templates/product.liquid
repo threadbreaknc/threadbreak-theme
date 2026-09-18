@@ -267,9 +267,16 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
   .patch-laser-info h3{font-size:16px;font-weight:700;color:#14121C;margin:0 0 .6em}
   .patch-laser-info p{margin:0 0 1em;line-height:1.6;font-size:14px;color:#3d3a4a}
   .patch-laser-examples-label{font-size:12.5px;font-weight:600;color:#6B6A78;margin-bottom:.6em!important}
-  .patch-laser-examples{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-  .patch-laser-examples img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;border:1px solid #E2E0EA;display:block}
+  .patch-laser-examples{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .patch-laser-thumb{display:block;width:100%;padding:0;margin:0;border:1px solid #E2E0EA;border-radius:10px;background:none;cursor:pointer;overflow:hidden;transition:border-color .15s}
+  .patch-laser-thumb:hover{border-color:#5028AA}
+  .patch-laser-thumb img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
   @media(max-width:520px){.patch-laser-examples{grid-template-columns:repeat(2,1fr)}}
+  .patch-laser-lightbox{position:fixed;inset:0;z-index:500;background:rgba(20,18,28,.88);display:flex;align-items:center;justify-content:center;padding:40px 20px}
+  .patch-laser-lightbox[hidden]{display:none}
+  .patch-laser-lightbox img{max-width:100%;max-height:100%;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+  .patch-laser-lightbox-close{position:absolute;top:18px;right:22px;background:none;border:none;color:#fff;font-size:38px;line-height:1;cursor:pointer;padding:6px 10px}
+  .patch-laser-lightbox-close:hover{color:#B7A6EE}
   .bundle-trust{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:16px 0 12px;padding:11px 14px;background:#F3EFFC;border:1px solid #E2E0EA;border-radius:11px;text-decoration:none;color:#14121C;transition:border-color .15s}
   .bundle-trust:hover{border-color:#5028AA}
   .bt-stars{color:#F5C518;font-size:17px;letter-spacing:2px;flex:0 0 auto}
@@ -445,7 +452,7 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 <label class="bundle-opt-label">Patch material <span class="bundle-req">*</span> <button type="button" class="pbo-info-btn" id="pbo-engrave-btn">How does engraving work?</button></label>
 <div class="pbo-matgrid" id="pboMaterials"></div>
 <div class="pbo-info-panel" id="pbo-engrave-info" hidden>
-<p class="bundle-hint">Our laser burns through the colored top layer of the leatherette to expose the black core underneath, so every engraved line comes out black no matter which material you pick. Bold, simple shapes engrave the cleanest, very fine detail can lose crispness at small sizes.</p>
+<p class="bundle-hint">Our laser burns through the colored top layer of the leatherette to expose the contrasting base layer underneath, so every engraved line comes out in that contrast color no matter which material you pick. Bold, simple shapes engrave the cleanest, very fine detail can lose crispness at small sizes.</p>
 </div>
 <input type="hidden" name="properties[Patch material]" id="pboMaterialInput" value="Brushed Silver">
 </div>
@@ -1229,15 +1236,62 @@ Free shipping
 {%- if is_patch_bundle -%}
 <div class="patch-laser-info">
 <h3>How laser engraving works</h3>
-<p>Every patch starts as a blank sheet of leatherette. Our laser burns through the colored top layer to expose the black core underneath, tracing your logo line by line, so the engraving is permanent rather than a print or a sticker. Once it's cut, we heat press it onto the front panel of your hat.</p>
-<p class="patch-laser-examples-label">A few we've done recently</p>
-<div class="patch-laser-examples">
+<p>Every patch starts as a blank sheet of leatherette. Our laser burns through the colored top layer to expose the contrasting base layer underneath, tracing your logo line by line, so the engraving is permanent rather than a print or a sticker. Once it's cut, we heat press it onto the front panel of your hat.</p>
+<p class="patch-laser-examples-label">A few we've done recently. Tap a photo to see it full size.</p>
+<div class="patch-laser-examples" id="patchLaserExamples">
+<button type="button" class="patch-laser-thumb" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-threadbreak.jpg?v=1789705673">
 <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-threadbreak.jpg?v=1789705673" alt="Laser engraved leatherette patch samples showing Threadbreak branding" loading="lazy">
+</button>
+<button type="button" class="patch-laser-thumb" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-emt.jpg?v=1789705673">
 <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-emt.jpg?v=1789705673" alt="Laser engraved leatherette patch reading E.M.T, Ethan Moore Trucking LLC, on a black trucker hat" loading="lazy">
+</button>
+<button type="button" class="patch-laser-thumb" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-emt-pile.jpg?v=1789705996">
+<img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-emt-pile.jpg?v=1789705996" alt="Several laser engraved E.M.T Ethan Moore Trucking LLC leatherette patches fresh off the laser" loading="lazy">
+</button>
+<button type="button" class="patch-laser-thumb" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-panelcraft.jpg?v=1789705673">
 <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-panelcraft.jpg?v=1789705673" alt="Three black trucker hats with laser engraved Panel Craft leatherette patches" loading="lazy">
+</button>
+<button type="button" class="patch-laser-thumb" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-panelcraft-closeup.jpg?v=1789705996">
+<img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-panelcraft-closeup.jpg?v=1789705996" alt="Close up of a laser engraved Panel Craft leatherette patch on a black trucker hat" loading="lazy">
+</button>
+<button type="button" class="patch-laser-thumb" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-trawlr.jpg?v=1789705673">
 <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-trawlr.jpg?v=1789705673" alt="Laser engraved leatherette patch reading Trawlr on a mustard yellow hat" loading="lazy">
+</button>
 </div>
 </div>
+<div class="patch-laser-lightbox" id="patchLaserLightbox" hidden>
+<button type="button" class="patch-laser-lightbox-close" id="patchLaserLightboxClose" aria-label="Close">&times;</button>
+<img src="" alt="" id="patchLaserLightboxImg">
+</div>
+<script>
+(function(){
+  var grid = document.getElementById("patchLaserExamples");
+  var box = document.getElementById("patchLaserLightbox");
+  var boxImg = document.getElementById("patchLaserLightboxImg");
+  var closeBtn = document.getElementById("patchLaserLightboxClose");
+  if (!grid || !box || !boxImg || !closeBtn) return;
+  function open(src, alt){
+    boxImg.src = src;
+    boxImg.alt = alt || "";
+    box.removeAttribute("hidden");
+    document.body.style.overflow = "hidden";
+  }
+  function close(){
+    box.setAttribute("hidden", "");
+    boxImg.src = "";
+    document.body.style.overflow = "";
+  }
+  grid.querySelectorAll(".patch-laser-thumb").forEach(function(btn){
+    btn.addEventListener("click", function(){
+      var img = btn.querySelector("img");
+      open(btn.dataset.full, img ? img.alt : "");
+    });
+  });
+  closeBtn.addEventListener("click", close);
+  box.addEventListener("click", function(e){ if (e.target === box) close(); });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape") close(); });
+})();
+</script>
 {%- endif -%}
 
 </div>
