@@ -83,14 +83,32 @@
             {%- else -%}
               <div class="coll-img-placeholder">🧢</div>
             {%- endif -%}
+            {%- assign is_hat_bundle = false -%}
+            {%- if product.type == "Custom Hat Bundle" -%}{%- assign is_hat_bundle = true -%}{%- endif -%}
+            {%- assign is_patch_bundle_card = false -%}
+            {%- if product.type == "Custom Patch Bundle" -%}{%- assign is_patch_bundle_card = true -%}{%- endif -%}
+            {%- assign is_process_bundle = false -%}
+            {%- if is_hat_bundle or is_patch_bundle_card -%}{%- assign is_process_bundle = true -%}{%- endif -%}
             {%- if product.compare_at_price > product.price -%}
-              <div class="coll-badge coll-badge-sale">Sale</div>
+              <div class="coll-badge coll-badge-sale{% if is_process_bundle %} coll-badge-shifted{% endif %}">Sale</div>
             {%- endif -%}
             {%- unless product.available -%}
-              <div class="coll-badge coll-badge-sold">Sold Out</div>
+              <div class="coll-badge coll-badge-sold{% if is_process_bundle %} coll-badge-shifted{% endif %}">Sold Out</div>
             {%- endunless -%}
+            {%- comment -%} process banner: which decoration method this bundle uses {%- endcomment -%}
+            {%- if is_patch_bundle_card -%}
+              <div class="coll-process coll-process-laser">
+                <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                Laser Engraved
+              </div>
+            {%- elsif is_hat_bundle -%}
+              <div class="coll-process coll-process-embroidered">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M8 12h8M12 8v8"/></svg>
+                Embroidered
+              </div>
+            {%- endif -%}
             {%- comment -%} brand mark for hat packages {%- endcomment -%}
-            {%- if product.type == "Custom Hat Bundle" -%}
+            {%- if is_process_bundle -%}
               {%- assign vt = product.vendor | append: " " | append: product.title | downcase -%}
               {%- assign blogo = "" -%}{%- assign balt = "" -%}
               {%- if vt contains "richardson" -%}
@@ -118,7 +136,7 @@
                 Colour count for bundle products. Each variant is one colour, so the
                 variant count is the colour count and works reliably on collection pages.
               {%- endcomment -%}
-              {%- if product.type == "Custom Hat Bundle" and product.variants.size > 1 -%}
+              {%- if is_process_bundle and product.variants.size > 1 -%}
                 <span class="coll-colors"><span class="coll-wheel"></span>{{ product.variants.size }} colors</span>
               {%- endif -%}
               {%- if product.variants.size > 1 -%}
@@ -128,11 +146,11 @@
           </div>
         </a>
         {%- comment -%}
-          Custom hat packages need a color, a logo file and a placement, so a
-          one-click add would create an unfulfillable order. Send them to the
-          product page instead.
+          Custom hat and patch packages need a color, a logo file and a
+          placement, so a one-click add would create an unfulfillable order.
+          Send them to the product page instead.
         {%- endcomment -%}
-        {%- if product.type == "Custom Hat Bundle" -%}
+        {%- if is_process_bundle -%}
           <a href="{{ product.url }}" class="coll-atc coll-atc-link">Customize This Package</a>
         {%- elsif product.available -%}
           <button class="coll-atc" data-variant="{{ product.variants.first.id }}" onclick="collAddToCart(event, this)">Add to Cart</button>

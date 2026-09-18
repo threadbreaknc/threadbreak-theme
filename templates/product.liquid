@@ -304,11 +304,17 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
     padding:9px 18px;margin-right:11px;cursor:pointer;transition:background .15s;}
   .bundle-file::file-selector-button:hover{background:#6234c9;}
   .bundle-file{cursor:pointer;font-size:13px;color:#6B6A78;}
-  /* Custom Patch Bundle: full patch designer, same options as the standalone patch order page */
+  /* Custom Patch Bundle: full patch designer, same options as the standalone patch order page.
+     The preview/fields split needs to react to the actual column width, not the viewport: this
+     block sits in the narrow product-info sidebar next to the gallery image, not the full page,
+     so a viewport media query (e.g. min-width:900px) fires on ordinary desktops while the real
+     available width here is still only ~400px, crushing the fields column down to a sliver.
+     A container query measures the real space instead. */
+  .bundle-opts{container-type:inline-size}
   .pbo-layout{display:flex;flex-direction:column;gap:6px}
   .pbo-layout-fields{display:flex;flex-direction:column;gap:26px;margin-top:22px}
-  @media(min-width:900px){
-    .pbo-layout{display:grid;grid-template-columns:minmax(260px,320px) 1fr;gap:24px;align-items:start}
+  @container (min-width:560px){
+    .pbo-layout{display:grid;grid-template-columns:minmax(240px,300px) 1fr;gap:20px;align-items:start}
     .pbo-layout-preview{position:sticky;top:18px;z-index:1}
     .pbo-layout-fields{margin-top:0}
   }
