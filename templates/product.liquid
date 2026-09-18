@@ -263,6 +263,13 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
   .product-desc ul{margin:0 0 1.1em;padding-left:20px}
   .product-desc li{margin-bottom:.45em;line-height:1.6}
   .product-desc strong{color:#14121C}
+  .patch-laser-info{margin-top:18px;background:#F3EFFC;border:1px solid #E2E0EA;border-radius:14px;padding:18px}
+  .patch-laser-info h3{font-size:16px;font-weight:700;color:#14121C;margin:0 0 .6em}
+  .patch-laser-info p{margin:0 0 1em;line-height:1.6;font-size:14px;color:#3d3a4a}
+  .patch-laser-examples-label{font-size:12.5px;font-weight:600;color:#6B6A78;margin-bottom:.6em!important}
+  .patch-laser-examples{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .patch-laser-examples img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:10px;border:1px solid #E2E0EA;display:block}
+  @media(max-width:520px){.patch-laser-examples{grid-template-columns:repeat(2,1fr)}}
   .bundle-trust{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:16px 0 12px;padding:11px 14px;background:#F3EFFC;border:1px solid #E2E0EA;border-radius:11px;text-decoration:none;color:#14121C;transition:border-color .15s}
   .bundle-trust:hover{border-color:#5028AA}
   .bt-stars{color:#F5C518;font-size:17px;letter-spacing:2px;flex:0 0 auto}
@@ -1218,6 +1225,20 @@ Free shipping
 {%- endform -%}
 
 <div class="product-desc">{{ product.description }}</div>
+
+{%- if is_patch_bundle -%}
+<div class="patch-laser-info">
+<h3>How laser engraving works</h3>
+<p>Every patch starts as a blank sheet of leatherette. Our laser burns through the colored top layer to expose the black core underneath, tracing your logo line by line, so the engraving is permanent rather than a print or a sticker. Once it's cut, we heat press it onto the front panel of your hat.</p>
+<p class="patch-laser-examples-label">A few we've done recently</p>
+<div class="patch-laser-examples">
+<img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-threadbreak.jpg?v=1789705673" alt="Laser engraved leatherette patch samples showing Threadbreak branding" loading="lazy">
+<img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-emt.jpg?v=1789705673" alt="Laser engraved leatherette patch reading E.M.T, Ethan Moore Trucking LLC, on a black trucker hat" loading="lazy">
+<img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-panelcraft.jpg?v=1789705673" alt="Three black trucker hats with laser engraved Panel Craft leatherette patches" loading="lazy">
+<img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-trawlr.jpg?v=1789705673" alt="Laser engraved leatherette patch reading Trawlr on a mustard yellow hat" loading="lazy">
+</div>
+</div>
+{%- endif -%}
 
 </div>
 
