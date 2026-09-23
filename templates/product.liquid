@@ -71,9 +71,11 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
 {%- endcomment -%}
 {%- assign jm_badge = product.metafields.judgeme.badge -%}
 {%- assign has_product_reviews = true -%}
-{%- if jm_badge == blank or jm_badge contains 'data-number-of-reviews="0"' -%}
-  {%- assign has_product_reviews = false -%}
-{%- endif -%}
+{%- if jm_badge == blank -%}{%- assign has_product_reviews = false -%}{%- endif -%}
+{%- if jm_badge contains 'data-number-of-reviews="0"' -%}{%- assign has_product_reviews = false -%}{%- endif -%}
+{%- if jm_badge contains "data-number-of-reviews='0'" -%}{%- assign has_product_reviews = false -%}{%- endif -%}
+{%- if jm_badge contains 'Be the first' -%}{%- assign has_product_reviews = false -%}{%- endif -%}
+{%- if jm_badge contains 'No reviews' -%}{%- assign has_product_reviews = false -%}{%- endif -%}
 
 {%- unless is_apparel -%}
   {%- if has_product_reviews -%}
@@ -82,13 +84,6 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
 {{ product.metafields.judgeme.badge }}
 </div>
 <!-- End of Judge.me code -->
-  {%- else -%}
-    {%- assign jm = shop.metafields.judgeme -%}
-    <a href="/pages/reviews" class="shop-rating">
-      <span class="shop-rating-stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-      <span>{{ jm.all_reviews_rating | default: 5.0 | round: 1 }}/5 from {{ jm.all_reviews_count | default: 45 }} verified reviews</span>
-      <span class="shop-rating-arrow" aria-hidden="true">&rarr;</span>
-    </a>
   {%- endif -%}
 {%- endunless -%}
 
@@ -243,16 +238,13 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
   .leadtime-notice strong{color:#5028AA;}
   /* premade: a quiet line rather than a highlighted callout */
   .leadtime-plain{margin:12px 0 4px;font-size:13px;color:#6B6A78;line-height:1.5;}
-  /* shop-wide rating shown when a product has no reviews of its own */
-  .shop-rating{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px;
-    text-decoration:none;color:#6B6A78;font-size:13.5px;transition:color .15s;}
-  .shop-rating:hover{color:#14121C;}
-  .shop-rating-stars{color:#F5C518;font-size:15px;letter-spacing:2px;flex:none;}
-  .shop-rating-arrow{color:#5028AA;font-weight:700;transition:transform .15s;}
-  .shop-rating:hover .shop-rating-arrow{transform:translateX(3px);}
-  /* never show Judge.me's empty prompts */
-  .jdgm-prev-badge[data-number-of-reviews="0"]{display:none !important;}
-  .jdgm-prev-badge[data-number-of-reviews="0"] + *{margin-top:0;}
+  /* Judge.me's app embed can inject widgets the template never rendered, so hide
+     every empty state here as well as skipping them in Liquid above */
+  .jdgm-prev-badge[data-number-of-reviews="0"],
+  .jdgm-prev-badge[data-number-of-reviews="0"] *,
+  .jdgm-widget[data-number-of-reviews="0"],
+  .jdgm-rev-widg[data-number-of-reviews="0"]{display:none !important;}
+  .jdgm-prev-badge:empty,.jdgm-rev-widg:empty,.jdgm-review-widget:empty{display:none !important;}
   .product-price-was{margin-left:8px;font-size:0.8em;color:#8b8996;text-decoration:line-through;}
   /* thumbnail dropdown for options with many values */
   /* .product-option already gets a transform from its fadeUp entrance animation,
