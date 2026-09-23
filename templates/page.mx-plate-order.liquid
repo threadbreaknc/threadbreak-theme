@@ -1,0 +1,223 @@
+{%- comment -%} build: mx-plate-landing-v1 {%- endcomment -%}
+{%- comment -%}
+  Custom Motocross Number Plate Hats landing page
+  (threadbreak.com/pages/custom-motocross-number-plate-hats).
+
+  This is a marketing/landing page, not a wizard - it mirrors the section
+  structure and namespacing style of templates/page.patch-order.liquid
+  (self-contained #-scoped div + inline <style>, no site header/footer
+  markup since the theme layout already provides those) rather than its
+  step-form machinery.
+
+  Two things are intentionally left as placeholders per the ask:
+  1. GALLERY - the three tiles are dashed placeholders, same idea as the
+     supplied mockup. Once real customer/product photos exist, replace the
+     .tile placeholder markup with <img> tags the same way
+     page.custom-hats-motorsports.liquid's .ind-gallery-row does (real src,
+     descriptive alt text, loading="lazy").
+  2. BUILDER - #builder is an empty placeholder section (.slot-box). The
+     actual plate/brand/hat configurator drops in here once it's built;
+     nothing to wire up yet.
+{%- endcomment -%}
+<div id="tbmxplate">
+<style>
+  #tbmxplate{
+    --ink:#121316; --ink-raised:#1b1d21; --line:#2b2d32;
+    --paper:#f3f1ec; --paper-dim:#b9b6ae;
+    --purple:#5028aa; --purple-deep:#2e1766;
+    --dirt:#c6531b; --dirt-bright:#e8691f;
+    padding-top:6rem; font-family:'DM Sans',sans-serif; color:var(--paper);
+    -webkit-font-smoothing:antialiased;
+  }
+  #tbmxplate *{box-sizing:border-box}
+  #tbmxplate h1,#tbmxplate h2,#tbmxplate h3{font-family:'Bebas Neue',sans-serif;font-weight:400;margin:0;letter-spacing:.5px}
+  #tbmxplate p{margin:0}
+  #tbmxplate a{color:inherit}
+  #tbmxplate img{max-width:100%;display:block}
+  #tbmxplate .wrap{max-width:480px;margin:0 auto;padding:0 20px}
+  @media(min-width:640px){#tbmxplate .wrap{max-width:720px}}
+
+  /* ---------- checker divider ---------- */
+  #tbmxplate .checker{
+    height:14px;
+    background-image:
+      linear-gradient(45deg, var(--paper) 25%, transparent 25%, transparent 75%, var(--paper) 75%),
+      linear-gradient(45deg, var(--paper) 25%, transparent 25%, transparent 75%, var(--paper) 75%);
+    background-size:14px 14px;
+    background-position:0 0, 7px 7px;
+    background-color:var(--ink);
+    opacity:.9;
+  }
+
+  /* ---------- hero ---------- */
+  #tbmxplate .hero{
+    position:relative; padding:52px 0 40px; overflow:hidden;
+    background:
+      radial-gradient(120% 90% at 15% 0%, var(--purple-deep) 0%, transparent 55%),
+      var(--ink);
+  }
+  #tbmxplate .hero-crest{position:absolute;top:-8%;right:-22%;width:78vw;max-width:460px;opacity:.14;transform:rotate(8deg)}
+  #tbmxplate .hero .wrap{position:relative;z-index:1}
+  #tbmxplate .kicker{font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;color:var(--dirt-bright);letter-spacing:.3px;margin-bottom:10px}
+  #tbmxplate h1.headline{font-size:54px;line-height:.94;letter-spacing:.5px;text-transform:uppercase}
+  #tbmxplate h1.headline .accent{color:var(--dirt-bright)}
+  #tbmxplate .sub{margin-top:16px;font-size:16px;line-height:1.55;color:var(--paper-dim);max-width:42ch}
+  #tbmxplate .cta{
+    display:inline-block;margin-top:26px;background:var(--dirt);color:var(--paper);
+    font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;
+    padding:15px 30px;border-radius:6px;text-decoration:none;box-shadow:0 6px 0 #7c3510;
+  }
+  #tbmxplate .cta:active{transform:translateY(3px);box-shadow:0 3px 0 #7c3510}
+  #tbmxplate .trust{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:30px;padding-top:22px;border-top:1px solid var(--line)}
+  #tbmxplate .trust-item{font-size:12.5px;color:var(--paper-dim);display:flex;align-items:center;gap:7px}
+  #tbmxplate .trust-item::before{content:'';width:5px;height:5px;background:var(--dirt-bright);border-radius:50%;flex-shrink:0}
+
+  /* ---------- how it works ---------- */
+  #tbmxplate .steps{padding:46px 0 40px;background:var(--ink)}
+  #tbmxplate .steps .section-title{font-size:34px;letter-spacing:.4px;color:var(--paper)}
+  #tbmxplate .steps .lede{color:var(--paper-dim);margin-top:8px;font-size:14.5px;max-width:46ch}
+  #tbmxplate .step-list{margin-top:30px;display:flex;flex-direction:column;gap:0}
+  #tbmxplate .step{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
+  #tbmxplate .step:last-child{border-bottom:none}
+  #tbmxplate .step-num{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--purple);line-height:1;width:40px;flex-shrink:0}
+  #tbmxplate .step-body h3{font-size:21px;letter-spacing:.3px;text-transform:uppercase;color:var(--paper)}
+  #tbmxplate .step-body p{margin-top:5px;font-size:14px;color:var(--paper-dim);line-height:1.5}
+
+  /* ---------- gallery ---------- */
+  #tbmxplate .gallery{padding:10px 0 44px;background:var(--ink)}
+  #tbmxplate .gallery .section-title{font-size:34px;color:var(--paper)}
+  #tbmxplate .gallery .lede{color:var(--paper-dim);margin-top:8px;font-size:14.5px}
+  #tbmxplate .gallery-grid{margin-top:22px;display:grid;grid-template-columns:1.3fr 1fr;gap:8px}
+  #tbmxplate .gallery-grid .tile:first-child{grid-row:span 2;min-height:232px}
+  #tbmxplate .tile{
+    background:var(--ink-raised);border:1px dashed var(--line);border-radius:8px;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+    color:var(--paper-dim);font-size:11.5px;min-height:110px;text-align:center;padding:10px;
+  }
+  #tbmxplate .tile svg{opacity:.5}
+  #tbmxplate .gallery-grid img{width:100%;height:100%;object-fit:cover;border-radius:8px}
+
+  /* ---------- reviews ---------- */
+  #tbmxplate .reviews{padding:4px 0 30px;background:var(--ink)}
+  #tbmxplate .rating-line{font-size:13.5px;color:var(--paper-dim);text-align:center}
+  #tbmxplate .rating-line .stars{color:var(--dirt-bright);font-size:12px;letter-spacing:1px}
+  #tbmxplate .rating-count-inline{color:var(--paper)}
+  #tbmxplate .rating-link{font-weight:700;color:var(--dirt-bright);text-decoration:underline;text-underline-offset:3px}
+
+  /* ---------- builder slot (placeholder) ---------- */
+  #tbmxplate .builder-slot{padding:10px 0 60px;background:var(--ink)}
+  #tbmxplate .builder-slot .section-title{font-size:34px;color:var(--paper)}
+  #tbmxplate .builder-slot .lede{color:var(--paper-dim);margin-top:8px;font-size:14.5px}
+  #tbmxplate .slot-box{margin-top:22px;border:2px dashed var(--purple);border-radius:12px;padding:46px 20px;text-align:center;background:rgba(80,40,170,.08)}
+  #tbmxplate .slot-box .tag{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--purple);letter-spacing:.4px}
+  #tbmxplate .slot-box p{margin-top:10px;font-size:13px;color:var(--paper-dim);max-width:40ch;margin-left:auto;margin-right:auto}
+
+  @media(max-width:600px){
+    #tbmxplate h1.headline{font-size:44px}
+  }
+</style>
+
+<section class="hero">
+  <svg class="hero-crest" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--paper)" stroke-width="1.4" aria-hidden="true">
+    <path d="M50,12 Q56,2 62,6 Q78,10 84,26 Q88,38 79,44 Q84,52 74,60 L64,54 L50,63 L36,54 L26,60 Q16,52 21,44 Q12,38 16,26 Q22,10 38,6 Q44,2 50,12 Z"/>
+  </svg>
+  <div class="wrap">
+    <div class="kicker">Threadbreak &middot; Custom Hats</div>
+    <h1 class="headline">Your number.<br>Your plate.<br><span class="accent">Your hat.</span></h1>
+    <p class="sub">A custom leatherette patch styled after your bike's actual number plate &mdash; your name and number, laser engraved and heat pressed onto the hat of your choice.</p>
+    <a href="#builder" class="cta">Build your plate</a>
+
+    <div class="trust">
+      <span class="trust-item">Made in Burlington, NC</span>
+      <span class="trust-item">Free shipping, lower 48</span>
+      <span class="trust-item">Laser engraved, not printed</span>
+    </div>
+  </div>
+</section>
+
+<div class="checker"></div>
+
+<section class="steps">
+  <div class="wrap">
+    <h2 class="section-title">How it comes together</h2>
+    <p class="lede">Three choices and it's ready to build.</p>
+
+    <div class="step-list">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Pick a plate style</h3>
+          <p>Pro, Factory, Supercross, and more &mdash; the layout and edge shape of your number plate.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Pick your bike brand</h3>
+          <p>Sets the plate to match your bike's actual number plate design &mdash; KTM, Honda, Yamaha, Kawasaki, and more.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Pick your hat</h3>
+          <p>Choose the blank it goes on and where the patch sits on the front.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="gallery">
+  <div class="wrap">
+    <h2 class="section-title">Real riders, real plates</h2>
+    <p class="lede">Hats we've built for customers.</p>
+    {%- comment -%}
+      TODO(threadbreak): replace these three placeholder tiles with real
+      customer/product photos, the same way page.custom-hats-motorsports.liquid's
+      .ind-gallery-row does it, e.g.:
+        <img src="https://cdn.shopify.com/..." alt="Custom motocross number
+        plate hat made by Threadbreak" loading="lazy">
+      Keep the first tile as the tall/first grid item (grid-row: span 2).
+    {%- endcomment -%}
+    <div class="gallery-grid">
+      <div class="tile">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M3 16l5-5 4 4 3-3 5 5"/></svg>
+        Customer photo
+      </div>
+      <div class="tile">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M3 16l5-5 4 4 3-3 5 5"/></svg>
+        Customer photo
+      </div>
+      <div class="tile">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M3 16l5-5 4 4 3-3 5 5"/></svg>
+        Customer photo
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="reviews">
+  <div class="wrap">
+    {%- assign jm = shop.metafields.judgeme -%}
+    <p class="rating-line">
+      <span class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+      {{ jm.all_reviews_rating | default: 5.0 | round: 1 }}/5 &middot;
+      <span class="rating-count-inline">{{ jm.all_reviews_count | default: 45 }}</span> reviews &middot;
+      <a href="/pages/reviews" class="rating-link">Read them</a>
+    </p>
+  </div>
+</section>
+
+<section class="builder-slot" id="builder">
+  <div class="wrap">
+    <h2 class="section-title">Build your plate</h2>
+    <p class="lede">Pick your style, brand, and hat below.</p>
+    <div class="slot-box">
+      <div class="tag">Builder loads here</div>
+      <p>This is where the plate style / brand / hat configurator drops in once it's built.</p>
+    </div>
+  </div>
+</section>
+
+</div>

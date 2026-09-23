@@ -64,12 +64,32 @@ data-src="{{ image | img_url: '800x800', crop: 'center' }}">
   {%- if col.handle == 'pre-made-hats' -%}{%- assign is_premade = true -%}{%- endif -%}
   {%- if col.handle contains 'clearance' -%}{%- assign is_clearance = true -%}{%- endif -%}
 {%- endfor -%}
+{%- comment -%}
+  The Judge.me badge is per product, so a hat with no reviews of its own renders
+  an empty "be the first" prompt. Show it only when there are reviews, and fall
+  back to the shop-wide rating so the page still carries social proof.
+{%- endcomment -%}
+{%- assign jm_badge = product.metafields.judgeme.badge -%}
+{%- assign has_product_reviews = true -%}
+{%- if jm_badge == blank or jm_badge contains 'data-number-of-reviews="0"' -%}
+  {%- assign has_product_reviews = false -%}
+{%- endif -%}
+
 {%- unless is_apparel -%}
+  {%- if has_product_reviews -%}
 <!-- Start of Judge.me code -->
 <div style='margin-bottom: 0.75rem;' class='jdgm-widget jdgm-preview-badge' data-id='{{ product.id }}' data-auto-install='false'>
 {{ product.metafields.judgeme.badge }}
 </div>
 <!-- End of Judge.me code -->
+  {%- else -%}
+    {%- assign jm = shop.metafields.judgeme -%}
+    <a href="/pages/reviews" class="shop-rating">
+      <span class="shop-rating-stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
+      <span>{{ jm.all_reviews_rating | default: 5.0 | round: 1 }}/5 from {{ jm.all_reviews_count | default: 45 }} verified reviews</span>
+      <span class="shop-rating-arrow" aria-hidden="true">&rarr;</span>
+    </a>
+  {%- endif -%}
 {%- endunless -%}
 
 <div class="product-price-row">
@@ -221,6 +241,18 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 .bundle-en-example img{max-width:100%;border-radius:10px;border:1px solid #E2E0EA;display:block}
   .leadtime-notice{margin:14px 0 4px;font-size:14px;color:#3d3a4a;background:#F3EFFC;border:1px solid #E2E0EA;border-radius:10px;padding:10px 14px;}
   .leadtime-notice strong{color:#5028AA;}
+  /* premade: a quiet line rather than a highlighted callout */
+  .leadtime-plain{margin:12px 0 4px;font-size:13px;color:#6B6A78;line-height:1.5;}
+  /* shop-wide rating shown when a product has no reviews of its own */
+  .shop-rating{display:inline-flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px;
+    text-decoration:none;color:#6B6A78;font-size:13.5px;transition:color .15s;}
+  .shop-rating:hover{color:#14121C;}
+  .shop-rating-stars{color:#F5C518;font-size:15px;letter-spacing:2px;flex:none;}
+  .shop-rating-arrow{color:#5028AA;font-weight:700;transition:transform .15s;}
+  .shop-rating:hover .shop-rating-arrow{transform:translateX(3px);}
+  /* never show Judge.me's empty prompts */
+  .jdgm-prev-badge[data-number-of-reviews="0"]{display:none !important;}
+  .jdgm-prev-badge[data-number-of-reviews="0"] + *{margin-top:0;}
   .product-price-was{margin-left:8px;font-size:0.8em;color:#8b8996;text-decoration:line-through;}
   /* thumbnail dropdown for options with many values */
   /* .product-option already gets a transform from its fadeUp entrance animation,
@@ -1191,7 +1223,7 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 {%- if is_clearance -%}
 <p class="leadtime-notice">Ready to ship &middot; <strong>sold as-is</strong>, each hat has a disclosed cosmetic or production issue</p>
 {%- elsif is_premade -%}
-<p class="leadtime-notice"><strong>Made to order</strong></p>
+<p class="leadtime-plain">Made to order. Most orders ship in 2-4 business days.</p>
 {%- elsif is_apparel -%}
 <p class="leadtime-notice">Printed to order &middot; ships in <strong>2-5 business days</strong></p>
 {%- endif -%}
@@ -1308,9 +1340,12 @@ Free shipping
 </div>
 </section>
 
+{%- comment -%} the full widget also shows an empty prompt, so skip it with no reviews {%- endcomment -%}
+{%- if has_product_reviews -%}
 <section class="product-reviews-wrap">
 <!-- Start of Judge.me code -->{% assign has_legacy = false %}{% if product.metafields.judgeme.widget.size > 20 %}{% assign has_legacy = true %}{% endif %}<div style='clear:both'></div><div id='judgeme_product_reviews' class='jdgm-widget jdgm-review-widget' data-product-title='{{ product.title | escape }}' data-id='{{ product.id }}' data-product-id='{{ product.id }}' data-widget='review' data-auto-install='false' data-shop-reviews-count='{{ shop.metafields.judgeme.shop_reviews_count | default: 0 | escape }}' data-entry-point='review_widget.js' data-entry-key='review-widget/main.js'>{% if has_legacy %}<div class='jdgm-legacy-widget-content' style='display: none;'>{{ product.metafields.judgeme.widget }}</div>{% endif %}</div>{% if product.metafields.judgeme.review_widget_data %}<script>jdgm.data ||= {}; jdgm.data.reviewWidget ||= {}; jdgm.data.reviewWidget[{{ product.id }}] = {{ product.metafields.judgeme.review_widget_data }}</script>{% endif %}<!-- End of Judge.me code -->
 </section>
+{%- endif -%}
 
 {%- if product.metafields.custom.wild_photo_1 != blank -%}
 <section class="in-the-wild">
