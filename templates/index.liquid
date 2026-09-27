@@ -7,13 +7,27 @@
   <div class="hc-hero-overlay"></div>
   <div class="hc-hero-loopfade" id="hcLoopFade"></div>
   <div class="hc-hero-inner">
-    <p class="hc-eyebrow">Custom &amp; Wholesale Embroidery</p>
-    <h1 class="hc-h1">Custom&nbsp;embroidered hats for your brand.</h1>
-    <p class="hc-sub">Your logo, stitched in-house in North Carolina. 5 hat minimum, wholesale pricing starts at 10.</p>
-    <div class="hc-cta-row">
-      <a href="/pages/custom-order" class="hc-cta-primary">Place a Custom Order</a>
-      <a href="/collections/pre-made-hats" class="hc-cta-secondary">Shop Premade Hats</a>
-      <a href="/pages/our-work" class="hc-cta-secondary">Our Work</a>
+    <p class="hc-eyebrow">Custom Embroidery &amp; Laser Engraving</p>
+    <h1 class="hc-h1">Your logo on hats,<br><em>stitched or engraved.</em></h1>
+    <p class="hc-sub">Custom embroidery and laser engraved leather patches, made in-house in Burlington, North Carolina. 5 hat minimum, wholesale pricing starts at 10.</p>
+
+    <div class="method-row">
+      <a href="/pages/custom-order" class="method method-a">
+        <span class="method-kicker">Stitched</span>
+        <span class="method-name">Custom Embroidered Hats</span>
+        <span class="method-desc">Thread on the front, sides or back. No stitch limits.</span>
+      </a>
+      <a href="/pages/custom-patch-hats" class="method method-b">
+        <span class="method-kicker">Engraved</span>
+        <span class="method-name">Custom Patch Hats</span>
+        <span class="method-desc">Leather patches, laser engraved and pressed on.</span>
+      </a>
+    </div>
+
+    <div class="hc-minor">
+      <a href="/collections/custom-hat-packages">Hat Packages</a>
+      <a href="/collections/pre-made-hats">Shop Premade Hats</a>
+      <a href="/pages/our-work">Our Work</a>
     </div>
     <a href="/pages/reviews" class="hc-rating">
       {%- assign jm_rating = shop.metafields.judgeme.all_reviews_rating | default: 5.0 -%}
@@ -23,6 +37,70 @@
     </a>
   </div>
 </section>
+
+<section class="tb-methods">
+  <div class="tb-methods-inner">
+    <h2>Two Ways To Brand A Hat</h2>
+    <p class="tb-methods-sub">Both are done in-house, both include a free mockup before anything is made, and both ship free to the lower 48. The right one depends on your artwork.</p>
+    <div class="tb-m-grid">
+
+      <div class="tb-m-card">
+        <img class="tb-m-img" src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/embroidered_hats.jpg?v=1790523398&width=800" alt="Custom embroidered hats with company logos made by Threadbreak" loading="lazy" width="800" height="500">
+        <div class="tb-m-body">
+          <span class="tb-m-tag">Embroidery</span>
+          <h3>Stitched With Thread</h3>
+          <p>The classic look. Durable, textured, and it works on any panel of the hat.</p>
+          <ul class="tb-m-list">
+            <li>No stitch limits, detailed logos cost the same</li>
+            <li>Front, left side, right side or back</li>
+            <li>3D puff available on the front</li>
+            <li>Free digitizing, no setup fee</li>
+          </ul>
+          <a href="/pages/custom-order" class="tb-m-cta">Start an Embroidery Order</a>
+        </div>
+      </div>
+
+      <div class="tb-m-card">
+        <img class="tb-m-img" src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/Threadbreak_hats.jpg?v=1790523398&width=800" alt="Laser engraved leather patch hats made by Threadbreak" loading="lazy" width="800" height="500">
+        <div class="tb-m-body">
+          <span class="tb-m-tag">Laser Engraving</span>
+          <h3>Engraved Leather Patches</h3>
+          <p>Your logo burned into real leatherette, then pressed onto the hat. Holds fine detail that thread cannot.</p>
+          <ul class="tb-m-list">
+            <li>Multiple leatherette color options</li>
+            <li>Three sizes, four patch shapes</li>
+            <li>Better for intricate or small-text logos</li>
+            <li>See your engraving before you order</li>
+          </ul>
+          <a href="/pages/custom-patch-hats" class="tb-m-cta alt">Start a Patch Order</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+<style>
+  .tb-methods{padding:4.5rem 2rem;background:#fff;}
+  .tb-methods-inner{max-width:1040px;margin:0 auto;}
+  .tb-methods h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,4vw,2.8rem);text-align:center;margin:0 0 10px;line-height:1.05;}
+  .tb-methods-sub{text-align:center;color:#6B6A78;font-size:1rem;line-height:1.6;max-width:600px;margin:0 auto 2.4rem;}
+  .tb-m-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .tb-m-card{border:1.5px solid #E2E0EA;border-radius:16px;overflow:hidden;background:#fff;display:flex;flex-direction:column;transition:border-color .16s,box-shadow .16s;}
+  .tb-m-card:hover{border-color:#5028AA;box-shadow:0 10px 30px rgba(20,18,28,.09);}
+  .tb-m-img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block;background:#f0edf8;}
+  .tb-m-body{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1;}
+  .tb-m-tag{display:inline-block;align-self:flex-start;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:700;color:#5028AA;background:#F3EFFC;border-radius:999px;padding:4px 10px;margin-bottom:10px;}
+  .tb-m-card h3{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:.02em;margin:0 0 8px;}
+  .tb-m-card p{font-size:14px;line-height:1.6;color:#3d3a4a;margin:0 0 14px;}
+  .tb-m-list{list-style:none;margin:0 0 18px;padding:0;display:grid;gap:7px;}
+  .tb-m-list li{font-size:13px;color:#3d3a4a;padding-left:22px;position:relative;line-height:1.45;}
+  .tb-m-list li::before{content:"\2713";position:absolute;left:0;color:#1E9E5A;font-weight:700;}
+  .tb-m-cta{margin-top:auto;display:inline-block;text-align:center;background:#5028AA;color:#fff;text-decoration:none;font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:.04em;padding:.7rem 1.4rem;border-radius:10px;transition:background .16s;}
+  .tb-m-cta:hover{background:#6234c9;}
+  .tb-m-cta.alt{background:#14121C;}
+  .tb-m-cta.alt:hover{background:#2a2636;}
+  @media(max-width:760px){.tb-m-grid{grid-template-columns:1fr;}.tb-methods{padding:3rem 1.4rem;}}
+</style>
 
 <section class="tb-story">
   <div class="tb-story-inner">
@@ -103,6 +181,21 @@
   </div>
 </section>
 <style>
+  /* two decoration methods presented side by side in the hero */
+  .method-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:660px;}
+  .method{display:block;padding:18px 20px;border-radius:14px;text-decoration:none;border:2px solid transparent;transition:transform .16s,background .16s,border-color .16s;}
+  .method:hover{transform:translateY(-3px);}
+  .method-a{background:#5028AA;color:#fff;box-shadow:0 8px 26px rgba(80,40,170,.42);}
+  .method-a:hover{background:#6234c9;}
+  .method-b{background:rgba(255,255,255,.07);color:#fff;border-color:rgba(255,255,255,.28);}
+  .method-b:hover{background:rgba(255,255,255,.13);border-color:#B7A6EE;}
+  .method-kicker{display:block;font-size:11px;letter-spacing:.12em;text-transform:uppercase;font-weight:700;opacity:.75;margin-bottom:5px;}
+  .method-name{display:block;font-family:'Bebas Neue',sans-serif;font-size:1.65rem;line-height:1.05;letter-spacing:.02em;margin-bottom:5px;}
+  .method-desc{display:block;font-size:12.5px;line-height:1.45;opacity:.82;}
+  .hc-minor{display:flex;gap:18px;flex-wrap:wrap;margin-top:20px;font-size:14px;}
+  .hc-minor a{color:#D9D6E4;text-decoration:none;border-bottom:1px solid rgba(217,214,228,.35);padding-bottom:2px;}
+  .hc-minor a:hover{color:#fff;}
+  @media(max-width:700px){.method-row{grid-template-columns:1fr;}}
   .hc-rating{display:inline-flex;align-items:center;gap:8px;margin-top:18px;font-size:0.95rem;color:rgba(247,244,240,0.85);letter-spacing:.02em;text-decoration:none;transition:color .15s;}
   .hc-rating:hover{color:#fff;}
   .hc-stars{color:#F5C518;letter-spacing:1px;}
@@ -140,7 +233,7 @@
       <h2>Laser Engraved Patch Hats</h2>
       <p>Your logo burned into real leatherette, then sewn onto the hat. It's the look people associate with premium outdoor and workwear brands, and it holds up better than a print.</p>
       <ul class="tb-patch-list">
-        <li>Seven leatherette colors, from rawhide and saddle tan to brushed silver</li>
+        <li>Multiple leatherette colors, from rawhide and saddle tan to brushed silver</li>
         <li>Three patch sizes and four shapes, on any hat we carry</li>
         <li>Same 5 hat minimum, free mockup before anything is cut</li>
       </ul>
