@@ -157,7 +157,9 @@
   .nav-dd-wide a:hover span{color:#5028AA;}
   .coll-brand{position:absolute;top:-6px;right:0;width:86px;height:86px;object-fit:contain;z-index:2;
     mix-blend-mode:multiply;pointer-events:none;}
-  @media(max-width:600px){.coll-brand{width:64px;height:64px;top:-5px;right:0;}}
+  /* On phones the card is narrow enough that the brand mark collides with the
+     card CTA, so hide it here. The product page keeps its own larger mark. */
+  @media(max-width:600px){.coll-brand{display:none !important;}}
   /* more hats per row on wide screens; theme.css locks it to 3 */
   @media(min-width:1100px){ .collection-grid{ grid-template-columns:repeat(4,1fr) !important; } }
   @media(min-width:1500px){ .collection-grid{ grid-template-columns:repeat(5,1fr) !important; } }
