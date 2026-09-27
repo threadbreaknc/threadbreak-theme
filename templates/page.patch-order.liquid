@@ -24,9 +24,9 @@
     #tbpo header::after{background:linear-gradient(180deg,rgba(20,18,28,.72),rgba(20,18,28,.9))}
     /* Phone: drop the hat shot and run the patch photo across the whole banner,
        zoomed in so the patches themselves are readable. Banner height unchanged. */
-    #tbpo .hero-photos div:first-child,
-    #tbpo .hero-photos div:nth-child(n+3){display:none}
-    #tbpo .hero-photos div:nth-child(2){flex:1 1 100%;margin-left:0;-webkit-mask-image:none;mask-image:none;background-size:auto 165%;background-position:center 45%}
+    /* Phone: show one photo across the whole banner, zoomed so the patch reads. */
+    #tbpo .hero-photos div:nth-child(n+2){display:none}
+    #tbpo .hero-photos div:first-child{flex:1 1 100%;margin-left:0;-webkit-mask-image:none;mask-image:none;background-size:cover;background-position:center 40%}
   }
   #tbpo h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,6vw,58px);line-height:.95;letter-spacing:.01em;margin:0 0 10px}
   #tbpo h1 em{font-style:normal;color:#7F5FD8}
@@ -360,8 +360,9 @@
 
 <header class="tbco-hero">
   <div class="hero-photos" aria-hidden="true">
-    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG-6464.png?v=1787886178')"></div>
-    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/FullSizeRender_2dab9953-4bf4-4da6-921b-88e8233d180a_1600x.heic.jpg?v=1787886178')"></div>
+    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/EMT_patch_hat.jpg?v=1790523398&width=1100')"></div>
+    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/Threadbreak_hats.jpg?v=1790523398&width=1100')"></div>
+    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-panelcraft.jpg?v=1789705673&width=1100')"></div>
   </div>
   <div class="wrap">
     <h1>Your logo.<br>Laser <em>engraved.</em></h1>
