@@ -230,6 +230,22 @@
   #tbco .puff-swatch{text-shadow:0 3px 0 rgba(80,40,170,.35),0 5px 7px rgba(0,0,0,.18)}
   #tbco .info-note{font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:11px}
   #tbco .hint{font-size:12.5px;color:var(--muted);line-height:1.6;margin-top:9px}
+  /* orientation is the single most asked question, so it gets a callout */
+  #tbco .orient-note{display:flex;gap:11px;align-items:flex-start;background:#FFF8E6;border:1.5px solid #E8C97A;
+    border-left:5px solid #E8C97A;border-radius:11px;padding:12px 14px;margin-top:12px}
+  #tbco .orient-note p{font-size:12.5px;line-height:1.55;margin:0;color:#5c4a1a}
+  #tbco .orient-note strong{color:#3d3000}
+  #tbco .orient-icon{flex:0 0 auto;font-size:15px;color:#8a6d1f;line-height:1.3}
+  /* detailed-logo nudge toward patch hats */
+  #tbco .patch-suggest{display:block;margin-top:18px;padding:16px 18px;border-radius:13px;text-decoration:none;
+    background:linear-gradient(135deg,#F3EFFC 0%,#EDE7FA 100%);border:1.5px solid var(--purple);
+    transition:transform .15s,box-shadow .15s}
+  #tbco .patch-suggest:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(80,40,170,.16)}
+  #tbco .patch-suggest-head{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.02em;
+    color:var(--ink);margin:0 0 6px}
+  #tbco .patch-suggest-body p{font-size:13px;line-height:1.55;color:#3d3a4a;margin:0 0 10px}
+  #tbco .patch-suggest-body p strong{color:var(--purple)}
+  #tbco .patch-suggest-cta{display:inline-block;font-size:13.5px;font-weight:700;color:var(--purple)}
   #tbco .uploads{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin-top:4px}
   #tbco .up-slot{border:1.5px dashed var(--line);border-radius:12px;padding:14px;background:#fff}
   #tbco .up-slot.req{border-color:var(--purple);background:var(--ice)}
@@ -409,15 +425,28 @@
 
       <p class="fld">Placement</p>
       <div class="chips" id="places"></div>
+      <div class="orient-note">
+        <span class="orient-icon" aria-hidden="true">&#9432;</span>
+        <p><strong>Left and right are based on looking at the hat from the front, not the wearer's perspective.</strong></p>
+      </div>
+
       <div id="frontPosWrap">
         <p class="fld" style="font-size:13px">Front logo position</p>
         <div class="chips" id="frontPos"></div>
       </div>
-      <p class="hint">Front is included. <strong>Additional locations are $5 per hat, per location.</strong> 3D puff applies to the front only; side and back are stitched flat.</p>
+      <p class="hint">Front is included. <strong>Each additional location is $5 per hat.</strong> Both sides is $10 per hat. <strong>3D puff applies to the front logo only</strong>, so sides and back are always stitched flat.</p>
 
       <p class="fld">Your logo / artwork</p>
       <div class="uploads" id="uploads"></div>
       <p class="hint">One file per location: PNG, JPG, PDF, AI, or SVG, up to 10 MB each. Digitizing is free. No file handy? Skip it and email us after.</p>
+
+      <a href="/pages/custom-patch-hats" class="patch-suggest">
+        <div class="patch-suggest-body">
+          <p class="patch-suggest-head">Very detailed logo?</p>
+          <p>Fine lines, small text and intricate artwork lose detail in thread. A <strong>laser engraved leather patch</strong> holds detail far better and gives a premium look.</p>
+          <span class="patch-suggest-cta">See patch hats &rarr;</span>
+        </div>
+      </a>
 
       <div class="embroidery-notice">
         <span class="en-icon" aria-hidden="true">!</span>
@@ -551,7 +580,7 @@ const STYLES = [
     tiers:[[5,25,52662448586884],[10,22,52559807971460],[24,21,52559808004228],[48,19,52559808036996],[96,18,52559808069764]] },
   { id:"atonal_a500r", name:"Atonal A500R Rope Snapback", brand:"Atonal A500R", desc:"Pinch-front rope snapback · one size fits most", popular:99, features:"Pinch-front rope snapback with a clean flat brim and decorative front rope. A modern lifestyle look that embroiders well above the rope line.",
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/gold-black.jpg?v=1785794799","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black.webp?v=1785794799","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/cardinal-white.jpg?v=1785794799","https://cdn.shopify.com/s/files/1/0974/8453/7988/files/sage-white.jpg?v=1785794799"],
-    colors:["Black","Black/White","Black/Red","Gold/Black","Charcoal/Gold","Cardinal/White","Sage/White","Bone/Medium Blue/Gold","Cream/Copper/Black","Bone/Seafoam/Black"],
+    colors:["Black","Black/White","Black/Red","Gold/Black","Charcoal/Gold","Cardinal/White","Sage/White","Bone/Medium Blue/Gold","Bone/Seafoam/Black"],
     colorImgs:{
       "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black.webp?v=1785794799",
       "Black/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/black-white.webp?v=1785794799",
@@ -726,10 +755,13 @@ const DECOS = [
 ];
 const PLACEMENTS = [
   { id:"front", label:"Front", add:0, locked:true },
-  { id:"side",  label:"Side", add:5, variantId:52543282806916 },
+  { id:"left",  label:"Left side",  add:5, variantId:52543282806916 },
+  { id:"right", label:"Right side", add:5, variantId:52928583204996 },
   { id:"back",  label:"Back", add:5, variantId:52543282839684 },
 ];
-const FRONT_POSITIONS = ["Left front","Center front","Right front"];
+// Left and right are always as you look AT the hat, never the wearer's left
+// and right. People ask about this constantly, so it is spelled out in the UI.
+const FRONT_POSITIONS = ["Left panel","Centered","Right panel"];
 </script>
 
 <script>
@@ -801,8 +833,8 @@ const specsOf = s => (s.desc || "").split("\u00b7").map(x => x.trim()).filter(x 
 
 const state = {
   style: null, colors: [], split: {}, qty: 5, activeColor: null,
-  deco: DECOS[0], places: new Set(["front"]), frontPos: "Center front",
-  files: { front:null, side:null, back:null },
+  deco: DECOS[0], places: new Set(["front"]), frontPos: "Centered",
+  files: { front:null, left:null, right:null, back:null },
   step: 1, maxStep: 1, done: new Set()
 };
 
@@ -838,7 +870,7 @@ function colorImg(style, color){
   return style.imgs[0];
 }
 function activeUploadSlots(){
-  return ["front","side","back"].filter(p => p === "front" || state.places.has(p));
+  return ["front","left","right","back"].filter(p => p === "front" || state.places.has(p));
 }
 
 
@@ -1158,7 +1190,6 @@ function renderDesign(){
   renderUploads();
 }
 
-// One upload slot per selected location, clearly labeled so buyers know which artwork goes where.
 function renderUploads(){
   const host = $("uploads");
   if (!host) return;
@@ -1169,9 +1200,11 @@ function renderUploads(){
       '<div class="up-slot-label">' + p.label + ' logo ' +
         (p.add ? '<span class="up-tag">+' + money(p.add) + '/hat</span>' : '<span class="up-tag inc">Included</span>') +
       '</div>' +
-      '<div class="up-slot-sub">' + (p.id === "front"
-        ? "Your main logo, stitched on the front panel."
-        : "Artwork for the " + p.label.toLowerCase() + " of the hat.") + '</div>' +
+      '<div class="up-slot-sub">' + (
+        p.id === "front" ? "Your main logo, stitched on the front panel." :
+        p.id === "left"  ? "Artwork for the left side, as you look at the hat." :
+        p.id === "right" ? "Artwork for the right side, as you look at the hat." :
+                           "Artwork for the back of the hat.") + '</div>' +
       '<input type="file" data-up="' + p.id + '" accept=".png,.jpg,.jpeg,.pdf,.ai,.svg,image/*">' +
       (f ? '<div class="up-have">Attached: ' + f.name + '</div>' : "") +
     '</div>';
@@ -1185,7 +1218,7 @@ function renderUploads(){
     });
   });
   // drop files for locations that are no longer selected
-  ["side","back"].forEach(id => { if (!state.places.has(id)) state.files[id] = null; });
+  ["left","right","back"].forEach(id => { if (!state.places.has(id)) state.files[id] = null; });
 }
 
 /* ---------- review ---------- */
