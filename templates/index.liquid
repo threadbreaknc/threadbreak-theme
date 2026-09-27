@@ -33,7 +33,9 @@
       {%- assign jm_rating = shop.metafields.judgeme.all_reviews_rating | default: 5.0 -%}
       {%- assign jm_count = shop.metafields.judgeme.all_reviews_count | default: 45 -%}
       <span class="hc-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-      {{ jm_rating | round: 1 }}/5 from {{ jm_count }} verified reviews
+      <span class="hc-rating-score">{{ jm_rating | round: 1 }}/5</span>
+      <span class="hc-rating-count">from {{ jm_count }} verified reviews</span>
+      <span class="hc-rating-cta">Read our reviews <span class="hc-rating-arrow">&rarr;</span></span>
     </a>
   </div>
 </section>
@@ -182,6 +184,22 @@
 </section>
 <style>
   /* two decoration methods presented side by side in the hero */
+  /* the second line of the headline names the engraving side, so it gets the accent */
+  .hc-h1 em{font-style:italic;color:#B7A6EE;}
+  /* the rating was easy to miss as plain text, so it now reads as a button */
+  .hc-rating{display:inline-flex !important;align-items:center;gap:10px;flex-wrap:wrap;margin-top:22px !important;
+    padding:9px 16px;border-radius:999px;background:rgba(255,255,255,.08);border:1.5px solid rgba(183,166,238,.45);
+    text-decoration:none;transition:background .16s,border-color .16s;}
+  .hc-rating:hover{background:rgba(255,255,255,.14);border-color:#B7A6EE;}
+  .hc-rating-score{font-weight:700;color:#fff;}
+  .hc-rating-count{color:rgba(247,244,240,.8);}
+  .hc-rating-cta{font-weight:700;color:#B7A6EE;border-left:1px solid rgba(183,166,238,.4);padding-left:10px;white-space:nowrap;}
+  .hc-rating-arrow{display:inline-block;transition:transform .16s;}
+  .hc-rating:hover .hc-rating-arrow{transform:translateX(4px);}
+  @media(max-width:560px){
+    .hc-rating{font-size:.88rem;padding:8px 13px;gap:7px;}
+    .hc-rating-cta{border-left:none;padding-left:0;flex-basis:100%;}
+  }
   .method-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:660px;}
   .method{display:block;padding:18px 20px;border-radius:14px;text-decoration:none;border:2px solid transparent;transition:transform .16s,background .16s,border-color .16s;}
   .method:hover{transform:translateY(-3px);}
@@ -378,24 +396,51 @@
   // this script sits after the video element, so the download starts at parse time
   initHeroVideo();
 
-  var TRIM = 2.5;
-  var FADE = 0.5;
-  var looping = false;
+  // The source still has a CapCut outro on the end, so we loop before reaching it.
+  // timeupdate only fires about four times a second, which was letting the logo
+  // flash through; a rAF loop checks every frame instead.
+  var TRIM = 4.0;   // seconds cut from the end
+  var FADE = 0.45;
+  var looping = false, raf = null;
 
-  vid.addEventListener('timeupdate', function(){
-    if (!vid.duration || isNaN(vid.duration)) return;
+  function watch(){
+    raf = requestAnimationFrame(watch);
+    if (!vid.duration || isNaN(vid.duration) || looping) return;
     var cutoff = vid.duration - TRIM;
-    if (!looping && vid.currentTime >= cutoff - FADE){
-      if (fade) fade.classList.add('show');
-    }
-    if (!looping && vid.currentTime >= cutoff){
+    if (cutoff <= 0) return;
+    if (vid.currentTime >= cutoff - FADE && fade) fade.classList.add('show');
+    if (vid.currentTime >= cutoff){
       looping = true;
       vid.currentTime = 0;
+      var p = vid.play();
+      if (p && p.catch) p.catch(function(){});
       setTimeout(function(){
         if (fade) fade.classList.remove('show');
         looping = false;
       }, FADE * 1000);
     }
+  }
+
+  vid.addEventListener('loadedmetadata', function(){
+    if (!raf) watch();
+  });
+
+  // Keep playback honest: browsers pause background tabs, and a stalled decode
+  // leaves a frozen frame that looks broken.
+  document.addEventListener('visibilitychange', function(){
+    if (document.hidden){ vid.pause(); }
+    else if (vid.dataset.loaded){ var p = vid.play(); if (p && p.catch) p.catch(function(){}); }
+  });
+
+  vid.addEventListener('stalled', function(){
+    var p = vid.play(); if (p && p.catch) p.catch(function(){});
+  });
+
+  // If the file cannot be decoded at all, drop back to the poster rather than
+  // leaving a black box.
+  vid.addEventListener('error', function(){
+    vid.style.display = 'none';
+    if (raf) cancelAnimationFrame(raf);
   });
 })();
 </script>
