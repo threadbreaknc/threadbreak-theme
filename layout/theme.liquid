@@ -95,6 +95,9 @@
   html, body { margin: 0 !important; padding: 0 !important; }
   /* full threadbreak wordmark logo, override theme's square/black-filter rules */
   .nav-brand{display:flex;align-items:center;height:100%;}
+  /* logo sits closer to the left edge */
+  #main-nav{padding-left:1.75rem;}
+  @media(max-width:700px){ #main-nav{padding-left:1.1rem;} }
   .nav-logo-full.nav-logo-img{height:56px !important;width:auto !important;display:block;object-fit:contain;align-self:center;filter:none !important;animation:none !important;position:relative;top:2px;}
   /* one logo file for both placements: the footer sits on the dark band, so the
      mark is forced to solid white rather than needing a second artwork file. */
