@@ -823,10 +823,10 @@ const SHORT_NAME = {
 };
 const shortOf = s => SHORT_NAME[s.id] || nameOf(s);
 const BRAND_LOGOS = [
-  { test: /richardson/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/richardson.png?v=1787437321", alt: "Richardson" },
-  { test: /yupoong|yp classics/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yupoong.png?v=1787437321", alt: "Yupoong" },
-  { test: /atonal/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/atonal.png?v=1787437321", alt: "Atonal" },
-  { test: /otto/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/otoo.png?v=1787437321", alt: "Otto" }
+  { test: /richardson/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/logo_richardson.png?v=1790739725", alt: "Richardson" },
+  { test: /yupoong|yp classics/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/logo_yupoong.png?v=1790739725", alt: "Yupoong" },
+  { test: /atonal/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/logo_atonal.png?v=1790739725", alt: "Atonal" },
+  { test: /otto/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/logo_otto.png?v=1790739725", alt: "Otto" }
 ];
 function brandLogo(s){
   const hit = BRAND_LOGOS.find(b => b.test.test(s.brand) || b.test.test(s.name));
