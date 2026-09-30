@@ -356,6 +356,20 @@
     .hc-props{gap:.4rem 1.25rem;}
     .hc-props span{font-size:.8rem;}
   }
+  /* Phones: the hero photo sits in its own band under the header at full width,
+     so the machine and hat read clearly, then fades into the text below. */
+  @media(max-width:700px){
+    section.hc-hero{--hc-top:117px;--hc-band:75vw;background:#14121C;}
+    section.hc-hero .hc-hero-bg{inset:auto;top:var(--hc-top);left:0;right:0;width:100%;height:var(--hc-band);transform:none;object-fit:cover;object-position:center;}
+    section.hc-hero .hc-hero-overlay{inset:auto;top:var(--hc-top);left:0;right:0;height:var(--hc-band);
+      background:linear-gradient(180deg,rgba(20,18,28,0) 62%,rgba(20,18,28,.75) 88%,#14121C 100%);}
+    section.hc-hero .hc-hero-loopfade{display:none;}
+    section.hc-hero .hc-hero-inner{padding-top:calc(var(--hc-top) + var(--hc-band) - 1.25rem);}
+    /* reviews pill: every line centered */
+    .hc-rating{display:flex !important;flex-wrap:wrap;justify-content:center;text-align:center;row-gap:4px;}
+    .hc-rating .hc-rating-count{flex-basis:100%;}
+    .hc-rating .hc-rating-cta{flex-basis:100%;text-align:center;}
+  }
   .tb-story{background:#14121C;color:#F7F4F0;padding:5rem 2rem;}
   .tb-story-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1.2fr;gap:3.5rem;align-items:center;}
   .tb-story-lead h2{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.2rem,4vw,3.4rem);line-height:1.02;margin:0 0 1.25rem;}
