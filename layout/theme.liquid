@@ -113,22 +113,16 @@
   @media(max-width:700px){ #main-nav.scrolled .nav-logo-full.nav-logo-img{height:38px !important;} }
   /* collapse the free-shipping banner when scrolled down */
   .shipping-banner{transition:transform .28s ease, opacity .28s ease;}
-  /* Banner carries two messages: free shipping, and the current custom order lead time
-     (set apart in its own pill). Phones alternate between them. */
-  .shipping-banner{display:flex;align-items:center;justify-content:center;gap:18px;}
-  .shipping-banner .sb-lead{text-decoration:none;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.35);
-    border-radius:999px;padding:1px 12px 0;color:#fff;}
-  .shipping-banner .sb-lead:hover{background:rgba(255,255,255,.26);}
-  @media(max-width:900px){
-    .shipping-banner{position:fixed;}
-    .shipping-banner .sb-msg{animation:sbSwap 9s infinite;}
-    .shipping-banner .sb-lead{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);white-space:nowrap;
-      animation-delay:-4.5s;letter-spacing:.18em;}
-  }
+  /* Banner alternates between two messages: free shipping, then the current
+     custom order lead time. Same text style for both, they just fade in turn. */
+  .shipping-banner .sb-msg{animation:sbSwap 8s infinite;}
+  .shipping-banner .sb-lead{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
+    white-space:nowrap;text-decoration:none;color:#fff;animation-delay:-4s;}
   @keyframes sbSwap{0%,44%{opacity:1;visibility:visible}50%,94%{opacity:0;visibility:hidden}100%{opacity:1;visibility:visible}}
+  @media(max-width:350px){ .shipping-banner .sb-msg{letter-spacing:.2em;} }
   @media(prefers-reduced-motion:reduce){
     .shipping-banner .sb-msg{animation:none;}
-    @media(max-width:900px){.shipping-banner .sb-ship{visibility:hidden}}
+    .shipping-banner .sb-lead{visibility:hidden;}
   }
   body.tb-scrolled .shipping-banner{transform:translateY(-100%);opacity:0;pointer-events:none;}
   /* nav is offset below the banner; pull it up and reclaim the space when collapsed */
