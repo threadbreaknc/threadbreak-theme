@@ -367,8 +367,26 @@
       <span>Free shipping to the lower 48</span>
       <span>Local pickup by appointment</span>
     </div>
+    <div class="tb-leadtime" role="note">
+      <span class="tb-leadtime-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+      <div class="tb-leadtime-text">
+        <strong>Current lead time: 3-4 weeks</strong>
+        <span>Need them sooner? <a href="mailto:help@threadbreak.com?subject=Rush%20order%20request">Email us before you order</a> and we'll see what we can do.</span>
+      </div>
+    </div>
   </div>
 </header>
+<style>
+  /* Current lead time callout in the order form header */
+  .tb-leadtime{display:flex;align-items:flex-start;gap:12px;margin-top:18px;max-width:560px;background:#fff;color:#1a1726;
+    border-radius:12px;padding:12px 16px;border-left:5px solid #7B52E8;box-shadow:0 6px 22px rgba(0,0,0,.28)}
+  .tb-leadtime-icon{flex:none;width:34px;height:34px;border-radius:50%;background:#F3EFFC;color:#5028AA;display:flex;align-items:center;justify-content:center}
+  .tb-leadtime-text{display:flex;flex-direction:column;gap:2px;line-height:1.4}
+  .tb-leadtime-text strong{font-size:17px;font-weight:800;color:#5028AA;letter-spacing:.01em}
+  .tb-leadtime-text span{font-size:13.5px;color:#3d3a4a}
+  .tb-leadtime-text a{color:#5028AA;font-weight:700;text-decoration:underline;text-underline-offset:2px}
+  @media(max-width:600px){.tb-leadtime{padding:11px 13px;gap:10px}.tb-leadtime-text strong{font-size:16px}}
+</style>
 
 <div class="wrap">
 
@@ -506,7 +524,7 @@
       <div class="cart-err" id="cartErr">Something went wrong adding this to your cart. Please try again, or email help@threadbreak.com and we'll sort it out.</div>
 
       <div class="btn-row"><button type="button" class="back" data-back="3">Back</button><button type="button" class="next" id="checkout">Add to Cart</button></div>
-      <p class="hint">Production typically takes 2-3 weeks after mockup approval. Shipping transit time is additional.</p>
+      <p class="hint">Current lead time is 3-4 weeks after mockup approval, plus shipping transit. Need them sooner? Email help@threadbreak.com before you order.</p>
     </div>
   </section>
   </div>
@@ -879,7 +897,7 @@ const sorted = STYLES.filter(s => HIDDEN_STYLES.indexOf(s.id) === -1).sort((a, b
   return a.brand.localeCompare(b.brand);
 });
 
-const BADGES = { rich112: "Most popular", otto: "Best value", atonal_a500r: "Premium rope" };
+const BADGES = { rich112_5p: "Most popular", otto: "Best value", atonal_a500r: "Premium rope" };
 
 // Display name without the model number; the model lives in the secondary line.
 const CLEAN_NAME = {
