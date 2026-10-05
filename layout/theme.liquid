@@ -119,7 +119,12 @@
   .shipping-banner .sb-lead{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
     white-space:nowrap;text-decoration:none;color:#fff;animation-delay:-4s;}
   @keyframes sbSwap{0%,44%{opacity:1;visibility:visible}50%,94%{opacity:0;visibility:hidden}100%{opacity:1;visibility:visible}}
-  @media(max-width:350px){ .shipping-banner .sb-msg{letter-spacing:.2em;} }
+  /* Banner color matches the logo purple; plain sans text so it reads easily at small sizes. */
+  .shipping-banner{background:#5028AA !important;line-height:16px;font-size:12px;padding-top:8px !important;padding-bottom:8px !important;}
+  @media(max-width:600px){ .shipping-banner{padding-top:6px !important;padding-bottom:6px !important;} }
+  .shipping-banner .shipping-banner-text{font-family:var(--font-body,'DM Sans',sans-serif) !important;font-weight:700;
+    font-size:12.5px;letter-spacing:.12em;line-height:16px;}
+  @media(max-width:380px){ .shipping-banner .shipping-banner-text{font-size:12px;letter-spacing:.06em;} }
   @media(prefers-reduced-motion:reduce){
     .shipping-banner .sb-msg{animation:none;}
     .shipping-banner .sb-lead{visibility:hidden;}
