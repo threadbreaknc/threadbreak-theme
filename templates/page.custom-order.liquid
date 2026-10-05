@@ -886,7 +886,7 @@ const RANK = { rich112: 0, rich112_5p: 1, rich112p: 2, tt6: 0, tt5: 1, tt5r: 2, 
 // 10 10 Hats sit at the end of the grid, after every other brand.
 const LAST = s => /^10 10/.test(s.brand) ? 1 : 0;
 // Styles temporarily left out of the embroidery picker (still offered on the patch form).
-const HIDDEN_STYLES = ["rich112"];
+const HIDDEN_STYLES = [];
 const sorted = STYLES.filter(s => HIDDEN_STYLES.indexOf(s.id) === -1).sort((a, b) => {
   if (LAST(a) !== LAST(b)) return LAST(a) - LAST(b);
   const brand = a.brand.split(" ")[0].localeCompare(b.brand.split(" ")[0]);
