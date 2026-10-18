@@ -454,10 +454,6 @@
 
           <div class="field" style="margin-top:18px"><label for="notes">Notes</label><textarea id="notes" rows="3" placeholder="Placement preferences, deadlines, anything else we should know"></textarea></div>
 
-          <label class="social-optout">
-            <input type="checkbox" id="noSocial">
-            <span><strong>Keep my finished order private.</strong> Leave this unchecked if you're comfortable with us featuring your finished hats in our portfolio or on social media.</span>
-          </label>
         </div>
       </div>
 
@@ -1848,7 +1844,6 @@ async function submitCheckout(){
   };
   props["Confirmation delivery"] = meta.proof + (meta.proof === "Text message" && meta.proofPhone ? " to " + meta.proofPhone : "");
   if (meta.notes !== "-") props["Notes"] = meta.notes;
-  props["Social sharing"] = meta.social;
 
   const items = [
     { id: tier[2], quantity: state.qty, properties: props },

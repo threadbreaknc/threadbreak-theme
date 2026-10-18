@@ -510,10 +510,6 @@
 
       <div class="field" style="margin-top:18px"><label for="notes">Notes</label><textarea id="notes" rows="3" placeholder="Thread colors, deadlines, anything else we should know"></textarea></div>
 
-      <label class="social-optout">
-        <input type="checkbox" id="noSocial">
-        <span><strong>Keep my finished order private.</strong> Leave this unchecked if you're comfortable with us featuring your finished hats in our portfolio or on social media.</span>
-      </label>
 
       <div class="lt-note" role="note">
         <span class="lt-note-icon" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
@@ -1644,7 +1640,6 @@ async function submitCheckout(){
   };
   props["Proof delivery"] = meta.proof + (meta.proof === "Text message" && meta.proofPhone ? " to " + meta.proofPhone : "");
   if (meta.notes !== "-") props["Notes"] = meta.notes;
-  props["Social sharing"] = meta.social;
 
   const items = [{ id: tier[2], quantity: state.qty, properties: props }];
   if (state.deco.variantId)
