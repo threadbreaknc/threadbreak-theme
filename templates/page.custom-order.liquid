@@ -272,6 +272,14 @@
   #tbco .en-icon{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
   #tbco .en-toggle{background:none;border:none;padding:0;margin-top:8px;font-family:inherit;font-size:12.5px;font-weight:600;color:var(--purple);text-decoration:underline;cursor:pointer}
   #tbco .en-example{margin-top:10px}
+  #tbco .en-links{display:flex;flex-wrap:wrap;gap:4px 16px}
+  #tbco .en-ai-disclaimer{margin-top:8px !important;padding-top:8px;border-top:1px solid rgba(80,40,170,.18)}
+  #tbco .en-ai{margin-top:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  #tbco .en-ai p{font-size:12.5px;line-height:1.6;margin:0 0 6px}
+  #tbco .en-ai p:last-child{margin:8px 0 0;color:#3d3a4a}
+  #tbco .en-ai ul{margin:0 0 10px;padding-left:18px}
+  #tbco .en-ai li{font-size:12.5px;line-height:1.55;color:#3d3a4a;margin:0 0 4px}
+  #tbco .en-ai li b{color:var(--ink)}
   #tbco .en-example img{max-width:100%;border-radius:10px;border:1px solid var(--line);display:block}
   #tbco .art-note{margin-top:14px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:13px 15px}
   #tbco .art-note p{font-size:12.5px;line-height:1.6;margin:0;color:#3d3a4a}
@@ -457,7 +465,27 @@
         <span class="en-icon" aria-hidden="true">!</span>
         <div>
           <p><strong>Embroidery Notice:</strong> AI-generated and highly detailed logos don't always translate well to embroidery. If your design isn't suitable, we'll recommend the best solution, such as simplifying the artwork, using a DTF transfer, or a patch to ensure the best possible result.</p>
-          <button type="button" class="en-toggle" id="enToggle">View example</button>
+          <p class="en-ai-disclaimer"><strong>AI-generated artwork:</strong> AI images usually aren't ready to stitch as-is, so every one is reviewed by our design team before production. If yours needs to be professionally recreated into a production-ready file, we'll let you know and quote any recreation fee before anything is made. Standard digitizing is still free.</p>
+          <div class="en-links">
+            <button type="button" class="en-toggle" id="enToggle">View example</button>
+            <button type="button" class="en-toggle" id="aiToggle">Using AI artwork? Read this</button>
+          </div>
+          <div class="en-ai" id="aiTips" hidden>
+            <p><strong>Why AI art can be tricky to stitch</strong></p>
+            <ul>
+              <li><b>Shading and gradients.</b> Thread is a solid color, so soft blends and glows can't be reproduced and come out as stripes or blotches.</li>
+              <li><b>Too much detail.</b> Tiny textures, thin lines and busy backgrounds disappear at hat size.</li>
+              <li><b>Messy lettering.</b> AI tools often warp letters or invent words. Small text needs to be clean and at least about 1/4 inch tall to read in thread.</li>
+              <li><b>Fuzzy edges.</b> Most AI images are low resolution with blurry edges, so the shapes have to be redrawn before digitizing.</li>
+            </ul>
+            <p><strong>Tips for an embroidery-friendly AI design</strong></p>
+            <ul>
+              <li>Ask for a <b>flat, simple logo</b> with <b>2 to 4 solid colors</b>, bold shapes and thick outlines.</li>
+              <li>Say <b>no gradients, no shadows, no 3D effects</b>, on a plain or transparent background.</li>
+              <li>Keep any text short and blocky, or add it in the notes and we'll set it in a clean font.</li>
+            </ul>
+            <p>Send it either way. After review, we'll tell you if it needs recreating and quote any fee, then show you exactly how it will stitch in your free mockup before anything is made. Make sure you have the rights to use the design.</p>
+          </div>
           <div class="en-example" id="enExample" hidden>
             <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ChatGPT_Image_Aug_14_2026_at_10_40_32_PM.png?v=1786761670" alt="Example showing how a detailed logo simplifies for embroidery" loading="lazy">
           </div>
@@ -1681,6 +1709,7 @@ document.querySelectorAll("#tbco [data-back]").forEach(b => {
 
 bindToggle("puffBtn","puffInfo","What is 3D puff?","Hide");
 bindToggle("enToggle","enExample","View example","Hide example");
+bindToggle("aiToggle","aiTips","Using AI artwork? Read this","Hide AI tips");
 
 renderHats();
 renderDesign();
