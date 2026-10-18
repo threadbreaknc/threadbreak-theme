@@ -208,6 +208,11 @@
   #tbco .split-row input{width:88px;font-family:inherit;font-size:16px;padding:8px 10px;border:1.5px solid var(--line);border-radius:9px}
   #tbco .split-total{display:flex;justify-content:space-between;padding:11px 14px;border-top:1.5px solid var(--line);font-size:13.5px;font-weight:700;background:#fafafa}
   #tbco .split-total.bad{color:#c33}
+  #tbco .split-note{padding:8px 14px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);background:#fff}
+  #tbco .split-row.sized{flex-wrap:wrap}
+  #tbco .split-sizes{display:flex;gap:8px;flex-wrap:wrap}
+  #tbco .split-sizes label{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:700;color:var(--muted)}
+  #tbco .split-row .split-sizes input{width:66px;text-align:center}
 
   /* chips */
   #tbco .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
@@ -780,6 +785,112 @@ const STYLES = [
       "White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/120_white.jpg?v=1787191190"
     },
     tiers:[[5,36,52668967878788],[10,30,52668967911556],[24,28,52668967944324],[48,26,52668967977092],[96,25,52668968009860]] },
+  { id:"o285", name:"Otto 32-285 5-Panel Mesh Trucker", brand:"Otto Cap 32-285", desc:"5-panel mid profile · mesh back snapback · one size fits most", popular:90, features:"Otto's classic mid profile trucker. Structured 5-panel front with a seamless panel for clean logo placement, matching undervisor, breathable mesh back and a plastic snap closure.",
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_a852e717-9e51-41d3-b45e-c35444bdfffa.jpg?v=1792361279", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_464fbcad-2c03-48e3-9a0e-515c82b09bf2.jpg?v=1792361279", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_3c8b744b-d90f-4755-a3c8-492e172ac20d.jpg?v=1792361279", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download.jpg?v=1792361128"],
+    colors:["Black", "Black/Red", "Charcoal Gray", "Dark Green", "Gray", "Gray/Black", "Gray/Navy", "Kelly Green", "Khaki", "Khaki/Black", "Khaki/Dark Green", "Khaki/Navy", "Maroon", "Navy", "Navy/Khaki", "Neon Orange", "Neon Yellow", "Red", "Red/Black", "Royal", "White"],
+    colorImgs:{
+      "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download.jpg?v=1792361128",
+      "Black/Red":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_732e13b7-13c3-4b55-ae7d-0d5815811866.jpg?v=1792361280",
+      "Charcoal Gray":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_f0bc1e0d-5e64-4d62-b4cc-7d292957f88f.jpg?v=1792361279",
+      "Dark Green":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_ce35df80-9cbc-4556-ba4f-571cd6caac6d.jpg?v=1792361279",
+      "Gray":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_0cc84f91-1ede-46b7-9242-e800211d68f1.jpg?v=1792361279",
+      "Gray/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_87c48723-64f9-460e-a3d3-b8e441cd9cfa.jpg?v=1792361279",
+      "Gray/Navy":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_ed0da9a1-24fc-4afc-8da3-6107940e3868.jpg?v=1792361279",
+      "Kelly Green":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_cd75f381-a81b-4f84-85a6-fede557e3549.jpg?v=1792361279",
+      "Khaki":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_d975780b-74ba-4b15-821d-0cde6f685d5e.jpg?v=1792361279",
+      "Khaki/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_a32afb28-fab7-4e07-809c-b03df8cb9b65.jpg?v=1792361279",
+      "Khaki/Dark Green":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_5e425d74-c958-4e0e-9e22-5478fe3d12f0.jpg?v=1792361279",
+      "Khaki/Navy":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_69623fb8-6bfd-416c-9891-5322ecb92441.jpg?v=1792361279",
+      "Maroon":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_b10875d9-be7d-474e-adc4-3308d1ce964d.jpg?v=1792361279",
+      "Navy":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_41f033df-ec87-4689-8f5b-a1ceb3ad5851.jpg?v=1792361279",
+      "Navy/Khaki":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_b9484cfa-16ae-408b-baad-5eb2b8e1ab5a.jpg?v=1792361279",
+      "Neon Orange":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_3247c759-cb9d-43b8-8142-1cfb4970aa54.jpg?v=1792361279",
+      "Neon Yellow":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_464fbcad-2c03-48e3-9a0e-515c82b09bf2.jpg?v=1792361279",
+      "Red":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_a852e717-9e51-41d3-b45e-c35444bdfffa.jpg?v=1792361279",
+      "Red/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_25d2bf09-f442-4b99-9a57-a917b3935508.jpg?v=1792361279",
+      "Royal":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_3c8b744b-d90f-4755-a3c8-492e172ac20d.jpg?v=1792361279",
+      "White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_f4212e56-83b6-4969-b800-440908debe7e.jpg?v=1792361279"
+    },
+    tiers:[[5,25,67710718050436],[10,21,67710718083204],[24,20,67710718115972],[48,18,67710718148740],[96,17,67710718181508]] },
+  { id:"o598", name:"Otto 99-598 5-Panel Low Profile", brand:"Otto Cap 99-598", desc:"5-panel low profile · 100% cotton · hook & loop strap · one size fits most", popular:90, features:"A low-fitting, structured 5-panel baseball cap in 100% cotton. Seamless front panel, 6 rows of stitching on the visor, matching undervisor and an adjustable hook and loop strap.",
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_71d432ed-c917-4d2a-b8cf-2e1083255d8d.jpg?v=1792361279", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_5da6c446-2ce9-4e4a-aa2a-75f48ffc518b.jpg?v=1792361279", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_a1c1cfd3-3af1-434f-86f5-1447d9a608aa.jpg?v=1792361279", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_64f9d18f-88b2-4f9f-a02f-500042b9ebe7.jpg?v=1792361279"],
+    colors:["Black", "Dark Green", "Gray", "Khaki", "Navy", "Red", "Royal", "White"],
+    colorImgs:{
+      "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_64f9d18f-88b2-4f9f-a02f-500042b9ebe7.jpg?v=1792361279",
+      "Dark Green":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_15d175fa-6d98-4f68-9010-4027e29ef610.jpg?v=1792361279",
+      "Gray":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_b99271b8-3b0e-4d59-aa9a-7fff8213a4ee.jpg?v=1792361279",
+      "Khaki":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_a1c1cfd3-3af1-434f-86f5-1447d9a608aa.jpg?v=1792361279",
+      "Navy":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_acebfc64-24e3-46b8-bba4-e5c42f930f03.jpg?v=1792361279",
+      "Red":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_5da6c446-2ce9-4e4a-aa2a-75f48ffc518b.jpg?v=1792361279",
+      "Royal":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_71d432ed-c917-4d2a-b8cf-2e1083255d8d.jpg?v=1792361279",
+      "White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_5d271a40-fe7a-46aa-9f83-6e635108f228.jpg?v=1792361279"
+    },
+    tiers:[[5,25,67710718214276],[10,21,67710718247044],[24,20,67710718279812],[48,18,67710718312580],[96,17,67710718345348]] },
+  { id:"yp6506", name:"YP Classics 6506 5-Panel Retro Trucker", brand:"YP Classics 6506", desc:"5-panel mid profile · mesh back snapback · one size fits most", popular:90, features:"Structured 5-panel mid profile trucker with a seamless front, Permacurv visor, mesh back and snapback closure. Fits 6 5/8 to 7 5/8.",
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp6506_red_white.jpg?v=1792361277", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp6506_navy_white.jpg?v=1792361277", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp6506_brown_khaki.jpg?v=1792361277", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp6506_black.jpg?v=1792361277"],
+    colors:["Black", "Black/White", "Brown/Khaki", "Charcoal", "Charcoal/White", "Heather/Black", "Heather/White", "Khaki", "Navy", "Navy/White", "Red", "Red/White", "White"],
+    colorImgs:{
+      "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp6506_black.jpg?v=1792361277",
+      "Black/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp6506_black_white.jpg?v=1792361277",
+      "Brown/Khaki":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp6506_brown_khaki.jpg?v=1792361277",
+      "Charcoal":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp6506_charcoal.jpg?v=1792361277",
+      "Charcoal/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp6506_charcoal_white.jpg?v=1792361277",
+      "Heather/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp6506_heather_black.jpg?v=1792361277",
+      "Heather/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp6506_heather_white.jpg?v=1792361277",
+      "Khaki":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp6506_khaki.jpg?v=1792361277",
+      "Navy":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp6506_navy.jpg?v=1792361277",
+      "Navy/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp6506_navy_white.jpg?v=1792361277",
+      "Red":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp6506_red.jpg?v=1792361277",
+      "Red/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp6506_red_white.jpg?v=1792361277",
+      "White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/yp6506_white_a8195a9f-70a5-4a1c-9faf-e242f16bd8e8.jpg?v=1792361277"
+    },
+    tiers:[[5,25,67710718378116],[10,21,67710718410884],[24,20,67710718443652],[48,18,67710718476420],[96,17,67710718509188]] },
+  { id:"ff110f", name:"Flexfit 110F Flat Bill Snapback", brand:"Flexfit 110F", desc:"6-panel high profile · flat bill · snapback · one size fits most", popular:90, features:"The Flexfit 110 with a flat bill. Structured 6-panel high crown in a wool blend with Flexfit's stretch band inside and an adjustable snapback, so it fits like a fitted cap without picking a size. Fits 6 1/2 to 7 7/8.", sizing:"One size fits most (adjustable, 6 1/2 to 7 7/8)",
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff110f_black_red.jpg?v=1792361277", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff110f_black_teal.jpg?v=1792361277", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff110f_maroon.jpg?v=1792361277", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff110f_heather_grey.jpg?v=1792361277"],
+    colors:["Black", "Black/Grey", "Black/Purple", "Black/Red", "Black/Teal", "Dark Grey", "Dark Navy", "Grey", "Heather Grey", "Maroon", "Natural/Black", "Navy", "White"],
+    colorImgs:{
+      "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff110f_black.jpg?v=1792361277",
+      "Black/Grey":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff110f_black_grey.jpg?v=1792361277",
+      "Black/Purple":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff110f_black_purple.jpg?v=1792361277",
+      "Black/Red":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff110f_black_red.jpg?v=1792361277",
+      "Black/Teal":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff110f_black_teal.jpg?v=1792361277",
+      "Dark Grey":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff110f_dark_grey.jpg?v=1792361277",
+      "Dark Navy":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff110f_dark_navy.jpg?v=1792361277",
+      "Grey":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff110f_grey.jpg?v=1792361277",
+      "Heather Grey":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff110f_heather_grey.jpg?v=1792361277",
+      "Maroon":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff110f_maroon.jpg?v=1792361277",
+      "Natural/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff110f_natural_black.jpg?v=1792361277",
+      "Navy":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff110f_navy.jpg?v=1792361277",
+      "White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff110f_white.jpg?v=1792361277"
+    },
+    tiers:[[5,34,67710718541956],[10,29,67710718574724],[24,28,67710718607492],[48,26,67710718640260],[96,25,67710718673028]] },
+  { id:"ff6277", name:"Flexfit 6277 Fitted", brand:"Flexfit 6277", desc:"6-panel mid profile · stretch fitted · S/M, L/XL, XL/2XL", popular:90, features:"The original Flexfit. Structured mid profile 6-panel in a stretch twill with a curved bill and no closure. It fits by size, so you'll pick S/M, L/XL or XL/2XL for each hat when you choose quantities.", sizing:"Fitted: S/M (6 3/4 to 7 1/4), L/XL (7 1/8 to 7 5/8), XL/2XL (7 3/8 to 8)", sizes:["S/M", "L/XL", "XL/2XL"], sizeOnly:{"XL/2XL": ["Black", "Dark Grey", "Dark Navy", "Navy"]},
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_carolina_blue.jpg?v=1792361277", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_orange.jpg?v=1792361277", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_multicam_black.jpg?v=1792361277", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_black.jpg?v=1792361277"],
+    colors:["Black", "Brown", "Carolina Blue", "Coyote Brown", "Dark Grey", "Dark Navy", "Grey", "Khaki", "Kryptek Typhon", "Maroon", "Multicam Black", "Multicam Green", "Navy", "Olive", "Orange", "Purple", "Red", "Royal Blue", "Silver", "Spruce", "White"],
+    colorImgs:{
+      "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_black.jpg?v=1792361277",
+      "Brown":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_brown.jpg?v=1792361277",
+      "Carolina Blue":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_carolina_blue.jpg?v=1792361277",
+      "Coyote Brown":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_coyote_brown.jpg?v=1792361277",
+      "Dark Grey":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_dark_grey.jpg?v=1792361277",
+      "Dark Navy":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_dark_navy.jpg?v=1792361277",
+      "Grey":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_grey.jpg?v=1792361277",
+      "Khaki":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_khaki.jpg?v=1792361277",
+      "Kryptek Typhon":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_kryptek_typhon.jpg?v=1792361277",
+      "Maroon":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_maroon.jpg?v=1792361277",
+      "Multicam Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_multicam_black.jpg?v=1792361277",
+      "Multicam Green":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_multicam_green.jpg?v=1792361277",
+      "Navy":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_navy.jpg?v=1792361277",
+      "Olive":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_olive.jpg?v=1792361277",
+      "Orange":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_orange.jpg?v=1792361277",
+      "Purple":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_purple.jpg?v=1792361277",
+      "Red":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_red.jpg?v=1792361277",
+      "Royal Blue":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_royal_blue.jpg?v=1792361277",
+      "Silver":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_silver.jpg?v=1792361277",
+      "Spruce":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_spruce.jpg?v=1792361277",
+      "White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ff6277_white.jpg?v=1792361277"
+    },
+    tiers:[[5,33,67710718705796],[10,28,67710718738564],[24,27,67710718771332],[48,25,67710718804100],[96,24,67710718836868]] },
   { id:"tt6", name:"10 10 Hats 6 Panel Performance", brand:"10 10 Hats", desc:"6-panel snapback · waterproof dry-fit · one size fits most", popular:92, features:"95/5 poly-spandex performance cap that sheds water and dries fast. Structured front, slightly curved bill, laser-perforated mesh back, and an adjustable snapback. A clean 6-panel crown built for the golf course, the boat, and the job site.",
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tt6_red.jpg?v=1790738955", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tt6_sky_blue.png?v=1790738955", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tt6_pink.png?v=1790738955", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tt6_shadow_grass_blades_camo.webp?v=1790738955"],
     colors:["Avalanche Camo", "Black", "Blackout Camo", "Dark Gray", "Deep Blue", "Deep Blue/White", "Green/Tan", "Grey/Black", "Light Grey", "Maroon", "Pink", "Red", "Shadow Grass Blades Camo", "Sky Blue", "Tan/Black", "True Navy", "White"],
@@ -929,7 +1040,12 @@ const CLEAN_NAME = {
   tt6: "10 10 6-Panel Performance",
   tt5: "10 10 5-Panel Performance",
   tt5r: "10 10 5-Panel Rope",
-  tt7: "10 10 7-Panel Performance"
+  tt7: "10 10 7-Panel Performance",
+  o285: "Otto 5-Panel Mesh Trucker",
+  o598: "Otto 5-Panel Low Profile Cap",
+  yp6506: "Yupoong 5-Panel Retro Trucker",
+  ff110f: "Flexfit 110 Flat Bill Snapback",
+  ff6277: "Flexfit 6277 Fitted"
 };
 const nameOf = s => CLEAN_NAME[s.id] || s.name;
 
@@ -949,7 +1065,12 @@ const SHORT_NAME = {
   tt6: "6-Panel Performance",
   tt5: "5-Panel Performance",
   tt5r: "5-Panel Rope",
-  tt7: "7-Panel Performance"
+  tt7: "7-Panel Performance",
+  o285: "5-Panel Mesh Trucker",
+  o598: "Low Profile Cap",
+  yp6506: "5-Panel Retro Trucker",
+  ff110f: "110 Flat Bill",
+  ff6277: "Flexfit Fitted"
 };
 const shortOf = s => SHORT_NAME[s.id] || nameOf(s);
 
@@ -959,14 +1080,15 @@ const BRAND_LOGOS = [
   { test: /yupoong|yp classics/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/logo_yupoong.png?v=1790739725", alt: "Yupoong" },
   { test: /atonal/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/logo_atonal.png?v=1790739725", alt: "Atonal" },
   { test: /otto/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/logo_otto.png?v=1790739725", alt: "Otto" },
-  { test: /^10 ?10/i, src: "{{ '1010hats.png' | asset_url }}", alt: "10 10 Hats" }
+  { test: /^10 ?10/i, src: "{{ '1010hats.png' | asset_url }}", alt: "10 10 Hats" },
+  { test: /flexfit/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/flexfit-logo.png?v=1792360646", alt: "Flexfit" }
 ];
 function brandLogo(s){
   const hit = BRAND_LOGOS.find(b => b.test.test(s.brand) || b.test.test(s.name));
   return hit || null;
 }
 // Every blank we carry is one size fits most; the Richardsons are the standard M/L.
-const sizingOf = s => (/^rich/i.test(s.id) || /richardson/i.test(s.brand))
+const sizingOf = s => s.sizing ? s.sizing : (/^rich/i.test(s.id) || /richardson/i.test(s.brand))
   ? "One size fits most (standard M/L)" : "One size fits most";
 const specsOf = s => (s.desc || "").split("\u00b7").map(x => x.trim()).filter(x => x && !/size|fits/i.test(x));
 
@@ -1001,6 +1123,7 @@ function nextTier(){
 }
 function colorSummary(){
   if (!state.colors.length) return "Not specified";
+  if (isSized()){ splitTotal(); return Object.keys(state.split).filter(k => +state.split[k] > 0).map(k => k + " x" + state.split[k]).join(", ") || state.colors.join(", "); }
   if (state.colors.length === 1) return state.colors[0];
   return state.colors.map(c => c + " x" + (state.split[c] || 0)).join(", ");
 }
@@ -1273,11 +1396,54 @@ function renderPicked(){
 }
 
 /* ---------- step 2: quantity + split ---------- */
+// Fitted styles (s.sizes) split each color by size; s.sizeOnly limits a size to listed colors.
+const isSized = () => !!(state.style && state.style.sizes);
+function sizesFor(c){
+  const s = state.style;
+  return s.sizes.filter(z => !(s.sizeOnly && s.sizeOnly[z]) || s.sizeOnly[z].indexOf(c) > -1);
+}
+function splitKeys(){
+  if (!isSized()) return state.colors.slice();
+  const k = [];
+  state.colors.forEach(c => sizesFor(c).forEach(z => k.push(c + " / " + z)));
+  return k;
+}
+function splitTotal(){
+  const keep = new Set(splitKeys());
+  Object.keys(state.split).forEach(k => { if (!keep.has(k)) delete state.split[k]; });
+  return Object.values(state.split).reduce((a,b) => a + (+b || 0), 0);
+}
+function renderSizedSplit(host){
+  const total = splitTotal();
+  const target = state.qty || 0;
+  const bad = target && total !== target;
+  const note = state.style.sizing ? '<div class="split-note">' + state.style.sizing + '</div>' : "";
+  host.innerHTML =
+    '<div class="split"><div class="split-head">How many of each size' + (state.colors.length > 1 ? ' and color' : '') + '?</div>' + note +
+    state.colors.map(c =>
+      '<div class="split-row sized"><img src="' + colorImg(state.style, c) + '" alt="' + c + '" onerror="this.onerror=null;this.src=\'' + state.style.imgs[0] + '\'">' +
+      '<span class="nm">' + c + '</span><div class="split-sizes">' +
+      sizesFor(c).map(z => { const k = c + " / " + z;
+        return '<label><span>' + z + '</span><input type="number" min="0" inputmode="numeric" data-split="' + k + '" value="' + (state.split[k] != null ? state.split[k] : "") + '" placeholder="0"></label>'; }).join("") +
+      '</div></div>').join("") +
+    '<div class="split-total ' + (bad ? "bad" : "") + '"><span>Allocated</span><span>' + total +
+    (target ? " of " + target : "") + (bad ? " (needs to match)" : "") + '</span></div></div>';
+  host.querySelectorAll("[data-split]").forEach(inp => {
+    // update the running total in place so the field being typed in keeps focus
+    inp.addEventListener("input", () => {
+      state.split[inp.dataset.split] = +inp.value || 0;
+      const t = splitTotal(), tg = state.qty || 0, b = tg && t !== tg, el = host.querySelector(".split-total");
+      if (el){ el.classList.toggle("bad", !!b); el.lastChild.textContent = t + (tg ? " of " + tg : "") + (b ? " (needs to match)" : ""); }
+      sync();
+    });
+  });
+}
 function renderSplit(){
   const host = $("splitHost");
   if (!host) return;
+  if (isSized() && state.colors.length){ renderSizedSplit(host); return; }
   if (state.colors.length < 2){ host.innerHTML = ""; return; }
-  const total = Object.values(state.split).reduce((a,b) => a + (+b || 0), 0);
+  const total = splitTotal();
   const target = state.qty || 0;
   const bad = target && total !== target;
   host.innerHTML =
@@ -1293,6 +1459,7 @@ function renderSplit(){
   });
 }
 function evenSplit(){
+  if (isSized()) return; // sizes have to be picked by the customer
   if (state.colors.length < 2 || !state.qty) return;
   const base = Math.floor(state.qty / state.colors.length);
   let rem = state.qty - base * state.colors.length;
@@ -1389,10 +1556,7 @@ function canLeave(step){
   if (step === 1) return !!state.style && state.colors.length > 0;
   if (step === 2){
     if (!state.qty || state.qty < 5) return false;
-    if (state.colors.length > 1){
-      const t = Object.values(state.split).reduce((a,b) => a + (+b || 0), 0);
-      return t === state.qty;
-    }
+    if (isSized() || state.colors.length > 1) return splitTotal() === state.qty;
     return true;
   }
   if (step === 3){
