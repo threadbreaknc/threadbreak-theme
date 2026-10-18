@@ -1587,6 +1587,32 @@ async function sendToDrive(type){
   });
 }
 
+// Builds the cart add as multipart form data so logo files ride along as line
+// item properties. Shopify stores each file and shows it as a link on the order.
+function cartFormData(items, files){
+  const fd = new FormData();
+  items.forEach((it, i) => {
+    fd.append("items[" + i + "][id]", it.id);
+    fd.append("items[" + i + "][quantity]", it.quantity);
+    Object.keys(it.properties || {}).forEach(k => fd.append("items[" + i + "][properties][" + k + "]", it.properties[k]));
+  });
+  Object.keys(files || {}).forEach(k => { const f = files[k]; fd.append("items[0][properties][" + k + "]", f, f.name || (k + ".png")); });
+  return fd;
+}
+async function addToCart(items, files){
+  const hasFiles = files && Object.keys(files).length > 0;
+  let res = await fetch("/cart/add.js", hasFiles
+    ? { method: "POST", body: cartFormData(items, files) }
+    : { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items: items }) });
+  // If Shopify rejects the files (too large, odd format), still place the order
+  // without them; the logo also went to Google Drive.
+  if (!res.ok && hasFiles){
+    console.warn("cart add with files failed, retrying without files", res.status);
+    items[0].properties["Logo files"] = "Not attached in Shopify, see Google Drive upload";
+    res = await fetch("/cart/add.js", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ items: items }) });
+  }
+  return res;
+}
 async function submitCheckout(){
   const btn = $("checkout");
   btn.disabled = true;
@@ -1632,11 +1658,12 @@ async function submitCheckout(){
   }
 
   try {
-    const res = await fetch("/cart/add.js", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: items })
-    });
+    const files = {};
+    for (const p of activeUploadSlots()){
+      const fl = state.files[p];
+      if (fl) files[((PLACEMENTS.find(x => x.id === p) || {}).label || p) + " logo"] = fl;
+    }
+    const res = await addToCart(items, files);
     if (!res.ok){
       // Surface what Shopify actually said so a bad variant or sold-out add-on
       // is obvious instead of a generic failure.
