@@ -210,7 +210,7 @@
   #tbco .split-total.bad{color:#c33}
   #tbco .split-note{padding:8px 14px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);background:#fff}
   #tbco .split-row.sized{flex-wrap:wrap}
-  #tbco .split-sizes{display:flex;gap:8px;flex-wrap:wrap}
+  #tbco .split-sizes{display:flex;gap:8px;flex-wrap:wrap;flex-basis:100%;padding-left:50px}
   #tbco .split-sizes label{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:700;color:var(--muted)}
   #tbco .split-row .split-sizes input{width:66px;text-align:center}
 
@@ -812,6 +812,35 @@ const STYLES = [
       "White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_f4212e56-83b6-4969-b800-440908debe7e.jpg?v=1792361279"
     },
     tiers:[[5,25,67710718050436],[10,21,67710718083204],[24,20,67710718115972],[48,18,67710718148740],[96,17,67710718181508]] },
+  { id:"o1121", name:"Otto 112-1 6-Panel Mesh Trucker", brand:"Otto Cap 112-1", desc:"6-panel mid profile · mesh back snapback · one size fits most", popular:85, features:"Our budget-friendly alternative to the Richardson 112. Same classic look: structured 6-panel mid profile front, pre-curved visor with matching undervisor, breathable mesh back and a plastic snap closure.",
+    imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-030316-FB.jpg?v=1792641731&width=1000", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-025-FB.jpg?v=1792641730&width=1000", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-040416-FB.jpg?v=1792641731&width=1000", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-848452-FB.jpg?v=1792641731&width=1000"],
+    colors:["Black", "Navy", "Charcoal Gray", "Gray", "White", "Red", "Royal", "Maroon", "Dark Green", "Coyote Brown", "Black/White", "Navy/White", "Charcoal Gray/White", "Charcoal Gray/Black", "Heather Gray/Black", "Heather Gray/White", "Khaki/Dark Brown", "Coyote Brown/Light Khaki", "Dark Olive/Light Khaki", "Navy/Khaki", "Red/White", "Royal/White", "Columbia Blue/White"],
+    colorImgs:{
+      "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-003-FB.jpg?v=1792641731&width=1000",
+      "Navy":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-004-FB.jpg?v=1792641731&width=1000",
+      "Charcoal Gray":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-025-FB.jpg?v=1792641730&width=1000",
+      "Gray":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-014-FB.jpg?v=1792641731&width=1000",
+      "White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-016-FB.jpg?v=1792641730&width=1000",
+      "Red":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-002-FB.jpg?v=1792641731&width=1000",
+      "Royal":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-001-FB.jpg?v=1792641731&width=1000",
+      "Maroon":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-010-FB.jpg?v=1792641731&width=1000",
+      "Dark Green":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-017-FB.jpg?v=1792641730&width=1000",
+      "Coyote Brown":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-084-FB.jpg?v=1792641731&width=1000",
+      "Black/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-030316-FB.jpg?v=1792641731&width=1000",
+      "Navy/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-040416-FB.jpg?v=1792641731&width=1000",
+      "Charcoal Gray/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-252516-FB.jpg?v=1792641730&width=1000",
+      "Charcoal Gray/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-252503-FB.jpg?v=1792641731&width=1000",
+      "Heather Gray/Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-747403-FB.jpg?v=1792641731&width=1000",
+      "Heather Gray/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-747416-FB.jpg?v=1792641731&width=1000",
+      "Khaki/Dark Brown":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-323239-FB.jpg?v=1792641731&width=1000",
+      "Coyote Brown/Light Khaki":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-848452-FB.jpg?v=1792641731&width=1000",
+      "Dark Olive/Light Khaki":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-464652-FB.jpg?v=1792641731&width=1000",
+      "Navy/Khaki":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-040432-FB.jpg?v=1792641731&width=1000",
+      "Red/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-020216-FB.jpg?v=1792641731&width=1000",
+      "Royal/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-010116-FB.jpg?v=1792641731&width=1000",
+      "Columbia Blue/White":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/112-1-080816-FB.jpg?v=1792641731&width=1000"
+    },
+    tiers:[[5,25,67773786390660],[10,21,67773786423428],[24,20,67773786456196],[48,18,67773786488964],[96,17,67773786521732]] },
   { id:"o598", name:"Otto 99-598 5-Panel Low Profile", brand:"Otto Cap 99-598", desc:"5-panel low profile · 100% cotton · hook & loop strap · one size fits most", popular:90, features:"A low-fitting, structured 5-panel baseball cap in 100% cotton. Seamless front panel, 6 rows of stitching on the visor, matching undervisor and an adjustable hook and loop strap.",
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_71d432ed-c917-4d2a-b8cf-2e1083255d8d.jpg?v=1792361279", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_5da6c446-2ce9-4e4a-aa2a-75f48ffc518b.jpg?v=1792361279", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_a1c1cfd3-3af1-434f-86f5-1447d9a608aa.jpg?v=1792361279", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/download_64f9d18f-88b2-4f9f-a02f-500042b9ebe7.jpg?v=1792361279"],
     colors:["Black", "Dark Green", "Gray", "Khaki", "Navy", "Red", "Royal", "White"],
@@ -1042,6 +1071,7 @@ const CLEAN_NAME = {
   tt5r: "10 10 5-Panel Rope",
   tt7: "10 10 7-Panel Performance",
   o285: "Otto 5-Panel Mesh Trucker",
+  o1121: "Otto 6-Panel Mesh Trucker",
   o598: "Otto 5-Panel Low Profile Cap",
   yp6506: "Yupoong 5-Panel Retro Trucker",
   ff110f: "Flexfit 110 Flat Bill Snapback",
@@ -1067,6 +1097,7 @@ const SHORT_NAME = {
   tt5r: "5-Panel Rope",
   tt7: "7-Panel Performance",
   o285: "5-Panel Mesh Trucker",
+  o1121: "6-Panel Mesh Trucker",
   o598: "Low Profile Cap",
   yp6506: "5-Panel Retro Trucker",
   ff110f: "110 Flat Bill",
