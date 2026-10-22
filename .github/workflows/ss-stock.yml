@@ -26,4 +26,4 @@ jobs:
           git config user.email "help@threadbreak.com"
           git add snippets/ss-stock.liquid
           git commit -m "Update S&S stock"
-          git push
+          git pull --rebase origin main && git push
