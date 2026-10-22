@@ -1,0 +1,29 @@
+name: S&S stock sync
+on:
+  schedule:
+    - cron: "17 */4 * * *"   # every 4 hours
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency: ss-stock
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Pull S&S stock
+        env:
+          SS_ACCOUNT: ${{ secrets.SS_ACCOUNT }}
+          SS_API_KEY: ${{ secrets.SS_API_KEY }}
+        run: node tools/ss-stock.mjs
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- snippets/ss-stock.liquid; then echo "Nothing to commit"; exit 0; fi
+          git config user.name "threadbreak-stock-bot"
+          git config user.email "help@threadbreak.com"
+          git add snippets/ss-stock.liquid
+          git commit -m "Update S&S stock"
+          git push
