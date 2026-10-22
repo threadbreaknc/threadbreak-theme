@@ -74,6 +74,20 @@
   #tbpo .tbstep-hint strong{color:var(--ink)}
 
   /* hat grid (identical to embroidery form) */
+  #tbpo .hat-filters{margin:0 0 14px;display:flex;flex-direction:column;gap:8px}
+  #tbpo .hat-filters[hidden]{display:none}
+  #tbpo .frow{display:flex;gap:7px;align-items:center;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
+  #tbpo .frow::-webkit-scrollbar{display:none}
+  #tbpo .flabel{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#8a85a0;flex:0 0 auto;min-width:42px}
+  #tbpo .fchip{flex:0 0 auto;border:1.5px solid var(--line);background:#fff;color:#2a2638;border-radius:999px;padding:6px 12px;font:600 13px/1.2 inherit;cursor:pointer;white-space:nowrap}
+  #tbpo .fchip span{color:#8a85a0;font-weight:500;margin-left:2px}
+  #tbpo .fchip:hover{border-color:var(--purple)}
+  #tbpo .fchip.on{background:var(--purple);border-color:var(--purple);color:#fff}
+  #tbpo .fchip.on span{color:rgba(255,255,255,.8)}
+  #tbpo .fchip.dim{opacity:.45}
+  #tbpo .fempty{font-size:13px;color:#5b5670}
+  #tbpo .fempty button{border:0;background:none;color:var(--purple);font-weight:700;cursor:pointer;padding:0;text-decoration:underline}
+  #tbpo .hat.f-hide{display:none}
   #tbpo .hats{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:13px}
   #tbpo .hats.picking{grid-template-columns:1fr}
   #tbpo .hat{border:1.5px solid var(--line);border-radius:13px;background:#fff;cursor:pointer;overflow:hidden;transition:.2s;position:relative;scroll-margin-top:150px}
@@ -402,6 +416,7 @@
     <div class="tbstep-head"><div class="tbstep-num">1</div><h2>Choose your hat</h2><div class="tbstep-sum" id="sum1"></div></div>
     <div class="tbstep-body">
       <p class="tbstep-hint">Every leatherette patch attaches to the front panel. Pick a style, then choose your colors right below it. You'll pick your patch material and shape in step 3.</p>
+      <div class="hat-filters" id="hatFilters"></div>
       <div class="hats" id="hats"></div>
       <a href="/pages/quote" class="quote-redirect">Don't see what you're looking for? <strong>Get a custom quote instead</strong></a>
       <div class="btn-row"><button type="button" class="next" id="next1" disabled>Choose Quantity</button></div>
@@ -1997,10 +2012,50 @@ function easeScrollToEl(el, duration){
 }
 
 /* ---------- step 1: hats ---------- */
+/* ---------- grid filters (brand + style) ---------- */
+const BRAND_OF = s => /richardson/i.test(s.brand) ? "Richardson" : /yupoong|yp classics/i.test(s.brand) ? "Yupoong"
+  : /otto/i.test(s.brand) ? "Otto" : /flexfit/i.test(s.brand) ? "Flexfit" : /^10 10/.test(s.brand) ? "10 10" : /atonal/i.test(s.brand) ? "Atonal" : "Other";
+const KINDS = [
+  ["trucker", "Trucker", ["rich112","rich112_5p","rich112p","rich112pm","rich112pl","rich115","rich168","yp6606","yp6506","yupoong","o285","o1121","ff110m","ff6511"]],
+  ["solid", "Solid back", ["otto","atonal","ff110f","yp6089","yp6789","otto120","tt6","tt5","tt7"]],
+  ["rope", "Rope", ["atonal_a500r","rich256","rich258","tt5r"]],
+  ["flat", "Flat bill", ["yupoong","ff110f","yp6089"]],
+  ["fitted", "Fitted", ["ff6277","ff6511"]],
+  ["dad", "Dad hat / unstructured", ["yp6245","rich220","o598"]],
+  ["perf", "Performance", ["rich220","rich258","rich256","tt6","tt5","tt5r","tt7"]]
+];
+const filt = { brand: null, kind: null };
+const kindHas = (k, s) => { const e = KINDS.find(x => x[0] === k); return !!e && e[2].indexOf(s.id) > -1; };
+const passes = (s, f) => (!f.brand || BRAND_OF(s) === f.brand) && (!f.kind || kindHas(f.kind, s));
+function renderFilters(picking){
+  const host = $("hatFilters"); if (!host) return;
+  host.hidden = picking;
+  if (picking) return;
+  const brands = [];
+  sorted.forEach(s => { const b = BRAND_OF(s); if (brands.indexOf(b) === -1) brands.push(b); });
+  const chip = (type, val, label, n) => '<button type="button" class="fchip' + (filt[type] === val ? " on" : "") + (n === 0 ? " dim" : "") +
+    '" data-ftype="' + type + '" data-fval="' + (val || "") + '">' + label + (n != null ? ' <span>' + n + '</span>' : '') + '</button>';
+  const shown = sorted.filter(s => passes(s, filt)).length;
+  host.innerHTML =
+    '<div class="frow"><span class="flabel">Brand</span>' + chip("brand", null, "All") +
+      brands.map(b => chip("brand", b, b, sorted.filter(s => passes(s, { brand: b, kind: filt.kind })).length)).join("") + '</div>' +
+    '<div class="frow"><span class="flabel">Style</span>' + chip("kind", null, "All") +
+      KINDS.map(k => chip("kind", k[0], k[1], sorted.filter(s => passes(s, { brand: filt.brand, kind: k[0] })).length)).join("") + '</div>' +
+    (shown ? '' : '<div class="fempty">No hats match both filters. <button type="button" data-fclear>Show all hats</button></div>');
+  host.querySelectorAll("[data-ftype]").forEach(b => b.addEventListener("click", () => {
+    const t = b.dataset.ftype, v = b.dataset.fval || null;
+    filt[t] = (filt[t] === v) ? null : v;
+    renderHats();
+  }));
+  const clr = host.querySelector("[data-fclear]");
+  if (clr) clr.addEventListener("click", () => { filt.brand = null; filt.kind = null; renderHats(); });
+}
+
 function renderHats(){
   const picking = !!state.style;
   const grid = $("hats");
   grid.classList.toggle("picking", picking);
+  renderFilters(picking);
 
   grid.innerHTML = sorted.map((s, idx) => {
     const on = state.style && state.style.id === s.id;
@@ -2067,6 +2122,10 @@ function renderHats(){
     state.style = null; state.colors = []; state.split = {}; state.activeColor = null;
     renderHats(); sync();
     requestAnimationFrame(() => easeScrollToEl(document.getElementById("hats"), 900));
+  });
+  if (!picking) grid.querySelectorAll("[data-hat]").forEach(el => {
+    const st = STYLES.find(x => x.id === el.dataset.hat);
+    el.classList.toggle("f-hide", !!st && !passes(st, filt));
   });
   if (picking) renderColorPanel();
 }
