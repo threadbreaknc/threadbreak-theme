@@ -16,6 +16,15 @@
   #tbco .form-wrap{max-width:1180px;margin:0 auto;padding:0 20px}
   #tbco .bar-in{max-width:1180px}
   #tbco header{position:relative;overflow:hidden;background:var(--ink);color:var(--white);padding:44px 0 20px}
+  #tbco .props .gbp-link{color:inherit;text-decoration:underline;text-underline-offset:2px}
+  #tbco .from-prices{display:grid;grid-template-columns:auto repeat(3,1fr);align-items:stretch;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:0 0 14px;font-size:13.5px}
+  #tbco .from-prices:empty{display:none}
+  #tbco .from-prices > div{padding:10px 12px;text-align:center;border-left:1px solid var(--line)}
+  #tbco .from-prices > div:first-child{border-left:0;text-align:left;font-weight:700;color:var(--ink);display:flex;align-items:center;background:var(--ice)}
+  #tbco .from-prices .fp-q{display:block;font-size:12px;color:var(--muted);font-weight:600}
+  #tbco .from-prices .fp-p{display:block;font-size:17px;font-weight:800;color:var(--purple)}
+  #tbco .from-prices .fp-note{grid-column:1/-1;border-left:0;border-top:1px solid var(--line);font-size:12px;color:var(--muted);padding:7px 12px}
+  @media(max-width:640px){#tbco .from-prices{grid-template-columns:repeat(3,1fr)}#tbco .from-prices > div:first-child{grid-column:1/-1;justify-content:center;border-bottom:1px solid var(--line)}#tbco .from-prices > div:nth-child(2){border-left:0}}
   #tbco .hero-photos{position:absolute;inset:0;display:flex;z-index:0;opacity:.5}
   #tbco .hero-photos div{flex:1;background-size:cover;background-position:center;min-width:0}
   #tbco .hero-photos div:not(:first-child){-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%);mask-image:linear-gradient(90deg,transparent,#000 12%);margin-left:-6%}
@@ -418,7 +427,7 @@
     <div class="props">
       <span>Embroidered in Burlington, NC</span>
       <span>Free shipping to the lower 48</span>
-      <span>Local pickup by appointment</span>
+      <span>Local pickup by appointment &middot; <a href="https://share.google/7xKE8jEQONDBDGPqy" target="_blank" rel="noopener" class="gbp-link">Find us on Google</a></span>
     </div>
   </div>
 </header>
@@ -434,6 +443,7 @@
 
   <div id="tbFormSteps">
   <!-- STEP 1: hat + colors -->
+  <div class="from-prices" id="fromPrices" aria-label="Per-hat pricing"></div>
   <section class="tbstep active" data-step="1">
     <div class="tbstep-head"><div class="tbstep-num">1</div><h2>Choose your hat</h2><div class="tbstep-sum" id="sum1"></div></div>
     <div class="tbstep-body">
@@ -592,6 +602,7 @@
     <span class="tbco-rating-arrow" aria-hidden="true">&rarr;</span>
   </a>
 
+  {% render 'tb-reviews' %}
   <section class="ch" id="customerHats" aria-labelledby="chTitle">
     <div class="ch-head">
       <h2 id="chTitle">Hats we've made for customers</h2>
@@ -2163,6 +2174,19 @@ function renderFilters(picking){
   const clr = host.querySelector("[data-fclear]");
   if (clr) clr.addEventListener("click", () => { filt.brand = null; filt.kind = null; renderHats(); });
 }
+
+// Per-hat "starting at" row above step 1: lowest tier price across the hats in the picker.
+(function(){
+  const host = document.getElementById("fromPrices"); if (!host) return;
+  const minAt = q => Math.min.apply(null, sorted.map(s => { const t = s.tiers.find(x => x[0] === q); return t ? t[1] : Infinity; }));
+  const p5 = minAt(5), p10 = minAt(10), p24 = minAt(24);
+  if (!isFinite(p5)) return;
+  host.innerHTML = '<div>Per hat, starting at</div>' +
+    '<div><span class="fp-q">5\u20139 hats</span><span class="fp-p">' + money(p5) + '</span></div>' +
+    '<div><span class="fp-q">10\u201323 hats</span><span class="fp-p">' + money(p10) + '</span></div>' +
+    '<div><span class="fp-q">24+ hats</span><span class="fp-p">' + money(p24) + '</span></div>' +
+    '<div class="fp-note">Front embroidery, digitizing and shipping to the lower 48 included. Exact price depends on the hat, and drops again at 48 and 96.</div>';
+})();
 
 function renderHats(){
   const picking = !!state.style;

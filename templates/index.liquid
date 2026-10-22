@@ -128,10 +128,19 @@
     <p class="tb-pk-eyebrow">Straightforward pricing</p>
     <h2>Custom Hat Packages</h2>
     <p class="tb-pk-sub">Pick a hat, pick a color, send your logo. Front embroidery, free digitizing, a mockup before we stitch, and free shipping to the lower 48 are all in the price. No setup fees and no stitch limits.</p>
+    {%- comment -%} "from" prices are the lowest live price of each pack size in the Custom Hat Packages collection (pack size = number at the start of the product handle), so they can't drift. {%- endcomment -%}
+    {%- assign pk10 = 0 -%}{%- assign pk24 = 0 -%}{%- assign pk48 = 0 -%}
+    {%- for p in collections['custom-hat-packages'].products limit: 100 -%}
+      {%- assign pkq = p.handle | split: '-' | first -%}
+      {%- if pkq == '10' -%}{%- if pk10 == 0 or p.price_min < pk10 -%}{%- assign pk10 = p.price_min -%}{%- endif -%}
+      {%- elsif pkq == '24' -%}{%- if pk24 == 0 or p.price_min < pk24 -%}{%- assign pk24 = p.price_min -%}{%- endif -%}
+      {%- elsif pkq == '48' -%}{%- if pk48 == 0 or p.price_min < pk48 -%}{%- assign pk48 = p.price_min -%}{%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
     <div class="tb-pk-grid">
-      <div class="tb-pk-card"><span class="tb-pk-qty">10</span><span class="tb-pk-label">hats</span><span class="tb-pk-from">from $209</span></div>
-      <div class="tb-pk-card"><span class="tb-pk-qty">24</span><span class="tb-pk-label">hats</span><span class="tb-pk-from">from $479</span></div>
-      <div class="tb-pk-card"><span class="tb-pk-qty">48</span><span class="tb-pk-label">hats</span><span class="tb-pk-from">from $859</span></div>
+      <div class="tb-pk-card"><span class="tb-pk-qty">10</span><span class="tb-pk-label">hats</span><span class="tb-pk-from">{% if pk10 > 0 %}from {{ pk10 | money_without_trailing_zeros }}{% else %}See packages{% endif %}</span></div>
+      <div class="tb-pk-card"><span class="tb-pk-qty">24</span><span class="tb-pk-label">hats</span><span class="tb-pk-from">{% if pk24 > 0 %}from {{ pk24 | money_without_trailing_zeros }}{% else %}See packages{% endif %}</span></div>
+      <div class="tb-pk-card"><span class="tb-pk-qty">48</span><span class="tb-pk-label">hats</span><span class="tb-pk-from">{% if pk48 > 0 %}from {{ pk48 | money_without_trailing_zeros }}{% else %}See packages{% endif %}</span></div>
     </div>
     <a href="/collections/custom-hat-packages" class="tb-pk-cta">Shop Hat Packages</a>
     <p class="tb-pk-note">Need a different quantity, extra logo locations, or 3D puff? <a href="/pages/custom-order">Build a custom order</a> instead.</p>
@@ -250,7 +259,7 @@
     <div class="tb-patch-copy">
       <p class="tb-patch-eyebrow">New</p>
       <h2>Laser Engraved Patch Hats</h2>
-      <p>Your logo burned into real leatherette, then sewn onto the hat. It's the look people associate with premium outdoor and workwear brands, and it holds up better than a print.</p>
+      <p>Your logo burned into real leatherette, then pressed onto the hat. It's the look people associate with premium outdoor and workwear brands, and it holds up better than a print.</p>
       <ul class="tb-patch-list">
         <li>Multiple leatherette colors, from rawhide and saddle tan to brushed silver</li>
         <li>Three patch sizes and four shapes, on any hat we carry</li>
