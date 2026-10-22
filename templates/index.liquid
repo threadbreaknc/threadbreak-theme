@@ -1,8 +1,11 @@
 {%- comment -%} Homepage: hero + story inlined so no separate section files are needed. {%- endcomment -%}
 
 <section class="hc-hero">
+  <picture class="hc-hero-bg hc-hero-pic">
+    <source media="(max-width:700px)" srcset="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/660B5CDC-607C-4CB3-AC44-66FDB8578C7D.jpg?v=1792644744&amp;width=900&amp;format=webp">
+    <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/hat-hero.jpg?v=1785008565&amp;width=1600&amp;format=webp" alt="" fetchpriority="high" decoding="async">
+  </picture>
   <video class="hc-hero-bg hc-hero-video" muted loop playsinline preload="metadata" autoplay
-         poster="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/hat-hero.jpg?v=1785008565&amp;width=1600&amp;format=webp"
          data-video-src="https://cdn.shopify.com/videos/c/o/v/4f8d2a0347e7479382891962bc3a7b4e.mov"></video>
   <div class="hc-hero-overlay"></div>
   <div class="hc-hero-loopfade" id="hcLoopFade"></div>
@@ -236,7 +239,7 @@
   <div class="tb-machine-inner">
     <p class="tb-machine-eyebrow">Every hat, start to finish</p>
     <h2 class="tb-machine-title">Made in-house.</h2>
-    <p class="tb-machine-sub">Stitched on our 6-head embroidery machine in Burlington, NC. Every finished hat is inspected for placement, stitching, and finishing before it ships.</p>
+    <p class="tb-machine-sub">Every finished hat is inspected for placement, stitching, and finishing before it ships.</p>
     <a href="/pages/custom-order" class="tb-machine-cta">Start a Custom Order</a>
   </div>
 </section>
@@ -319,12 +322,18 @@
   .tb-machine-cta{display:inline-block;background:#5028AA;color:#fff;text-decoration:none;font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:.05em;padding:.85rem 2.2rem;border-radius:12px;transition:background .18s,transform .18s;box-shadow:0 6px 24px rgba(80,40,170,.4);}
   .tb-machine-cta:hover{background:#6234c9;transform:translateY(-2px);}
   @media(max-width:600px){.tb-machine{min-height:50vh;}.tb-machine-inner{padding:3rem 1.25rem;}}
+  @media(max-width:700px){
+    .tb-machine-img{background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/hat-hero.jpg?v=1785008565&width=900&format=webp');filter:saturate(1.2) contrast(1.12) brightness(.82);transform:scale(1.04);}
+    .tb-machine-overlay{background:radial-gradient(ellipse at 50% 40%,rgba(80,40,170,.18),rgba(20,18,28,.55) 70%),linear-gradient(180deg,rgba(20,18,28,.55),rgba(80,40,170,.22) 50%,rgba(20,18,28,.8));}
+  }
 </style>
 
 <style>
   .hc-hero{position:relative;min-height:82vh;display:flex;align-items:center;overflow:hidden;padding-top:5rem;border-bottom:5px solid #5028AA;}
   .hc-hero-bg{position:absolute;inset:0;background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/hat-hero.jpg?v=1785008565&width=1600&format=webp');background-size:cover;background-position:center;transform:scale(1.04);}
   .hc-hero-video{width:100%;height:100%;object-fit:cover;object-position:center;background-image:none;}
+  .hc-hero-pic{background-image:none;}
+  .hc-hero-pic img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
   .hc-hero-loopfade{position:absolute;inset:0;z-index:1;background:#14121C;opacity:0;transition:opacity .5s ease;pointer-events:none;}
   .hc-hero-loopfade.show{opacity:1;}
   .hc-hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(16,14,22,.92) 0%,rgba(16,14,22,.72) 42%,rgba(16,14,22,.40) 100%);}
@@ -363,6 +372,7 @@
     section.hc-hero .hc-hero-overlay{inset:auto;top:var(--hc-top);left:0;right:0;height:var(--hc-band);
       background:linear-gradient(180deg,rgba(20,18,28,0) 62%,rgba(20,18,28,.75) 88%,#14121C 100%);}
     section.hc-hero .hc-hero-loopfade{display:none;}
+    section.hc-hero .hc-hero-video{display:none;}
     section.hc-hero .hc-hero-inner{padding-top:calc(var(--hc-top) + var(--hc-band) - 1.25rem);}
     /* reviews pill: every line centered */
     .hc-rating{display:flex !important;flex-wrap:wrap;justify-content:center;text-align:center;row-gap:4px;}
@@ -391,6 +401,8 @@
   // guaranteed the poster flashed first. Mobile still keeps the poster only, so
   // phones get a fast LCP and never download the video.
   var isDesktop = !window.matchMedia('(max-width: 768px)').matches;
+  // desktop only: poster matches the photo behind it, so nothing flashes before the first frame
+  if (isDesktop) vid.poster = 'https://cdn.shopify.com/s/files/1/0974/8453/7988/files/hat-hero.jpg?v=1785008565&width=1600&format=webp';
   function initHeroVideo(){
     if (!isDesktop) return;
     if (vid.dataset.loaded) return;
