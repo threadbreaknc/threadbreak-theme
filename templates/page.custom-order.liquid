@@ -340,6 +340,22 @@
 
   /* reviews block */
   /* one compact line with stars and an arrow, same shape as the homepage */
+  #tbco .ch{margin:34px auto 0;max-width:1100px}
+  #tbco .ch-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  #tbco .ch h2{font-size:20px;margin:0;color:var(--ink)}
+  #tbco .ch-all{font-size:13.5px;font-weight:700;color:var(--purple);text-decoration:none;white-space:nowrap}
+  #tbco .ch-sub{font-size:13.5px;color:var(--muted);margin:4px 0 12px}
+  #tbco .ch-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(150px,1fr);gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin;padding-bottom:6px}
+  #tbco .ch-tile{scroll-snap-align:start;border:1px solid var(--line);border-radius:12px;overflow:hidden;padding:0;background:#fff;cursor:zoom-in;aspect-ratio:1/1}
+  #tbco .ch-tile img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s}
+  #tbco .ch-tile:hover img{transform:scale(1.04)}
+  @media(max-width:640px){#tbco .ch-row{grid-auto-columns:42%}}
+  .ch-lb{position:fixed;inset:0;z-index:10001;background:rgba(14,12,22,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+  .ch-lb[hidden]{display:none}
+  .ch-lb img{max-width:min(92vw,900px);max-height:calc(100vh - 120px);border-radius:14px;background:#fff}
+  .ch-cap{color:#fff;font-weight:600;font-size:14px;margin:12px 0 0;text-align:center}
+  .ch-x{position:absolute;top:14px;right:14px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.95);font-size:26px;line-height:1;cursor:pointer}
+  #tbco .ch-jump{color:var(--purple);font-weight:700;text-decoration:none;white-space:nowrap}
   #tbco .tbco-rating{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;
     margin:30px auto 0;padding:0;background:none;border:none;text-decoration:none;
     color:var(--muted);font-size:14px;transition:color .15s}
@@ -418,7 +434,7 @@
   <section class="tbstep active" data-step="1">
     <div class="tbstep-head"><div class="tbstep-num">1</div><h2>Choose your hat</h2><div class="tbstep-sum" id="sum1"></div></div>
     <div class="tbstep-body">
-      <p class="tbstep-hint">Front embroidery is included on every hat. Pick a style, then choose your colors right below it.</p>
+      <p class="tbstep-hint">Front embroidery is included on every hat. Pick a style, then choose your colors right below it. <a href="#customerHats" class="ch-jump">See hats we've made</a></p>
       <div class="hat-filters" id="hatFilters"></div>
       <div class="hats" id="hats"></div>
       <a href="/pages/quote" class="quote-redirect">Don't see what you're looking for? <strong>Get a custom quote instead</strong></a>
@@ -571,6 +587,47 @@
     <span>{{ jm.all_reviews_rating | default: 5.0 | round: 1 }}/5 from {{ jm.all_reviews_count | default: 45 }} verified reviews</span>
     <span class="tbco-rating-arrow" aria-hidden="true">&rarr;</span>
   </a>
+
+  <section class="ch" id="customerHats" aria-labelledby="chTitle">
+    <div class="ch-head">
+      <h2 id="chTitle">Hats we've made for customers</h2>
+      <a href="/pages/our-work" class="ch-all">See all our work &rarr;</a>
+    </div>
+    <p class="ch-sub">Real orders, stitched in-house in Burlington, NC. Tap any photo to see it bigger.</p>
+    <div class="ch-row">
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/674100D1-0298-4DFB-8401-00C3DE69C07A.jpg?v=1792644743&width=1400" aria-label="View larger: Black trucker hats with a white embroidered logo"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/674100D1-0298-4DFB-8401-00C3DE69C07A.jpg?v=1792644743&width=360" alt="Black trucker hats with a white embroidered logo" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/7E9A5743-F089-4AAD-8CAD-C76055C2CF85.jpg?v=1792644744&width=1400" aria-label="View larger: Tan and black hats with a gold embroidered crown"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/7E9A5743-F089-4AAD-8CAD-C76055C2CF85.jpg?v=1792644744&width=360" alt="Tan and black hats with a gold embroidered crown" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A75A3466-AEE7-40E6-80B5-72E4F7E1818E.jpg?v=1792644743&width=1400" aria-label="View larger: A run of black hats with gold embroidered numbers"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A75A3466-AEE7-40E6-80B5-72E4F7E1818E.jpg?v=1792644743&width=360" alt="A run of black hats with gold embroidered numbers" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/19A80ECD-D3B8-4E97-A565-CEF7C37F1A3D.jpg?v=1792644744&width=1400" aria-label="View larger: Race team flat bill with front and side embroidery"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/19A80ECD-D3B8-4E97-A565-CEF7C37F1A3D.jpg?v=1792644744&width=360" alt="Race team flat bill with front and side embroidery" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/embroidered_hats.jpg?v=1790523398&width=1400" aria-label="View larger: Custom embroidered hats with company logos"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/embroidered_hats.jpg?v=1790523398&width=360" alt="Custom embroidered hats with company logos" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/2736EC88-FDD3-4C5D-BBA3-F70364DE24BE.jpg?v=1786337802&width=1400" aria-label="View larger: Custom embroidered motorsports hats"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/2736EC88-FDD3-4C5D-BBA3-F70364DE24BE.jpg?v=1786337802&width=360" alt="Custom embroidered motorsports hats" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG-6154.jpg?v=1786922824&width=1400" aria-label="View larger: Custom embroidered hat"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG-6154.jpg?v=1786922824&width=360" alt="Custom embroidered hat" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/07217139-5CCE-441B-B790-0029094697DC.jpg?v=1786337803&width=1400" aria-label="View larger: Custom embroidered hat"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/07217139-5CCE-441B-B790-0029094697DC.jpg?v=1786337803&width=360" alt="Custom embroidered hat" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/72816A1C-5D40-4732-9FEB-F01282E9C397.jpg?v=1786337803&width=1400" aria-label="View larger: Custom embroidered hat"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/72816A1C-5D40-4732-9FEB-F01282E9C397.jpg?v=1786337803&width=360" alt="Custom embroidered hat" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6DFA090A-1089-4CDE-8C3F-764AA7E7D576.jpg?v=1786337802&width=1400" aria-label="View larger: Custom embroidered hat"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6DFA090A-1089-4CDE-8C3F-764AA7E7D576.jpg?v=1786337802&width=360" alt="Custom embroidered hat" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/31046EA1-FC9B-495F-A851-AEF0819AA92E.jpg?v=1786337803&width=1400" aria-label="View larger: Custom embroidered hat"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/31046EA1-FC9B-495F-A851-AEF0819AA92E.jpg?v=1786337803&width=360" alt="Custom embroidered hat" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6CB0AC79-A34F-4B4D-AD9D-FBAEF30942E3.jpg?v=1786337802&width=1400" aria-label="View larger: Custom embroidered hat"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6CB0AC79-A34F-4B4D-AD9D-FBAEF30942E3.jpg?v=1786337802&width=360" alt="Custom embroidered hat" loading="lazy" decoding="async"></button>
+    </div>
+  </section>
+  <div class="ch-lb" id="chLb" hidden><button type="button" class="ch-x" aria-label="Close">&times;</button><img alt=""><p class="ch-cap"></p></div>
+  <script>
+  (function(){
+    var lb = document.getElementById("chLb"); if (!lb) return;
+    document.body.appendChild(lb);
+    var im = lb.querySelector("img"), cap = lb.querySelector(".ch-cap");
+    function close(){ lb.hidden = true; document.body.style.overflow = ""; }
+    document.querySelectorAll(".ch-tile").forEach(function(t){
+      t.addEventListener("click", function(){
+        var i = t.querySelector("img");
+        im.src = t.dataset.full; im.alt = i.alt; cap.textContent = i.alt;
+        lb.hidden = false; document.body.style.overflow = "hidden";
+      });
+    });
+    lb.addEventListener("click", function(e){ if (e.target !== im) close(); });
+    document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !lb.hidden) close(); });
+  })();
+  </script>
+
 
   <a href="sms:+13365856176" class="tbco-textus">
     <span class="tbco-textus-icon" aria-hidden="true">
@@ -1988,8 +2045,11 @@ let scrollAnim = null;
     if (scrollAnim){ cancelAnimationFrame(scrollAnim); scrollAnim = null; }
   }, { passive: true }));
 
+// Gliding auto-scroll turned off: only ever an instant jump, and only where a
+// caller needs the active step brought back on screen.
 function easeScrollTo(targetY, duration){
   if (scrollAnim) cancelAnimationFrame(scrollAnim);
+  window.scrollTo(0, Math.max(0, targetY)); return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches){
     window.scrollTo(0, Math.max(0, targetY));
     return;
@@ -2045,10 +2105,6 @@ function settleAfterCollapse(beforeTop, targetSel){
   const jump = target.getBoundingClientRect().top - beforeTop;
   if (Math.abs(jump) > 1) window.scrollBy(0, jump);
   lockTaps(380, targetSel);
-  requestAnimationFrame(() => {
-    const y = window.scrollY + target.getBoundingClientRect().top - railBottom();
-    if (Math.abs(y - window.scrollY) > 24) easeScrollTo(y, 420);
-  });
 }
 
 /* ---------- step 1: hats ---------- */

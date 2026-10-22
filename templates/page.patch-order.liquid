@@ -344,6 +344,22 @@
 
   /* reviews block */
   /* one compact line with stars and an arrow, same shape as the homepage */
+  #tbpo .ch{margin:34px auto 0;max-width:1100px}
+  #tbpo .ch-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  #tbpo .ch h2{font-size:20px;margin:0;color:var(--ink)}
+  #tbpo .ch-all{font-size:13.5px;font-weight:700;color:var(--purple);text-decoration:none;white-space:nowrap}
+  #tbpo .ch-sub{font-size:13.5px;color:var(--muted);margin:4px 0 12px}
+  #tbpo .ch-row{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(150px,1fr);gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:thin;padding-bottom:6px}
+  #tbpo .ch-tile{scroll-snap-align:start;border:1px solid var(--line);border-radius:12px;overflow:hidden;padding:0;background:#fff;cursor:zoom-in;aspect-ratio:1/1}
+  #tbpo .ch-tile img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .25s}
+  #tbpo .ch-tile:hover img{transform:scale(1.04)}
+  @media(max-width:640px){#tbpo .ch-row{grid-auto-columns:42%}}
+  .ch-lb{position:fixed;inset:0;z-index:10001;background:rgba(14,12,22,.88);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+  .ch-lb[hidden]{display:none}
+  .ch-lb img{max-width:min(92vw,900px);max-height:calc(100vh - 120px);border-radius:14px;background:#fff}
+  .ch-cap{color:#fff;font-weight:600;font-size:14px;margin:12px 0 0;text-align:center}
+  .ch-x{position:absolute;top:14px;right:14px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.95);font-size:26px;line-height:1;cursor:pointer}
+  #tbpo .ch-jump{color:var(--purple);font-weight:700;text-decoration:none;white-space:nowrap}
   #tbpo .tbco-rating{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;
     margin:30px auto 0;padding:0;background:none;border:none;text-decoration:none;
     color:var(--muted);font-size:14px;transition:color .15s}
@@ -415,7 +431,7 @@
   <section class="tbstep active" data-step="1">
     <div class="tbstep-head"><div class="tbstep-num">1</div><h2>Choose your hat</h2><div class="tbstep-sum" id="sum1"></div></div>
     <div class="tbstep-body">
-      <p class="tbstep-hint">Every leatherette patch attaches to the front panel. Pick a style, then choose your colors right below it. You'll pick your patch material and shape in step 3.</p>
+      <p class="tbstep-hint">Every leatherette patch attaches to the front panel. Pick a style, then choose your colors right below it. You'll pick your patch material and shape in step 3. <a href="#customerHats" class="ch-jump">See hats we've made</a></p>
       <div class="hat-filters" id="hatFilters"></div>
       <div class="hats" id="hats"></div>
       <a href="/pages/quote" class="quote-redirect">Don't see what you're looking for? <strong>Get a custom quote instead</strong></a>
@@ -559,6 +575,43 @@
     <span>{{ jm.all_reviews_rating | default: 5.0 | round: 1 }}/5 from {{ jm.all_reviews_count | default: 45 }} verified reviews</span>
     <span class="tbco-rating-arrow" aria-hidden="true">&rarr;</span>
   </a>
+
+  <section class="ch" id="customerHats" aria-labelledby="chTitle">
+    <div class="ch-head">
+      <h2 id="chTitle">Hats we've made for customers</h2>
+      <a href="/pages/our-work" class="ch-all">See all our work &rarr;</a>
+    </div>
+    <p class="ch-sub">Real orders, made in-house in Burlington, NC. Tap any photo to see it bigger.</p>
+    <div class="ch-row">
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/Threadbreak_hats.jpg?v=1790523398&width=1400" aria-label="View larger: Laser engraved leatherette patch hats"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/Threadbreak_hats.jpg?v=1790523398&width=360" alt="Laser engraved leatherette patch hats" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-panelcraft.jpg?v=1789705673&width=1400" aria-label="View larger: Black truckers with laser engraved Panel Craft patches"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-panelcraft.jpg?v=1789705673&width=360" alt="Black truckers with laser engraved Panel Craft patches" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/EMT_patch_hat.jpg?v=1790523398&width=1400" aria-label="View larger: Laser engraved leather patch hat for an EMT service"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/EMT_patch_hat.jpg?v=1790523398&width=360" alt="Laser engraved leather patch hat for an EMT service" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_6566.jpg?v=1790523397&width=1400" aria-label="View larger: Embroidered and laser engraved patch hats"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG_6566.jpg?v=1790523397&width=360" alt="Embroidered and laser engraved patch hats" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/Threadbreak-patches-1000px.jpg?v=1787941951&width=1400" aria-label="View larger: Laser engraved leatherette patches"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/Threadbreak-patches-1000px.jpg?v=1787941951&width=360" alt="Laser engraved leatherette patches" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/674100D1-0298-4DFB-8401-00C3DE69C07A.jpg?v=1792644743&width=1400" aria-label="View larger: Black trucker hats with a white embroidered logo"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/674100D1-0298-4DFB-8401-00C3DE69C07A.jpg?v=1792644743&width=360" alt="Black trucker hats with a white embroidered logo" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/7E9A5743-F089-4AAD-8CAD-C76055C2CF85.jpg?v=1792644744&width=1400" aria-label="View larger: Tan and black hats with a gold embroidered crown"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/7E9A5743-F089-4AAD-8CAD-C76055C2CF85.jpg?v=1792644744&width=360" alt="Tan and black hats with a gold embroidered crown" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A75A3466-AEE7-40E6-80B5-72E4F7E1818E.jpg?v=1792644743&width=1400" aria-label="View larger: A run of black hats with gold embroidered numbers"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A75A3466-AEE7-40E6-80B5-72E4F7E1818E.jpg?v=1792644743&width=360" alt="A run of black hats with gold embroidered numbers" loading="lazy" decoding="async"></button>
+    </div>
+  </section>
+  <div class="ch-lb" id="chLb" hidden><button type="button" class="ch-x" aria-label="Close">&times;</button><img alt=""><p class="ch-cap"></p></div>
+  <script>
+  (function(){
+    var lb = document.getElementById("chLb"); if (!lb) return;
+    document.body.appendChild(lb);
+    var im = lb.querySelector("img"), cap = lb.querySelector(".ch-cap");
+    function close(){ lb.hidden = true; document.body.style.overflow = ""; }
+    document.querySelectorAll(".ch-tile").forEach(function(t){
+      t.addEventListener("click", function(){
+        var i = t.querySelector("img");
+        im.src = t.dataset.full; im.alt = i.alt; cap.textContent = i.alt;
+        lb.hidden = false; document.body.style.overflow = "hidden";
+      });
+    });
+    lb.addEventListener("click", function(e){ if (e.target !== im) close(); });
+    document.addEventListener("keydown", function(e){ if (e.key === "Escape" && !lb.hidden) close(); });
+  })();
+  </script>
+
 
   <a href="sms:+13365856176" class="tbco-textus">
     <span class="tbco-textus-icon" aria-hidden="true">
@@ -1983,8 +2036,11 @@ let scrollAnim = null;
     if (scrollAnim){ cancelAnimationFrame(scrollAnim); scrollAnim = null; }
   }, { passive: true }));
 
+// Gliding auto-scroll turned off: only ever an instant jump, and only where a
+// caller needs the active step brought back on screen.
 function easeScrollTo(targetY, duration){
   if (scrollAnim) cancelAnimationFrame(scrollAnim);
+  window.scrollTo(0, Math.max(0, targetY)); return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches){
     window.scrollTo(0, Math.max(0, targetY));
     return;
@@ -2116,17 +2172,21 @@ function renderHats(){
       if (ev.target.closest(".hat-expand") || ev.target.closest("[data-change]")) return;
       const s = STYLES.find(x => x.id === el.dataset.hat);
       if (state.style && state.style.id === s.id) return;
+      const beforeTop = el.getBoundingClientRect().top;
       state.style = s; state.colors = []; state.split = {}; state.activeColor = null;
       renderHats(); sync();
-      requestAnimationFrame(() => easeScrollToEl(document.querySelector("#tbpo .hat.on"), 900));
+      const on = document.querySelector("#tbpo .hat.on");
+      if (on){ const jump = on.getBoundingClientRect().top - beforeTop; if (Math.abs(jump) > 1) window.scrollBy(0, jump); }
     });
   });
   const chg = grid.querySelector("[data-change]");
   if (chg) chg.addEventListener("click", ev => {
     ev.stopPropagation();
+    const beforeTop = chg.getBoundingClientRect().top;
     state.style = null; state.colors = []; state.split = {}; state.activeColor = null;
     renderHats(); sync();
-    requestAnimationFrame(() => easeScrollToEl(document.getElementById("hats"), 900));
+    const g = document.getElementById("hats");
+    if (g){ const jump = g.getBoundingClientRect().top - beforeTop; if (Math.abs(jump) > 1) window.scrollBy(0, jump); }
   });
   if (!picking) grid.querySelectorAll("[data-hat]").forEach(el => {
     const st = STYLES.find(x => x.id === el.dataset.hat);
