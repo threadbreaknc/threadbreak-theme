@@ -2067,6 +2067,7 @@ function renderReview(){
     ["Patch shape", state.shape.label],
     ["Placement", state.placement.label],
     ["Edge finish", edgeLabel()],
+    ["Patch size", "We'll size it on your proof"],
     ["Price per hat", each ? money(each) : "-"],
     ["Order total", each && state.qty ? money(each * state.qty) : "-"]
   ];
@@ -2336,6 +2337,7 @@ async function submitCheckout(){
     "Patch shape": meta.shape,
     "Placement": meta.placement,
     "Edge finish": meta.edge,
+    "Patch size": meta.patchSize,
     "Artwork": artNote,
     "Logo size": meta.logoScale,
     "Logo offset": meta.logoOffset
