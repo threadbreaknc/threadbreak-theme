@@ -2087,6 +2087,11 @@ function renderFilters(picking){
     filt[t] = (filt[t] === v) ? null : v;
     renderHats();
   }));
+  // keep the picked chip in view on phones, where each row scrolls sideways
+  host.querySelectorAll(".frow").forEach(row => {
+    const on = row.querySelector(".fchip.on");
+    if (on && on.dataset.fval) row.scrollLeft = Math.max(0, on.offsetLeft - row.offsetLeft - 60);
+  });
   const clr = host.querySelector("[data-fclear]");
   if (clr) clr.addEventListener("click", () => { filt.brand = null; filt.kind = null; renderHats(); });
 }
