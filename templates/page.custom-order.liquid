@@ -1042,7 +1042,16 @@ const $ = id => document.getElementById(id);
 const STOCK_MIN = 12; // fewer than this on hand = out of stock
 const STOCK = (window.TB_STOCK && window.TB_STOCK.styles) || {};
 const normColor = c => String(c || "").toLowerCase().replace(/grey/g, "gray").replace(/[^a-z0-9]/g, "");
-function stockEntry(s, c){ const st = s && STOCK[s.id]; return st ? (st[normColor(c)] || null) : null; }
+// form color name -> S&S color name, where they differ
+const STOCK_ALIAS = {
+  rich112: { "Royal Blue/Black": "Royal/Black", "Royal Blue/White": "Royal/White" },
+  rich112p: { "Realtree/Neon Yellow": "Realtree Edge/Neon Yellow", "Realtree/Neon Pink": "Realtree Edge/Neon Pink" },
+  yupoong: { "Navy Blue": "Navy", "Heather Grey/Black": "Heather/Black", "Heather Grey/White": "Heather/White", "Carolina Blue/White": "Carolina Blue/White/Caroline Blue", "Red/White": "Red/White/Red" },
+  yp6606: { "Blue/Silver": "Steel Blue/Silver", "Green Camo": "Green Camo/Black" },
+  rich168: { "Black Camo": "Black/Camo/Loden", "Charcoal/White/Black": "Charcoal/Black/White", "Pale Khaki/Loden": "Pale Khaki/Loden Green" },
+  rich256: { "Black": "Black/Black", "Cardinal": "Cardinal/White" }
+};
+function stockEntry(s, c){ const st = s && STOCK[s.id]; if (!st) return null; const al = STOCK_ALIAS[s.id]; return st[normColor((al && al[c]) || c)] || null; }
 // unknown color or style = treat as in stock, so a name mismatch never blocks a sale
 function isOut(s, c){ const e = stockEntry(s, c); return !!e && e.qty < STOCK_MIN; }
 function sizeOut(s, c, z){ const e = stockEntry(s, c); return !!(e && e.sizes && typeof e.sizes[z] === "number" && e.sizes[z] < STOCK_MIN); }
