@@ -1,21 +1,5 @@
 {
- "meta": {
-  "Richardson 112PM": "ok (5 colors)",
-  "Richardson 112+": "ok (115 colors)",
-  "Richardson 112PL": "ok (12 colors)",
-  "Richardson 115": "ok (41 colors)",
-  "Richardson 258": "ok (13 colors)",
-  "Richardson 220": "ok (15 colors)",
-  "Richardson 213": "not found",
-  "YP Classics 6245CM": "ok (13 colors)",
-  "YP Classics 6089M": "ok (36 colors)",
-  "YP Classics 6789M": "ok (7 colors)",
-  "Flexfit 110M": "ok (30 colors)",
-  "Flexfit 6511": "ok (23 colors)",
-  "Flexfit 6210": "not found",
-  "Pacific Headwear 104BR": "not found",
-  "Pacific Headwear 104C": "not found"
- },
+ "meta": {},
  "styles": {
   "Richardson 112": {
    "brand": "Richardson",
@@ -7438,12 +7422,10 @@
     {
      "name": "Royal/ White",
      "skus": {
-      "One Size": "B85895760",
       "S/M": "B85895761",
       "L/XL": "B85895762"
      },
      "sizes": [
-      "One Size",
       "S/M",
       "L/XL"
      ],
