@@ -84,19 +84,16 @@
   #tbco .tbstep-hint strong{color:var(--ink)}
 
   /* hat grid */
-  #tbco .hat-filters{margin:0 0 14px;display:flex;flex-direction:column;gap:8px}
+  #tbco .hat-filters{margin:0 0 14px;display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px}
   #tbco .hat-filters[hidden]{display:none}
-  #tbco .frow{display:flex;gap:7px;align-items:center;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:2px}
-  #tbco .frow::-webkit-scrollbar{display:none}
-  #tbco .flabel{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#8a85a0;flex:0 0 auto;min-width:42px}
-  #tbco .fchip{flex:0 0 auto;border:1.5px solid var(--line);background:#fff;color:#2a2638;border-radius:999px;padding:6px 12px;font:600 13px/1.2 inherit;cursor:pointer;white-space:nowrap}
-  #tbco .fchip span{color:#8a85a0;font-weight:500;margin-left:2px}
-  #tbco .fchip:hover{border-color:var(--purple)}
-  #tbco .fchip.on{background:var(--purple);border-color:var(--purple);color:#fff}
-  #tbco .fchip.on span{color:rgba(255,255,255,.8)}
-  #tbco .fchip.dim{opacity:.45}
-  #tbco .fempty{font-size:13px;color:#5b5670}
-  #tbco .fempty button{border:0;background:none;color:var(--purple);font-weight:700;cursor:pointer;padding:0;text-decoration:underline}
+  #tbco .fsel{position:relative;display:flex;align-items:center;gap:6px;border:1.5px solid var(--line);border-radius:10px;background:#fff;padding:0 30px 0 11px;height:40px;flex:1 1 150px;max-width:240px}
+  #tbco .fsel:focus-within{border-color:var(--purple)}
+  #tbco .fsel span{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#8a85a0}
+  #tbco .fsel select{appearance:none;-webkit-appearance:none;border:0;background:transparent;font:600 14px/1.2 inherit;color:#2a2638;flex:1;min-width:0;height:100%;cursor:pointer;outline:none}
+  #tbco .fsel::after{content:"";position:absolute;right:12px;top:50%;width:7px;height:7px;border-right:2px solid #6f6a85;border-bottom:2px solid #6f6a85;transform:translateY(-70%) rotate(45deg);pointer-events:none}
+  #tbco .fcount{font-size:13px;color:#8a85a0;white-space:nowrap}
+  #tbco .fcount button{border:0;background:none;color:var(--purple);font-weight:700;cursor:pointer;padding:0 0 0 6px;font-size:13px}
+  @media(max-width:640px){#tbco .fsel{max-width:none} #tbco .fcount{width:100%}}
   #tbco .hat.f-hide{display:none}
   #tbco .hats{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:13px}
   #tbco .hats.picking{grid-template-columns:1fr}
@@ -355,7 +352,13 @@
   .ch-lb img{max-width:min(92vw,900px);max-height:calc(100vh - 120px);border-radius:14px;background:#fff}
   .ch-cap{color:#fff;font-weight:600;font-size:14px;margin:12px 0 0;text-align:center}
   .ch-x{position:absolute;top:14px;right:14px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(255,255,255,.95);font-size:26px;line-height:1;cursor:pointer}
-  #tbco .ch-jump{color:var(--purple);font-weight:700;text-decoration:none;white-space:nowrap}
+  #tbco .ch-peek{display:inline-flex;align-items:center;gap:10px;margin:-6px 0 14px;text-decoration:none;color:var(--ink);font-size:13.5px;font-weight:600}
+  #tbco .ch-peek:empty{display:none}
+  #tbco .ch-peek-thumbs{display:flex}
+  #tbco .ch-peek-thumbs img{width:34px;height:34px;border-radius:50%;object-fit:cover;border:2px solid #fff;box-shadow:0 1px 4px rgba(20,18,28,.18);margin-left:-9px;background:var(--ice)}
+  #tbco .ch-peek-thumbs img:first-child{margin-left:0}
+  #tbco .ch-peek-txt b{color:var(--purple)}
+  #tbco .ch-peek:hover .ch-peek-txt{color:var(--purple)}
   #tbco .tbco-rating{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;
     margin:30px auto 0;padding:0;background:none;border:none;text-decoration:none;
     color:var(--muted);font-size:14px;transition:color .15s}
@@ -434,7 +437,8 @@
   <section class="tbstep active" data-step="1">
     <div class="tbstep-head"><div class="tbstep-num">1</div><h2>Choose your hat</h2><div class="tbstep-sum" id="sum1"></div></div>
     <div class="tbstep-body">
-      <p class="tbstep-hint">Front embroidery is included on every hat. Pick a style, then choose your colors right below it. <a href="#customerHats" class="ch-jump">See hats we've made</a></p>
+      <p class="tbstep-hint">Front embroidery is included on every hat. Pick a style, then choose your colors right below it.</p>
+      <a href="#customerHats" class="ch-peek" id="chPeek" aria-label="See hats we've made for customers"></a>
       <div class="hat-filters" id="hatFilters"></div>
       <div class="hats" id="hats"></div>
       <a href="/pages/quote" class="quote-redirect">Don't see what you're looking for? <strong>Get a custom quote instead</strong></a>
@@ -595,18 +599,18 @@
     </div>
     <p class="ch-sub">Real orders, stitched in-house in Burlington, NC. Tap any photo to see it bigger.</p>
     <div class="ch-row">
-      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/674100D1-0298-4DFB-8401-00C3DE69C07A.jpg?v=1792644743&width=1400" aria-label="View larger: Black trucker hats with a white embroidered logo"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/674100D1-0298-4DFB-8401-00C3DE69C07A.jpg?v=1792644743&width=360" alt="Black trucker hats with a white embroidered logo" loading="lazy" decoding="async"></button>
-      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/7E9A5743-F089-4AAD-8CAD-C76055C2CF85.jpg?v=1792644744&width=1400" aria-label="View larger: Tan and black hats with a gold embroidered crown"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/7E9A5743-F089-4AAD-8CAD-C76055C2CF85.jpg?v=1792644744&width=360" alt="Tan and black hats with a gold embroidered crown" loading="lazy" decoding="async"></button>
-      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A75A3466-AEE7-40E6-80B5-72E4F7E1818E.jpg?v=1792644743&width=1400" aria-label="View larger: A run of black hats with gold embroidered numbers"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A75A3466-AEE7-40E6-80B5-72E4F7E1818E.jpg?v=1792644743&width=360" alt="A run of black hats with gold embroidered numbers" loading="lazy" decoding="async"></button>
-      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/19A80ECD-D3B8-4E97-A565-CEF7C37F1A3D.jpg?v=1792644744&width=1400" aria-label="View larger: Race team flat bill with front and side embroidery"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/19A80ECD-D3B8-4E97-A565-CEF7C37F1A3D.jpg?v=1792644744&width=360" alt="Race team flat bill with front and side embroidery" loading="lazy" decoding="async"></button>
-      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/embroidered_hats.jpg?v=1790523398&width=1400" aria-label="View larger: Custom embroidered hats with company logos"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/embroidered_hats.jpg?v=1790523398&width=360" alt="Custom embroidered hats with company logos" loading="lazy" decoding="async"></button>
-      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/2736EC88-FDD3-4C5D-BBA3-F70364DE24BE.jpg?v=1786337802&width=1400" aria-label="View larger: Custom embroidered motorsports hats"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/2736EC88-FDD3-4C5D-BBA3-F70364DE24BE.jpg?v=1786337802&width=360" alt="Custom embroidered motorsports hats" loading="lazy" decoding="async"></button>
-      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG-6154.jpg?v=1786922824&width=1400" aria-label="View larger: Custom embroidered hat"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG-6154.jpg?v=1786922824&width=360" alt="Custom embroidered hat" loading="lazy" decoding="async"></button>
-      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/07217139-5CCE-441B-B790-0029094697DC.jpg?v=1786337803&width=1400" aria-label="View larger: Custom embroidered hat"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/07217139-5CCE-441B-B790-0029094697DC.jpg?v=1786337803&width=360" alt="Custom embroidered hat" loading="lazy" decoding="async"></button>
-      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/72816A1C-5D40-4732-9FEB-F01282E9C397.jpg?v=1786337803&width=1400" aria-label="View larger: Custom embroidered hat"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/72816A1C-5D40-4732-9FEB-F01282E9C397.jpg?v=1786337803&width=360" alt="Custom embroidered hat" loading="lazy" decoding="async"></button>
-      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6DFA090A-1089-4CDE-8C3F-764AA7E7D576.jpg?v=1786337802&width=1400" aria-label="View larger: Custom embroidered hat"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6DFA090A-1089-4CDE-8C3F-764AA7E7D576.jpg?v=1786337802&width=360" alt="Custom embroidered hat" loading="lazy" decoding="async"></button>
-      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/31046EA1-FC9B-495F-A851-AEF0819AA92E.jpg?v=1786337803&width=1400" aria-label="View larger: Custom embroidered hat"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/31046EA1-FC9B-495F-A851-AEF0819AA92E.jpg?v=1786337803&width=360" alt="Custom embroidered hat" loading="lazy" decoding="async"></button>
-      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6CB0AC79-A34F-4B4D-AD9D-FBAEF30942E3.jpg?v=1786337802&width=1400" aria-label="View larger: Custom embroidered hat"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6CB0AC79-A34F-4B4D-AD9D-FBAEF30942E3.jpg?v=1786337802&width=360" alt="Custom embroidered hat" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/674100D1-0298-4DFB-8401-00C3DE69C07A.jpg?v=1792644743&width=1000" aria-label="View larger: Black trucker hats with a white embroidered logo"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/674100D1-0298-4DFB-8401-00C3DE69C07A.jpg?v=1792644743&width=300" alt="Black trucker hats with a white embroidered logo" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/7E9A5743-F089-4AAD-8CAD-C76055C2CF85.jpg?v=1792644744&width=1000" aria-label="View larger: Tan and black hats with a gold embroidered crown"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/7E9A5743-F089-4AAD-8CAD-C76055C2CF85.jpg?v=1792644744&width=300" alt="Tan and black hats with a gold embroidered crown" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A75A3466-AEE7-40E6-80B5-72E4F7E1818E.jpg?v=1792644743&width=1000" aria-label="View larger: A run of black hats with gold embroidered numbers"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/A75A3466-AEE7-40E6-80B5-72E4F7E1818E.jpg?v=1792644743&width=300" alt="A run of black hats with gold embroidered numbers" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/19A80ECD-D3B8-4E97-A565-CEF7C37F1A3D.jpg?v=1792644744&width=1000" aria-label="View larger: Race team flat bill with front and side embroidery"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/19A80ECD-D3B8-4E97-A565-CEF7C37F1A3D.jpg?v=1792644744&width=300" alt="Race team flat bill with front and side embroidery" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/embroidered_hats.jpg?v=1790523398&width=1000" aria-label="View larger: Custom embroidered hats with company logos"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/embroidered_hats.jpg?v=1790523398&width=300" alt="Custom embroidered hats with company logos" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/2736EC88-FDD3-4C5D-BBA3-F70364DE24BE.jpg?v=1786337802&width=1000" aria-label="View larger: Custom embroidered motorsports hats"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/2736EC88-FDD3-4C5D-BBA3-F70364DE24BE.jpg?v=1786337802&width=300" alt="Custom embroidered motorsports hats" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG-6154.jpg?v=1786922824&width=1000" aria-label="View larger: Custom embroidered hat"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/IMG-6154.jpg?v=1786922824&width=300" alt="Custom embroidered hat" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/07217139-5CCE-441B-B790-0029094697DC.jpg?v=1786337803&width=1000" aria-label="View larger: Custom embroidered hat"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/07217139-5CCE-441B-B790-0029094697DC.jpg?v=1786337803&width=300" alt="Custom embroidered hat" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/72816A1C-5D40-4732-9FEB-F01282E9C397.jpg?v=1786337803&width=1000" aria-label="View larger: Custom embroidered hat"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/72816A1C-5D40-4732-9FEB-F01282E9C397.jpg?v=1786337803&width=300" alt="Custom embroidered hat" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6DFA090A-1089-4CDE-8C3F-764AA7E7D576.jpg?v=1786337802&width=1000" aria-label="View larger: Custom embroidered hat"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6DFA090A-1089-4CDE-8C3F-764AA7E7D576.jpg?v=1786337802&width=300" alt="Custom embroidered hat" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/31046EA1-FC9B-495F-A851-AEF0819AA92E.jpg?v=1786337803&width=1000" aria-label="View larger: Custom embroidered hat"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/31046EA1-FC9B-495F-A851-AEF0819AA92E.jpg?v=1786337803&width=300" alt="Custom embroidered hat" loading="lazy" decoding="async"></button>
+      <button type="button" class="ch-tile" data-full="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6CB0AC79-A34F-4B4D-AD9D-FBAEF30942E3.jpg?v=1786337802&width=1000" aria-label="View larger: Custom embroidered hat"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/6CB0AC79-A34F-4B4D-AD9D-FBAEF30942E3.jpg?v=1786337802&width=300" alt="Custom embroidered hat" loading="lazy" decoding="async"></button>
     </div>
   </section>
   <div class="ch-lb" id="chLb" hidden><button type="button" class="ch-x" aria-label="Close">&times;</button><img alt=""><p class="ch-cap"></p></div>
@@ -615,8 +619,22 @@
     var lb = document.getElementById("chLb"); if (!lb) return;
     document.body.appendChild(lb);
     var im = lb.querySelector("img"), cap = lb.querySelector(".ch-cap");
+    var tiles = document.querySelectorAll(".ch-tile");
+    var peek = document.getElementById("chPeek");
+    if (peek && tiles.length){
+      var h = '<span class="ch-peek-thumbs">';
+      for (var k = 0; k < Math.min(5, tiles.length); k++){
+        var src = tiles[k].querySelector("img").getAttribute("src").replace(/&width=\d+/, "&width=96");
+        h += '<img src="' + src + '" alt="" width="34" height="34" decoding="async" fetchpriority="low">';
+      }
+      peek.innerHTML = h + '</span><span class="ch-peek-txt">See ' + tiles.length + ' hats we\u2019ve made <b>&darr;</b></span>';
+    }
+    var warmed = {};
+    function warm(t){ var u = t.dataset.full; if (warmed[u]) return; warmed[u] = 1; var p = new Image(); p.src = u; }
     function close(){ lb.hidden = true; document.body.style.overflow = ""; }
-    document.querySelectorAll(".ch-tile").forEach(function(t){
+    tiles.forEach(function(t){
+      t.addEventListener("pointerenter", function(){ warm(t); });
+      t.addEventListener("touchstart", function(){ warm(t); }, { passive:true });
       t.addEventListener("click", function(){
         var i = t.querySelector("img");
         im.src = t.dataset.full; im.alt = i.alt; cap.textContent = i.alt;
@@ -2129,25 +2147,19 @@ function renderFilters(picking){
   if (picking) return;
   const brands = [];
   sorted.forEach(s => { const b = BRAND_OF(s); if (brands.indexOf(b) === -1) brands.push(b); });
-  const chip = (type, val, label, n) => '<button type="button" class="fchip' + (filt[type] === val ? " on" : "") + (n === 0 ? " dim" : "") +
-    '" data-ftype="' + type + '" data-fval="' + (val || "") + '">' + label + (n != null ? ' <span>' + n + '</span>' : '') + '</button>';
+  const opt = (val, label, n, cur) => '<option value="' + (val || "") + '"' + (cur === val ? " selected" : "") + (n === 0 ? " disabled" : "") + '>' + label + (n != null ? " (" + n + ")" : "") + '</option>';
   const shown = sorted.filter(s => passes(s, filt)).length;
   host.innerHTML =
-    '<div class="frow"><span class="flabel">Brand</span>' + chip("brand", null, "All") +
-      brands.map(b => chip("brand", b, b, sorted.filter(s => passes(s, { brand: b, kind: filt.kind })).length)).join("") + '</div>' +
-    '<div class="frow"><span class="flabel">Style</span>' + chip("kind", null, "All") +
-      KINDS.map(k => chip("kind", k[0], k[1], sorted.filter(s => passes(s, { brand: filt.brand, kind: k[0] })).length)).join("") + '</div>' +
-    (shown ? '' : '<div class="fempty">No hats match both filters. <button type="button" data-fclear>Show all hats</button></div>');
-  host.querySelectorAll("[data-ftype]").forEach(b => b.addEventListener("click", () => {
-    const t = b.dataset.ftype, v = b.dataset.fval || null;
-    filt[t] = (filt[t] === v) ? null : v;
+    '<label class="fsel"><span>Brand</span><select data-ftype="brand">' + opt(null, "All brands", null, filt.brand) +
+      brands.map(b => opt(b, b, sorted.filter(s => passes(s, { brand: b, kind: filt.kind })).length, filt.brand)).join("") + '</select></label>' +
+    '<label class="fsel"><span>Style</span><select data-ftype="kind">' + opt(null, "All styles", null, filt.kind) +
+      KINDS.map(k => opt(k[0], k[1], sorted.filter(s => passes(s, { brand: filt.brand, kind: k[0] })).length, filt.kind)).join("") + '</select></label>' +
+    '<div class="fcount">' + (shown ? shown + (shown === 1 ? " hat" : " hats") : "No matches") +
+      ((filt.brand || filt.kind) ? ' <button type="button" data-fclear>Clear</button>' : '') + '</div>';
+  host.querySelectorAll("select[data-ftype]").forEach(sel => sel.addEventListener("change", () => {
+    filt[sel.dataset.ftype] = sel.value || null;
     renderHats();
   }));
-  // keep the picked chip in view on phones, where each row scrolls sideways
-  host.querySelectorAll(".frow").forEach(row => {
-    const on = row.querySelector(".fchip.on");
-    if (on && on.dataset.fval) row.scrollLeft = Math.max(0, on.offsetLeft - row.offsetLeft - 60);
-  });
   const clr = host.querySelector("[data-fclear]");
   if (clr) clr.addEventListener("click", () => { filt.brand = null; filt.kind = null; renderHats(); });
 }
