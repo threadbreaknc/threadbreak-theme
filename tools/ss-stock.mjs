@@ -27,15 +27,21 @@ const MAP = {
   yp6506:     { brand: "YP Classics", styles: ["6506"] },
   ff110f:     { brand: "Flexfit", styles: ["110F"] },
   ff6277:     { brand: "Flexfit", styles: ["6277"] },
+  rich112pm:  { brand: "Richardson", styles: ["112PM"] },
+  rich112pl:  { brand: "Richardson", styles: ["112PL"] },
+  rich115:    { brand: "Richardson", styles: ["115"] },
+  rich258:    { brand: "Richardson", styles: ["258"] },
+  rich220:    { brand: "Richardson", styles: ["220"] },
+  yp6245:     { brand: "YP Classics", styles: ["6245CM"] },
+  yp6089:     { brand: "YP Classics", styles: ["6089M"] },
+  yp6789:     { brand: "YP Classics", styles: ["6789M"] },
+  ff110m:     { brand: "Flexfit", styles: ["110M"] },
+  ff6511:     { brand: "Flexfit", styles: ["6511"] },
 };
 
 // extra styles to pull into the catalog (candidates for the forms)
 const CATALOG_EXTRA = [
-  ["Richardson", "112PM"], ["Richardson", "112+"], ["Richardson", "112PL"], ["Richardson", "115"],
-  ["Richardson", "258"], ["Richardson", "220"], ["Richardson", "213"],
-  ["YP Classics", "6245CM"], ["YP Classics", "6089M"], ["YP Classics", "6789M"],
-  ["Flexfit", "110M"], ["Flexfit", "6511"], ["Flexfit", "6210"],
-  ["Pacific Headwear", "104BR"], ["Pacific Headwear", "104C"],
+  // add [brand, style] pairs here to pull a style's colors/photos before adding it to the forms
 ];
 
 const norm = s => String(s || "").toLowerCase().replace(/grey/g, "gray").replace(/[^a-z0-9]/g, "");
