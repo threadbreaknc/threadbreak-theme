@@ -1961,6 +1961,8 @@ const STYLES = [
     },
     tiers:[[5,33,67758425866372],[10,28,67758425899140],[24,27,67758425931908],[48,25,67758425964676],[96,24,67758425997444]] },
 ];
+// Color options listed A to Z on every hat.
+STYLES.forEach(s => { if (Array.isArray(s.colors)) s.colors.sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base", numeric: true })); });
 const MATERIALS = [
   { id:"brushed_silver", name:"Brushed Silver", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/brushed_silver_black.jpg?v=1787885403" },
   { id:"saddle_tan", name:"Saddle Tan", swatch:"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/saddle_tan_black.jpg?v=1787885402" },

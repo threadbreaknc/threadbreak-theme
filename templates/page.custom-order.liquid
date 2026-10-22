@@ -1981,6 +1981,8 @@ const STYLES = [
     },
     tiers:[[5,33,67582181343364],[10,28,67582181376132],[24,27,67582181408900],[48,25,67582181441668],[96,24,67582181474436]] },
 ];
+// Color options listed A to Z on every hat.
+STYLES.forEach(s => { if (Array.isArray(s.colors)) s.colors.sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base", numeric: true })); });
 const DECOS = [
   { id:"flat",  label:"Flat embroidery", add:0 },
   { id:"puff",  label:"3D puff", add:4, variantId:52543282741380 },
