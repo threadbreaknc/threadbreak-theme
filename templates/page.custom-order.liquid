@@ -176,6 +176,9 @@
   #tbco .dd-opt:hover{background:var(--ice)}
   #tbco .dd-opt img{width:42px;height:42px;object-fit:contain;border-radius:7px;background:#fff;border:1px solid var(--line);flex:0 0 auto}
   #tbco .dd-opt.picked{background:#eee9fb}
+  #tbco .dd-opt.oos{opacity:.45;cursor:not-allowed}
+  #tbco .dd-opt.oos:hover{background:none}
+  #tbco .oos-tag{font-style:normal;font-size:11px;font-weight:600;color:#b42318;margin-left:6px}
   #tbco .dd-opt .tick{margin-left:auto;color:var(--purple);font-weight:700}
   #tbco .picked-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
   #tbco .pchip{display:flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:6px 9px;font-size:13px}
@@ -1029,10 +1032,20 @@ const PLACEMENTS = [
 const FRONT_POSITIONS = ["Left panel","Centered","Right panel"];
 </script>
 
+{% render 'ss-stock' %}
 <script>
 (function(){
 "use strict";
 const $ = id => document.getElementById(id);
+
+// ---- S&S stock (snippets/ss-stock.liquid, refreshed by a GitHub Action) ----
+const STOCK_MIN = 12; // fewer than this on hand = out of stock
+const STOCK = (window.TB_STOCK && window.TB_STOCK.styles) || {};
+const normColor = c => String(c || "").toLowerCase().replace(/grey/g, "gray").replace(/[^a-z0-9]/g, "");
+function stockEntry(s, c){ const st = s && STOCK[s.id]; return st ? (st[normColor(c)] || null) : null; }
+// unknown color or style = treat as in stock, so a name mismatch never blocks a sale
+function isOut(s, c){ const e = stockEntry(s, c); return !!e && e.qty < STOCK_MIN; }
+function sizeOut(s, c, z){ const e = stockEntry(s, c); return !!(e && e.sizes && typeof e.sizes[z] === "number" && e.sizes[z] < STOCK_MIN); }
 const money = n => "$" + (Math.round(n * 100) / 100).toFixed(2).replace(/\.00$/, "");
 
 // Brand-alphabetical, but the popular Richardson 112s lead their brand group.
@@ -1348,9 +1361,9 @@ function renderColorPanel(){
         '<svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg></button>' +
         '<div class="dd-menu" id="ddMenu">' +
           s.colors.map((c, i) =>
-            '<div class="dd-opt ' + (state.colors.indexOf(c) > -1 ? "picked" : "") + '" data-color="' + c + '">' +
+            '<div class="dd-opt ' + (state.colors.indexOf(c) > -1 ? "picked" : "") + (isOut(s, c) && state.colors.indexOf(c) === -1 ? " oos" : "") + '" data-color="' + c + '">' +
               '<img src="' + colorImg(s, c) + '" alt="' + c + '" loading="' + (i < 8 ? "eager" : "lazy") + '" decoding="async" onerror="this.onerror=null;this.src=\'' + s.imgs[0] + '\'">' +
-              '<span>' + c + '</span>' +
+              '<span>' + c + (isOut(s, c) ? ' <em class="oos-tag">Out of stock</em>' : '') + '</span>' +
               (state.colors.indexOf(c) > -1 ? '<span class="tick">&#10003;</span>' : "") +
             '</div>').join("") +
           // lives inside #ddMenu so "sticky" pins it to the bottom of the
@@ -1376,6 +1389,7 @@ function renderColorPanel(){
     opt.addEventListener("click", () => {
       const c = opt.dataset.color;
       const i = state.colors.indexOf(c);
+      if (i === -1 && isOut(state.style, c)) return;
       if (i === -1){ state.colors.push(c); state.activeColor = c; }
       else {
         state.colors.splice(i,1); delete state.split[c];
@@ -1431,7 +1445,7 @@ function renderPicked(){
 const isSized = () => !!(state.style && state.style.sizes);
 function sizesFor(c){
   const s = state.style;
-  return s.sizes.filter(z => !(s.sizeOnly && s.sizeOnly[z]) || s.sizeOnly[z].indexOf(c) > -1);
+  return s.sizes.filter(z => (!(s.sizeOnly && s.sizeOnly[z]) || s.sizeOnly[z].indexOf(c) > -1) && !sizeOut(s, c, z));
 }
 function splitKeys(){
   if (!isSized()) return state.colors.slice();
