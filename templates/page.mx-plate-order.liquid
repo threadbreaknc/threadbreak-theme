@@ -1,223 +1,500 @@
-{%- comment -%} build: mx-plate-landing-v1 {%- endcomment -%}
+{%- comment -%} build: mx-plate-landing-v2 {%- endcomment -%}
 {%- comment -%}
-  Custom Motocross Number Plate Hats landing page
-  (threadbreak.com/pages/custom-motocross-number-plate-hats).
+  Custom Motocross Number Plate Hats (threadbreak.com/pages/custom-motocross-number-plate-hats)
+  Template suffix: mx-plate-order  (templates/page.mx-plate-order.liquid)
 
-  This is a marketing/landing page, not a wizard - it mirrors the section
-  structure and namespacing style of templates/page.patch-order.liquid
-  (self-contained #-scoped div + inline <style>, no site header/footer
-  markup since the theme layout already provides those) rather than its
-  step-form machinery.
+  Self-contained and #tbmx-scoped, same approach as page.patch-order.liquid.
+  The 24 plate designs are inline vector art from NumberPlates.ai (artboard n = data-plate n).
+  Brand -> plate mapping lives in the BRANDS array in the script at the bottom.
 
-  Two things are intentionally left as placeholders per the ask:
-  1. GALLERY - the three tiles are dashed placeholders, same idea as the
-     supplied mockup. Once real customer/product photos exist, replace the
-     .tile placeholder markup with <img> tags the same way
-     page.custom-hats-motorsports.liquid's .ind-gallery-row does (real src,
-     descriptive alt text, loading="lazy").
-  2. BUILDER - #builder is an empty placeholder section (.slot-box). The
-     actual plate/brand/hat configurator drops in here once it's built;
-     nothing to wire up yet.
+  STILL TO DO (placeholders on purpose):
+  1. HATS[].colors is a placeholder BASIC list. Replace with the real per-style colorways
+     from the STYLES data in page.custom-order.liquid / page.patch-order.liquid, and set
+     HATS[].img to each style's photo URL (the preview falls back to a drawn hat).
+  2. #addBtn currently opens a prefilled email to help@threadbreak.com (no checkout yet).
+     Wire it to the cart (hat tier variant + line item properties) when ready.
+  3. Gallery: no customer photos yet, so the section is left out. Add one when there are photos.
+  4. Pricing constants live in TIERS at the top of the script: Otto 39.95/25.00/20.00,
+     Richardson/Yupoong/Flexfit 44.95/29.95/24.95; 2 to 4 hats = 10% off each; 10+ stays at the 10-hat price.
 {%- endcomment -%}
-<div id="tbmxplate">
-<style>
-  #tbmxplate{
-    --ink:#121316; --ink-raised:#1b1d21; --line:#2b2d32;
-    --paper:#f3f1ec; --paper-dim:#b9b6ae;
-    --purple:#5028aa; --purple-deep:#2e1766;
-    --dirt:#c6531b; --dirt-bright:#e8691f;
-    padding-top:6rem; font-family:'DM Sans',sans-serif; color:var(--paper);
-    -webkit-font-smoothing:antialiased;
-  }
-  #tbmxplate *{box-sizing:border-box}
-  #tbmxplate h1,#tbmxplate h2,#tbmxplate h3{font-family:'Bebas Neue',sans-serif;font-weight:400;margin:0;letter-spacing:.5px}
-  #tbmxplate p{margin:0}
-  #tbmxplate a{color:inherit}
-  #tbmxplate img{max-width:100%;display:block}
-  #tbmxplate .wrap{max-width:480px;margin:0 auto;padding:0 20px}
-  @media(min-width:640px){#tbmxplate .wrap{max-width:720px}}
-
-  /* ---------- checker divider ---------- */
-  #tbmxplate .checker{
-    height:14px;
-    background-image:
-      linear-gradient(45deg, var(--paper) 25%, transparent 25%, transparent 75%, var(--paper) 75%),
-      linear-gradient(45deg, var(--paper) 25%, transparent 25%, transparent 75%, var(--paper) 75%);
-    background-size:14px 14px;
-    background-position:0 0, 7px 7px;
-    background-color:var(--ink);
-    opacity:.9;
-  }
-
-  /* ---------- hero ---------- */
-  #tbmxplate .hero{
-    position:relative; padding:52px 0 40px; overflow:hidden;
-    background:
-      radial-gradient(120% 90% at 15% 0%, var(--purple-deep) 0%, transparent 55%),
-      var(--ink);
-  }
-  #tbmxplate .hero-crest{position:absolute;top:-8%;right:-22%;width:78vw;max-width:460px;opacity:.14;transform:rotate(8deg)}
-  #tbmxplate .hero .wrap{position:relative;z-index:1}
-  #tbmxplate .kicker{font-family:'DM Sans',sans-serif;font-weight:700;font-size:13px;color:var(--dirt-bright);letter-spacing:.3px;margin-bottom:10px}
-  #tbmxplate h1.headline{font-size:54px;line-height:.94;letter-spacing:.5px;text-transform:uppercase}
-  #tbmxplate h1.headline .accent{color:var(--dirt-bright)}
-  #tbmxplate .sub{margin-top:16px;font-size:16px;line-height:1.55;color:var(--paper-dim);max-width:42ch}
-  #tbmxplate .cta{
-    display:inline-block;margin-top:26px;background:var(--dirt);color:var(--paper);
-    font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:.5px;
-    padding:15px 30px;border-radius:6px;text-decoration:none;box-shadow:0 6px 0 #7c3510;
-  }
-  #tbmxplate .cta:active{transform:translateY(3px);box-shadow:0 3px 0 #7c3510}
-  #tbmxplate .trust{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:30px;padding-top:22px;border-top:1px solid var(--line)}
-  #tbmxplate .trust-item{font-size:12.5px;color:var(--paper-dim);display:flex;align-items:center;gap:7px}
-  #tbmxplate .trust-item::before{content:'';width:5px;height:5px;background:var(--dirt-bright);border-radius:50%;flex-shrink:0}
-
-  /* ---------- how it works ---------- */
-  #tbmxplate .steps{padding:46px 0 40px;background:var(--ink)}
-  #tbmxplate .steps .section-title{font-size:34px;letter-spacing:.4px;color:var(--paper)}
-  #tbmxplate .steps .lede{color:var(--paper-dim);margin-top:8px;font-size:14.5px;max-width:46ch}
-  #tbmxplate .step-list{margin-top:30px;display:flex;flex-direction:column;gap:0}
-  #tbmxplate .step{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
-  #tbmxplate .step:last-child{border-bottom:none}
-  #tbmxplate .step-num{font-family:'Bebas Neue',sans-serif;font-size:34px;color:var(--purple);line-height:1;width:40px;flex-shrink:0}
-  #tbmxplate .step-body h3{font-size:21px;letter-spacing:.3px;text-transform:uppercase;color:var(--paper)}
-  #tbmxplate .step-body p{margin-top:5px;font-size:14px;color:var(--paper-dim);line-height:1.5}
-
-  /* ---------- gallery ---------- */
-  #tbmxplate .gallery{padding:10px 0 44px;background:var(--ink)}
-  #tbmxplate .gallery .section-title{font-size:34px;color:var(--paper)}
-  #tbmxplate .gallery .lede{color:var(--paper-dim);margin-top:8px;font-size:14.5px}
-  #tbmxplate .gallery-grid{margin-top:22px;display:grid;grid-template-columns:1.3fr 1fr;gap:8px}
-  #tbmxplate .gallery-grid .tile:first-child{grid-row:span 2;min-height:232px}
-  #tbmxplate .tile{
-    background:var(--ink-raised);border:1px dashed var(--line);border-radius:8px;
-    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
-    color:var(--paper-dim);font-size:11.5px;min-height:110px;text-align:center;padding:10px;
-  }
-  #tbmxplate .tile svg{opacity:.5}
-  #tbmxplate .gallery-grid img{width:100%;height:100%;object-fit:cover;border-radius:8px}
-
-  /* ---------- reviews ---------- */
-  #tbmxplate .reviews{padding:4px 0 30px;background:var(--ink)}
-  #tbmxplate .rating-line{font-size:13.5px;color:var(--paper-dim);text-align:center}
-  #tbmxplate .rating-line .stars{color:var(--dirt-bright);font-size:12px;letter-spacing:1px}
-  #tbmxplate .rating-count-inline{color:var(--paper)}
-  #tbmxplate .rating-link{font-weight:700;color:var(--dirt-bright);text-decoration:underline;text-underline-offset:3px}
-
-  /* ---------- builder slot (placeholder) ---------- */
-  #tbmxplate .builder-slot{padding:10px 0 60px;background:var(--ink)}
-  #tbmxplate .builder-slot .section-title{font-size:34px;color:var(--paper)}
-  #tbmxplate .builder-slot .lede{color:var(--paper-dim);margin-top:8px;font-size:14.5px}
-  #tbmxplate .slot-box{margin-top:22px;border:2px dashed var(--purple);border-radius:12px;padding:46px 20px;text-align:center;background:rgba(80,40,170,.08)}
-  #tbmxplate .slot-box .tag{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--purple);letter-spacing:.4px}
-  #tbmxplate .slot-box p{margin-top:10px;font-size:13px;color:var(--paper-dim);max-width:40ch;margin-left:auto;margin-right:auto}
-
-  @media(max-width:600px){
-    #tbmxplate h1.headline{font-size:44px}
-  }
-</style>
-
+<div id="tbmx">
+<style>#tbmx{--ink: #121316;--ink-raised: #1b1d21;--line: #2b2d32;--paper: #f3f1ec;--paper-dim: #b9b6ae;--purple: #5028aa;--purple-deep: #2e1766;--dirt: #c6531b;--dirt-bright: #e8691f}#tbmx *{box-sizing:border-box}#tbmx{margin:0;background:var(--ink);color:var(--paper);font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased}#tbmx h1,#tbmx h2,#tbmx h3{font-family:'Bebas Neue',sans-serif;font-weight:400;margin:0;letter-spacing:0.5px}#tbmx p{margin:0}#tbmx a{color:inherit}#tbmx img{max-width:100%;display:block}#tbmx .wrap{max-width: 480px;margin:0 auto;padding: 0 20px}@media(min-width:640px){#tbmx .wrap{max-width: 720px}}#tbmx .checker{height: 14px;background-image: linear-gradient(45deg,var(--paper) 25%,transparent 25%,transparent 75%,var(--paper) 75%),linear-gradient(45deg,var(--paper) 25%,transparent 25%,transparent 75%,var(--paper) 75%);background-size: 14px 14px;background-position: 0 0,7px 7px;background-color: var(--ink);opacity: 0.9}#tbmx .hero{position: relative;padding: 52px 0 40px;overflow: hidden;background: radial-gradient(120% 90% at 15% 0%,var(--purple-deep) 0%,transparent 55%),var(--ink)}#tbmx .hero-crest{position:absolute;top: -8%;right: -22%;width: 78vw;max-width: 460px;opacity: 0.14;transform: rotate(8deg)}#tbmx .hero .wrap{position:relative;z-index:1}#tbmx .kicker{font-family:'DM Sans',sans-serif;font-weight:700;font-size: 13px;color: var(--dirt-bright);letter-spacing: 0.3px;margin-bottom: 10px}#tbmx h1.headline{font-size: 54px;line-height: 0.94;letter-spacing: 0.5px;text-transform: uppercase}#tbmx h1.headline .accent{color: var(--dirt-bright)}#tbmx .sub{margin-top: 16px;font-size: 16px;line-height: 1.55;color: var(--paper-dim);max-width: 42ch}#tbmx .cta{display:inline-block;margin-top: 26px;background: var(--dirt);color: var(--paper);font-family:'Bebas Neue',sans-serif;font-size: 20px;letter-spacing: 0.5px;padding: 15px 30px;border-radius: 6px;text-decoration:none;box-shadow: 0 6px 0 #7c3510}#tbmx .cta:active{transform: translateY(3px);box-shadow: 0 3px 0 #7c3510}#tbmx .trust{display:flex;flex-wrap:wrap;gap: 10px 22px;margin-top: 30px;padding-top: 22px;border-top: 1px solid var(--line)}#tbmx .trust-item{font-size: 12.5px;color: var(--paper-dim);display:flex;align-items:center;gap:7px}#tbmx .trust-item::before{content:'';width:5px;height:5px;background:var(--dirt-bright);border-radius:50%;flex-shrink:0}#tbmx .steps{padding: 46px 0 40px}#tbmx .steps h2.section-title{font-size: 34px;letter-spacing:0.4px}#tbmx .steps .lede{color: var(--paper-dim);margin-top: 8px;font-size: 14.5px;max-width: 46ch}#tbmx .step-list{margin-top: 30px;display:flex;flex-direction:column;gap: 0}#tbmx .step{display:flex;gap: 16px;padding: 20px 0;border-bottom: 1px solid var(--line)}#tbmx .step:last-child{border-bottom:none}#tbmx .step-num{font-family:'Bebas Neue',sans-serif;font-size: 34px;color: var(--purple);line-height:1;width: 40px;flex-shrink:0}#tbmx .step-body h3{font-size: 21px;letter-spacing:0.3px;text-transform: uppercase}#tbmx .step-body p{margin-top: 5px;font-size: 14px;color: var(--paper-dim);line-height:1.5}#tbmx .reviews{padding: 4px 0 30px}#tbmx .rating-line{font-size: 13.5px;color: var(--paper-dim);text-align:center}#tbmx .rating-line .stars{color: var(--dirt-bright);font-size: 12px;letter-spacing: 1px}#tbmx .rating-link{font-weight: 700;color: var(--dirt-bright);text-decoration: underline;text-underline-offset: 3px}#tbmx .builder-slot{padding: 10px 0 60px}#tbmx .builder-slot h2.section-title{font-size: 34px}#tbmx .builder-slot .lede{color: var(--paper-dim);margin-top: 8px;font-size: 14.5px}#tbmx .form{margin-top: 22px;display:flex;flex-direction:column;gap: 26px}#tbmx .field-label{font-family:'Bebas Neue',sans-serif;font-size: 22px;letter-spacing:0.4px;display:flex;align-items:center;gap:10px;margin-bottom: 12px}#tbmx .field-label .n{width: 26px;height: 26px;border-radius: 50%;background: var(--purple);color: var(--paper);display:inline-flex;align-items:center;justify-content:center;font-size: 15px;font-family:'DM Sans',sans-serif;font-weight:700}#tbmx .hint{font-size: 12.5px;color: var(--paper-dim);margin: 0 0 12px;line-height:1.45}#tbmx .field-block > .hint:last-child{margin: 10px 0 0}#tbmx .chip-row{display:flex;flex-wrap:wrap;gap: 8px}#tbmx .brand-chip{flex: 1 1 calc(33.333% - 8px);min-width: 92px;min-height: 48px;background: var(--ink-raised);border: 1.5px solid var(--line);color: var(--paper);border-radius: 8px;font-family:'DM Sans',sans-serif;font-size: 14px;font-weight:700;cursor:pointer}#tbmx .brand-chip[aria-pressed="true"]{border-color: var(--dirt-bright);background: rgba(232,105,31,0.14)}#tbmx .plate-grid{display:grid;grid-template-columns: 1fr 1fr;gap: 10px}@media(min-width:640px){#tbmx .plate-grid{grid-template-columns: repeat(4,1fr)}}#tbmx .plate-card{position:relative;display:flex;flex-direction:column;align-items:center;gap: 6px;background: var(--ink-raised);border: 1.5px solid var(--line);border-radius: 10px;padding: 12px 8px 10px;cursor:pointer}#tbmx .plate-card[hidden]{display:none}#tbmx .plate-card input{position:absolute;opacity:0;pointer-events:none}#tbmx .plate-card:has(input:checked){border-color: var(--dirt-bright);box-shadow: 0 0 0 2px rgba(232,105,31,0.35)}#tbmx .plate-art{display:block;width: 100%;background:#e6e3dc;border-radius: 8px;padding: 6px}#tbmx .plate-svg{width:100%;height:auto;display:block}#tbmx .plate-svg .leather{fill: var(--leather);transition: fill .15s}#tbmx .plate-name{font-size: 12px;color: var(--paper-dim);font-weight:700}#tbmx .plate-card:has(input:checked) .plate-name{color: var(--paper)}#tbmx .two-col{display:grid;grid-template-columns: 1fr 1.4fr;gap: 10px}#tbmx .mini{display:block;font-size: 12px;font-weight:700;color: var(--paper-dim);margin-bottom: 6px}#tbmx .mini .opt{font-weight:400}#tbmx .form input[type=text]{width:100%;background: var(--ink-raised);border: 1.5px solid var(--line);color: var(--paper);border-radius: 8px;padding: 13px 12px;font-size: 17px;font-family:'DM Sans',sans-serif;text-transform: uppercase}#tbmx .form input[type=text]::placeholder{text-transform:none;color:#6a6c71}#tbmx .form input[type=text]:focus{outline:none;border-color: var(--dirt-bright)}#tbmx .swatch-row{display:flex;flex-wrap:wrap;gap: 12px 10px}#tbmx .swatch{width: 64px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;background:none;border:none;padding:0;color:inherit;font-family:inherit}#tbmx .swatch .dot{width: 44px;height: 44px;border-radius:50%;border: 2px solid var(--line)}#tbmx .swatch[aria-pressed="true"] .dot{border-color: var(--dirt-bright);box-shadow: 0 0 0 2px var(--ink),0 0 0 4px var(--dirt-bright)}#tbmx .swatch span{font-size: 11px;color: var(--paper-dim);text-align:center;line-height:1.2}#tbmx .summary{font-size: 13.5px;color: var(--paper-dim);border-top: 1px solid var(--line);padding-top: 18px;line-height:1.5}#tbmx .summary b{color: var(--paper)}#tbmx .cta-block{display:block;width:100%;margin-top: 0;text-align:center;border:none;cursor:pointer}#tbmx .cta-block:disabled{background:#3a3c41;box-shadow: 0 6px 0 #26282c;color:#85878c;cursor:not-allowed}#tbmx .proof-note{font-size: 11.5px;color: var(--paper-dim);text-align:center;margin-top: -10px;line-height:1.5}#tbmx .cart-msg{font-size: 12.5px;color: var(--dirt-bright);text-align:center;margin-top:-12px}#tbmx .hc-swatches{display:flex;flex-wrap:wrap;gap: 10px}#tbmx .hc-dot{width: 40px;height: 40px;border-radius:50%;border: 2px solid var(--line);cursor:pointer;padding:0}#tbmx .hc-dot[aria-pressed="true"]{border-color: var(--dirt-bright);box-shadow: 0 0 0 2px var(--ink),0 0 0 4px var(--dirt-bright)}#tbmx .summary .total{display:block;margin-top: 6px;color: var(--paper);font-size: 15px}#tbmx .summary .save{color: var(--dirt-bright);font-weight:700}#tbmx .hthumb{display:block;background:#e6e3dc;border-radius: 8px;padding: 6px 10px}#tbmx .hthumb svg{width:100%;height:auto;display:block}#tbmx .hthumb img{width:100%;height:auto;display:block;border-radius: 6px}#tbmx .stepper{display:flex;align-items:center;justify-content:center;gap: 18px;margin-bottom: 14px}#tbmx .step-btn{width: 52px;height: 52px;border-radius: 50%;border: 1.5px solid var(--line);background: var(--ink-raised);color: var(--paper);font-size: 26px;line-height:1;cursor:pointer;font-family:'DM Sans',sans-serif}#tbmx .step-btn:active{background: var(--line)}#tbmx .quick-qty{display:flex;flex-wrap:wrap;gap: 8px;justify-content:center;margin-bottom: 16px}#tbmx .quick-qty button{background: var(--ink-raised);border: 1.5px solid var(--line);color: var(--paper);border-radius: 20px;padding: 9px 14px;font-size: 13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif}#tbmx .quick-qty button[aria-pressed="true"]{border-color: var(--dirt-bright);background: rgba(232,105,31,0.14)}#tbmx .price-box{background: var(--ink-raised);border: 1.5px solid var(--line);border-radius: 10px;padding: 14px 16px;font-size: 13.5px;color: var(--paper-dim);line-height:1.5;margin-bottom: 14px}#tbmx .price-box .big{font-family:'Bebas Neue',sans-serif;font-size: 34px;color: var(--paper);line-height:1;letter-spacing:0.3px}#tbmx .price-box .each{color: var(--paper);font-weight:700}#tbmx .price-box .good{color: var(--dirt-bright);font-weight:700}#tbmx .price-box .nudge{margin-top: 8px;padding-top: 8px;border-top: 1px solid var(--line)}#tbmx .ladder{width:100%;border-collapse: collapse;font-size: 12.5px;margin-bottom: 4px}#tbmx .ladder th,#tbmx .ladder td{text-align:left;padding: 9px 6px;border-bottom: 1px solid var(--line);vertical-align: top}#tbmx .ladder th{color: var(--paper-dim);font-weight:700;font-size: 11.5px}#tbmx .ladder td:first-child{font-weight:700}#tbmx .ladder td .sm{display:block;font-weight:400;color: var(--paper-dim);font-size: 11px}#tbmx .ladder td.hot{color: var(--dirt-bright);font-weight:700}#tbmx .qty-input{width: 96px;background: transparent;border: none;color: var(--paper);text-align:center;font-family:'Bebas Neue',sans-serif;font-size: 52px;line-height:1;padding: 0;-moz-appearance: textfield}#tbmx .qty-input::-webkit-outer-spin-button,#tbmx .qty-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}#tbmx .qty-input:focus{outline:none;border-bottom: 2px solid var(--dirt-bright)}#tbmx .hat-list{display:flex;flex-direction:column;gap: 8px}#tbmx .hat-opt{background: var(--ink-raised);border: 1.5px solid var(--line);border-radius: 10px;overflow:hidden}#tbmx .hat-opt.open{border-color: var(--dirt-bright)}#tbmx .hat-opt-head{display:flex;align-items:center;gap: 12px;width:100%;padding: 10px;background:none;border:none;color: inherit;text-align:left;cursor:pointer;font-family:'DM Sans',sans-serif}#tbmx .hat-opt-head .hthumb{width: 64px;flex-shrink:0;padding: 4px 6px;border-radius: 6px}#tbmx .hat-opt-head .htext{flex:1}#tbmx .hat-opt-head .hb{display:block;font-size: 11px;color: var(--paper-dim);font-weight:700}#tbmx .hat-opt-head .hn{display:block;font-size: 14px;font-weight:700;margin-top:2px;line-height:1.25}#tbmx .hat-opt-head .hp{display:block;font-size: 12px;color: var(--dirt-bright);font-weight:700;margin-top: 3px}#tbmx .hat-opt-body{padding: 2px 12px 14px}#tbmx .hat-big{background:#e6e3dc;border-radius: 10px;padding: 22px;max-width: 300px;margin: 0 auto 8px;aspect-ratio: 1 / 1;display:flex;align-items:center;justify-content:center}#tbmx .hat-big svg,#tbmx .hat-big img{width:100%;height:auto;display:block}#tbmx .preview-cap{text-align:center;font-size: 12px;color: var(--paper-dim);margin-bottom: 14px;min-height: 16px}#tbmx .hc-label{font-size: 12.5px;font-weight:700;color: var(--paper-dim);margin-bottom: 10px}#tbmx .hc-swatches{display:flex;flex-wrap:wrap;gap: 10px}#tbmx .color-list{margin-top: 14px}#tbmx .crow{display:flex;align-items:center;gap: 10px;padding: 9px 0;border-top: 1px solid var(--line)}#tbmx .crow .cdot{width: 26px;height: 26px;border-radius:50%;border: 2px solid var(--line);flex-shrink:0}#tbmx .crow .cname{flex:1;font-size: 14px;font-weight:700}#tbmx .cq{display:flex;align-items:center;gap: 8px}#tbmx .cq button{width: 36px;height: 36px;border-radius:50%;border: 1.5px solid var(--line);background: var(--ink);color: var(--paper);font-size: 19px;line-height:1;cursor:pointer}#tbmx .cq span{min-width: 24px;text-align:center;font-weight:700}#tbmx .crow .rm{background:none;border:none;color: var(--paper-dim);font-size: 22px;padding: 4px 6px;cursor:pointer}#tbmx .assign{font-size: 13px;font-weight:700;margin-top: 10px}#tbmx .assign.ok{color:#6fcf97}#tbmx .assign.bad{color: var(--dirt-bright)}#tbmx{padding-top:6rem;line-height:1.5;width:100%}#tbmx button{font-family:'DM Sans',sans-serif;letter-spacing:0;text-transform:none}#tbmx .cta-block{font-family:'Bebas Neue',sans-serif;letter-spacing:.5px}#tbmx .step-btn,#tbmx .cq button{padding:0}</style>
 <section class="hero">
-  <svg class="hero-crest" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--paper)" stroke-width="1.4" aria-hidden="true">
-    <path d="M50,12 Q56,2 62,6 Q78,10 84,26 Q88,38 79,44 Q84,52 74,60 L64,54 L50,63 L36,54 L26,60 Q16,52 21,44 Q12,38 16,26 Q22,10 38,6 Q44,2 50,12 Z"/>
-  </svg>
-  <div class="wrap">
-    <div class="kicker">Threadbreak &middot; Custom Hats</div>
-    <h1 class="headline">Your number.<br>Your plate.<br><span class="accent">Your hat.</span></h1>
-    <p class="sub">A custom leatherette patch styled after your bike's actual number plate &mdash; your name and number, laser engraved and heat pressed onto the hat of your choice.</p>
-    <a href="#builder" class="cta">Build your plate</a>
-
-    <div class="trust">
-      <span class="trust-item">Made in Burlington, NC</span>
-      <span class="trust-item">Free shipping, lower 48</span>
-      <span class="trust-item">Laser engraved, not printed</span>
-    </div>
-  </div>
+<svg class="hero-crest" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--paper)" stroke-width="1.4">
+<path d="M50,12 Q56,2 62,6 Q78,10 84,26 Q88,38 79,44 Q84,52 74,60 L64,54 L50,63 L36,54 L26,60 Q16,52 21,44 Q12,38 16,26 Q22,10 38,6 Q44,2 50,12 Z"/>
+</svg>
+<div class="wrap">
+<div class="kicker">Threadbreak &middot; Custom Hats</div>
+<h1 class="headline">Your number.<br>Your plate.<br><span class="accent">Your hat.</span></h1>
+<p class="sub">A custom leatherette patch styled after your bike's actual number plate — your name and number, laser engraved and heat pressed onto the hat of your choice.</p>
+<a href="#builder" class="cta">Build your plate</a>
+<div class="trust">
+<span class="trust-item">Made in Burlington, NC</span>
+<span class="trust-item">From $39.95, free shipping to the lower 48</span>
+<span class="trust-item">Laser engraved, not printed</span>
+</div>
+</div>
 </section>
-
 <div class="checker"></div>
-
 <section class="steps">
-  <div class="wrap">
-    <h2 class="section-title">How it comes together</h2>
-    <p class="lede">Three choices and it's ready to build.</p>
-
-    <div class="step-list">
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-body">
-          <h3>Pick a plate style</h3>
-          <p>Pro, Factory, Supercross, and more &mdash; the layout and edge shape of your number plate.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-body">
-          <h3>Pick your bike brand</h3>
-          <p>Sets the plate to match your bike's actual number plate design &mdash; KTM, Honda, Yamaha, Kawasaki, and more.</p>
-        </div>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-body">
-          <h3>Pick your hat</h3>
-          <p>Choose the blank it goes on and where the patch sits on the front.</p>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="wrap">
+<h2 class="section-title">How it comes together</h2>
+<p class="lede">Three choices and it's ready to build.</p>
+<div class="step-list">
+<div class="step">
+<div class="step-num">1</div>
+<div class="step-body">
+<h3>Pick your bike brand</h3>
+<p>Each brand has its own number plate shapes: KTM, Honda, Yamaha, Kawasaki, and more.</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">2</div>
+<div class="step-body">
+<h3>Pick a design</h3>
+<p>A few styles per brand, cut to the shape of the real plate.</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">3</div>
+<div class="step-body">
+<h3>Add your number and name</h3>
+<p>Type them in, choose your leatherette color, and we engrave it exactly as ordered.</p>
+</div>
+</div>
+<div class="step">
+<div class="step-num">4</div>
+<div class="step-body">
+<h3>Pick your hat</h3>
+<p>Choose the style and color. Order 2 or more and every hat costs less, and each hat can be a different color.</p>
+</div>
+</div>
+</div>
+</div>
 </section>
-
-<section class="gallery">
-  <div class="wrap">
-    <h2 class="section-title">Real riders, real plates</h2>
-    <p class="lede">Hats we've built for customers.</p>
-    {%- comment -%}
-      TODO(threadbreak): replace these three placeholder tiles with real
-      customer/product photos, the same way page.custom-hats-motorsports.liquid's
-      .ind-gallery-row does it, e.g.:
-        <img src="https://cdn.shopify.com/..." alt="Custom motocross number
-        plate hat made by Threadbreak" loading="lazy">
-      Keep the first tile as the tall/first grid item (grid-row: span 2).
-    {%- endcomment -%}
-    <div class="gallery-grid">
-      <div class="tile">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M3 16l5-5 4 4 3-3 5 5"/></svg>
-        Customer photo
-      </div>
-      <div class="tile">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M3 16l5-5 4 4 3-3 5 5"/></svg>
-        Customer photo
-      </div>
-      <div class="tile">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="M3 16l5-5 4 4 3-3 5 5"/></svg>
-        Customer photo
-      </div>
-    </div>
-  </div>
-</section>
-
 <section class="reviews">
-  <div class="wrap">
-    {%- assign jm = shop.metafields.judgeme -%}
-    <p class="rating-line">
-      <span class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
-      {{ jm.all_reviews_rating | default: 5.0 | round: 1 }}/5 &middot;
-      <span class="rating-count-inline">{{ jm.all_reviews_count | default: 45 }}</span> reviews &middot;
-      <a href="/pages/reviews" class="rating-link">Read them</a>
-    </p>
-  </div>
+<div class="wrap">
+{%- assign jm = shop.metafields.judgeme -%}
+<p class="rating-line"><span class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span> {{ jm.all_reviews_rating | default: 5.0 | round: 1 }}/5{% if jm.all_reviews_count %} &middot; <span class="rating-count-inline">{{ jm.all_reviews_count }}</span> reviews{% else %} from our customers{% endif %} &middot; <a href="/pages/reviews" class="rating-link">Read the reviews</a></p>
+</div>
 </section>
-
 <section class="builder-slot" id="builder">
-  <div class="wrap">
-    <h2 class="section-title">Build your plate</h2>
-    <p class="lede">Pick your style, brand, and hat below.</p>
-    <div class="slot-box">
-      <div class="tag">Builder loads here</div>
-      <p>This is where the plate style / brand / hat configurator drops in once it's built.</p>
-    </div>
-  </div>
+<div class="wrap">
+<h2 class="section-title">Build your plate</h2>
+<p class="lede">Pick your bike, a design, and a color.</p>
+<div class="form" id="plateForm" style="--leather:#a9713e">
+<div class="field-block">
+<div class="field-label"><span class="n">1</span> Bike brand</div>
+<div class="chip-row" id="brandRow"></div>
+</div>
+<div class="field-block" id="designBlock">
+<div class="field-label"><span class="n">2</span> Design</div>
+<p class="hint" id="designHint">Choose a brand first.</p>
+<div class="plate-grid" id="plateGrid">
+<label class="plate-card" data-plate="1" hidden><input type="radio" name="plate" value="1"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M88 184c-3-1-3-2-6-9l-3-8l-11-5c-13-6-12-5-20-22c-5-12-7-15-15-26c-13-17-13-17-13-20c0-2 0-4-1-6c-2-4-1-4 10-28c14-31 14-31 35-27c31 5 57 5 88 0c21-4 21-3 36 27c10 24 10 23 9 28c-1 2-1 5-1 7c0 2-2 5-11 17c-12 17-13 18-20 33l-4 11l-12 6l-12 6l-2 6c-5 12-4 11-27 11c-15 0-18 0-20-1z"/><path fill="#121110" fill-rule="evenodd" d="M89 180c-1-1-2-4-4-9l-3-7l-11-5c-14-7-12-4-19-21c-6-13-7-15-17-27c-11-15-11-16-10-18c0-2 0-2-1-4c-3-3-2-5 8-27c13-27 14-28 26-26c4 0 10 1 14 2c24 4 49 3 75-1c25-3 23-5 37 25c10 21 10 23 8 27c0 1-1 3 0 4c0 2-1 4-10 17c-11 15-15 21-21 35c-3 9-3 8-17 14l-10 5l-2 7c-5 11-2 10-24 10c-14 0-19 0-19-1zM129 168c3-8 3-10 4-9c3 3 22-9 24-14c6-14 9-21 20-35c6-8 10-15 10-15c0-1-15 7-20 10c-4 3-16 21-18 28c-1 4-1 4-3 4c-2 0-2 1-6 6l-4 5l-28 0l-27 0l-4-5l-4-6l-8 0c-5 0-9 0-9 0c0 0 1 3 2 7c3 6 3 6 14 11c11 5 11 5 11 4c1-1 2 3 4 8l4 10l17 0l17 0l4-9zM88 131c4-2 6-6 9-17c4-18 3-19-14-19c-7 0-12-1-12-1c0 0 0-2 0-3c1-2 1-4 1-5c1-2 1-2 14-2l14 0l2-7c2-7 3-7-17-6c-24 0-24 0-29 22c-1 7-3 13-3 13c1 1 11 7 11 8c2 1 2 0 3-3l1-5l8 0c6 0 8 1 8 1c0 1-1 4-1 7l-2 6l-5 0c-7 0-7 0-5 2c0 1 0 2 0 2c0 0-1 0-2-2c0-1-1-2-3-2c-1 0-1 0-1-2c0-1 0-2-2-3c-2-3-10-7-10-7c-4 5-3 23 1 24c4 1 31 1 34-1zM116 132c0 0 1-6 3-13c5-24 10-46 10-47c0-4-14-2-15 2c-2 4-6 7-9 8c-3 1-5 7-5 12c0 2 5 1 8-2c1 0 2-1 2 0c0 0-7 30-9 39c-1 2-1 2 7 2c4 0 8 0 8-1zM146 131c0-1 1-4 1-6c2-5 1-6-1-3c-1 2-1 3-1 2c0-1 3-6 4-7c0 0 2-3 3-6c4-8 9-15 15-22c6-5 9-12 9-18c0 0-10 0-22 0l-22 0l-1 5c-2 9-3 8 12 8l14 0l-3 2c-9 8-19 25-22 39c-1 3-2 6-2 6c0 2 0 2 8 2c7 0 7 0 8-2zM48 112c2-7 2-6-10-13c-11-6-11-6-1 8c5 6 9 11 9 11c1 0 1-3 2-6zM44 94l-7-9l5-12l4-12l63 0l62 0l1 3c1 3 1 3 5 3c4 0 4 0 3 7c-1 2-1 6-1 8c0 3 0 4-6 12l-6 9l10-7c16-10 15-7 3-33c-12-26-11-25-26-23c-18 3-23 4-45 4c-22 0-33-1-48-4c-9-2-11-1-14 1c-3 3-21 43-20 45c0 2 22 18 23 18c0 0-3-5-6-10zM134 53c-8-3-14-6-14-6c-1 0 8-1 19-2c11 0 21-1 22-1c2-1 3 0 7 11l2 3l-12 0c-11 0-11 0-24-5z"/></svg></span><span class="plate-name">Design 1</span></label>
+<label class="plate-card" data-plate="2" hidden><input type="radio" name="plate" value="2"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M73 180c0-1-2-2-3-4c-3-6-8-11-20-21c-16-13-15-12-17-27c-1-5-3-24-6-42c-7-42-8-37 4-45c12-8 10-7 20-3l7 3l50 0l49 0l8-3c9-4 8-4 20 3c11 8 11 6 7 25c-5 33-9 58-10 65c-1 11-1 11-16 24c-14 12-17 15-22 22c-3 5-4 5-13 2c-6-2-6-2-7-7c-1-7-1-6-16-6c-16 0-15 0-16 6c-1 6-15 12-19 8z"/><path fill="#121110" fill-rule="evenodd" d="M74 170c-4-5-9-10-22-21c-12-10-12-9-13-23c0-4-3-22-6-39c-6-39-6-35-1-39c10-7 10-7 18-4l7 3l51 0l51 0l7-3c7-3 7-3 15 2c8 6 8 1 2 41c-3 19-6 38-7 43c-1 9 0 9-16 22c-9 7-14 13-16 16c-4 5-5 6-7 6c-4 0-7-2-8-6c-1-8-3-8-22-8c-19 0-19 0-21 10c0 1-1 2-3 3c-5 2-6 1-9-3zM132 152l10-5l-9 0c-7 0-9 0-16 2l-9 3l-10-3c-12-3-11-3-17-2l-5 0l10 5c10 4 10 4 23 4l14 0l9-4zM82 142c8-1 11-5 14-20c4-18 4-18-15-18c-11 0-13-1-12-2c0 0 0-3 1-5l1-5l14 0l14 0l2-6c0-3 1-6 1-6c0-2-36-1-39 0c-7 4-19 53-15 59c3 4 23 6 34 3zM115 143c0 0 2-9 4-19c6-24 10-43 10-44c0-3-15-1-16 1c-1 5-6 10-10 10c-1 0-2 0-2 2c-1 3-2 8-2 9c-1 2 3 2 7 0c3-2 3-2 3-1c-1 2-9 41-9 41c0 1 2 1 7 1c4 0 8 0 8 0zM147 136c5-17 13-32 24-41c2-2 4-4 4-5c0-1 1-4 2-7l1-4l-23 0l-23 0l-1 6l-2 7l14 0l15 0l-5 5c-12 12-23 34-23 46c0 0 3 0 8 0l8 0l1-7zM161 139c12-6 11-5 12-13c0-3 1-12 2-18c3-14 3-14-4-7c-11 10-21 31-21 41c0 2-1 2 11-3zM63 128c0 0 0-3 1-7l2-5l8 0c5 0 8 0 8 0c0 1-2 10-2 12c-1 2-2 2-9 2c-8 0-9 0-8-2zM48 110l4-17l-7-16c-9-22-9-25 4-20c10 4 45 5 85 3l25-1l8-4c7-5 7-5 12 0c1 0-1 5-3 10c-2 5-4 9-4 10c0 0 2 0 4 0c5 0 4 1 7-16l1-6l-5-4c-7-4-6-4-13-1c-6 3-6 3-58 3c-53 0-53 0-58-3c-3-1-6-2-7-2c-1 0-11 7-11 7c0 1 2 16 5 35c3 18 6 35 6 36c0 2 0 5 1 4c0 0 2-8 4-18z"/></svg></span><span class="plate-name">Design 2</span></label>
+<label class="plate-card" data-plate="3" hidden><input type="radio" name="plate" value="3"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M72 176c-1-1-18-24-27-36c-2-2-5-7-8-11c-11-14-11-15-10-53c0-41-5-37 51-36c44 1 42 0 43 4c2 6 1 6 15 6c13 0 13 0 2 0c-13-1-13-1-15-5c-3-6-4-6 22-6c25 0 25 0 23 5c-3 4-4 5-9 5c-7 0-12 1-6 1c12 0 14 0 16-5c3-8 13-8 19 0c2 3 2 60 0 68c-2 6-40 58-45 62c-2 2-69 2-71 1z"/><path fill="#121110" fill-rule="evenodd" d="M70 163c-4-5-6-8-5-8c8 3 23 0 30-6c3-3 5-3 5 0c1 5 3 6 16 5c14 0 12 0 24 0l12 1l-4 5c-9 11-5 10-34 10c-14 0-29 0-32 1l-6 0l-6-8zM68 149c-26-6-29-27-9-60l8-14l10 0l10 0l-6 10l-7 11l4 0c14 2 23 12 23 26c1 18-16 31-33 27zM106 120l0-28l-6 0c-4 0-5 0-5-1c1 0 2-4 3-8l3-8l11 0l12 0l0 37l0 36l-9 0l-9 0l0-28zM133 148c0 0 5-12 12-28c7-15 13-27 13-28c0 0-5 0-14 0l-13 0l0-9l0-8l26 0l25 0l-16 37l-15 36l-9 0c-5 0-9 0-9 0zM162 138c3-8 3-8 10-17c6-9 7-12 7-21c0-2 1-5 2-7l2-4l0 11c0 9-1 12-2 14c-1 3-21 30-22 30c0 0 1-3 3-6zM79 131c9-5 5-19-5-19c-6 0-11 4-10 10c0 8 8 12 15 9zM37 118c-4-5-4-7-4-40c0-27 1-30 2-31c1-1 4-1 40-1l40 1l2 3c3 7 2 6 26 6c27 0 28 0 31-8c1-3 6-3 8-1c2 4 1 22-1 22c-2 0-2 0-2-9c0-10 0-12-3-8c-3 8-4 8-31 8c-22 0-23 0-26-1c-3-2-3-2-43 5c-21 4-39 7-39 7c-1 0 0 40 1 42c1 2 2 4 2 6l-1 3l-2-4zM125 49c-2-3-4-7-3-8c1-2 46-3 46-1c1 1-1 6-3 8c-2 1-38 2-40 1z"/></svg></span><span class="plate-name">Design 3</span></label>
+<label class="plate-card" data-plate="4" hidden><input type="radio" name="plate" value="4"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M141 194c-5-4-24-12-32-12c-8 0-29 7-33 12c-7 6-6 6-19-4c-15-11-15-10-20-24c-11-25-11-25-3-38c9-12 8-14-3-54c-6-20-8-18 11-25c17-6 18-6 24-4c28 11 46 11 79 1c5-1 10-2 11-2c2-1 28 9 32 11c2 1 2 3-2 16c-13 46-13 44-4 56c9 14 9 13 0 34c-7 18-8 18-11 18c-2 0-5-1-8-1l-5 0l0 6c-2 9-2 10-6 13c-5 3-6 3-11-3z"/><path fill="#121110" fill-rule="evenodd" d="M59 182l-10-8l-5-11c-3-7-6-14-6-17l-2-5l5-8c10-15 10-21-3-63c-3-9-3-9-1-10c1-1 7-3 13-5l10-3l6 2c33 10 46 10 79 1l11-3l12 4c7 3 12 5 12 5c0 1-1 6-3 12c-2 5-4 14-5 20c-1 6-2 12-3 13c-4 9-3 12 5 25c8 12 8 9 0 28l-5 11l-6 0c-10-1-14 4-14 18c0 1-2 0-4-2c-6-5-28-12-35-12c-10 0-33 7-38 12l-4 3l-9-7zM71 182c3-4 29-12 38-12c7 0 31 7 35 11c1 1 1 0 2-2c1-9 5-13 14-13l7-1l3-8c7-17 7-14 1-23c-2-4-5-8-5-8c-1 1-7 10-14 21c-8 12-14 21-14 21c-1-1-8-3-16-5l-15-4l-19 5c-10 2-18 4-18 3c-3-9-5-11-10-12c-7 0-15-10-13-17c1-7 0-7-3-1c-4 6-4 6 5 26c5 12 18 23 22 19zM87 146c6-5 6-5 7-13c1-5 2-10 2-10c1-1 0-3-2-6l-3-3l-16-1c-14 0-14 0-10-1c4-1 4-1 4-4c1-6 3-7 10-7c6 0 8 1 7 5c0 2 0 2 6 2l7 0l1-5c1-5 1-5-3-10l-4-5l-12 0l-11 0l-6 5l-6 5l-4 22l-4 21l4 5l4 6l11 0l12 0l6-6zM121 145l1-6l-6 0c-6 0-6 0-3-1l4-1l4-24c2-13 5-24 5-24c1-3-9-1-22 4c-1 1-1 2-1 6c0 6 1 6 3 5c4-2 4-2 0 17l-3 17l-4 1c-4 0-4 0-5 6l-1 7l13-1l14 0l1-6zM152 127c14-25 17-30 17-38c0-1-5-1-21-1l-20 0l-1 5c-2 8-3 7 17 7c18 0 18 0 13 1c-4 1-5 2-5 3c-1 1-12 21-25 42l-3 6l7-1l7 0l14-24zM65 137c-1-1-1-2 0-7l1-6l8 0c9 0 9 0 8 7c-2 7-13 12-17 6zM141 73c36-3 33-3 34-6c0-2 0-3 0-3c0-1-4-3-10-5l-9-3l-6 1c-34 11-48 11-77 3c-6-2-11-3-12-4c-2 0-18 6-20 7c-1 1 1 7 2 7c0 0 14 1 32 3c18 2 33 3 35 3c2 0 16-1 31-3z"/></svg></span><span class="plate-name">Design 4</span></label>
+<label class="plate-card" data-plate="5" hidden><input type="radio" name="plate" value="5"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M79 179c-4-4-7-10-45-66c-12-17-12-15-7-28c1-5 5-18 7-29c6-25 4-23 21-20c41 5 61 7 64 4c1-1 4-2 13-3c6-1 16-2 20-3c7-1 10-2 11-1c1 1 3 1 7 0c4 0 5 0 6 1c1 2 1 0 7 25c3 12 6 24 7 28c2 3 3 7 3 8c0 3-54 84-56 85c-1 1-4 0-8 0c-7-2-27-2-35-1c-13 2-12 2-15 0z"/><path fill="#121110" fill-rule="evenodd" d="M85 166c-1-1-5-6-8-11c-7-9-7-9-12-10c-15-1-24-14-21-31c1-5 1-5-3-12l-5-7l3-9c1-5 3-11 4-14l1-4l64 0l64 0l1 3c1 3 1 3 5 3l4 0l-1 8c-1 4-1 9-1 11c0 2-2 5-6 12c-4 5-10 16-14 24c-8 14-8 15-10 15c-2 0-4 2-11 12c-4 6-8 12-8 11c-8-1-29-1-42 1c-3 0-3 0-4-2zM119 155c5-2 9-3 10-4c1 0-8 0-21 0c-13 0-23 0-22 0c0 1 20 6 22 6c1 0 6-1 11-2zM74 142c14-3 23-17 19-32c-2-9-14-14-24-10c-4 2 0-6 4-8c1 0 6-1 11-1l8-1l3-5c3-8 3-8-7-8c-28 0-36 8-41 41c-2 18 8 27 27 24zM128 135c1-4 2-7 2-7c0 0-2 0-5 0c-3 0-5-1-5-1c0 0 2-12 5-25c3-17 4-24 4-24c-1-1-7-1-14-1l-13 1l-2 6c-1 3-2 6-2 6c0 0 2 1 5 1c6 0 6 0 6 2c0 2-2 10-4 18l-3 16l-4 1c-4 0-10 7-10 13c0 0 9 0 19 0l19 0l2-6zM163 115c13-26 14-26 14-32l1-6l-21 0l-22 1l-2 6l-3 7l13 0c8 0 14 1 14 1c0 1-6 10-12 22c-6 12-12 23-13 24l-2 3l10 0l10 0l13-26zM65 128c-2-2-3-5-1-10c2-9 13-8 13 0c0 9-6 15-12 10zM149 56c-8-1-19-3-24-4c-5-1-9-2-9-2c1-1 41-4 45-4c3 0 7 8 7 13c0 1-4 0-19-3z"/></svg></span><span class="plate-name">Design 5</span></label>
+<label class="plate-card" data-plate="6" hidden><input type="radio" name="plate" value="6"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M49 167l-17-14l-1-10c-4-22-10-47-14-58l-2-4l11-23c11-22 11-23 13-22c1 0 17 2 35 3l34 4l34-4c18-1 34-3 35-3c3-1 25 44 23 47c-4 7-10 31-14 52c-1 9-3 16-3 17c-1 3-31 29-34 29c-2 0-22-8-24-10c-1-1 0-2 11-10c7-5 8-6 11-11c3-7 3-7-2-2c-5 5-33 21-37 21c-4 0-32-16-37-21c-5-5-5-5-2 2c3 5 4 6 11 11c15 11 15 10-1 16c-14 5-12 6-30-10z"/><path fill="#121110" fill-rule="evenodd" d="M52 163c-9-7-15-13-15-14c0-1-1-5-1-9c-3-19-7-36-12-50l-3-9l2-5c12-26 17-35 20-35c1 0 16 2 34 4l31 3l32-3c17-2 33-4 34-4c2 1 2 1 12 20l9 20l-3 9c-5 14-9 31-12 50c0 4-1 8-1 9c-1 2-29 27-30 27c-2 0-14-6-14-7c0 0 2-2 6-5c12-9 18-25 9-26c-2 0-3 0-8 5c-4 6-6 6-19 13l-15 8l-15-8c-13-7-15-7-19-13c-5-5-6-5-8-5c-9 1-3 17 9 26c4 3 6 5 6 5c0 1-12 7-14 7c0 0-7-6-15-13zM121 153c7-4 14-8 16-10l3-2l-10-1l-9 0l17-23c9-13 16-23 16-24c0 0-7 0-15 0c-18 0-17 1-15-10l1-7l27 0c16 0 26 1 26 1c0 9 0 11-16 34c-8 13-14 22-14 22c1 0 8-3 17-7l15-7l3-13c2-7 5-15 6-19l2-6l-4-8c-2-4-4-7-4-7c0 1 1 4 2 7c2 7 2 8-8-1c-6-5-10-7-11-7c-1-1-15 1-30 3l-28 3l-28-3c-15-2-29-4-30-3c-1 0-5 2-11 7c-10 9-10 8-8 1c1-3 2-6 2-7c0 0-2 3-4 7l-4 8l2 6c1 4 4 12 6 19c2 10 3 13 4 13c2 1 2 2 2 6c1 9 5 14 13 17c3 1 4 1 4 0c1-1 1-2 0-2c-5 0-13-7-14-12c0-3 3-34 5-38c3-10 15-16 32-15c15 1 22 5 15 8c-5 2-5 2-5 8c-1 8-6 10-6 4c0-4-3-6-9-6c-6 1-9 4-10 13l0 4l4-3c10-4 20-4 19 2c0 4 0 4 5 1c10-5 11 19 1 28c-3 3-10 6-13 6c-6 0-1 5 14 13c15 7 12 7 27 0zM100 151c-4-2-7-4-8-4c0-1 7-1 16-1l17 0l-9 5c-4 2-8 4-8 4c0 0-4-2-8-4zM105 119c1-11 2-21 2-21c0 0-4 1-9 3c-4 2-8 4-9 4c0 0 0-4 1-9l1-10l11-5c11-5 21-7 21-3c0 1-1 11-2 14c0 2 0 2 3 2c4 0 4 0 3 3c0 1-1 10-2 20c-3 23-3 23-15 23l-8 0l3-21zM76 126c3-1 5-5 4-8c-3-4-15-4-17 0c-3 7 4 12 13 8z"/></svg></span><span class="plate-name">Design 6</span></label>
+<label class="plate-card" data-plate="7" hidden><input type="radio" name="plate" value="7"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M46 185c-6-14-6-13 0-26c6-13 7-15 2-33c-5-24-5-24-19-35c-7-5-7-6-5-13c1-4 2-7 2-8c0-4 8-32 9-34c1-3 11-7 22-11c12-3 14-3 17 0c8 7 9 7 34 7c24 0 25 0 33-6c5-5 12-4 30 3c11 5 11 4 20 42c3 15 3 14-4 21c-12 9-13 10-17 24c-7 27-7 29 0 44c6 12 6 11 1 23c-6 13-5 13-20 3c-6-4-12-8-14-9c-3-3-3-2 0-13c1-4 1-4-15 1l-14 4l-14-4c-15-5-16-5-15 0c4 10 4 9-5 15c-5 3-11 7-14 9c-9 6-9 6-14-4zM112 59c5-2 7-8 5-13c-3-7-15-7-18 0c-3 9 5 17 13 13z"/><path fill="#121110" fill-rule="evenodd" d="M54 185c0 0-2-4-3-8l-3-7l4-8c5-10 5-10 14-5c7 4 7 4 9 9c2 6 2 6-9 13c-9 6-10 6-12 6zM151 179c-13-9-13-15 0-22c10-5 10-5 14 4c4 9 4 9 1 17c-3 9-2 9-15 1zM94 160c-20-6-38-15-38-19c0-4-3-15-7-29c-3-11-5-14-17-24c-5-4-5-3 0-24c7-28 6-27 11-29c8-3 23-8 25-8c1 0 3 1 4 2c8 7 16 9 26 6c7-2 13-2 20 0c10 3 18 1 26-6c1-1 3-2 4-2c2 0 17 5 25 8c5 2 4 1 11 28c6 22 6 20-3 28c-10 8-11 10-13 18c-4 12-7 28-7 32c-1 4-19 13-40 19c-15 5-11 5-27 0zM117 158c4-1 9-3 11-3c11-3 29-13 29-17c1-9 9-36 11-40c0 0 4-4 9-8l8-8l-2-9c-8-35-7-34-26-40l-9-2l-3 2c-8 6-18 9-25 6c-7-2-17-2-24 0c-7 3-17 0-25-6l-3-2l-7 2c-21 6-19 4-25 29l-5 20l3 3c16 13 18 17 24 48l2 9l12 6c7 3 15 6 18 7c3 1 8 3 11 4c7 2 6 2 16-1zM96 153c-16-5-33-13-33-16c0-2 0-2 9-2c10 0 16-1 22-4c5-3 7-3 6 1l0 2l24 0l24 0l2-2c2-4 5-4 4-1c0 2 0 4-1 6c0 4-22 14-45 19c0 0-5-1-12-3zM61 127c-4-16-8-29-11-33c-7-8 1-23 14-27c15-5 44 1 32 6c-4 2-4 2-5 9c-1 7-6 10-6 3c0-4-2-6-8-5c-7 0-9 3-11 13l0 3l4-3c4-2 5-2 12-2l8 0l-1 4c0 4 0 4 5 1c6-3 9 1 8 13c-1 16-10 22-32 22l-8 0l-1-4zM107 111c1-11 2-21 2-22c1-2 1-2-8 2c-5 2-9 4-9 4c-1 0 0-4 0-9l1-9l11-5c11-6 21-7 21-4c0 1-1 11-2 15c0 2 0 2 3 2c4 0 4 0 3 3c0 2-1 11-2 20c-3 23-3 22-14 22l-8 0l2-19zM125 128c1-1 8-12 17-23c8-12 15-21 15-21c0-1-7-1-16-1l-16 0l1-4c0-3 0-7 1-9l0-3l25 0l25 0l1 4c2 8 2 9-8 19c-7 7-7 7-9 13c-1 5-3 8-8 17l-7 10l-12 0l-11 0l2-2zM79 116c4-3 4-9 0-10c-7-3-14 0-14 5c-1 6 9 9 14 5zM39 64c1-6 6-22 7-22c1-1 19-7 20-7c1 0 3 1 6 3c9 6 18 8 26 5c4-1 6-1 4 0c-5 3-5 11 0 15c8 8 22-6 13-14c-2-2-1-2 4-1c7 3 18 0 28-6c2-2 5-2 18 3l6 2l2 9c2 5 3 10 3 10c0 1-6 1-31 1c-31 0-31 0-36 3c-6 3-6 3-10 1c-10-6-29-6-41-1c-4 2-6 3-12 3l-7 0l0-4zM170 56c0-1-3-12-3-12c-1 0-9 3-19 7l-17 6l20 0c10 0 19 0 19-1z"/></svg></span><span class="plate-name">Design 7</span></label>
+<label class="plate-card" data-plate="8" hidden><input type="radio" name="plate" value="8"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M77 182c-1-1-3-4-5-7c-9-17-25-32-44-41c-6-3-8-5-8-6c-1-7-4-53-3-54c0-1 7-9 15-19c8-9 16-18 17-19c3-3 115-3 118 0c2 2 30 35 32 38c1 1-1 46-3 54c0 1-2 3-8 6c-20 10-37 25-46 43c-3 6-2 6-18 5c-13-1-35-1-44 1c-1 0-2-1-3-1z"/><path fill="#121110" fill-rule="evenodd" d="M78 176c-2-3-10-16-14-20l-5-5l9 0c10 1 8 0 13 10c2 5 3 9 4 9c0 1 15-3 16-3c1-1-4-4-9-9l-10-8l4-1l4-1l9 6l9 6l7-5c7-5 7-5 14-5l6 0l-10 8c-6 4-10 8-10 9c1 0 14 3 16 4c1 0 2-3 5-11l5-10l5 0l6 0l10-17c11-17 12-20 18-23c0 0 1-3 2-6c2-7 4-12 4-8c0 1-1 7-1 13l-1 12l-6 6c-6 6-6 7-3 5c2-1 5-3 8-5c5-2 5-3 6-5c1-6 3-44 2-47c0-4 0-5 3-2c2 3 2 3 0 29c-2 28-1 25-7 28c-20 9-43 31-49 46c-1 3 0 3-18 1c-9 0-15 0-24 0c-17 2-17 2-18-1zM62 147c-1 0-2 0-4 0c-6-1-16-9-18-14c-3-10 5-49 11-55c9-10 37-11 48-3c2 1 2 1-3 4c-5 2-5 2-6 11c0 7-6 10-6 3c0-5-2-7-8-7c-8 0-11 4-12 14l0 5l4-2c10-6 21-5 21 1c-1 5-1 5 4 2c12-6 13 23 2 34c-7 6-26 10-33 7zM105 143c2-9 5-46 5-47c0 0-5 2-10 4c-5 3-9 5-10 5c0 0 3-20 3-22c1-4 35-15 34-11c0 0 0 4-1 9c-1 13-1 12 3 12c4 0 4-3 0 25c-3 29-2 28-15 28l-9 0l0-3zM125 146c0 0 8-13 18-28c10-14 18-27 18-27c0-1-6-1-17-1l-17 0l1-10l1-9l29 0l30 0l-1 4c-1 12 0 10-19 41l-18 30l-13 0c-6 0-12 0-12 0zM30 130c-4-2-6-3-6-4c-1-2-4-46-4-49c1-1 6-8 16-20l15-18l14 0c18-1 68-1 86 0l14 0l11 14c12 14 12 14 10 14c-3 0-4-1-13-12l-10-12l-18-1c-23-1-51-1-74 0l-18 1l-14 17l-15 17l1 21c3 28 2 26 7 28c3 2 4 3 4 6c0 1-1 1-6-2zM77 129c3-1 5-5 4-9c-2-5-15-5-18 0c-6 8 5 14 14 9zM34 123c-2-2-2-4-3-18c-2-22-2-23 1-8c2 8 4 13 4 13c1 1 1 2 1 8c-1 7-1 7-3 5zM34 72c0-1 5-7 10-13l10-12l12-1c20-1 56-1 77 0l19 1l8 9c5 6 9 10 9 10c0 2-9 1-14-1c-7-3-42-5-83-3l-25 0l-8 4c-15 7-16 8-15 6z"/></svg></span><span class="plate-name">Design 8</span></label>
+<label class="plate-card" data-plate="9" hidden><input type="radio" name="plate" value="9"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M88 184c-3-1-3-2-6-9l-3-8l-11-5c-13-6-12-5-20-22c-5-12-7-15-15-26c-13-17-13-17-13-20c0-2 0-4-1-6c-2-4-1-4 10-28c14-31 14-31 35-27c31 5 57 5 88 0c21-4 21-3 36 27c10 24 10 23 9 28c-1 2-1 5-1 7c0 2-2 5-11 17c-12 17-13 18-20 33l-4 11l-12 6l-12 6l-2 6c-5 12-4 11-27 11c-15 0-18 0-20-1z"/><path fill="#121110" fill-rule="evenodd" d="M89 180c-1-1-2-4-4-9l-3-7l-11-5c-14-7-12-4-19-21c-6-13-7-15-17-27c-11-15-11-16-10-18c0-2 0-2-1-4c-3-3-2-5 8-27c13-27 14-28 26-26c4 0 10 1 14 2c24 4 49 3 75-1c25-3 23-5 37 25c10 21 10 23 8 27c0 1-1 3 0 4c0 2-1 4-10 17c-11 15-15 21-21 35c-3 9-3 8-17 14l-10 5l-2 7c-5 11-2 10-24 10c-14 0-19 0-19-1zM148 153c7-3 7-3 10-12c5-12 8-17 19-32c5-7 10-13 10-14c1-1-9 4-18 10c-9 5-12 11-17 29l-2 8l-8 0c-10 0-9 0-7-9c4-16 11-29 23-42l6-5l-16 0c-11 0-15-1-15-1c0-1 0-3 1-5c0-3 1-6 1-7c1-2 1-2 25-2l24 0l-3-6l-3-7l-70 0l-70 0l-4 10c-10 20-10 18 2 26c5 3 10 7 10 7c2 1 2 0 4-9c5-21 5-21 32-21c12 0 20 1 20 1c0 1-2 10-3 12c0 1-1 2-16 2l-15 0l-2 5c-1 8-3 7 14 7c20 0 20 1 15 21c-4 21-7 23-27 23c-5 0-10 0-10 0c0 4 4 8 10 11l7 4l33 0l33 0l7-4zM100 142c0-1 2-11 5-24c3-14 6-24 6-24c-1 0-2 1-3 2c-3 1-9 3-9 2c-2-2 3-13 5-14c4-1 9-5 11-9c1-4 17-6 17-3c0 1-4 17-8 35c-4 19-8 34-8 35c0 0-3 0-8 0c-5 0-8 0-8 0zM79 122c1-3 1-7 2-8l0-3l-9 0l-10 0l-2 7c-2 10-3 10 8 9l10 0l1-5zM47 104c-1-1-18-10-18-9c0 0 3 5 8 11l8 11l1-6c1-4 1-7 1-7zM189 87c1-2 1-2-2-8l-2-5l-1 5c-2 5-2 6-8 12c-13 13-13 14 0 5c7-4 12-8 13-9z"/></svg></span><span class="plate-name">Design 9</span></label>
+<label class="plate-card" data-plate="10" hidden><input type="radio" name="plate" value="10"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M73 180c0-1-2-2-3-4c-3-6-8-11-20-21c-16-13-15-12-17-27c-1-5-3-24-6-42c-7-42-8-37 4-45c12-8 10-7 20-3l7 3l50 0l49 0l8-3c9-4 8-4 20 3c11 8 11 6 7 25c-5 33-9 58-10 65c-1 11-1 11-16 24c-14 12-17 15-22 22c-3 5-4 5-13 2c-6-2-6-2-7-7c-1-7-1-6-16-6c-16 0-15 0-16 6c-1 6-15 12-19 8z"/><path fill="#121110" fill-rule="evenodd" d="M74 167c-3-4-8-9-17-17c-15-13-15-11-16-22c0-6-10-68-11-74c-1-1 0-2 4-5c8-6 8-6 16-3l7 3l51 0c49 0 50 0 54-2c12-4 10-4 18 0c4 3 6 5 6 6c0 1-2 16-5 33c-3 18-6 36-6 40c-1 12-2 12-9 19c-19 15-22 18-27 26c-2 3-8 0-8-5c0-1-1-3-3-5l-3-3l-17 0c-21 0-22 1-24 9c0 3-3 5-5 5c-1 0-3-2-5-5zM161 144c9-8 9-7 10-20c0-5 2-13 3-19c2-13 2-13-3-6c-9 11-15 23-19 37l-2 7l-8 0l-9 0l1-3c3-17 12-35 25-48l5-5l-16 0c-8 0-15 0-15 0c0 0 0-4 1-7l2-7l22 0c20 0 21 0 21-2c0 0 0-2 1-2c0-1-7-2-72-2c-57 1-72 1-72 1c0 2 8 49 8 49c1 1 3-7 5-16c6-29 5-28 35-28c20 0 19-1 17 5c0 1-1 4-1 6l-1 3l-16 0l-15 0l-1 5c-1 3-2 6-2 7c0 0 4 1 15 1c19 0 20 1 15 22c-4 19-6 21-26 21c-15 0-15 0-10 5l4 3l45 0l44 0l9-7zM100 142c0-1 3-11 5-23c3-12 5-22 6-23c0 0-1 0-3 1c-2 2-9 4-9 3c-2-1 3-14 5-14c5-1 12-8 12-12c0-1 0-1 8-1l8 0l-7 33c-4 19-8 35-8 36c-1 1-1 1-9 1c-8 0-8 0-8-1zM79 122c1-4 2-8 2-8c0-1-4-1-10-1l-9 0l-2 7c-1 4-2 8-2 8c0 1 3 1 10 1l10 0l1-7zM176 58c2-8-2-11-9-6c-5 4-7 4-16 7c-6 1-12 3-12 3c-1 1 7 1 17 1l18 0l2-5z"/></svg></span><span class="plate-name">Design 10</span></label>
+<label class="plate-card" data-plate="11" hidden><input type="radio" name="plate" value="11"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M72 176c-1-1-40-54-42-58c-4-7-5-64-2-73c3-6 4-6 50-5c44 1 42 0 43 4c2 6 1 6 15 6c13 0 13 0 2 0c-13-1-13-1-15-5c-3-6-4-6 22-6c25 0 25 0 23 5c-3 4-4 5-9 5c-7 0-12 1-6 1c12 0 14 0 16-5c3-8 13-8 19 0c2 3 2 60 0 68c-2 6-40 58-45 62c-2 1-69 2-71 1z"/><path fill="#121110" fill-rule="evenodd" d="M63 153c-27-36-28-38-29-42c-2-6-1-63 1-64c1-1 4-1 40-1l40 1l2 3c3 7 2 6 26 6c27 0 28 0 31-8c1-3 6-3 8 0c2 3 1 62-1 67c-3 4-36 49-39 53c-3 2-3 2-28 2c-14 0-29 0-32 1l-6 0l-13-18zM150 151c33-45 29-36 29-74c0-28 0-30-3-25c-4 9 0 8-75 8l-64 0l0 24c0 30-2 25 17 51l16 21l38 0l38 0l4-5zM68 142c-14-6-20-23-13-38c1-2 5-9 9-16l8-12l8 0c9 0 9 0 9 1c-1 1-3 5-6 9c-5 9-5 9 0 9c14 1 24 21 17 35c-5 11-20 16-32 12zM107 142c0 0-1-12-1-26l0-24l-4 0c-5 0-5 0-2-9l2-7l11 0l10 0l0 33l0 33l-8 0c-4 0-8 0-8 0zM131 142c0-1 5-12 11-26c7-13 12-25 12-25c0 0-6 0-12 0l-12 0l0-8l0-7l23 0c12 0 23 0 23 0c0 0-7 15-15 33l-14 33l-8 0c-4 0-8 0-8 0zM83 126c4-3 5-9 2-13c-4-8-17-4-17 6c1 7 9 11 15 7z"/></svg></span><span class="plate-name">Design 11</span></label>
+<label class="plate-card" data-plate="12" hidden><input type="radio" name="plate" value="12"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M141 194c-5-4-24-12-32-12c-8 0-29 7-33 12c-7 6-6 6-19-4c-15-11-15-10-20-24c-11-25-11-25-3-38c9-12 8-14-3-54c-6-20-8-18 11-25c17-6 18-6 24-4c28 11 46 11 79 1c5-1 10-2 11-2c2-1 28 9 32 11c2 1 2 3-2 16c-13 46-13 44-4 56c9 14 9 13 0 34c-7 18-8 18-11 18c-2 0-5-1-8-1l-5 0l0 6c-2 9-2 10-6 13c-5 3-6 3-11-3z"/><path fill="#121110" fill-rule="evenodd" d="M59 182l-10-8l-5-11c-3-7-6-14-6-17l-2-5l5-8c3-4 6-9 7-10c1-3 1-2 0 4c-1 3-2 6-4 9c-4 5-4 5-2 6c2 0 2 1 2 2c0 1 3 5 6 9l6 7l14 0c12 0 14 0 16-2c2-1 3-1 3 1c0 0 1 1 4 1c2 0 6 1 9 2c6 2 6 2 12 0c5-2 8-2 18-2l13 0l3-5c2-4 2-4 15-8c7-2 13-4 13-5c0 0-2-4-5-9c-5-8-6-9-4-11c1-1 13 17 13 20c0 1-2 8-5 15l-6 13l-6 0c-10-1-14 4-14 18c0 1-2 0-4-2c-6-5-28-12-35-12c-10 0-33 7-38 12l-4 3l-9-7zM53 150c-2-4-4-6-4-7c0 0 2-11 5-23l4-22l6-5l6-5l13 0l12 0l4 5c5 6 5 7 3 15c-1 3-15 2-15-1c0-4-1-5-7-5c-7 0-10 3-10 11c0 1 2 1 11 1l11 0l3 4c5 5 5 5 2 17c-2 10-2 10-9 15l-6 5l-12 0l-12 0l-5-5zM95 153c2-13 2-12 6-12c5 0 4 2 8-22c3-16 3-15 0-14c-4 1-4 1-4-5l-1-6l9-3c7-3 17-4 17-3c0 0-2 12-5 26c-6 30-6 27-2 27c3 0 3 0 3 1c0 1-1 4-2 6c0 3-1 5-1 6c-1 3-29 2-28-1zM127 155c0 0 6-11 14-24c15-26 15-25 15-28c1-2 1-2-13-2c-16 0-15 2-12-12c0-1 0-1 22-1l22 0l-1 8c-2 7-3 9-6 14c-2 4-8 15-14 26l-12 19l-7 0c-5 0-8 0-8 0zM80 139c1-1 2-3 3-6c1-7 1-7-8-7l-8 0l-1 6c-2 9 7 13 14 7zM49 115c0-6-5-27-11-45c-3-9-3-9-1-10c1-1 7-3 13-5l10-3l6 2c33 10 46 10 79 1l11-3l12 4c8 3 12 5 12 6c0 5-6 20-8 20c-2 1-2 1 1-9c1-5 2-10 2-10c0 0-4-2-10-4l-9-3l-6 1c-15 5-28 8-40 9c-35 4-66 9-66 10c1 2 2 8 4 16c4 13 4 13 2 21l-1 7l0-5z"/></svg></span><span class="plate-name">Design 12</span></label>
+<label class="plate-card" data-plate="13" hidden><input type="radio" name="plate" value="13"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M79 179c-5-6-55-79-56-82c0-1 2-6 4-12c1-6 5-19 7-29c6-25 4-23 21-20c41 5 61 7 64 4c1-1 4-2 13-3c6-1 16-2 20-3c7-1 10-2 11-1c1 1 3 1 7 0c4 0 5 0 6 1c1 2 1 0 7 25c3 12 6 24 7 28c2 3 3 7 3 8c0 3-54 84-56 85c-1 1-4 0-8 0c-7-2-27-2-35-1c-13 2-12 2-15 0z"/><path fill="#121110" fill-rule="evenodd" d="M83 167c-3-3-15-21-15-22c-1-2 13 0 26 3c15 3 13 3 31-1c14-3 25-5 25-3c0 2-18 25-19 25c-1 0-6 0-11 0c-8-1-28 0-33 1c-1 0-2 0-4-3zM64 141c-12-3-15-12-12-31c6-25 13-31 37-31c6 0 11 0 11 0c-1 1-2 4-3 7l-2 5l-8 1c-11 0-14 2-16 8c-1 1 0 1 1 1c13-5 24 3 24 15c0 18-14 29-32 25zM92 140c0-6 4-12 8-12l5-1l3-16c4-21 4-19-3-20l-5 0l2-6l3-6l13 0c12 0 12 0 12 1c0 1-2 12-4 24c-2 13-4 23-4 23c0 0 2 1 5 1c5 0 5 0 5 1c-1 1-2 3-3 6l-2 5l-18 0c-9 0-17 0-17 0zM133 138c1-1 6-11 13-23c6-12 12-22 12-22c0 0-6-1-14-1l-13 0l3-6l3-7l20 0l21 0l-1 5c0 5-1 7-13 31l-14 25l-9 0c-9 0-9 0-8-2zM76 128c4-2 6-12 3-15c-3-3-9-1-11 3c-4 8 1 16 8 12zM165 119c2-4 7-13 10-19c6-11 6-11 6-8c1 3 1 3-9 18c-12 19-13 21-7 9zM41 105l-7-10l2-7c2-5 5-16 7-25c4-20 3-19 12-17c45 6 61 7 68 3c3-1 8-2 19-4c16-2 17-2 23-1l4 1l4 14c4 17 4 17 1 17c-2 0-2-1-4-11c-1-4-2-6-2-6c0 0-14 2-30 5l-30 6l-30-6c-16-3-30-5-30-5c0 0-1 5-3 10c-1 5-3 13-4 18l-3 8l6 8c4 7 5 9 5 10c-1 4-1 3-8-8z"/></svg></span><span class="plate-name">Design 13</span></label>
+<label class="plate-card" data-plate="14" hidden><input type="radio" name="plate" value="14"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M49 167l-17-14l-1-10c-4-22-10-47-14-58l-2-4l11-23c11-22 11-23 13-22c1 0 17 2 35 3l34 4l34-4c18-1 34-3 35-3c3-1 25 44 23 47c-4 7-10 31-14 52c-1 9-3 16-3 17c-1 3-31 29-34 29c-2 0-22-8-24-10c-1-1 0-2 11-10c7-5 8-6 11-11c3-7 3-7-2-2c-5 5-33 21-37 21c-4 0-32-16-37-21c-5-5-5-5-2 2c3 5 4 6 11 11c15 11 15 10-1 16c-14 5-12 6-30-10z"/><path fill="#121110" fill-rule="evenodd" d="M52 163c-9-7-15-13-15-14c0-1-1-5-1-9c-3-19-7-36-12-50l-3-9l2-5c12-26 17-35 20-35c1 0 16 2 34 4l31 3l32-3c17-2 33-4 34-4c2 1 2 1 12 20l9 20l-3 9c-5 14-9 31-12 50c0 4-1 8-1 9c-1 2-29 27-30 27c-2 0-14-6-14-7c0 0 2-2 6-5c12-9 18-25 9-26c-2 0-3 0-8 5c-4 6-6 6-19 13l-15 8l-15-8c-13-7-15-7-19-13c-5-5-6-5-8-5c-9 1-3 17 9 26c4 3 6 5 6 5c0 1-12 7-14 7c0 0-7-6-15-13zM72 170c3-2 3-2-3-6c-6-4-13-20-12-24c4-9 10-8 20 1c5 5 7 6 18 12l13 6l13-6c11-6 13-7 19-12c9-9 15-10 18-2c3 5-5 21-12 26c-5 3-5 4-1 5c3 1 4 1 5 0c1-1 7-6 12-11c13-11 13-10 14-16c1-13 9-45 13-57l2-5l-9-18c-4-10-8-18-8-18c-2-1-71 8-104 14l-37 7l-4 7l-4 8l3 10c4 11 8 28 11 45c1 7 2 13 3 13c4 4 25 22 26 22c0 0 2-1 4-1zM100 151c-4-2-7-4-8-4c0-1 7-1 16-1l17 0l-9 5c-4 2-8 4-8 4c0 0-4-2-8-4zM76 136c-6-6-13-7-18-2c-5 5-14 0-17-8c-1-4 3-37 5-42c6-13 34-19 50-10c4 2 4 2-1 4c-5 2-5 2-5 9c-1 7-7 10-7 3c0-4-3-6-10-5c-5 0-8 4-9 12c0 5 0 5 3 3c7-6 21-5 21 1l0 3l4-2c8-3 12 6 7 21c-2 10-18 18-23 13zM104 135c1-9 5-41 5-42c-1 0-5 2-10 4c-11 5-10 6-8-6l1-10l11-5c11-5 22-7 22-4c0 0 0 4-1 8c-1 11-2 11 2 11c4 0 4 0 3 3c-5 47-4 44-17 44l-9 0l1-3zM123 137c0 0 8-11 18-24l17-24l-17 0c-16-1-16-1-16-3c0-2 2-13 2-14c0 0 11-1 28-1l28 0l0 3c0 1-1 4-1 7c-1 6-29 49-33 50c-4 0-7 2-9 5c-2 2-17 3-17 1zM77 122c5-3 4-8-1-10c-11-4-20 7-10 12c3 1 9 0 11-2z"/></svg></span><span class="plate-name">Design 14</span></label>
+<label class="plate-card" data-plate="15" hidden><input type="radio" name="plate" value="15"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M46 185c-6-14-6-13 0-25c7-15 7-16 0-44c-4-15-5-16-19-26c-5-4-5-5-3-12c1-4 2-7 2-8c0-4 8-32 9-34c1-3 11-7 22-11c12-3 14-3 17 0c8 7 9 7 34 7c24 0 25 0 33-6c5-5 12-4 30 3c11 5 11 4 20 42c3 15 3 14-4 21c-12 9-13 10-17 24c-7 27-7 29 0 44c6 12 6 11 1 23c-6 13-5 13-20 3c-6-4-12-8-14-9c-3-3-3-2 0-13c1-4 1-4-15 1l-14 4l-14-4c-15-5-16-5-15 0c4 10 4 9-5 15c-5 3-11 7-14 9c-9 6-9 6-14-4zM113 59c9-5 5-19-5-19c-10 0-13 14-5 19c2 1 8 1 10 0z"/><path fill="#121110" fill-rule="evenodd" d="M94 159c-21-6-37-15-37-19c-1-2-1-5-2-6c0-3 0-3 3-2c2 1 3 2 3 5c1 5 36 21 47 21c11 0 46-16 47-21c1-11 3-17 7-23c5-7 5-7 3 2c-3 9-5 19-6 24c0 4-17 13-37 19c-15 4-14 5-28 0zM95 150c-7-2-15-5-21-9l-10-4l10 0c6 0 21 1 34 1c13 0 28-1 34-1l10 0l-10 4c-9 5-31 13-34 13c-1 0-7-2-13-4zM64 130c-14-3-17-8-13-32c2-19 3-23 9-27c9-6 30-7 39-2c4 3 4 3 0 5c-4 2-4 2-5 8c0 6-6 10-6 4c0-5-4-7-10-6c-5 1-6 3-8 13l0 3l4-2c9-5 19-4 19 1c-1 4-1 4 4 1c7-3 10 7 6 20c-3 11-19 17-39 14zM108 127c1-11 4-39 4-39c0 0-4 1-9 3c-10 5-9 6-8-5l1-9l10-5c14-6 22-7 21-2c0 2 0 5-1 7c0 3 0 5 0 6c-1 2-1 3 3 3c3 0 3 0 3 1c0 1-2 9-3 19c-2 24-3 24-14 24l-8 0l1-3zM126 128c1-1 8-11 17-23l15-21l-15-1l-16 0l1-5c0-3 1-7 1-8l0-2l26 0l26 0l0 3c-1 9-1 9-18 34l-16 25l-11 0c-11 0-11 0-10-2zM84 114c5-5-1-11-9-9c-8 2-9 10-3 12c4 1 10-1 12-3zM42 96c-2-2-6-6-8-8c-7-5-6-3-1-24c7-30 5-27 27-34l8-2l4 2c8 6 18 9 21 7c9-5 20-5 29 0c4 2 15-1 22-7c2-1 3-2 3-2c2 0 20 6 24 7c6 3 5 2 9 17c4 13 4 12 1 12c-3-1-3-1-6-12l-3-11l-5-2c-2-1-8-3-12-4l-7-2l-2 2c-8 6-21 10-26 6c-7-4-14-4-22 0c-3 1-17 6-32 10c-30 10-27 8-30 20l-2 10l4 4c9 8 9 8 9 12l-1 3l-4-4zM180 88c3-5 4-7 4-11c1-5 1-5 3 1c1 6 1 5-5 11l-6 4l4-5z"/></svg></span><span class="plate-name">Design 15</span></label>
+<label class="plate-card" data-plate="16" hidden><input type="radio" name="plate" value="16"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M77 182c-1-1-3-4-5-7c-9-17-25-32-44-41c-6-3-8-5-8-6c-1-7-4-53-3-54c0-1 7-9 15-19c8-9 16-18 17-19c3-3 115-3 118 0c2 2 30 35 32 38c1 1-1 46-3 54c0 1-2 3-8 6c-20 10-37 25-46 43c-3 6-2 6-18 5c-13-1-35-1-44 1c-1 0-2-1-3-1z"/><path fill="#121110" fill-rule="evenodd" d="M78 176c-2-3-10-16-14-20l-4-4l3 0c3 0 8 5 15 17c2 3 4 5 4 5c0 1 6 0 13 0c12-1 22-1 36 0c3 1 3 1 6-4c5-9 14-20 16-20c2 0 3-1 5-4c4-6 14-13 26-20c5-2 5-1 6-18c1-10 1-11 3-14l2-4l0 5c-1 3-1 10-2 16c-1 17 0 16-6 19c-20 9-43 31-49 46c-1 3 0 3-18 1c-9 0-15 0-24 0c-17 2-17 2-18-1zM82 164c-2-2-4-5-5-6l-3-4l34 0l34 0l-5 7l-5 6l-9-1c-13 0-19 0-30 1l-9 0l-2-3zM55 147c-1-1-3-2-4-3c-2-2-12-9-15-11c-4-2-4-2-1-24c3-27 6-33 20-37c17-6 53 0 39 7c-5 2-5 2-6 12c-1 6-7 8-7 2c0-13-19-9-21 5c-1 1-1 4-1 6c-1 2-1 2 1 1c8-8 27-8 26-1c0 3 0 4 1 4c1 0 3-1 5-2c11-5 13 20 3 32c-7 7-31 13-40 9zM104 146c0-1 2-12 3-25c2-14 3-25 3-25c0 0-5 2-11 4c-5 3-10 5-11 5c0 0 1-5 1-10c1-6 2-11 2-11c0-1 5-4 12-7c16-7 26-8 26-3c-3 19-3 19 2 19c3 0 3 0 3 2c0 2-2 12-3 24c-4 28-3 27-17 27c-5 0-10 0-10 0zM126 145c1 0 10-13 21-27c11-15 19-27 19-28c0 0-8 0-19 0c-19 0-19 0-18-2c0-1 0-5 1-9l1-8l31 0c36 0 33-1 32 10c-1 6-1 6-21 35l-20 30l-14 0c-10 0-13 0-13-1zM73 130c4-2 6-8 3-11c-4-5-16-3-19 2c-4 7 6 13 16 9zM26 128c-1 0-2-1-2-3c-1-5-4-45-4-48c1-1 4-6 16-20l15-18l14 0c18-1 68-1 86 0l14 0l11 14c12 14 12 14 10 14c-2 0-3-1-7-5l-5-6l-33-1c-31-1-89 0-98 2c-1 0-5 4-10 10l-9 10l2 23c1 13 2 25 2 26c1 3 0 3-2 2zM166 48l-6-5l-18-2c-10 0-19 0-20 0c-2 0 45 13 48 13c1 0-1-3-4-6z"/></svg></span><span class="plate-name">Design 16</span></label>
+<label class="plate-card" data-plate="17" hidden><input type="radio" name="plate" value="17"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M88 184c-3-1-3-2-6-9l-3-8l-11-5c-13-6-12-5-20-22c-5-12-7-15-15-26c-13-17-13-17-13-20c0-2 0-4-1-6c-2-4-1-4 10-28c14-31 14-31 35-27c31 5 57 5 88 0c21-4 21-3 36 27c10 24 10 23 9 28c-1 2-1 5-1 7c0 2-2 5-11 17c-12 17-13 18-20 33l-4 11l-12 6l-12 6l-2 6c-5 12-4 11-27 11c-15 0-18 0-20-1z"/><path fill="#121110" fill-rule="evenodd" d="M90 178c0 0-2-4-4-9l-4-7l-10-5c-13-6-11-4-19-20c-6-13-7-15-16-28c-11-14-12-17-12-24c0-3 18-42 20-45c4-3 5-3 17-1c32 5 63 5 94-1c14-2 14-3 26 24c13 28 13 26-3 48c-10 14-14 21-20 34c-3 8-2 7-14 13l-11 5l-4 8l-4 9l-18 0c-13 0-17 0-18-1zM128 167c4-8 4-8 8-11c18-7 17-7 21-18c6-12 8-16 19-31c5-7 10-14 10-15c2-5 1-8 0-12l-2-4l-1 6c-2 5-2 6-6 10c-12 10-22 28-26 46l-1 4l-8 0c-5 0-8 0-8 0c0-12 12-36 24-49l5-5l-15 0c-13 0-15 0-15-1c0-1 1-4 2-7l1-7l23 1c23 0 23-1 23-2c-1-4-13-28-14-29c-2-2-4-2-21 0c-27 5-53 5-79 0c-21-3-18-5-30 21c-12 25-12 24 0 41c5 6 9 11 9 11c0 0 2-8 4-17c6-26 5-25 33-25c16-1 20 0 19 0c0 1-1 4-1 8l-2 6l-15 0l-16 0l0 4c-1 2-2 5-2 6c0 2 0 2 13 2c21 0 21 1 16 21c-4 19-7 21-25 21c-10 0-10 0-10 2c1 4 3 5 13 10l11 5l4 8l3 8l16 0l15 0l5-8zM106 121c3-13 5-23 5-24c1-2 1-2-1 0c-2 1-9 4-10 3c-1-1 2-12 3-13c7-2 12-7 13-11c0-2 17-4 17-2c0 0-4 15-8 34c-4 19-8 34-8 34c0 0-4 0-8 0l-8 0l5-21zM81 121c1-4 2-7 2-8c0 0-3-1-10-1l-9 0l-2 7c-1 4-1 8-2 8c0 1 2 1 10 1l9 0l2-7z"/></svg></span><span class="plate-name">Design 17</span></label>
+<label class="plate-card" data-plate="18" hidden><input type="radio" name="plate" value="18"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M73 180c0-1-2-2-3-4c-3-6-8-11-20-21c-16-13-15-12-17-27c-1-5-3-24-6-42c-7-42-8-37 4-45c12-8 10-7 20-3l7 3l50 0l49 0l8-3c9-4 8-4 20 3c11 8 11 6 7 25c-5 33-9 58-10 65c-1 11-1 11-16 24c-14 12-17 15-22 22c-3 5-4 5-13 2c-6-2-6-2-7-7c-1-7-1-6-16-6c-16 0-15 0-16 6c-1 6-15 12-19 8z"/><path fill="#121110" fill-rule="evenodd" d="M74 167c-3-4-8-9-17-17c-15-13-15-11-16-22c0-6-10-68-11-74c-1-1 0-2 4-5c8-6 8-6 16-3l7 3l51 0c49 0 50 0 54-2c12-4 10-4 18 0c4 3 6 5 6 6c0 1-2 16-5 33c-3 18-6 36-6 40c-1 12-2 12-9 19c-19 15-22 18-27 26c-2 3-8 0-8-5c0-1-1-3-3-5l-3-3l-17 0c-21 0-22 1-24 9c0 3-3 5-5 5c-1 0-3-2-5-5zM85 158c3-4 7-4 25-4c19 0 23 2 25 10c0 1 0 3 0 3c1 1 2-1 4-4c2-2 9-9 17-15c11-10 14-12 14-14c0-1 1-6 1-10c0-5 2-13 3-19c2-13 2-13-3-6c-9 11-15 23-19 37l-2 7l-8 0l-9 0l1-3c3-17 12-35 25-48l5-5l-16 0c-8 0-15 0-15 0c0 0 0-4 1-7l2-7l21 0l22 0l1-8c1-5 2-9 2-10c0-1-8-7-10-7c0 0-3 1-6 2c-9 4-107 4-116 0c-3-1-6-2-7-2c-1 0-9 6-9 7c0 2 10 62 10 62c1 1 3-7 5-16c6-29 5-28 35-28c20 0 19-1 17 5c0 1-1 4-1 6l-1 3l-16 0l-15 0l-1 5c-1 3-2 6-2 7c0 0 4 1 15 1c19 0 20 1 15 22c-4 19-6 21-26 21c-15 0-15 0-9 5c6 5 15 14 18 17l2 3l1-4c1-2 2-5 4-6zM100 142c0-1 3-11 5-23c3-12 5-22 6-23c0 0-1 0-3 1c-2 2-9 4-9 3c-2-1 3-14 5-14c5-1 12-8 12-12c0-1 0-1 8-1l8 0l-7 33c-4 19-8 35-8 36c-1 1-1 1-9 1c-8 0-8 0-8-1zM79 122c1-4 2-8 2-8c0-1-4-1-10-1l-9 0l-2 7c-1 4-2 8-2 8c0 1 3 1 10 1l10 0l1-7z"/></svg></span><span class="plate-name">Design 18</span></label>
+<label class="plate-card" data-plate="19" hidden><input type="radio" name="plate" value="19"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M72 176c-2-2-42-57-44-60c-2-6-2-65 0-71c3-6 14-7 77-5l14 1l2 4l2 5l17 0c25 0 26 0 29-5c3-10 17-7 20 3c2 8 0 63-2 69c-5 8-43 58-45 59c-4 1-69 1-70 0zM125 49c-2-3-4-8-3-9c2-1 45-1 46 0c1 1-1 6-3 8c-2 1-38 2-40 1z"/><path fill="#121110" fill-rule="evenodd" d="M69 161c-4-5-7-9-6-9c3 0 5 2 10 8c5 7 5 7 7 7c1 0 15-1 30-1l28 0l5-7c4-4 6-7 7-7c2 0 4-2 6-8c1-3 6-10 12-18c11-15 11-16 11-29c0-5 1-7 2-11l2-4l0 15c0 14 0 14-2 18c-3 4-36 49-39 53c-3 2-3 2-28 2c-14 0-29 0-32 1l-6 0l-7-10zM68 149c-26-6-29-27-9-60l8-14l10 0l10 0l-6 10l-7 11l4 0c14 2 23 12 23 26c1 18-16 31-33 27zM106 120l0-28l-6 0c-4 0-5 0-5-1c1 0 2-4 3-8l3-8l11 0l12 0l0 37l0 36l-9 0l-9 0l0-28zM133 148c0 0 5-12 12-28c7-15 13-27 13-28c0 0-5 0-14 0l-13 0l0-9l0-8l26 0l25 0l-16 37l-15 36l-9 0c-5 0-9 0-9 0zM79 131c9-5 5-19-5-19c-6 0-11 4-10 10c0 8 8 12 15 9zM38 120c-5-7-5-7-5-42c0-27 1-30 2-31c1-1 4-1 40-1l40 1l2 3c3 7 2 6 26 6c27 0 28 0 31-8c1-3 6-3 8-1c2 4 1 24-1 24c-2 0-2 0-2-10c0-11 0-13-3-9c-3 8-4 8-31 8c-27 0-28 0-31-6l-2-4l-37 0c-20 0-37 0-37 0c-1 0-1 13-1 29c0 30 0 32 3 37c1 2 3 10 2 10c0 0-1-2-4-6z"/></svg></span><span class="plate-name">Design 19</span></label>
+<label class="plate-card" data-plate="20" hidden><input type="radio" name="plate" value="20"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M142 195c-5-5-5-6-20-10l-13-3l-14 3c-14 4-14 4-19 9c-7 6-6 6-21-5l-13-9l-4-11c-12-27-12-28-3-41c8-12 8-15-5-56c-5-18-6-16 15-24c15-5 14-5 22-3c31 11 45 11 78 1c12-3 11-3 28 3c8 3 15 6 15 6c2 0 1 4-4 21c-11 41-11 39-2 52c8 12 8 13 0 34c-8 19-7 17-16 16l-8 0l0 4c-1 3-1 7-2 8c-1 8-9 11-14 5z"/><path fill="#121110" fill-rule="evenodd" d="M59 180c-9-7-11-11-19-32l-2-7l5-7c2-3 5-6 5-6c0 0-2 8-4 11c-4 6 7 29 17 37c8 6 7 5 11 3c2-2 6-4 14-6c6-1 13-4 16-4c7-2 25 1 39 7c3 2 3 2 4-1c2-8 8-12 16-11l4 0l5-11c5-12 5-10-1-20c-6-8-6-8-4-10c1-3 1-3 2 0c0 1 3 6 6 10c4 6 5 9 5 10c0 1-3 7-5 13l-5 12l-6 0c-9 0-13 3-14 10c-1 5-2 6-7 3c-2-1-8-3-12-4c-4-1-10-3-13-4c-4-1-7-2-8-2c-21 5-33 9-36 13c-3 3-3 3-13-4zM53 150l-4-6l4-22c3-13 5-23 5-23c0 0 3-3 6-6l6-4l12-1l12 0l4 5c4 6 4 6 3 11l-1 6l-7 0c-7 0-7 0-6-2c1-5-1-6-8-6c-7 0-9 1-10 7c0 2 0 4-1 5c0 1 2 1 12 1l11 0l3 4c2 2 4 4 4 5c0 0-1 5-2 10l-2 10l-6 6l-7 5l-12 0l-12 0l-4-5zM95 154c0-1 1-4 1-7c1-5 1-5 5-5l4 0l3-19c4-21 4-20 0-18c-3 1-3 1-3-5l-1-5l8-3c9-4 16-5 16-3c0 1-2 13-5 27c-2 13-4 25-4 25c0 0 1 1 3 1c2 0 3 0 2 1c0 1-1 4-1 7l-1 5l-14 0c-14 0-14 0-13-1zM129 151c1-2 8-13 15-25c16-27 16-26-2-26l-14 0l2-6l1-5l21 0c21 0 22 0 22 1c0 1-1 4-2 8c-1 6-2 7-16 32l-15 25l-7 0l-7 0l2-4zM80 140c1-1 2-3 3-7c1-8 1-8-9-8l-8 1l-1 6c-2 9-1 10 7 10c5 0 6-1 8-2zM50 109c0-2-4-20-9-35c-1-6-3-12-3-12c1 0 5-2 11-4l11-4l7 2c34 10 45 10 77 1c13-4 11-4 22 0c13 5 12 4 9 16c-2 6-3 11-3 11c0 0-1 0-2 0c-2 0-2 0 1-10c3-11 3-9-7-13l-8-3l-10 3c-34 9-46 9-79-1l-7-2l-9 3c-4 2-8 3-8 3c0 0 1 3 2 7c5 18 8 31 7 35c-1 4-2 6-2 3z"/></svg></span><span class="plate-name">Design 20</span></label>
+<label class="plate-card" data-plate="21" hidden><input type="radio" name="plate" value="21"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M79 179c-5-6-55-79-56-82c0-1 2-6 4-12c1-6 5-19 7-29c6-25 4-23 21-20c41 5 61 7 64 4c1-1 4-2 13-3c6-1 16-2 20-3c7-1 10-2 11-1c1 1 3 1 7 0c4 0 5 0 6 1c1 2 1 0 7 25c3 12 6 24 7 28c2 3 3 7 3 8c0 3-54 84-56 85c-1 1-4 0-8 0c-7-2-27-2-35-1c-13 2-12 2-15 0z"/><path fill="#121110" fill-rule="evenodd" d="M83 167c-3-3-15-21-15-22c0 0 0-1 2 0c2 0 3 1 9 9c3 5 6 10 7 11c1 1 1 1 9 0c9-1 30-1 34 0c1 1 2-1 9-10c7-11 12-15 12-11c0 2-18 25-19 25c-1 0-6 0-11 0c-8-1-28 0-33 1c-1 0-2 0-4-3zM64 141c-12-3-15-12-12-31c6-25 13-31 37-31c6 0 11 0 11 0c-1 1-2 4-3 7l-2 5l-8 1c-11 0-14 2-16 8c-1 1 0 1 1 1c13-5 24 3 24 15c0 18-14 29-32 25zM92 140c0-6 4-12 8-12l5-1l3-16c4-21 4-19-3-20l-5 0l2-6l3-6l13 0c12 0 12 0 12 1c0 1-2 12-4 24c-2 13-4 23-4 23c0 0 2 1 5 1c5 0 5 0 5 1c-1 1-2 3-3 6l-2 5l-18 0c-9 0-17 0-17 0zM133 138c1-1 6-11 13-23c6-12 12-22 12-22c0 0-6-1-14-1l-13 0l3-6l3-7l20 0l21 0l-1 5c0 5-1 7-13 31l-14 25l-9 0c-9 0-9 0-8-2zM76 128c4-2 6-12 3-15c-3-3-9-1-11 3c-4 8 1 16 8 12zM165 119c2-4 7-13 10-19c6-11 6-11 6-8c1 3 1 3-9 18c-12 19-13 21-7 9zM41 105l-7-10l2-7c2-5 5-16 7-25c4-20 3-19 12-17c45 6 61 7 68 3c3-1 8-2 19-4c16-2 17-2 23-1l4 1l4 14c4 17 4 17 1 17c-2 0-1 0-4-13c-4-16-4-15-9-15c-2-1-7 0-13 1c-5 1-12 1-14 2c-3 0-7 1-9 2c-7 4-21 3-57-2c-7-1-15-2-16-2c-2 0-2 0-6 16c-2 9-4 19-6 23l-2 7l6 8c4 7 5 9 5 10c-1 4-1 3-8-8z"/></svg></span><span class="plate-name">Design 21</span></label>
+<label class="plate-card" data-plate="22" hidden><input type="radio" name="plate" value="22"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M49 167l-17-14l-1-10c-4-22-10-47-14-58l-2-4l11-23c11-22 11-23 13-22c1 0 17 2 35 3l34 4l34-4c18-1 34-3 35-3c3-1 25 44 23 47c-4 7-10 31-14 52c-1 9-3 16-3 17c-1 3-31 29-34 29c-2 0-22-8-24-10c-1-1 0-2 11-10c7-5 8-6 11-11c3-7 3-7-2-2c-5 5-33 21-37 21c-4 0-32-16-37-21c-5-5-5-5-2 2c3 5 4 6 11 11c15 11 15 10-1 16c-14 5-12 6-30-10z"/><path fill="#121110" fill-rule="evenodd" d="M52 163c-9-7-15-13-15-14c0-1-1-5-1-9c-3-19-7-36-12-50l-3-9l2-5c12-26 17-35 20-35c1 0 16 2 34 4l31 3l32-3c17-2 33-4 34-4c2 1 2 1 12 20l9 20l-3 9c-5 14-9 31-12 50c0 4-1 8-1 9c-1 2-29 27-30 27c-2 0-14-6-14-7c0 0 2-2 6-5c12-9 18-25 9-26c-2 0-3 0-8 5c-4 6-6 6-19 13l-15 8l-15-8c-13-7-15-7-19-13c-5-5-6-5-8-5c-9 1-3 17 9 26c4 3 6 5 6 5c0 1-12 7-14 7c0 0-7-6-15-13zM72 170c3-2 3-2-3-6c-6-4-13-20-12-24c4-9 10-8 20 1c5 5 7 6 18 12l13 6l13-6c11-6 13-7 19-12c9-9 15-10 18-2c3 5-5 21-12 26c-5 3-5 4-1 5c3 1 4 1 5 0c1-1 7-6 12-11c13-11 13-10 14-16c1-13 9-45 13-57l2-5l-9-18c-4-10-8-18-8-18c0 0-15 2-33 3l-33 4l-33-4c-18-1-33-3-33-3c0 0-4 8-8 18l-9 18l3 10c4 11 8 28 11 45c1 7 2 13 3 13c4 4 25 22 26 22c0 0 2-1 4-1zM76 136c-6-6-13-7-18-2c-5 5-14 0-17-8c-1-4 3-37 5-42c6-13 34-19 50-10c4 2 4 2-1 4c-5 2-5 2-5 9c-1 7-7 10-7 3c0-4-3-6-10-5c-5 0-8 4-9 12c0 5 0 5 3 3c7-6 21-5 21 1l0 3l4-2c8-3 12 6 7 21c-2 10-18 18-23 13zM104 135c1-9 5-41 5-42c-1 0-5 2-10 4c-11 5-10 6-8-6l1-10l11-5c11-5 22-7 22-4c0 0 0 4-1 8c-1 11-2 11 2 11c4 0 4 0 3 3c-5 47-4 44-17 44l-9 0l1-3zM123 137c0 0 8-11 18-24l17-24l-17 0c-16-1-16-1-16-3c0-2 2-13 2-14c0 0 11-1 28-1l28 0l0 3c0 1-1 4-1 7c-1 6-29 49-33 50c-4 0-7 2-9 5c-2 2-17 3-17 1zM77 122c5-3 4-8-1-10c-11-4-20 7-10 12c3 1 9 0 11-2z"/></svg></span><span class="plate-name">Design 22</span></label>
+<label class="plate-card" data-plate="23" hidden><input type="radio" name="plate" value="23"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M46 185c-6-14-6-13 0-26c6-13 7-15 2-33c-5-24-5-24-19-35c-7-5-7-6-5-13c1-4 2-7 2-8c0-4 8-32 9-34c1-3 11-7 22-11c12-3 14-3 17 0c8 7 9 7 34 7c24 0 25 0 33-6c5-5 12-4 30 3c11 5 11 4 20 42c3 15 3 14-4 21c-12 9-13 10-17 24c-7 27-7 29 0 44c6 12 6 11 1 23c-6 13-5 13-20 3c-6-4-12-8-14-9c-3-3-3-2 0-13c1-4 1-4-15 1l-14 4l-14-4c-15-5-16-5-15 0c4 10 4 9-5 15c-5 3-11 7-14 9c-9 6-9 6-14-4zM113 59c5-3 6-9 3-14c-3-5-13-5-16 0c-6 9 4 19 13 14z"/><path fill="#121110" fill-rule="evenodd" d="M106 162c0 0-6-1-12-3c-12-4-36-15-37-17c0 0-1-5-1-9c-6-30-8-33-23-46l-5-4l5-19c7-28 6-26 12-28c14-7 23-8 27-5c7 6 17 8 24 6c7-2 17-2 24 0c7 2 16 0 24-6c4-3 4-3 14 0c12 4 18 7 19 9c3 11 10 42 10 43c-1 1-3 3-6 6c-13 10-15 15-21 43c0 5-1 10-1 10c-1 2-25 13-38 17c-12 4-13 4-15 3zM121 155c17-6 34-14 34-17c0-2 3-13 6-27c4-13 5-16 18-26l4-4l-4-17c-7-25-6-23-12-26c-11-4-18-5-20-4c-11 7-20 10-29 7c-5-2-14-2-20 0c-9 2-18 0-26-5c-2-2-4-3-5-3c-1 0-13 3-18 6c-6 2-5 0-12 25l-4 17l4 4c10 9 14 13 16 19c2 9 7 28 7 32c1 5 14 12 34 19c14 4 13 4 27 0zM63 135c-1-1-1-5-2-9c-4-16-7-28-10-31c-8-9 2-27 16-31c16-4 40 2 30 8c-5 2-5 2-5 6c-1 10-1 10-4 10c-2 0-2 0-2-4c0-4-2-5-7-5c-7 0-10 3-11 12l-1 5l5-2c9-5 19-4 18 1l0 4l4-2c12-6 12 25-1 34c-6 4-29 7-30 4zM105 134c0 0 1-11 2-23c2-12 3-23 2-23c0 0-4 2-9 4c-10 5-9 6-7-6c0-6 1-10 1-10c0-1 4-3 10-6c14-7 22-8 21-2c-1 10-2 16-2 16c0 0 1 1 3 1l3 0l-2 22c-3 28-3 28-14 28c-6 0-8 0-8-1zM123 135c0-1 7-12 17-26c9-14 16-26 16-26c0 0-7-1-16-1c-14 0-16 0-15-1c0-1 0-3 1-6c0-3 0-7 0-8l1-3l25 0l25 0l1 5c1 8-1 14-8 21c-5 5-7 8-9 15c-2 4-4 9-9 18l-7 12l-11 0c-6 0-11 0-11 0zM80 119c1-1 2-2 2-3c0-1 1-3 1-3c2-6-11-9-16-3c-6 7 4 14 13 9z"/></svg></span><span class="plate-name">Design 23</span></label>
+<label class="plate-card" data-plate="24" hidden><input type="radio" name="plate" value="24"><span class="plate-art"><svg class="plate-svg" viewBox="0 0 216 216" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Number plate design"><path class="leather" fill-rule="evenodd" d="M77 182c-1-1-3-4-5-7c-9-17-25-32-44-41c-6-3-8-5-8-6c-1-7-4-53-3-54c0-1 7-9 15-19c8-9 16-18 17-19c3-3 115-3 118 0c2 2 30 35 32 38c1 1-1 46-3 54c0 1-2 3-8 6c-20 10-37 25-46 43c-3 6-2 6-18 5c-13-1-35-1-44 1c-1 0-2-1-3-1z"/><path fill="#121110" fill-rule="evenodd" d="M78 176c-2-4-10-16-15-21c-2-2-4-4-3-4c1 0 3 1 4 1c2 0 8 6 14 17c2 3 4 5 4 5c0 1 6 0 13 0c12-1 22-1 36 0c3 1 3 1 6-4c9-17 25-32 45-42c5-3 6-4 7-6c1-6 3-44 2-47c0-4 0-5 3-2c2 3 2 3 0 29c-2 28-1 25-7 28c-20 9-43 31-49 46c-1 3 0 3-18 1c-9 0-15 0-24 0c-17 2-17 2-18-1zM62 147c-1 0-2 0-4 0c-6-1-16-9-18-14c-3-10 5-49 11-55c9-10 37-11 48-3c2 1 2 1-3 4c-5 2-5 2-6 11c0 7-6 10-6 3c0-5-2-7-8-7c-8 0-11 4-12 14l0 5l4-2c10-6 21-5 21 1c-1 5-1 5 4 2c12-6 13 23 2 34c-7 6-26 10-33 7zM105 143c2-9 5-46 5-47c0 0-5 2-10 4c-5 3-9 5-10 5c0 0 3-20 3-22c1-4 35-15 34-11c0 0 0 4-1 9c-1 13-1 12 3 12c4 0 4-3 0 25c-3 29-2 28-15 28l-9 0l0-3zM125 146c0 0 8-13 18-28c10-14 18-27 18-27c0-1-6-1-17-1l-17 0l1-10l1-9l29 0l30 0l-1 4c-1 12 0 10-19 41l-18 30l-13 0c-6 0-12 0-12 0zM30 130c-4-2-6-3-6-4c-1-2-4-46-4-49c1-1 6-8 16-20l15-18l14 0c18-1 68-1 86 0l14 0l11 14c12 14 12 14 10 14c-3 0-4-1-13-12l-10-12l-18-1c-23-1-51-1-74 0l-18 1l-14 17l-15 17l1 21c3 28 2 26 7 28c3 2 4 3 4 6c0 1-1 1-6-2zM77 129c3-1 5-5 4-9c-2-5-15-5-18 0c-6 8 5 14 14 9z"/></svg></span><span class="plate-name">Design 24</span></label>
+</div>
+</div>
+<div class="field-block">
+<div class="field-label"><span class="n">3</span> Number and name</div>
+<div class="two-col">
+<div>
+<label class="mini" for="numInput">Number</label>
+<input type="text" id="numInput" maxlength="4" inputmode="text" autocapitalize="characters" autocomplete="off" placeholder="617">
+</div>
+<div>
+<label class="mini" for="nameInput">Name <span class="opt">(optional)</span></label>
+<input type="text" id="nameInput" maxlength="14" autocapitalize="characters" autocomplete="off" placeholder="SMITH">
+</div>
+</div>
+<p class="hint">The designs above show a sample number and name. Yours is engraved in the same style.</p>
+</div>
+<div class="field-block">
+<div class="field-label"><span class="n">4</span> Leatherette color</div>
+<div class="swatch-row" id="colorRow"></div>
+<p class="hint">The plates above update to show your color.</p>
+</div>
+<div class="field-block">
+<div class="field-label"><span class="n">5</span> How many hats</div>
+<div class="stepper">
+<button type="button" class="step-btn" id="qtyMinus" aria-label="Fewer hats">&minus;</button>
+<input type="number" id="qtyNum" class="qty-input" min="1" max="100" value="1" inputmode="numeric" aria-label="Number of hats">
+<button type="button" class="step-btn" id="qtyPlus" aria-label="More hats">+</button>
+</div>
+<div class="quick-qty" id="quickQty">
+<button type="button" data-q="1" aria-pressed="true">1 hat</button>
+<button type="button" data-q="5" aria-pressed="false">5 &middot; Family Deal</button>
+<button type="button" data-q="10" aria-pressed="false">10 &middot; Friends + Family</button>
+</div>
+<p class="hint">Every hat in your order gets the same plate, number and name. Hat colors can be different.</p>
+<div class="price-box" id="priceBox"></div>
+<table class="ladder" id="ladder"></table>
+</div>
+<div class="field-block">
+<div class="field-label"><span class="n">6</span> Hat and color</div>
+<p class="hint" id="hatHint">Tap a hat, then choose its colors.</p>
+<div class="hat-list" id="hatList"></div>
+</div>
+<div class="summary" id="summary">Pick a brand and design to get started.</div>
+<button class="cta cta-block" id="addBtn" disabled>Email my order</button>
+<p class="proof-note">We produce your patch exactly as entered, so double-check the number and spelling before ordering. Made to order in 1 to 2 weeks. Need it sooner? Email help@threadbreak.com before you order.</p>
+</div>
+</div>
 </section>
-
+<script>
+(function(){
+var BRANDS = [
+{ name:'GasGas',    plates:[1,9,17] },
+{ name:'Honda',     plates:[2,10,18] },
+{ name:'Husqvarna', plates:[3,11,19] },
+{ name:'Kawasaki',  plates:[4,12,20] },
+{ name:'KTM',       plates:[5,13,21] },
+{ name:'Suzuki',    plates:[6,14,22] },
+{ name:'Triumph',   plates:[7,15,23] },
+{ name:'Yamaha',    plates:[8,16,24] }
+];
+var LEATHER = [
+{ name:'Threadbreak Purple', hex:'#5028aa' },
+{ name:'Saddle Tan', hex:'#a9713e' },
+{ name:'Brushed Silver', hex:'#b7b4ad' },
+{ name:'Vintage Gray', hex:'#6f6a63' },
+{ name:'Saddle Red', hex:'#8c2c22' },
+{ name:'Rawhide', hex:'#c79a5d' },
+{ name:'Vintage Sky Blue', hex:'#5c7f8c' },
+{ name:'Vintage Caramel Brown', hex:'#6b4527' }
+];
+var BASIC = [
+{ name:'Black', hex:'#1a1a1a' }, { name:'Navy', hex:'#1f2a44' }, { name:'Charcoal', hex:'#4a4d52' },
+{ name:'Heather Gray', hex:'#9a9ca0' }, { name:'White', hex:'#f2f2ee' }, { name:'Royal', hex:'#2c4fa3' },
+{ name:'Red', hex:'#b3262d' }, { name:'Forest Green', hex:'#1f4d36' }, { name:'Khaki', hex:'#b9a47a' }
+];
+var HATS = [
+{ id:'otto-31069', brand:'Otto',       name:'31-069 5-Panel Mid Profile',     tier:'otto',    kind:'twill',   img:null, colors:BASIC },
+{ id:'r112',       brand:'Richardson', name:'112 Trucker',                    tier:'premium', kind:'trucker', img:null, colors:BASIC },
+{ id:'r112-5',     brand:'Richardson', name:'112 5-Panel Trucker',            tier:'premium', kind:'trucker', img:null, colors:BASIC },
+{ id:'flex-6277',  brand:'Flexfit',    name:'6277',                           tier:'premium', kind:'twill',   img:null, colors:BASIC },
+{ id:'flex-110f',  brand:'Flexfit',    name:'110F',                           tier:'premium', kind:'twill',   img:null, colors:BASIC },
+{ id:'yp-6006',    brand:'Yupoong',    name:'YP Classics 6006 Trucker',       tier:'premium', kind:'trucker', img:null, colors:BASIC },
+{ id:'yp-6606',    brand:'Yupoong',    name:'YP Classics 6606 Retro Trucker', tier:'premium', kind:'trucker', img:null, colors:BASIC }
+];
+var TIERS = {
+otto:    { label:'Otto',                          single:39.95, five:25.00, ten:20.00 },
+premium: { label:'Richardson, Yupoong, Flexfit',  single:44.95, five:29.95, ten:24.95 }
+};
+var MAX_QTY = 100, SMALL_DISCOUNT = 0.10;
+function r2(n){ return Math.round(n*100)/100; }
+function money(n){ return '$' + n.toFixed(2); }
+function unitPrice(t, q){
+if (q >= 10) return t.ten;        // 10 or more stays at the 10-hat price
+if (q >= 5)  return t.five;
+if (q >= 2)  return r2(t.single*(1-SMALL_DISCOUNT));
+return t.single;
+}
+function totalPrice(t, q){
+if (q >= 2 && q < 5) return r2(t.single*(1-SMALL_DISCOUNT)*q);
+return r2(unitPrice(t,q)*q);
+}
+function shade(hex,f){ var n=parseInt(hex.slice(1),16),r=n>>16,g=(n>>8)&255,b=n&255; return 'rgb('+Math.round(r*f)+','+Math.round(g*f)+','+Math.round(b*f)+')'; }
+function lum(hex){ var n=parseInt(hex.slice(1),16); return (0.299*(n>>16)+0.587*((n>>8)&255)+0.114*(n&255))/255; }
+function hatSVG(kind, hex){
+var dark = shade(hex,0.7), seam='rgba(0,0,0,.28)';
+var mesh = lum(hex) < 0.5 ? 'rgba(255,255,255,.2)' : 'rgba(0,0,0,.12)';
+var s = '<svg viewBox="0 0 120 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">';
+s += '<path d="M18 56 C18 20 38 10 60 10 C82 10 102 20 102 56 Z" fill="'+hex+'"/>';
+if (kind === 'trucker'){
+s += '<path d="M18 56 C18 36 24 24 34 18 L42 56 Z" fill="'+mesh+'"/>';
+s += '<path d="M102 56 C102 36 96 24 86 18 L78 56 Z" fill="'+mesh+'"/>';
+s += '<path d="M34 18 L42 56 M86 18 L78 56" stroke="'+seam+'" stroke-width="1.2" fill="none"/>';
+} else {
+s += '<path d="M60 10 L60 56 M60 10 C47 22 41 38 41 56 M60 10 C73 22 79 38 79 56" stroke="'+seam+'" stroke-width="1.2" fill="none"/>';
+}
+s += '<circle cx="60" cy="10.5" r="2.4" fill="'+dark+'"/>';
+s += '<path d="M8 56 Q60 90 112 56 Q60 64 8 56 Z" fill="'+dark+'"/>';
+return s + '</svg>';
+}
+function thumb(hat, hex){
+return '<span class="hthumb">' + (hat.img ? '<img src="'+hat.img+'" alt="">' : hatSVG(hat.kind, hex)) + '</span>';
+}
+var form = document.getElementById('plateForm');
+var state = { brand:null, plate:null, leather:LEATHER[1], hat:null, qty:1, colors:[], preview:null };
+var $ = function(id){ return document.getElementById(id); };
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function assigned(){ return state.colors.reduce(function(a,x){ return a + x.n; }, 0); }
+function findColor(c){ for (var i=0;i<state.colors.length;i++) if (state.colors[i].c.name === c.name) return i; return -1; }
+var brandRow = $('brandRow');
+BRANDS.forEach(function(b, i){
+var btn = document.createElement('button');
+btn.type='button'; btn.className='brand-chip'; btn.textContent=b.name; btn.setAttribute('aria-pressed','false');
+btn.addEventListener('click', function(){
+state.brand = i; state.plate = null;
+[].forEach.call(brandRow.children, function(c, j){ c.setAttribute('aria-pressed', j===i ? 'true':'false'); });
+[].forEach.call(document.querySelectorAll('#tbmx .plate-card'), function(card){
+var idx = b.plates.indexOf(+card.dataset.plate);
+card.hidden = idx === -1;
+card.querySelector('input').checked = false;
+if (idx !== -1) card.querySelector('.plate-name').textContent = 'Design ' + (idx + 1);
+});
+$('designHint').textContent = b.name + ' designs: tap one to select it.';
+update();
+});
+brandRow.appendChild(btn);
+});
+document.querySelectorAll('#tbmx .plate-card input').forEach(function(inp){
+inp.addEventListener('change', function(){ state.plate = +inp.value; update(); });
+});
+var colorRow = $('colorRow');
+LEATHER.forEach(function(c){
+var b = document.createElement('button');
+b.type='button'; b.className='swatch'; b.setAttribute('aria-pressed', c===state.leather ? 'true':'false');
+b.innerHTML = '<div class="dot" style="background:'+c.hex+'"></div><span>'+c.name+'</span>';
+b.addEventListener('click', function(){
+state.leather = c; form.style.setProperty('--leather', c.hex);
+[].forEach.call(colorRow.children, function(x){ x.setAttribute('aria-pressed', x===b ? 'true':'false'); });
+update();
+});
+colorRow.appendChild(b);
+});
+function setQty(q){
+q = parseInt(q,10); if (isNaN(q)) q = 1;
+q = Math.max(1, Math.min(MAX_QTY, q));
+state.qty = q;
+if (state.colors.length === 1) state.colors[0].n = q;
+else if (state.colors.length > 1){
+var over = assigned() - q;
+for (var i = state.colors.length-1; i >= 0 && over > 0; i--){
+var take = Math.min(over, state.colors[i].n - 1);
+state.colors[i].n -= take; over -= take;
+}
+}
+if ($('qtyNum') !== document.activeElement) $('qtyNum').value = q;
+[].forEach.call($('quickQty').children, function(b){ b.setAttribute('aria-pressed', +b.dataset.q === q ? 'true':'false'); });
+update();
+}
+$('qtyMinus').addEventListener('click', function(){ setQty(state.qty-1); });
+$('qtyPlus').addEventListener('click', function(){ setQty(state.qty+1); });
+$('qtyNum').addEventListener('input', function(e){ if (e.target.value !== '') setQty(e.target.value); });
+$('qtyNum').addEventListener('blur', function(e){ e.target.value = state.qty; });
+[].forEach.call($('quickQty').children, function(b){ b.addEventListener('click', function(){ setQty(+b.dataset.q); }); });
+(function(){
+var o=TIERS.otto, p=TIERS.premium;
+$('ladder').innerHTML =
+'<tr><th></th><th>Otto</th><th>Richardson<br>Yupoong, Flexfit</th></tr>' +
+'<tr><td>1 hat</td><td>'+money(o.single)+'</td><td>'+money(p.single)+'</td></tr>' +
+'<tr><td>2 to 4 hats<span class="sm">10% off every hat</span></td><td class="hot">'+money(r2(o.single*0.9))+' each</td><td class="hot">'+money(r2(p.single*0.9))+' each</td></tr>' +
+'<tr><td>5 hats<span class="sm">Family Deal</span></td><td class="hot">'+money(o.five)+' each</td><td class="hot">'+money(p.five)+' each</td></tr>' +
+'<tr><td>10 or more<span class="sm">Friends + Family</span></td><td class="hot">'+money(o.ten)+' each</td><td class="hot">'+money(p.ten)+' each</td></tr>';
+})();
+function renderPriceBox(){
+var box = $('priceBox'), q = state.qty;
+if (!state.hat){
+var o = TIERS.otto, p = TIERS.premium;
+box.innerHTML = '<div><span class="each">At '+q+(q>1?' hats':' hat')+':</span></div>' +
+'<div>Otto: <span class="each">'+money(unitPrice(o,q))+' each</span> ('+money(totalPrice(o,q))+')</div>' +
+'<div>Richardson, Yupoong, Flexfit: <span class="each">'+money(unitPrice(p,q))+' each</span> ('+money(totalPrice(p,q))+')</div>' +
+'<div class="nudge">Pick a hat below for your exact price.</div>';
+return;
+}
+var t = TIERS[state.hat.tier];
+var tot = totalPrice(t,q), full = r2(t.single*q), save = r2(full - tot);
+var html = '<div class="big">'+money(tot)+'</div>' +
+'<div><span class="each">'+q+(q>1?' hats':' hat')+'</span>' + (q>1 ? ' &middot; '+money(r2(tot/q))+' each' : '') + ', shipped</div>';
+if (save > 0) html += '<div class="good">You save '+money(save)+(q<5 ? ' (10% off each hat)' : '')+'</div>';
+var nudge = '';
+if (q === 1) nudge = 'Order 2 or more and save 10% on every hat.';
+else if (q < 5){
+var t5 = totalPrice(t,5);
+nudge = 'Order 5 and pay '+money(t5)+' ('+money(t.five)+' each)' + (t5 <= tot ? ', less than your '+q+' hats cost.' : '.');
+} else if (q < 10){
+var t10 = totalPrice(t,10);
+nudge = 'Order 10 and pay '+money(t10)+' ('+money(t.ten)+' each)' + (t10 <= tot ? ', ' + (t10<tot?'less than':'the same as') + ' your '+q+' hats cost.' : '.');
+} else nudge = '10 or more hats are '+money(t.ten)+' each.';
+html += '<div class="nudge">'+nudge+'</div>';
+box.innerHTML = html;
+}
+function selectHat(hat){
+var keep = [];
+state.colors.forEach(function(x){
+var m = hat.colors.filter(function(c){ return c.name === x.c.name; })[0];
+if (m) keep.push({ c:m, n:x.n });
+});
+state.hat = hat; state.colors = keep;
+state.preview = keep.length ? keep[keep.length-1].c : null;
+if (state.colors.length === 1) state.colors[0].n = state.qty;
+update(true);
+}
+function tapColor(c){
+var i = findColor(c);
+state.preview = c;
+if (i >= 0){
+state.colors.splice(i,1);
+if (state.colors.length === 1) state.colors[0].n = state.qty;
+} else if (state.qty === 1){
+state.colors = [{ c:c, n:1 }];
+} else if (state.colors.length === 0){
+state.colors = [{ c:c, n:state.qty }];
+} else {
+var rem = state.qty - assigned();
+if (rem > 0) state.colors.push({ c:c, n:rem });
+else {
+var big = state.colors.reduce(function(a,x){ return x.n > a.n ? x : a; }, state.colors[0]);
+if (big.n > 1){ big.n -= 1; state.colors.push({ c:c, n:1 }); }
+else state.colors.push({ c:c, n:1 });
+}
+}
+update();
+}
+function adjust(i, d){
+var n = state.colors[i].n + d;
+if (n < 1) return;
+state.colors[i].n = n;
+update();
+}
+function removeColor(i){
+state.colors.splice(i,1);
+if (state.colors.length === 1) state.colors[0].n = state.qty;
+update();
+}
+function buildBody(hat){
+var body = document.createElement('div'); body.className = 'hat-opt-body';
+var pv = state.preview || { name:'', hex:'#4a4d52' };
+var big = hat.img ? '<img src="'+hat.img+'" alt="">' : hatSVG(hat.kind, pv.hex);
+var html = '<div class="hat-big">'+big+'</div>' +
+'<div class="preview-cap">'+(state.preview ? esc(state.preview.name) : 'Pick a color to preview it')+'</div>' +
+'<div class="hc-label">'+(state.qty > 1 ? 'Tap colors to add them. You can mix colors.' : 'Choose your color.')+'</div>' +
+'<div class="hc-swatches"></div><div class="color-list"></div><div class="assign"></div>';
+body.innerHTML = html;
+var sw = body.querySelector('.hc-swatches');
+hat.colors.forEach(function(c){
+var d = document.createElement('button');
+d.type='button'; d.className='hc-dot'; d.title=c.name; d.setAttribute('aria-label', c.name);
+d.style.background = c.hex; d.setAttribute('aria-pressed', findColor(c) >= 0 ? 'true':'false');
+d.addEventListener('click', function(){ tapColor(c); });
+sw.appendChild(d);
+});
+var list = body.querySelector('.color-list');
+state.colors.forEach(function(x, i){
+var row = document.createElement('div'); row.className = 'crow';
+row.innerHTML = '<span class="cdot" style="background:'+x.c.hex+'"></span><span class="cname">'+esc(x.c.name)+'</span>';
+if (state.qty > 1){
+var q = document.createElement('div'); q.className = 'cq';
+var m = document.createElement('button'); m.type='button'; m.textContent='\u2212'; m.setAttribute('aria-label','Fewer '+x.c.name);
+var pl = document.createElement('button'); pl.type='button'; pl.textContent='+'; pl.setAttribute('aria-label','More '+x.c.name);
+var span = document.createElement('span'); span.textContent = x.n;
+m.addEventListener('click', function(){ adjust(i,-1); });
+pl.addEventListener('click', function(){ adjust(i,1); });
+q.appendChild(m); q.appendChild(span); q.appendChild(pl); row.appendChild(q);
+var rm = document.createElement('button'); rm.type='button'; rm.className='rm'; rm.innerHTML='&times;'; rm.setAttribute('aria-label','Remove '+x.c.name);
+rm.addEventListener('click', function(){ removeColor(i); });
+row.appendChild(rm);
+}
+list.appendChild(row);
+});
+var a = body.querySelector('.assign'), tot = assigned();
+if (state.qty > 1){
+if (state.colors.length === 0){ a.textContent = '0 of '+state.qty+' hats assigned'; a.className='assign bad'; }
+else if (tot === state.qty){ a.textContent = state.qty+' of '+state.qty+' hats assigned'; a.className='assign ok'; }
+else if (tot < state.qty){ a.textContent = tot+' of '+state.qty+' assigned. Add '+(state.qty-tot)+' more.'; a.className='assign bad'; }
+else { a.textContent = tot+' of '+state.qty+' assigned. Remove '+(tot-state.qty)+'.'; a.className='assign bad'; }
+} else a.style.display = 'none';
+return body;
+}
+var lastHat = null;
+function renderHats(scroll){
+var list = $('hatList'); list.innerHTML = '';
+HATS.forEach(function(hat){
+var sel = state.hat === hat, t = TIERS[hat.tier];
+var priceTxt = state.qty > 1 ? money(unitPrice(t,state.qty)) + ' each' : money(t.single);
+var opt = document.createElement('div'); opt.className = 'hat-opt' + (sel ? ' open' : '');
+var head = document.createElement('button'); head.type='button'; head.className='hat-opt-head';
+head.setAttribute('aria-expanded', sel ? 'true':'false');
+head.innerHTML = thumb(hat, sel && state.preview ? state.preview.hex : '#4a4d52') +
+'<span class="htext"><span class="hb">'+hat.brand+'</span><span class="hn">'+hat.name+'</span><span class="hp">'+priceTxt+'</span></span>';
+head.addEventListener('click', function(){ if (!sel) selectHat(hat); });
+opt.appendChild(head);
+if (sel) opt.appendChild(buildBody(hat));
+list.appendChild(opt);
+if (sel && scroll) setTimeout(function(){ opt.scrollIntoView({ behavior:'smooth', block:'start' }); }, 30);
+});
+}
+function update(scrollToHat){
+var num = $('numInput').value.trim(), name = $('nameInput').value.trim();
+var colorsDone = !!state.hat && state.colors.length > 0 && assigned() === state.qty;
+var ready = state.brand!==null && !!state.plate && num.length>0 && colorsDone;
+var parts = [];
+if (state.brand!==null) parts.push('<b>'+BRANDS[state.brand].name+'</b>');
+if (state.plate) parts.push('Design '+(BRANDS[state.brand].plates.indexOf(state.plate)+1));
+if (num) parts.push('#<b>'+esc(num)+'</b>');
+if (name) parts.push(esc(name));
+parts.push(state.leather.name + ' patch');
+if (state.hat) parts.push(state.hat.brand + ' ' + state.hat.name);
+if (state.hat && state.colors.length){
+parts.push(state.colors.map(function(x){ return esc(x.c.name) + (state.qty>1 ? ' x' + x.n : ''); }).join(', '));
+}
+var html = (state.brand===null || !state.plate) ? 'Pick a brand and design to get started.' : parts.join(' &middot; ');
+if (state.hat){
+var t = TIERS[state.hat.tier], tot = totalPrice(t, state.qty), save = r2(t.single*state.qty - tot);
+html += '<span class="total">' + state.qty + (state.qty>1?' hats':' hat') + ': <b>' + money(tot) + '</b> shipped';
+if (save > 0) html += ' <span class="save">You save ' + money(save) + '</span>';
+html += '</span>';
+}
+if (!ready){
+var need = [];
+if (state.brand!==null && state.plate && !num) need.push('your number');
+if (!state.hat) need.push('a hat');
+else if (!state.colors.length) need.push('a hat color');
+else if (assigned() !== state.qty) need.push('colors for all ' + state.qty + ' hats');
+if (need.length) html += '<span class="total" style="font-size:12.5px;color:var(--paper-dim)">Still needed: ' + need.join(', ') + '</span>';
+}
+$('summary').innerHTML = html;
+$('addBtn').disabled = !ready;
+renderPriceBox();
+renderHats(scrollToHat === true);
+}
+['numInput','nameInput'].forEach(function(id){ $(id).addEventListener('input', function(){ update(); }); });
+$('addBtn').addEventListener('click', function(){
+var num = $('numInput').value.trim(), name = $('nameInput').value.trim();
+var t = TIERS[state.hat.tier], tot = totalPrice(t, state.qty);
+var lines = [
+'Bike brand: ' + BRANDS[state.brand].name,
+'Design: ' + (BRANDS[state.brand].plates.indexOf(state.plate)+1) + ' (artboard ' + state.plate + ')',
+'Number: ' + num,
+'Name: ' + (name || '(none)'),
+'Patch color: ' + state.leather.name,
+'Hat: ' + state.hat.brand + ' ' + state.hat.name,
+'Quantity: ' + state.qty,
+'Hat colors: ' + state.colors.map(function(x){ return x.c.name + ' x' + x.n; }).join(', '),
+'Total: ' + money(tot) + ' shipped'
+];
+var url = 'mailto:help@threadbreak.com?subject=' + encodeURIComponent('MX plate hat order: ' + BRANDS[state.brand].name + ' #' + num) +
+'&body=' + encodeURIComponent(lines.join('\n') + '\n\nYour name and shipping address:\n');
+var m = document.querySelector('#tbmx .cart-msg');
+if (!m){ m = document.createElement('p'); m.className='cart-msg'; $('addBtn').after(m); }
+m.textContent = 'Online checkout is coming soon. This opens an email to us with your exact order.';
+window.location.href = url;
+});
+update();
+})();
+</script>
 </div>
