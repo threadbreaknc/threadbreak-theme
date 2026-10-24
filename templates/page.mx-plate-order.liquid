@@ -1,4 +1,4 @@
-{%- comment -%} build: mx-plate-landing-v12 {%- endcomment -%}
+{%- comment -%} build: mx-plate-landing-v13 {%- endcomment -%}
 {%- comment -%}
   Custom Motocross Number Plate Hats (threadbreak.com/pages/custom-motocross-number-plate-hats)
   Template suffix: mx-plate-order  (templates/page.mx-plate-order.liquid)
@@ -148,6 +148,8 @@
     { name:'Yamaha',    plates:[8,16,24] }
   ];
   var DESIGN_NAMES = ['Factory','Supercross','Pro'];
+  // preview color picked when a brand is chosen (the customer can still change it in step 4)
+  var BRAND_COLORS = { GasGas:'Saddle Red', Honda:'Red Carbon Fiber', Husqvarna:'Vintage Gray', Kawasaki:'Lime Green', KTM:'Saddle Tan', Suzuki:'Rawhide', Triumph:'Brushed Silver', Yamaha:'Vintage Sky Blue' };
   var LEATHER = [
     { name:'Purple Carbon Fiber', hex:'#5028aa', tex:'carbon' },
     { name:'Saddle Tan', hex:'#a9713e' },
@@ -212,13 +214,18 @@
     }
     var i = +brandSel.value, b = BRANDS[i];
     state.brand = i; state.plate = null;
+    var bc = BRAND_COLORS[b.name];
+    if (bc && !state.colorTouched){
+      var sw = LEATHER.filter(function(c){ return c.name === bc; })[0];
+      if (sw){ state.leather = sw; form.style.setProperty('--leather', sw.hex); [].forEach.call($('colorRow').children, function(x, k){ x.setAttribute('aria-pressed', LEATHER[k] === sw ? 'true':'false'); }); }
+    }
     [].forEach.call(cards, function(card){
       var idx = b.plates.indexOf(+card.dataset.plate);
       card.hidden = idx === -1;
       card.querySelector('input').checked = false;
       if (idx !== -1) card.querySelector('.plate-name').textContent = DESIGN_NAMES[idx];
     });
-    $('designHint').textContent = b.name + ' designs: tap one to select it.';
+    $('designHint').textContent = b.name + ' designs: tap one to select it. Change the patch color in step 4.';
     update();
   });
   brandRow.appendChild(brandSel);
@@ -244,7 +251,7 @@
     b.type='button'; b.className='mx-swatch'; b.setAttribute('aria-pressed', c===state.leather ? 'true':'false');
     b.innerHTML = '<div class="dot'+(c.tex ? ' '+c.tex : '')+'" style="background-color:'+c.hex+'"></div><span>'+c.name+'</span>';
     b.addEventListener('click', function(){
-      state.leather = c; form.style.setProperty('--leather', c.hex);
+      state.leather = c; state.colorTouched = true; form.style.setProperty('--leather', c.hex);
       [].forEach.call(colorRow.children, function(x){ x.setAttribute('aria-pressed', x===b ? 'true':'false'); });
       update();
     });
