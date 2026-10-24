@@ -1,4 +1,4 @@
-{%- comment -%} build: mx-plate-landing-v6 {%- endcomment -%}
+{%- comment -%} build: mx-plate-landing-v7 {%- endcomment -%}
 {%- comment -%}
   Custom Motocross Number Plate Hats (threadbreak.com/pages/custom-motocross-number-plate-hats)
   Template suffix: mx-plate-order  (templates/page.mx-plate-order.liquid)
@@ -136,6 +136,7 @@
     { name:'Triumph',   plates:[7,15,23] },
     { name:'Yamaha',    plates:[8,16,24] }
   ];
+  var DESIGN_NAMES = ['Factory','Supercross','Pro'];
   var LEATHER = [
     { name:'Threadbreak Purple', hex:'#5028aa' },
     { name:'Saddle Tan', hex:'#a9713e' },
@@ -196,7 +197,7 @@
         var idx = b.plates.indexOf(+card.dataset.plate);
         card.hidden = idx === -1;
         card.querySelector('input').checked = false;
-        if (idx !== -1) card.querySelector('.plate-name').textContent = 'Design ' + (idx + 1);
+        if (idx !== -1) card.querySelector('.plate-name').textContent = DESIGN_NAMES[idx];
       });
       $('designHint').textContent = b.name + ' designs: tap one to select it.';
       update();
@@ -423,7 +424,7 @@
     var ready = state.brand!==null && !!state.plate && num.length>0 && nameOk && colorsDone;
     var parts = [];
     if (state.brand!==null) parts.push('<b>'+BRANDS[state.brand].name+'</b>');
-    if (state.plate) parts.push('Design '+(BRANDS[state.brand].plates.indexOf(state.plate)+1));
+    if (state.plate) parts.push(DESIGN_NAMES[BRANDS[state.brand].plates.indexOf(state.plate)]);
     if (num) parts.push('#<b>'+esc(num)+'</b>');
     parts.push(state.useName ? (name ? esc(name) : 'name needed') : 'no name');
     parts.push(state.leather.name + ' patch');
@@ -471,7 +472,7 @@
     var vid = VARIANTS[state.hat.tier][bracket(state.qty)];
     var props = {
       'Bike brand': BRANDS[state.brand].name,
-      'Design': 'Design ' + (BRANDS[state.brand].plates.indexOf(state.plate) + 1) + ' (plate art ' + state.plate + ')',
+      'Design': DESIGN_NAMES[BRANDS[state.brand].plates.indexOf(state.plate)] + ' (plate art ' + state.plate + ')',
       'Number': num,
       'Name': name || 'None',
       'Patch color': state.leather.name,
