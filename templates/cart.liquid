@@ -39,7 +39,7 @@
             {%- unless item.variant.title == 'Default Title' -%}
               <p class="cart-item-variant">{{ item.variant.title }}</p>
             {%- endunless -%}
-            {%- if item.product.tags contains 'mx-plate-hat' and item.properties.size > 0 -%}
+            {%- if item.product.tags contains 'mx-plate-hat' -%}
               <ul class="cart-item-props" style="list-style:none;margin:8px 0 0;padding:0;font-size:0.78rem;line-height:1.55;color:#6B6A78;">
                 {%- for p in item.properties -%}
                   {%- assign pk = p.first | slice: 0, 1 -%}
