@@ -3381,6 +3381,19 @@
      "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38716_fm.jpg"
     },
     {
+     "name": "Charcoal/ Royal",
+     "skus": {
+      "Adjustable": "B43195120"
+     },
+     "sizes": [
+      "Adjustable"
+     ],
+     "front": null,
+     "side": null,
+     "back": null,
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/52226_fm.jpg"
+    },
+    {
      "name": "Charcoal/ White",
      "skus": {
       "Adjustable": "B43195110"
