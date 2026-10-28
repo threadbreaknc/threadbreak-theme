@@ -511,6 +511,19 @@
           <div class="en-links">
             <button type="button" class="en-toggle" id="enToggle">View example</button>
             <button type="button" class="en-toggle" id="aiToggle">Using AI artwork? Read this</button>
+            <button type="button" class="en-toggle" id="varToggle">What to expect from embroidery</button>
+          </div>
+          <div class="en-ai" id="varTips" hidden>
+            <p><strong>Small differences are normal</strong></p>
+            <p>Embroidery is thread stitched into fabric by a machine, so no two hats are pixel-perfect copies of the mockup. These are normal and not defects:</p>
+            <ul>
+              <li><b>Color.</b> Thread can look a little different in person than it does on your screen.</li>
+              <li><b>Texture.</b> Stitches have a raised, woven look that a flat image can't show.</li>
+              <li><b>Placement.</b> Logos can shift slightly from hat to hat, since every hat is hooped by hand.</li>
+              <li><b>Fabric.</b> Mesh, nylon, corduroy and performance fabrics each take stitches a bit differently.</li>
+            </ul>
+            <p><strong>Some logos need adjusting to stitch well</strong></p>
+            <p>Depending on your design, we may simplify small details, thicken thin lines, resize it, or tweak the stitching. If thread isn't the right fit, we may suggest a leather patch or a different hat. You'll see every change on your free mockup before anything is made, and we always keep your logo looking like your logo.</p>
           </div>
           <div class="en-ai" id="aiTips" hidden>
             <p><strong>Why AI art can be tricky to stitch</strong></p>
@@ -3001,6 +3014,7 @@ document.querySelectorAll("#tbco [data-back]").forEach(b => {
 bindToggle("puffBtn","puffInfo","What is 3D puff?","Hide");
 bindToggle("enToggle","enExample","View example","Hide example");
 bindToggle("aiToggle","aiTips","Using AI artwork? Read this","Hide AI tips");
+bindToggle("varToggle","varTips","What to expect from embroidery","Hide");
 
 renderHats();
 renderDesign();

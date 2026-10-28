@@ -1,0 +1,151 @@
+{%- comment -%}
+  Embroidery guide: what stitches well, what doesn't, AI artwork, files, what to expect.
+  Copy lives here (not in the page body) so layout and text stay together.
+{%- endcomment -%}
+<style>
+  .tbeg{--purple:#5028AA;--ink:#14121C;--muted:#5c5a68;--line:#E2E0EA;--ice:#F4F1FB;--ok:#2f8a4e;--no:#c0392b;background:#fff;color:var(--ink);font-family:'DM Sans',system-ui,sans-serif}
+  .tbeg-wrap{max-width:980px;margin:0 auto;padding:8.5rem 20px 4rem}
+  .tbeg-eyebrow{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin:0 0 8px}
+  .tbeg h1{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(2.6rem,7vw,4.4rem);line-height:1;margin:0 0 12px}
+  .tbeg-lead{font-size:18px;line-height:1.65;color:#2a2638;max-width:700px;margin:0 0 22px}
+  .tbeg-jump{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 34px;padding:0;list-style:none}
+  .tbeg-jump a{display:inline-block;padding:8px 13px;border:1px solid var(--line);border-radius:999px;font-size:14px;font-weight:600;color:var(--ink);text-decoration:none}
+  .tbeg-jump a:hover{border-color:var(--purple);color:var(--purple)}
+  .tbeg section{margin:0 0 44px;scroll-margin-top:110px}
+  .tbeg h2{font-size:clamp(24px,3.4vw,30px);line-height:1.2;margin:0 0 10px;font-weight:700}
+  .tbeg p{font-size:16.5px;line-height:1.7;color:#2a2638;margin:0 0 14px}
+  .tbeg ul{margin:0 0 14px;padding-left:1.25rem;list-style:disc}
+  .tbeg li{font-size:16px;line-height:1.6;color:#2a2638;margin:0 0 7px}
+  .tbeg a{color:var(--purple);font-weight:600}
+  .tbeg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:6px 0 10px}
+  .tbeg-card{border:1px solid var(--line);border-radius:14px;padding:18px 18px 14px;background:#fff}
+  .tbeg-card h3{font-size:17px;margin:0 0 6px;display:flex;align-items:center;gap:8px}
+  .tbeg-card p{font-size:15px;margin:0 0 6px;color:var(--muted)}
+  .tbeg-ok h3::before,.tbeg-no h3::before{flex:0 0 auto;width:22px;height:22px;border-radius:50%;color:#fff;font-size:13px;display:inline-flex;align-items:center;justify-content:center;font-weight:800}
+  .tbeg-ok h3::before{content:"\2713";background:var(--ok)}
+  .tbeg-no h3::before{content:"\2715";background:var(--no)}
+  .tbeg-note{background:var(--ice);border-radius:14px;padding:18px 20px;margin:10px 0 0}
+  .tbeg-note p:last-child,.tbeg-note ul:last-child{margin-bottom:0}
+  .tbeg-ai{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:start}
+  .tbeg-ai img{width:100%;border-radius:14px;border:1px solid var(--line);display:block}
+  .tbeg-ai figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+  .tbeg-two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .tbeg-cta{background:var(--ink);color:#fff;border-radius:16px;padding:26px 22px}
+  .tbeg-cta h2{color:#fff;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:34px;margin:0 0 6px}
+  .tbeg-cta p{color:rgba(255,255,255,.82);margin:0 0 16px}
+  .tbeg-cta .btns{display:flex;flex-wrap:wrap;gap:10px}
+  .tbeg-cta a{display:inline-block;padding:12px 18px;border-radius:10px;font-weight:700;text-decoration:none}
+  .tbeg-cta .b1{background:var(--purple);color:#fff}.tbeg-cta .b2{background:#fff;color:var(--ink)}
+  @media(max-width:720px){.tbeg-ai,.tbeg-two{grid-template-columns:1fr}}
+</style>
+
+<div class="tbeg">
+  <div class="tbeg-wrap">
+    <p class="tbeg-eyebrow">Embroidery guide</p>
+    <h1>How to get a great looking logo hat</h1>
+    <p class="tbeg-lead">Embroidery is thread, not ink. That's what gives it a rich, textured, premium look, and it's also why some designs need a little help before they stitch well. Here's what works, what doesn't, and what to know if your logo was made with AI.</p>
+    <ul class="tbeg-jump">
+      <li><a href="#works">What works</a></li>
+      <li><a href="#avoid">What to avoid</a></li>
+      <li><a href="#ai">AI designs</a></li>
+      <li><a href="#files">Files &amp; colors</a></li>
+      <li><a href="#expect">What to expect</a></li>
+    </ul>
+
+    <section id="works">
+      <h2>What stitches well</h2>
+      <div class="tbeg-grid">
+        <div class="tbeg-card tbeg-ok"><h3>Bold, simple shapes</h3><p>Clean outlines, solid shapes and thick lines. Think strong icons, initials and simple marks.</p></div>
+        <div class="tbeg-card tbeg-ok"><h3>Text about 1/4 inch tall or bigger</h3><p>Short words in a clean, simple font read best. Very thin or tightly packed fonts can blur together.</p></div>
+        <div class="tbeg-card tbeg-ok"><h3>Solid colors with contrast</h3><p>Thread comes in solid colors. A few strong colors that stand out from the hat look cleanest.</p></div>
+        <div class="tbeg-card tbeg-ok"><h3>Room to breathe</h3><p>A little space between details keeps stitches crisp instead of crowded.</p></div>
+      </div>
+    </section>
+
+    <section id="avoid">
+      <h2>What doesn't stitch well</h2>
+      <div class="tbeg-grid">
+        <div class="tbeg-card tbeg-no"><h3>Photos and realistic art</h3><p>Thread can't recreate a photograph, soft shading or realistic textures.</p></div>
+        <div class="tbeg-card tbeg-no"><h3>Tiny text and hairlines</h3><p>Fine print, thin outlines and small details can disappear or turn fuzzy at hat size.</p></div>
+        <div class="tbeg-card tbeg-no"><h3>Gradients, glows and shadows</h3><p>Smooth color blends come out as stripes or blotches in thread.</p></div>
+        <div class="tbeg-card tbeg-no"><h3>Busy illustrations</h3><p>Lots of detail packed into a small space, like skylines or blueprints, gets lost.</p></div>
+      </div>
+      <div class="tbeg-note">
+        <p><strong>Detailed logo? Try a leather patch.</strong> Our <a href="/pages/custom-patch-hats">laser engraved leatherette patches</a> hold fine lines and small text far better than thread, and they give a clean, premium look. See <a href="/blogs/guides/leather-patch-vs-embroidered-hats">leather patch vs embroidered hats</a>.</p>
+      </div>
+    </section>
+
+    <section id="ai">
+      <h2>Using an AI-generated design</h2>
+      <div class="tbeg-ai">
+        <div>
+          <p>AI tools are great for ideas, but the images they make usually aren't ready to stitch as they are. Every AI design we get is reviewed by our design team before production.</p>
+          <p><strong>Why AI art can be tricky:</strong></p>
+          <ul>
+            <li><strong>Shading and gradients.</strong> AI loves soft blends and glows, which thread can't reproduce.</li>
+            <li><strong>Too much detail.</strong> Tiny textures and busy backgrounds vanish at hat size.</li>
+            <li><strong>Messy lettering.</strong> AI often warps letters or makes up words. Double-check every word.</li>
+            <li><strong>Fuzzy edges.</strong> Most AI images are low resolution, so shapes have to be redrawn before digitizing.</li>
+          </ul>
+          <p><strong>How to ask for an embroidery-friendly design:</strong></p>
+          <ul>
+            <li>Ask for a <strong>flat, simple vector-style logo</strong> with <strong>2 to 4 solid colors</strong>, bold shapes and thick outlines.</li>
+            <li>Say <strong>no gradients, no shadows and no 3D effects</strong>, on a plain or transparent background.</li>
+            <li>Keep text short and blocky, or leave it off and tell us the words. We'll set them in a clean font.</li>
+          </ul>
+          <p>Send it either way. If it needs to be professionally recreated into a production-ready file, we'll tell you and quote any fee before anything is made. Standard digitizing is still free. Please make sure you have the rights to use the design.</p>
+        </div>
+        <figure>
+          <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ChatGPT_Image_Aug_14_2026_at_10_40_32_PM.png?v=1786761670&width=800" alt="Example of a detailed logo simplified so it stitches cleanly in embroidery" loading="lazy">
+          <figcaption>Example: a detailed design simplified so it stitches cleanly.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section id="files">
+      <h2>Files, colors and placement</h2>
+      <div class="tbeg-two">
+        <div class="tbeg-card">
+          <h3>What file to send</h3>
+          <ul>
+            <li><strong>Best:</strong> a vector file (AI, SVG or PDF).</li>
+            <li><strong>Also fine:</strong> a sharp PNG or JPG, ideally on a transparent or plain background.</li>
+            <li>Up to 10 MB per file, one file per location.</li>
+            <li>No file yet? Order anyway and email it to help@threadbreak.com.</li>
+          </ul>
+        </div>
+        <div class="tbeg-card">
+          <h3>Colors and placement</h3>
+          <ul>
+            <li>We match thread colors to your logo unless you tell us otherwise. Tone-on-tone looks great too.</li>
+            <li>Fewer colors usually look cleaner on a hat.</li>
+            <li>The front logo is included. Sides and back are available as add-ons.</li>
+            <li>We size your logo to fit the hat and show it on your free mockup.</li>
+          </ul>
+        </div>
+      </div>
+      <p style="margin-top:14px">Digitizing, turning your logo into a stitch file the machine can read, is free on every order. Learn more in <a href="/blogs/guides/logo-ready-for-hat-embroidery">how to get your logo ready for hat embroidery</a> and <a href="/blogs/guides/3d-puff-vs-flat-embroidery">3D puff vs flat embroidery</a>.</p>
+    </section>
+
+    <section id="expect">
+      <h2>What to expect</h2>
+      <p><strong>Small differences are normal.</strong> Embroidery is thread stitched into fabric by a machine, so these aren't defects:</p>
+      <ul>
+        <li>Thread colors can look a little different in person than on your screen.</li>
+        <li>Stitches have a raised, woven texture a flat mockup can't show.</li>
+        <li>Every hat is hooped by hand, so placement can shift slightly from hat to hat.</li>
+        <li>Mesh, nylon, corduroy and performance fabrics take stitches a bit differently, which can change how dense a design looks.</li>
+      </ul>
+      <p><strong>Some designs need adjusting.</strong> Depending on your logo, we may simplify small details, thicken thin lines, resize it, adjust the stitching, or suggest a leather patch or a different hat. You'll see every change on your free mockup before anything is made, and we always aim to keep your logo looking like your logo.</p>
+    </section>
+
+    <aside class="tbeg-cta">
+      <h2>Ready to order?</h2>
+      <p>Upload what you have. We'll handle the digitizing and send a free mockup before anything is made. 5 hat minimum, free shipping to the lower 48.</p>
+      <div class="btns">
+        <a class="b1" href="/pages/custom-order">Custom embroidered hats</a>
+        <a class="b2" href="/pages/custom-patch-hats">Leather patch hats</a>
+      </div>
+    </aside>
+  </div>
+</div>

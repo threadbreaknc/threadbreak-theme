@@ -1,0 +1,101 @@
+{%- comment -%}
+  Guide / blog article. Plain Liquid template (theme has no JSON templates for blogs).
+  Body comes from the article's content in Shopify admin. A CTA box and related guides follow.
+{%- endcomment -%}
+{%- assign art_img = article.image | image_url: width: 1400 -%}
+<style>
+  .tbart{--purple:#5028AA;--ink:#14121C;--muted:#5c5a68;--line:#E2E0EA;--ice:#F4F1FB;background:#fff;color:var(--ink);font-family:'DM Sans',system-ui,sans-serif}
+  .tbart-wrap{max-width:760px;margin:0 auto;padding:8.5rem 20px 3rem}
+  .tbart-crumbs{font-size:13px;color:var(--muted);margin-bottom:14px}
+  .tbart-crumbs a{color:var(--purple);text-decoration:none;font-weight:600}
+  .tbart h1{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1.02;letter-spacing:.01em;margin:0 0 12px;color:var(--ink)}
+  .tbart-meta{font-size:13px;color:var(--muted);margin-bottom:22px}
+  .tbart-hero{width:100%;border-radius:14px;margin:0 0 26px;display:block;aspect-ratio:16/9;object-fit:cover;background:var(--ice)}
+  .tbart-body{font-size:17px;line-height:1.75;color:#2a2638}
+  .tbart-body h2{font-size:24px;line-height:1.25;margin:34px 0 10px;color:var(--ink);font-weight:700}
+  .tbart-body h3{font-size:19px;margin:26px 0 8px;color:var(--ink);font-weight:700}
+  .tbart-body p{margin:0 0 16px}
+  .tbart-body ul,.tbart-body ol{margin:0 0 18px;padding-left:1.3rem}
+  .tbart-body ul{list-style:disc}.tbart-body ol{list-style:decimal}
+  .tbart-body li{margin:0 0 7px}
+  .tbart-body a{color:var(--purple);font-weight:600}
+  .tbart-body strong{color:var(--ink)}
+  .tbart-body img{max-width:100%;height:auto;border-radius:12px}
+  .tbart-body table{width:100%;border-collapse:collapse;margin:6px 0 20px;font-size:15px}
+  .tbart-body th,.tbart-body td{border:1px solid var(--line);padding:9px 10px;text-align:left}
+  .tbart-body th{background:var(--ice);font-weight:700;color:var(--ink)}
+  .tbart-body .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tbart-cta{margin:36px 0 10px;background:var(--ink);color:#fff;border-radius:16px;padding:24px 22px}
+  .tbart-cta h2{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:30px;line-height:1.05;margin:0 0 6px;color:#fff}
+  .tbart-cta p{margin:0 0 16px;color:rgba(255,255,255,.82);font-size:15px;line-height:1.55}
+  .tbart-cta .btns{display:flex;flex-wrap:wrap;gap:10px}
+  .tbart-cta a{display:inline-block;padding:12px 18px;border-radius:10px;font-weight:700;font-size:15px;text-decoration:none}
+  .tbart-cta .b1{background:var(--purple);color:#fff}
+  .tbart-cta .b2{background:#fff;color:var(--ink)}
+  .tbart-rel{margin-top:34px;border-top:1px solid var(--line);padding-top:22px}
+  .tbart-rel h2{font-size:18px;margin:0 0 12px}
+  .tbart-rel ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+  .tbart-rel a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--ink);text-decoration:none;font-weight:600;font-size:15px}
+  .tbart-rel a:hover{border-color:var(--purple);color:var(--purple)}
+</style>
+
+<article class="tbart">
+  <div class="tbart-wrap">
+    <nav class="tbart-crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="{{ blog.url }}">{{ blog.title }}</a></nav>
+    <h1>{{ article.title }}</h1>
+    <p class="tbart-meta">By Threadbreak &middot; Burlington, NC &middot; Updated {{ article.updated_at | default: article.published_at | date: '%B %-d, %Y' }}</p>
+    {%- if article.image -%}
+      <img class="tbart-hero" src="{{ art_img }}" alt="{{ article.image.alt | default: article.title | escape }}" width="1400" height="788">
+    {%- endif -%}
+
+    <div class="tbart-body">{{ article.content }}</div>
+
+    <aside class="tbart-cta">
+      <h2>Ready to put your logo on a hat?</h2>
+      <p>5 hat minimum, free digitizing, a free mockup before anything is made, and free shipping to the lower 48. Embroidered and laser engraved in-house in Burlington, NC.</p>
+      <div class="btns">
+        <a class="b1" href="/pages/custom-order">Custom embroidered hats</a>
+        <a class="b2" href="/pages/custom-patch-hats">Leather patch hats</a>
+      </div>
+    </aside>
+
+    {%- assign shown = 0 -%}
+    {%- capture rel -%}
+      {%- for a in blog.articles -%}
+        {%- if a.id != article.id and shown < 4 -%}
+          {%- assign shown = shown | plus: 1 -%}
+          <li><a href="{{ a.url }}">{{ a.title }}</a></li>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+    {%- if shown > 0 -%}
+      <section class="tbart-rel"><h2>More hat guides</h2><ul>{{ rel }}</ul></section>
+    {%- endif -%}
+  </div>
+</article>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": {{ article.title | json }},
+  "description": {{ article.excerpt_or_content | strip_html | truncate: 200 | json }},
+  {%- if article.image %}"image": {{ art_img | prepend: 'https:' | json }},{% endif %}
+  "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+  "dateModified": {{ article.updated_at | date: '%Y-%m-%dT%H:%M:%S%z' | json }},
+  "author": { "@type": "Organization", "name": "Threadbreak", "url": "{{ shop.url }}" },
+  "publisher": { "@type": "Organization", "name": "Threadbreak", "logo": { "@type": "ImageObject", "url": "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tbstar-notext.png?v=1787534858" } },
+  "mainEntityOfPage": "{{ shop.url }}{{ article.url }}"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ shop.url }}" },
+    { "@type": "ListItem", "position": 2, "name": {{ blog.title | json }}, "item": "{{ shop.url }}{{ blog.url }}" },
+    { "@type": "ListItem", "position": 3, "name": {{ article.title | json }}, "item": "{{ shop.url }}{{ article.url }}" }
+  ]
+}
+</script>
