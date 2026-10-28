@@ -404,7 +404,7 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 <option value="Email">Email</option>
 <option value="Text message">Text message</option>
 </select>
-<p class="bundle-hint" id="proof-hint">We'll send your mockup within one business day. Nothing gets stitched until you approve it.</p>
+<p class="bundle-hint" id="proof-hint">We'll send your mockup within 48 hours. Nothing gets stitched until you approve it.</p>
 </div>
 <div class="bundle-opt" id="proof-phone-wrap" hidden>
 <label class="bundle-opt-label" for="proof-phone">Mobile number for your proof <span class="bundle-req">*</span></label>
@@ -503,7 +503,7 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
 <option value="Email">Email</option>
 <option value="Text message">Text message</option>
 </select>
-<p class="bundle-hint" id="pbo-proof-hint">We'll send your proof within one business day. Nothing gets engraved until you approve it.</p>
+<p class="bundle-hint" id="pbo-proof-hint">We'll send your proof within 48 hours. Nothing gets engraved until you approve it.</p>
 </div>
 <div class="bundle-opt" id="pbo-proof-phone-wrap" hidden>
 <label class="bundle-opt-label" for="pbo-proof-phone">Mobile number for your proof <span class="bundle-req">*</span></label>
@@ -1195,8 +1195,8 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
       if (wrap){ if (isText) wrap.removeAttribute("hidden"); else { wrap.setAttribute("hidden",""); if (phone) phone.value = ""; } }
       if (phone) phone.required = isText;
       if (hint) hint.textContent = isText
-        ? "We'll text your proof from (336) 585-6176 within one business day. Nothing gets engraved until you approve it."
-        : "We'll email your proof from help@threadbreak.com within one business day. Nothing gets engraved until you approve it.";
+        ? "We'll text your proof from (336) 585-6176 within 48 hours. Nothing gets engraved until you approve it."
+        : "We'll email your proof from help@threadbreak.com within 48 hours. Nothing gets engraved until you approve it.";
     });
   })();
 
@@ -1436,8 +1436,8 @@ document.querySelectorAll('.product-thumb').forEach(function(thumb) {
     if (wrap){ if (isText) wrap.removeAttribute('hidden'); else { wrap.setAttribute('hidden',''); if (phone) phone.value=''; } }
     if (phone) phone.required = isText;
     if (hint) hint.textContent = isText
-      ? "We'll text your mockup from (336) 585-6176 within one business day. Nothing gets stitched until you approve it."
-      : "We'll email your mockup from help@threadbreak.com within one business day. Nothing gets stitched until you approve it.";
+      ? "We'll text your mockup from (336) 585-6176 within 48 hours. Nothing gets stitched until you approve it."
+      : "We'll email your mockup from help@threadbreak.com within 48 hours. Nothing gets stitched until you approve it.";
   });
 })();
 

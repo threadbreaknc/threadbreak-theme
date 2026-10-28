@@ -36,6 +36,12 @@
   .tbeg-cta .btns{display:flex;flex-wrap:wrap;gap:10px}
   .tbeg-cta a{display:inline-block;padding:12px 18px;border-radius:10px;font-weight:700;text-decoration:none}
   .tbeg-cta .b1{background:var(--purple);color:#fff}.tbeg-cta .b2{background:#fff;color:var(--ink)}
+  .tbeg-gal{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0 4px}
+  .tbeg-gal figure{margin:0}
+  .tbeg-gal img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:14px;display:block;background:var(--ice)}
+  .tbeg-gal figcaption{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.4}
+  .tbeg-hero{width:100%;aspect-ratio:16/7;object-fit:cover;border-radius:18px;display:block;margin:0 0 30px;box-shadow:0 18px 40px -22px rgba(20,18,28,.45)}
+  @media(max-width:720px){.tbeg-gal{grid-template-columns:1fr 1fr}.tbeg-gal figure:last-child{grid-column:1/-1}.tbeg-hero{aspect-ratio:4/3}}
   @media(max-width:720px){.tbeg-ai,.tbeg-two{grid-template-columns:1fr}}
 </style>
 
@@ -44,6 +50,7 @@
     <p class="tbeg-eyebrow">Embroidery guide</p>
     <h1>How to get a great looking logo hat</h1>
     <p class="tbeg-lead">Embroidery is thread, not ink. That's what gives it a rich, textured, premium look, and it's also why some designs need a little help before they stitch well. Here's what works, what doesn't, and what to know if your logo was made with AI.</p>
+    <img class="tbeg-hero" src="{{ 'work-ricoma-stitching.jpg' | asset_img_url: '1600x' }}" alt="Grey trucker hats being stitched on a multi-head embroidery machine at Threadbreak" width="1600" height="1200" fetchpriority="high">
     <ul class="tbeg-jump">
       <li><a href="#works">What works</a></li>
       <li><a href="#avoid">What to avoid</a></li>
@@ -59,6 +66,11 @@
         <div class="tbeg-card tbeg-ok"><h3>Text about 1/4 inch tall or bigger</h3><p>Short words in a clean, simple font read best. Very thin or tightly packed fonts can blur together.</p></div>
         <div class="tbeg-card tbeg-ok"><h3>Solid colors with contrast</h3><p>Thread comes in solid colors. A few strong colors that stand out from the hat look cleanest.</p></div>
         <div class="tbeg-card tbeg-ok"><h3>Room to breathe</h3><p>A little space between details keeps stitches crisp instead of crowded.</p></div>
+      </div>
+      <div class="tbeg-gal">
+        <figure><img src="{{ 'work-allstar-112fp.jpg' | asset_img_url: '700x' }}" alt="Grey Richardson 112FP truckers with a black embroidered All Star Martial Arts logo" loading="lazy"><figcaption>Bold shapes and clean lettering stitch crisp.</figcaption></figure>
+        <figure><img src="{{ 'work-camo-duck-otto.jpg' | asset_img_url: '700x' }}" alt="Otto camo snapbacks with a detailed multi-color embroidered duck hunting logo" loading="lazy"><figcaption>Detail works when it's sized right and has room to breathe.</figcaption></figure>
+        <figure><img src="{{ 'guide-puff-richardson-168.jpg' | asset_img_url: '700x' }}" alt="Richardson 7-panel truckers with a 3D puff embroidered gear logo" loading="lazy"><figcaption>Thick outlines and solid shapes are perfect for 3D puff.</figcaption></figure>
       </div>
     </section>
 
@@ -129,6 +141,7 @@
 
     <section id="expect">
       <h2>What to expect</h2>
+      <p><strong>Your mockup shows size and placement.</strong> Within 48 hours of your order, we send a digital mockup showing how big your logo will be and where it sits on the hat. It's a preview of the layout, not a photo of the finished hat, so thread texture and exact shades will look a little different in person.</p>
       <p><strong>Small differences are normal.</strong> Embroidery is thread stitched into fabric by a machine, so these aren't defects:</p>
       <ul>
         <li>Thread colors can look a little different in person than on your screen.</li>
@@ -141,7 +154,7 @@
 
     <aside class="tbeg-cta">
       <h2>Ready to order?</h2>
-      <p>Upload what you have. We'll handle the digitizing and send a free mockup before anything is made. 5 hat minimum, free shipping to the lower 48.</p>
+      <p>Upload what you have. We'll handle the digitizing and send a free mockup within 48 hours showing your logo's size and placement. 5 hat minimum, free shipping to the lower 48.</p>
       <div class="btns">
         <a class="b1" href="/pages/custom-order">Custom embroidered hats</a>
         <a class="b2" href="/pages/custom-patch-hats">Leather patch hats</a>

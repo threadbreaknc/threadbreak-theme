@@ -539,7 +539,7 @@
               <li>Say <b>no gradients, no shadows, no 3D effects</b>, on a plain or transparent background.</li>
               <li>Keep any text short and blocky, or add it in the notes and we'll set it in a clean font.</li>
             </ul>
-            <p>Send it either way. After review, we'll tell you if it needs recreating and quote any fee, then show you exactly how it will stitch in your free mockup before anything is made. Make sure you have the rights to use the design.</p>
+            <p>Send it either way. After review, we'll tell you if it needs recreating and quote any fee, then show you its size and placement on your free mockup before anything is made. Make sure you have the rights to use the design.</p>
           </div>
           <div class="en-example" id="enExample" hidden>
             <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ChatGPT_Image_Aug_14_2026_at_10_40_32_PM.png?v=1786761670" alt="Example showing how a detailed logo simplifies for embroidery" loading="lazy">
@@ -563,7 +563,7 @@
         <label for="proofPhone">Mobile number for your proof <span style="color:#c33">*</span></label>
         <input type="tel" id="proofPhone" inputmode="tel" autocomplete="tel" placeholder="(336) 555-0123">
       </div>
-      <p class="hint" id="proofHint">We'll send your mockup within one business day. Nothing gets stitched until you approve it.</p>
+      <p class="hint" id="proofHint">We'll send your mockup within 48 hours. Nothing gets stitched until you approve it.</p>
 
       <div class="field" style="margin-top:18px"><label for="notes">Notes</label><textarea id="notes" rows="3" placeholder="Thread colors, deadlines, anything else we should know"></textarea></div>
 
@@ -585,7 +585,7 @@
 
       <div class="proof-note">
         <span class="en-icon" aria-hidden="true">!</span>
-        <div><p><strong>Keep an eye on your email.</strong> We'll send your digital mockup from help@threadbreak.com within one business day. We can't start production until you approve it, so please watch your inbox and spam folder.</p></div>
+        <div><p><strong>Keep an eye on your email.</strong> We'll send your digital mockup from help@threadbreak.com within 48 hours. It shows your logo's size and placement on the hat. We can't start production until you approve it, so please watch your inbox and spam folder.</p></div>
       </div>
 
       <div class="upload-progress" id="uploadProgress">
@@ -3004,8 +3004,8 @@ document.querySelectorAll("#tbco [data-back]").forEach(b => {
     const isText = sel.value === "Text message";
     if (wrap){ if (isText) wrap.removeAttribute("hidden"); else { wrap.setAttribute("hidden",""); if ($("proofPhone")) $("proofPhone").value = ""; } }
     if (hint) hint.textContent = isText
-      ? "We'll text your mockup from (336) 585-6176 within one business day. Nothing gets stitched until you approve it."
-      : "We'll email your mockup from help@threadbreak.com within one business day. Nothing gets stitched until you approve it.";
+      ? "We'll text your mockup from (336) 585-6176 within 48 hours. Nothing gets stitched until you approve it."
+      : "We'll email your mockup from help@threadbreak.com within 48 hours. Nothing gets stitched until you approve it.";
     sync();
   });
   if ($("proofPhone")) $("proofPhone").addEventListener("input", sync);

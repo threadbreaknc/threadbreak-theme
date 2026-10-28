@@ -1,78 +1,182 @@
 {%- comment -%}
-  Guide / blog article. Plain Liquid template (theme has no JSON templates for blogs).
-  Body comes from the article's content in Shopify admin. A CTA box and related guides follow.
+  Guide / blog article. Body comes from the article content in Shopify admin and can use these blocks:
+    <div class="tb-key"><p class="tb-key-h">Quick answer</p>...</div>   summary box
+    <div class="tb-tip"><p><strong>Tip:</strong> ...</p></div>          callout
+    <div class="tb-stats"><div><b>5</b><span>hat minimum</span></div>...</div>
+    <figure class="tb-fig"><img ...><figcaption>...</figcaption></figure>
+    <div class="tb-gallery"><figure class="tb-fig">...</figure>...</div>
+    <div class="tb-split"><figure class="tb-fig">...</figure><div>text</div></div>
+    <div class="tbl-wrap"><table>...</table></div>
+  A table of contents is built from the h2s, and a CTA + related guides follow.
 {%- endcomment -%}
-{%- assign art_img = article.image | image_url: width: 1400 -%}
+{%- assign art_img = article.image | image_url: width: 1600 -%}
+{%- assign words = article.content | strip_html | split: ' ' | size -%}
+{%- assign mins = words | divided_by: 200 | at_least: 2 -%}
 <style>
-  .tbart{--purple:#5028AA;--ink:#14121C;--muted:#5c5a68;--line:#E2E0EA;--ice:#F4F1FB;background:#fff;color:var(--ink);font-family:'DM Sans',system-ui,sans-serif}
-  .tbart-wrap{max-width:760px;margin:0 auto;padding:8.5rem 20px 3rem}
-  .tbart-crumbs{font-size:13px;color:var(--muted);margin-bottom:14px}
-  .tbart-crumbs a{color:var(--purple);text-decoration:none;font-weight:600}
-  .tbart h1{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(2.3rem,6vw,3.6rem);line-height:1.02;letter-spacing:.01em;margin:0 0 12px;color:var(--ink)}
-  .tbart-meta{font-size:13px;color:var(--muted);margin-bottom:22px}
-  .tbart-hero{width:100%;border-radius:14px;margin:0 0 26px;display:block;aspect-ratio:16/9;object-fit:cover;background:var(--ice)}
-  .tbart-body{font-size:17px;line-height:1.75;color:#2a2638}
-  .tbart-body h2{font-size:24px;line-height:1.25;margin:34px 0 10px;color:var(--ink);font-weight:700}
-  .tbart-body h3{font-size:19px;margin:26px 0 8px;color:var(--ink);font-weight:700}
-  .tbart-body p{margin:0 0 16px}
-  .tbart-body ul,.tbart-body ol{margin:0 0 18px;padding-left:1.3rem}
-  .tbart-body ul{list-style:disc}.tbart-body ol{list-style:decimal}
-  .tbart-body li{margin:0 0 7px}
-  .tbart-body a{color:var(--purple);font-weight:600}
+  .tbart{--purple:#5028AA;--purple2:#7B5BD6;--ink:#14121C;--muted:#5c5a68;--line:#E6E3EE;--ice:#F4F1FB;--sand:#FBF7F0;background:#fff;color:var(--ink);font-family:'DM Sans',system-ui,sans-serif}
+  .tbart-prog{position:fixed;left:0;top:0;height:3px;width:0;background:linear-gradient(90deg,var(--purple),var(--purple2));z-index:9999;transition:width .1s linear}
+  .tbart-head{max-width:820px;margin:0 auto;padding:8rem 20px 0;text-align:center}
+  .tbart-crumbs{font-size:13px;color:var(--muted);margin-bottom:16px}
+  .tbart-crumbs a{color:var(--purple);text-decoration:none;font-weight:700}
+  .tbart-tag{display:inline-block;background:var(--ice);color:var(--purple);font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:6px 11px;border-radius:999px;margin-bottom:14px}
+  .tbart h1{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(2.5rem,6.5vw,4.3rem);line-height:.98;letter-spacing:.01em;margin:0 0 14px;color:var(--ink)}
+  .tbart-dek{font-size:clamp(17px,2.2vw,20px);line-height:1.55;color:var(--muted);margin:0 auto 18px;max-width:640px}
+  .tbart-meta{display:flex;justify-content:center;flex-wrap:wrap;gap:6px 16px;font-size:13.5px;color:var(--muted);margin-bottom:26px}
+  .tbart-meta b{color:var(--ink);font-weight:700}
+  .tbart-hero{max-width:1100px;margin:0 auto 10px;padding:0 20px}
+  .tbart-hero img{width:100%;display:block;border-radius:18px;aspect-ratio:16/8;object-fit:cover;background:var(--ice);box-shadow:0 18px 40px -22px rgba(20,18,28,.45)}
+  .tbart-wrap{max-width:740px;margin:0 auto;padding:22px 20px 3rem}
+  .tbart-toc{border:1px solid var(--line);border-radius:14px;padding:4px 18px;margin:8px 0 30px;background:#fff}
+  .tbart-toc summary{cursor:pointer;font-weight:800;font-size:14px;letter-spacing:.04em;text-transform:uppercase;padding:12px 0;list-style:none;display:flex;justify-content:space-between;align-items:center}
+  .tbart-toc summary::-webkit-details-marker{display:none}
+  .tbart-toc summary::after{content:"+";font-size:20px;color:var(--purple)}
+  .tbart-toc[open] summary::after{content:"\2013"}
+  .tbart-toc ol{margin:0 0 12px;padding-left:1.2rem;counter-reset:none}
+  .tbart-toc li{margin:0 0 7px;font-size:15px;line-height:1.4}
+  .tbart-toc a{color:var(--ink);text-decoration:none;font-weight:600}
+  .tbart-toc a:hover{color:var(--purple)}
+  .tbart-body{font-size:17.5px;line-height:1.78;color:#2a2638}
+  .tbart-body > p:first-child{font-size:19px;line-height:1.7;color:var(--ink)}
+  .tbart-body h2{position:relative;font-size:clamp(23px,3vw,28px);line-height:1.22;margin:46px 0 12px;color:var(--ink);font-weight:800;padding-top:16px;scroll-margin-top:100px}
+  .tbart-body h2::before{content:"";position:absolute;left:0;top:0;width:38px;height:4px;border-radius:4px;background:var(--purple)}
+  .tbart-body h3{font-size:19px;margin:28px 0 8px;color:var(--ink);font-weight:800}
+  .tbart-body p{margin:0 0 18px}
+  .tbart-body ul,.tbart-body ol{margin:0 0 20px;padding-left:1.35rem}
+  .tbart-body ul{list-style:none;padding-left:0}
+  .tbart-body ul > li{position:relative;padding-left:26px}
+  .tbart-body ul > li::before{content:"";position:absolute;left:4px;top:.62em;width:9px;height:9px;border-radius:50%;background:var(--purple);opacity:.85}
+  .tbart-body ol{list-style:decimal}
+  .tbart-body li{margin:0 0 9px}
+  .tbart-body a{color:var(--purple);font-weight:700;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
   .tbart-body strong{color:var(--ink)}
-  .tbart-body img{max-width:100%;height:auto;border-radius:12px}
-  .tbart-body table{width:100%;border-collapse:collapse;margin:6px 0 20px;font-size:15px}
-  .tbart-body th,.tbart-body td{border:1px solid var(--line);padding:9px 10px;text-align:left}
-  .tbart-body th{background:var(--ice);font-weight:700;color:var(--ink)}
-  .tbart-body .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .tbart-cta{margin:36px 0 10px;background:var(--ink);color:#fff;border-radius:16px;padding:24px 22px}
-  .tbart-cta h2{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:30px;line-height:1.05;margin:0 0 6px;color:#fff}
-  .tbart-cta p{margin:0 0 16px;color:rgba(255,255,255,.82);font-size:15px;line-height:1.55}
-  .tbart-cta .btns{display:flex;flex-wrap:wrap;gap:10px}
-  .tbart-cta a{display:inline-block;padding:12px 18px;border-radius:10px;font-weight:700;font-size:15px;text-decoration:none}
+  .tbart-body img{max-width:100%;height:auto}
+  /* quick answer */
+  .tbart-body .tb-key{background:linear-gradient(135deg,#F4F1FB,#FBF9FF);border:1px solid #E2DAF6;border-radius:16px;padding:20px 22px 8px;margin:4px 0 30px}
+  .tbart-body .tb-key-h{font-size:12.5px !important;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--purple) !important;margin:0 0 8px !important}
+  .tbart-body .tb-key p,.tbart-body .tb-key li{font-size:16.5px;color:var(--ink)}
+  /* tip */
+  .tbart-body .tb-tip{background:var(--sand);border-left:4px solid #E0A526;border-radius:0 12px 12px 0;padding:14px 18px 2px;margin:8px 0 26px}
+  .tbart-body .tb-tip p{font-size:16px;margin-bottom:12px}
+  /* stats */
+  .tbart-body .tb-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0 28px}
+  .tbart-body .tb-stats > div{background:var(--ink);color:#fff;border-radius:14px;padding:16px 12px;text-align:center}
+  .tbart-body .tb-stats b{display:block;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:34px;line-height:1;color:#fff}
+  .tbart-body .tb-stats span{display:block;font-size:13px;line-height:1.35;color:rgba(255,255,255,.78);margin-top:5px}
+  /* figures */
+  .tbart-body .tb-fig{margin:10px 0 28px}
+  .tbart-body .tb-fig img{width:100%;display:block;border-radius:14px;background:var(--ice)}
+  .tbart-body .tb-fig figcaption{font-size:13.5px;line-height:1.45;color:var(--muted);margin-top:8px;text-align:center}
+  .tbart-body .tb-wide{margin-left:-40px;margin-right:-40px}
+  .tbart-body .tb-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:10px 0 28px}
+  .tbart-body .tb-gallery .tb-fig{margin:0}
+  .tbart-body .tb-gallery img{aspect-ratio:1/1;object-fit:cover}
+  .tbart-body .tb-split{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:center;margin:10px 0 28px}
+  .tbart-body .tb-split .tb-fig{margin:0}
+  .tbart-body .tb-split img{aspect-ratio:4/5;object-fit:cover}
+  /* tables */
+  .tbart-body .tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:8px 0 10px;border:1px solid var(--line);border-radius:14px}
+  .tbart-body table{width:100%;border-collapse:collapse;font-size:15px;min-width:520px}
+  .tbart-body th,.tbart-body td{padding:11px 12px;text-align:left;border-bottom:1px solid var(--line)}
+  .tbart-body thead th{background:var(--ink);color:#fff;font-weight:700;font-size:13.5px;letter-spacing:.02em}
+  .tbart-body tbody tr:nth-child(even) td{background:#FAF9FD}
+  .tbart-body tbody tr:last-child td{border-bottom:0}
+  .tbart-body tbody td:first-child{font-weight:700;color:var(--ink)}
+  .tbart-body .tbl-wrap + p{font-size:14px;color:var(--muted)}
+  /* cta + related */
+  .tbart-cta{margin:44px 0 10px;background:var(--ink);color:#fff;border-radius:18px;padding:28px 24px;position:relative;overflow:hidden}
+  .tbart-cta::after{content:"";position:absolute;right:-60px;top:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(123,91,214,.55),transparent 70%)}
+  .tbart-cta h2{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:34px;line-height:1.02;margin:0 0 8px;color:#fff;position:relative}
+  .tbart-cta p{margin:0 0 18px;color:rgba(255,255,255,.82);font-size:15.5px;line-height:1.55;position:relative}
+  .tbart-cta .btns{display:flex;flex-wrap:wrap;gap:10px;position:relative}
+  .tbart-cta a{display:inline-block;padding:13px 18px;border-radius:11px;font-weight:800;font-size:15px;text-decoration:none}
   .tbart-cta .b1{background:var(--purple);color:#fff}
   .tbart-cta .b2{background:#fff;color:var(--ink)}
-  .tbart-rel{margin-top:34px;border-top:1px solid var(--line);padding-top:22px}
-  .tbart-rel h2{font-size:18px;margin:0 0 12px}
-  .tbart-rel ul{list-style:none;margin:0;padding:0;display:grid;gap:8px}
-  .tbart-rel a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;color:var(--ink);text-decoration:none;font-weight:600;font-size:15px}
-  .tbart-rel a:hover{border-color:var(--purple);color:var(--purple)}
+  .tbart-rel{max-width:1100px;margin:0 auto;padding:10px 20px 4rem}
+  .tbart-rel h2{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:32px;margin:0 0 14px}
+  .tbart-rel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+  .tbart-rel a{display:block;border:1px solid var(--line);border-radius:14px;overflow:hidden;color:var(--ink);text-decoration:none;background:#fff;transition:transform .15s,border-color .15s}
+  .tbart-rel a:hover{transform:translateY(-2px);border-color:var(--purple)}
+  .tbart-rel img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block;background:var(--ice)}
+  .tbart-rel span{display:block;padding:12px 14px 14px;font-weight:700;font-size:15px;line-height:1.35}
+  @media(max-width:860px){.tbart-body .tb-wide{margin-left:0;margin-right:0}}
+  @media(max-width:640px){
+    .tbart-body{font-size:17px}
+    .tbart-body .tb-stats{grid-template-columns:1fr 1fr 1fr;gap:8px}
+    .tbart-body .tb-stats b{font-size:28px}
+    .tbart-body .tb-split{grid-template-columns:1fr}
+    .tbart-hero img{aspect-ratio:4/3;border-radius:14px}
+  }
 </style>
 
+<div class="tbart-prog" id="tbProg" aria-hidden="true"></div>
 <article class="tbart">
-  <div class="tbart-wrap">
-    <nav class="tbart-crumbs" aria-label="Breadcrumb"><a href="/">Home</a> / <a href="{{ blog.url }}">{{ blog.title }}</a></nav>
+  <header class="tbart-head">
+    <nav class="tbart-crumbs" aria-label="Breadcrumb"><a href="/">Home</a> &nbsp;/&nbsp; <a href="{{ blog.url }}">{{ blog.title }}</a></nav>
+    <span class="tbart-tag">Hat guide</span>
     <h1>{{ article.title }}</h1>
-    <p class="tbart-meta">By Threadbreak &middot; Burlington, NC &middot; Updated {{ article.updated_at | default: article.published_at | date: '%B %-d, %Y' }}</p>
-    {%- if article.image -%}
-      <img class="tbart-hero" src="{{ art_img }}" alt="{{ article.image.alt | default: article.title | escape }}" width="1400" height="788">
-    {%- endif -%}
+    {%- if article.excerpt != blank -%}<p class="tbart-dek">{{ article.excerpt | strip_html }}</p>{%- endif -%}
+    <div class="tbart-meta"><span>By <b>Threadbreak</b>, Burlington, NC</span><span>{{ mins }} min read</span><span>Updated {{ article.updated_at | date: '%B %-d, %Y' }}</span></div>
+  </header>
+  {%- if article.image -%}
+    <div class="tbart-hero"><img src="{{ art_img }}" alt="{{ article.image.alt | default: article.title | escape }}" width="1600" height="800" fetchpriority="high"></div>
+  {%- endif -%}
 
-    <div class="tbart-body">{{ article.content }}</div>
+  <div class="tbart-wrap">
+    <details class="tbart-toc" id="tbToc" hidden><summary>In this guide</summary><ol></ol></details>
+    <div class="tbart-body" id="tbBody">{{ article.content }}</div>
 
     <aside class="tbart-cta">
       <h2>Ready to put your logo on a hat?</h2>
-      <p>5 hat minimum, free digitizing, a free mockup before anything is made, and free shipping to the lower 48. Embroidered and laser engraved in-house in Burlington, NC.</p>
+      <p>5 hat minimum, free digitizing, a free mockup within 48 hours showing your logo's size and placement, and free shipping to the lower 48. Made in-house in Burlington, NC.</p>
       <div class="btns">
         <a class="b1" href="/pages/custom-order">Custom embroidered hats</a>
         <a class="b2" href="/pages/custom-patch-hats">Leather patch hats</a>
       </div>
     </aside>
-
-    {%- assign shown = 0 -%}
-    {%- capture rel -%}
-      {%- for a in blog.articles -%}
-        {%- if a.id != article.id and shown < 4 -%}
-          {%- assign shown = shown | plus: 1 -%}
-          <li><a href="{{ a.url }}">{{ a.title }}</a></li>
-        {%- endif -%}
-      {%- endfor -%}
-    {%- endcapture -%}
-    {%- if shown > 0 -%}
-      <section class="tbart-rel"><h2>More hat guides</h2><ul>{{ rel }}</ul></section>
-    {%- endif -%}
   </div>
+
+  {%- assign shown = 0 -%}
+  {%- capture rel -%}
+    {%- for a in blog.articles -%}
+      {%- if a.id != article.id and shown < 3 -%}
+        {%- assign shown = shown | plus: 1 -%}
+        <a href="{{ a.url }}">{%- if a.image -%}<img src="{{ a.image | image_url: width: 600 }}" alt="" loading="lazy" width="600" height="375">{%- endif -%}<span>{{ a.title }}</span></a>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+  {%- if shown > 0 -%}
+    <section class="tbart-rel"><h2>More hat guides</h2><div class="tbart-rel-grid">{{ rel }}</div></section>
+  {%- endif -%}
 </article>
+
+<script>
+(function(){
+  var body = document.getElementById("tbBody"), toc = document.getElementById("tbToc");
+  if (body && toc){
+    var hs = body.querySelectorAll("h2"), ol = toc.querySelector("ol");
+    if (hs.length >= 3){
+      hs.forEach(function(h, i){
+        if (!h.id) h.id = (h.textContent || "s" + i).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+        var li = document.createElement("li"), a = document.createElement("a");
+        a.href = "#" + h.id; a.textContent = h.textContent; li.appendChild(a); ol.appendChild(li);
+      });
+      toc.hidden = false;
+      if (window.matchMedia("(min-width: 700px)").matches) toc.open = true;
+    }
+    body.querySelectorAll("img").forEach(function(im){ if (!im.loading) im.loading = "lazy"; im.decoding = "async"; });
+  }
+  var bar = document.getElementById("tbProg");
+  if (bar){
+    var art = document.querySelector(".tbart-wrap");
+    var upd = function(){
+      var r = art.getBoundingClientRect(), h = r.height - window.innerHeight;
+      var p = h > 0 ? Math.min(1, Math.max(0, -r.top / h)) : 0;
+      bar.style.width = (p * 100) + "%";
+    };
+    window.addEventListener("scroll", upd, { passive:true }); upd();
+  }
+})();
+</script>
 
 <script type="application/ld+json">
 {

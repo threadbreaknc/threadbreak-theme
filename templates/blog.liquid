@@ -13,6 +13,16 @@
   .tbblog-card h2{font-size:18px;line-height:1.3;margin:0 0 8px}
   .tbblog-card p{font-size:14.5px;line-height:1.55;color:var(--muted);margin:0}
   .tbblog-empty{color:var(--muted)}
+  .tbblog-card{box-shadow:0 10px 26px -20px rgba(20,18,28,.5)}
+  .tbblog-card .kick{display:block;font-size:11.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--purple);margin-bottom:6px}
+  .tbblog-card .more{display:inline-block;margin-top:10px;font-size:14px;font-weight:800;color:var(--purple)}
+  @media(min-width:760px){
+    .tbblog-card:first-child{grid-column:1/-1;flex-direction:row}
+    .tbblog-card:first-child img,.tbblog-card:first-child .ph{width:56%;aspect-ratio:auto;min-height:320px}
+    .tbblog-card:first-child div.t{padding:30px;align-self:center;flex:1}
+    .tbblog-card:first-child h2{font-size:28px}
+    .tbblog-card:first-child p{font-size:16px}
+  }
   .tbblog-pg{margin-top:26px;display:flex;gap:14px;font-weight:600}
   .tbblog-pg a{color:var(--purple)}
 </style>
@@ -25,8 +35,8 @@
         <div class="tbblog-grid">
           {%- for a in blog.articles -%}
             <a class="tbblog-card" href="{{ a.url }}">
-              {%- if a.image -%}<img src="{{ a.image | image_url: width: 700 }}" alt="{{ a.image.alt | default: a.title | escape }}" loading="lazy" width="700" height="394">{%- else -%}<div class="ph"></div>{%- endif -%}
-              <div class="t"><h2>{{ a.title }}</h2><p>{{ a.excerpt_or_content | strip_html | truncate: 140 }}</p></div>
+              {%- if a.image -%}<img src="{{ a.image | image_url: width: 1100 }}" alt="{{ a.image.alt | default: a.title | escape }}" loading="lazy" width="1100" height="619">{%- else -%}<div class="ph"></div>{%- endif -%}
+              <div class="t"><span class="kick">Hat guide</span><h2>{{ a.title }}</h2><p>{{ a.excerpt_or_content | strip_html | truncate: 150 }}</p><span class="more">Read the guide &rarr;</span></div>
             </a>
           {%- endfor -%}
         </div>
