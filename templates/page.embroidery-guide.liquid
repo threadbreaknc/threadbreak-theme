@@ -17,9 +17,10 @@
   .tbeg ul{margin:0 0 14px;padding-left:1.25rem;list-style:disc}
   .tbeg li{font-size:16px;line-height:1.6;color:#2a2638;margin:0 0 7px}
   .tbeg a{color:var(--purple);font-weight:600}
-  .tbeg-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:6px 0 10px}
+  .tbeg-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:6px 0 10px}
+  @media(max-width:599px){.tbeg-grid{grid-template-columns:1fr;gap:10px}.tbeg-grid .tbeg-card{padding:14px 16px 10px}.tbeg-grid .tbeg-card h3{font-size:16px}.tbeg-grid .tbeg-card p{font-size:14.5px}}
   .tbeg-card{border:1px solid var(--line);border-radius:14px;padding:18px 18px 14px;background:#fff}
-  .tbeg-card h3{font-size:17px;margin:0 0 6px;display:flex;align-items:center;gap:8px}
+  .tbeg-card h3{font-size:17px;margin:0 0 6px;display:flex;align-items:flex-start;gap:9px;line-height:1.3}
   .tbeg-card p{font-size:15px;margin:0 0 6px;color:var(--muted)}
   .tbeg-ok h3::before,.tbeg-no h3::before{flex:0 0 auto;width:22px;height:22px;border-radius:50%;color:#fff;font-size:13px;display:inline-flex;align-items:center;justify-content:center;font-weight:800}
   .tbeg-ok h3::before{content:"\2713";background:var(--ok)}
