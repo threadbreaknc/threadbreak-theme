@@ -7,7 +7,7 @@
   .tbblog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
   .tbblog-card{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:14px;overflow:hidden;text-decoration:none;color:var(--ink);background:#fff;transition:border-color .15s}
   .tbblog-card:hover{border-color:var(--purple)}
-  .tbblog-card img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;background:var(--ice)}
+  .tbblog-card img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover;display:block;background:var(--ice)}
   .tbblog-card .ph{aspect-ratio:16/9;background:var(--ice)}
   .tbblog-card div.t{padding:16px}
   .tbblog-card h2{font-size:18px;line-height:1.3;margin:0 0 8px}
@@ -18,7 +18,7 @@
   .tbblog-card .more{display:inline-block;margin-top:10px;font-size:14px;font-weight:800;color:var(--purple)}
   @media(min-width:760px){
     .tbblog-card:first-child{grid-column:1/-1;flex-direction:row}
-    .tbblog-card:first-child img,.tbblog-card:first-child .ph{width:56%;aspect-ratio:auto;min-height:320px}
+    .tbblog-card:first-child img,.tbblog-card:first-child .ph{width:56%;height:auto;aspect-ratio:auto;min-height:320px;object-fit:cover}
     .tbblog-card:first-child div.t{padding:30px;align-self:center;flex:1}
     .tbblog-card:first-child h2{font-size:28px}
     .tbblog-card:first-child p{font-size:16px}
