@@ -71,6 +71,17 @@
     {%- capture q1 -%}Do you ship custom hats to Winston-Salem?{%- endcapture -%}{%- capture a1 -%}Yes, with free USPS shipping. You can also pick up from our Burlington shop by appointment.{%- endcapture -%}
     {%- capture q2 -%}Can I order more later with the same logo?{%- endcapture -%}{%- capture a2 -%}Yes. Your stitch file is saved after your first order, so reorders are quick and easy.{%- endcapture -%}
     {%- capture q3 -%}What's the smallest order?{%- endcapture -%}{%- capture a3 -%}5 hats per logo. You can split them across colors of the same hat style.{%- endcapture -%}
+  {%- when 'custom-hats-raleigh-nc' -%}
+    {%- assign city = 'Raleigh' -%}{%- assign county = 'Wake County' -%}{%- assign show_fan = true -%}
+    {%- assign img1 = '19A80ECD-D3B8-4E97-A565-CEF7C37F1A3D.jpg?v=1792644744' -%}{%- assign img1alt = 'Black flat bill hat with a front logo and side embroidery' -%}
+    {%- assign img2 = '73D7073E-A985-4396-9FD8-50363613C29D.jpg?v=1786337803' -%}{%- assign img2alt = 'Grey and black custom snapbacks with an embroidered logo' -%}
+    {%- capture lead -%}Custom embroidered and leather patch hats for Raleigh businesses, teams and brands, plus our Carolina hockey inspired snapbacks made for game day.{%- endcapture -%}
+    {%- capture intro -%}<p>A lot of Raleigh folks know us from our Carolina hockey inspired hats, the meme-worthy snapbacks fans wear to games and watch parties. Those are designed and embroidered in-house, and the same machines make custom hats for Raleigh businesses, crews, bars and rec teams.</p><p>Custom orders start at 5 hats with free digitizing and a free mockup within 48 hours. Everything ships free by USPS to Raleigh, or you can pick up from our Burlington shop by appointment.</p>{%- endcapture -%}
+    {%- capture popular -%}<li>Bars, restaurants and watch party spots</li><li>Company, staff and crew hats</li><li>Beer league, rec and youth hockey teams</li><li>Local brands and merch drops</li>{%- endcapture -%}
+    {%- capture nearby -%}Cary, Apex, Wake Forest, Garner, Knightdale, Morrisville, Holly Springs and the rest of the Triangle{%- endcapture -%}
+    {%- capture q1 -%}Do you ship custom hats to Raleigh?{%- endcapture -%}{%- capture a1 -%}Yes. Custom orders ship free by USPS to Raleigh and the rest of the Triangle. You can also pick up from our Burlington shop by appointment.{%- endcapture -%}
+    {%- capture q2 -%}Can you make hats for our hockey team or watch party crew?{%- endcapture -%}{%- capture a2 -%}Yes. Send us your team or group logo and we'll make it, starting at 5 hats. We can't reproduce official team or league logos, but we're happy to make your own designs.{%- endcapture -%}
+    {%- capture q3 -%}Where can I buy your Carolina hockey hats?{%- endcapture -%}{%- capture a3 -%}Right here on our site. Our premade Carolina hockey inspired snapbacks are made to order and usually ship within 5 business days.{%- endcapture -%}
 {%- endcase -%}
 
 <style>
@@ -108,6 +119,12 @@
   .tbcity-end{background:var(--ink);color:#fff;border-radius:18px;padding:28px 24px;text-align:center;margin:20px 0 50px}
   .tbcity-end h2{color:#fff;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:36px}
   .tbcity .tbcity-end p{color:rgba(255,255,255,.8)}
+  .tbcity-fan{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .tbcity-fan a{display:block;border:1px solid var(--line);border-radius:14px;overflow:hidden;text-decoration:none;color:var(--ink);background:#fff}
+  .tbcity-fan img{border-radius:0}
+  .tbcity-fan span{display:block;padding:10px 12px 2px;font-size:14px;font-weight:700;line-height:1.35}
+  .tbcity-fan b{display:block;padding:0 12px 12px;font-size:14px;color:var(--purple)}
+  @media(max-width:760px){.tbcity-fan{grid-template-columns:1fr 1fr}}
   @media(max-width:760px){.tbcity-two{grid-template-columns:1fr}.tbcity-steps{grid-template-columns:1fr}.tbcity-hero{padding-top:160px}}
 </style>
 
@@ -141,6 +158,19 @@
     </section>
   </div>
 
+
+  {%- if show_fan -%}
+  <div class="tbcity-wrap">
+    <h2>Carolina hockey inspired hats</h2>
+    <p>Our fan favorite snapbacks, designed and embroidered in-house. Unofficial and not affiliated with the NHL or any team.</p>
+    <div class="tbcity-fan">
+      {%- for prod in collections['pre-made-hats'].products limit: 4 -%}
+        <a href="{{ prod.url }}">{%- if prod.featured_image -%}<img src="{{ prod.featured_image | image_url: width: 500 }}" alt="{{ prod.title | escape }}" loading="lazy" width="500" height="500">{%- endif -%}<span>{{ prod.title | split: '|' | first | strip }}</span><b>{{ prod.price | money_without_trailing_zeros }}</b></a>
+      {%- endfor -%}
+    </div>
+    <p style="margin-top:14px"><a class="tbcity-cta" href="/collections/pre-made-hats">Shop all premade hats</a></p>
+  </div>
+  {%- endif -%}
   <div class="tbcity-wrap">
     <h2>How it works</h2>
     <div class="tbcity-steps">
@@ -157,7 +187,7 @@
     <details><summary>{{ q3 }}</summary><p>{{ a3 }}</p></details>
     <p class="tbcity-near">Also serving {{ nearby }}.</p>
     <div class="tbcity-links">
-      {%- assign cities = 'custom-hats-burlington-nc:Burlington,custom-hats-graham-nc:Graham,custom-hats-mebane-nc:Mebane,custom-hats-greensboro-nc:Greensboro,custom-hats-high-point-nc:High Point,custom-hats-winston-salem-nc:Winston-Salem' | split: ',' -%}
+      {%- assign cities = 'custom-hats-burlington-nc:Burlington,custom-hats-graham-nc:Graham,custom-hats-mebane-nc:Mebane,custom-hats-greensboro-nc:Greensboro,custom-hats-high-point-nc:High Point,custom-hats-winston-salem-nc:Winston-Salem,custom-hats-raleigh-nc:Raleigh' | split: ',' -%}
       {%- for c in cities -%}{%- assign parts = c | split: ':' -%}{%- if parts[0] != page.handle -%}<a href="/pages/{{ parts[0] }}">Custom hats in {{ parts[1] }}</a>{%- endif -%}{%- endfor -%}
       <a href="/blogs/guides">Hat guides</a>
     </div>
