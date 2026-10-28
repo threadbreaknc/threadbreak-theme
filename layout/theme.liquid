@@ -283,6 +283,22 @@
   .footer-col li{margin:0}
   .footer-col a{text-decoration:none;font-size:0.88rem;color:rgba(247,244,240,0.65);transition:color .15s}
   .footer-col a:hover{color:#fff}
+  /* footer: accordions on phones, columns on desktop */
+  .footer-col > summary{list-style:none;cursor:default}
+  .footer-col > summary::-webkit-details-marker{display:none}
+  .footer-contact-email{border-bottom:0 !important;padding-bottom:0 !important}
+  .footer-contact-label{letter-spacing:.12em !important}
+  @media(max-width:700px){
+    .footer-nav-groups{display:block !important}
+    .footer-col{border-bottom:1px solid rgba(247,244,240,0.12);min-width:0 !important}
+    .footer-col:first-child{border-top:1px solid rgba(247,244,240,0.12)}
+    .footer-col > summary{cursor:pointer;display:flex;justify-content:space-between;align-items:center;margin:0 !important;padding:15px 2px;font-size:1.05rem}
+    .footer-col > summary::after{content:"+";font-family:'DM Sans',sans-serif;font-size:1.3rem;line-height:1;color:rgba(247,244,240,0.6)}
+    .footer-col[open] > summary::after{content:"\2013"}
+    .footer-col ul{padding:0 2px 16px !important;gap:0.7rem !important}
+    .footer-col a{font-size:0.95rem}
+    .footer-contact{margin-top:6px}
+  }
   @media(max-width:600px){
     .footer-nav-groups{gap:1.75rem}
     .footer-col{min-width:40%}
@@ -375,33 +391,33 @@
       <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tbstar-notext.png?v=1787534858" alt="{{ shop.name }}" class="footer-logo footer-logo-full">
     </div>
     <div class="footer-nav-groups">
-      <div class="footer-col">
-        <p class="footer-col-head">Company</p>
+      <details class="footer-col" open>
+        <summary class="footer-col-head">Company</summary>
         <ul>
           <li><a href="/">Home</a></li>
           <li><a href="/pages/about">About Us</a></li>
           <li><a href="/pages/our-work">Our Work</a></li>
           <li><a href="/pages/reviews">Reviews</a></li>
         </ul>
-      </div>
-      <div class="footer-col">
-        <p class="footer-col-head">Info</p>
+      </details>
+      <details class="footer-col" open>
+        <summary class="footer-col-head">Info</summary>
         <ul>
           <li><a href="/blogs/guides">Hat Guides</a></li>
           <li><a href="/pages/embroidery-guide">Embroidery Guide</a></li>
           <li><a href="/pages/faq">FAQ</a></li>
           <li><a href="/pages/contactus">Contact</a></li>
         </ul>
-      </div>
-      <div class="footer-col">
-        <p class="footer-col-head">Shop</p>
+      </details>
+      <details class="footer-col" open>
+        <summary class="footer-col-head">Shop</summary>
         <ul>
           <li><a href="/collections/pre-made-hats">Premade Hats</a></li>
           <li><a href="/collections/apparel">Apparel</a></li>
         </ul>
-      </div>
-      <div class="footer-col">
-        <p class="footer-col-head">Custom</p>
+      </details>
+      <details class="footer-col" open>
+        <summary class="footer-col-head">Custom</summary>
         <ul>
           <li><a href="/pages/custom-order">Custom Embroidered Hats</a></li>
           <li><a href="/pages/custom-patch-hats">Custom Patch Hats</a></li>
@@ -409,9 +425,9 @@
           <li><a href="/pages/quote">Get a Quote</a></li>
           <li><a href="/collections/custom-hat-packages">Hat Packages</a></li>
         </ul>
-      </div>
-      <div class="footer-col">
-        <p class="footer-col-head">Industries</p>
+      </details>
+      <details class="footer-col" open>
+        <summary class="footer-col-head">Industries</summary>
         <ul>
           <li><a href="/pages/custom-hats-for-small-businesses">Small Businesses</a></li>
           <li><a href="/pages/custom-hats-for-landscaping-companies">Landscaping</a></li>
@@ -419,7 +435,7 @@
           <li><a href="/pages/custom-hats-for-sports-teams">Sports Teams</a></li>
           <li><a href="/pages/custom-hats-for-motorsports-teams">Motorsports</a></li>
         </ul>
-      </div>
+      </details>
     </div>
     <div class="footer-contact">
       <p class="footer-contact-label">Questions? Email or text us</p>
@@ -493,6 +509,15 @@
       dds.forEach(function(d){ d.classList.remove('open'); d.querySelector('.nav-dd-toggle').setAttribute('aria-expanded','false'); });
     }
   });
+})();
+</script>
+<script>
+(function(){
+  var mq = window.matchMedia("(max-width:700px)");
+  var cols = document.querySelectorAll("details.footer-col");
+  function set(){ cols.forEach(function(d){ if (mq.matches) d.removeAttribute("open"); else d.setAttribute("open",""); }); }
+  set(); if (mq.addEventListener) mq.addEventListener("change", set);
+  cols.forEach(function(d){ d.querySelector("summary").addEventListener("click", function(e){ if (!mq.matches) e.preventDefault(); }); });
 })();
 </script>
 </body>
