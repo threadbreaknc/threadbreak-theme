@@ -164,7 +164,12 @@
     <h2>Carolina hockey inspired hats</h2>
     <p>Our fan favorite snapbacks, designed and embroidered in-house. Unofficial and not affiliated with the NHL or any team.</p>
     <div class="tbcity-fan">
-      {%- for prod in collections['pre-made-hats'].products limit: 4 -%}
+      {%- assign fan_n = 0 -%}
+      {%- for prod in collections['pre-made-hats'].products -%}
+        {%- assign t = prod.title | downcase -%}
+        {%- unless t contains 'hockey' or t contains 'carolina' or t contains 'cup' or t contains 'raleigh' -%}{%- continue -%}{%- endunless -%}
+        {%- if fan_n >= 4 -%}{%- break -%}{%- endif -%}
+        {%- assign fan_n = fan_n | plus: 1 -%}
         <a href="{{ prod.url }}">{%- if prod.featured_image -%}<img src="{{ prod.featured_image | image_url: width: 500 }}" alt="{{ prod.title | escape }}" loading="lazy" width="500" height="500">{%- endif -%}<span>{{ prod.title | split: '|' | first | strip }}</span><b>{{ prod.price | money_without_trailing_zeros }}</b></a>
       {%- endfor -%}
     </div>
