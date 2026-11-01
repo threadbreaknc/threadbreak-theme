@@ -106,9 +106,6 @@
   .footer-logo-full.footer-logo{height:80px !important;width:auto !important;display:block;object-fit:contain;
     filter:brightness(0) invert(1) !important;}
   @media(max-width:700px){ .nav-logo-full.nav-logo-img{height:50px !important;} .footer-logo-full.footer-logo{height:64px !important;} }
-  /* keep the Place a Custom Order button text white on hover */
-  .nav-links a.nav-cta,
-  .nav-links a.nav-cta:hover{color:#ffffff !important;}
   /* shrink the logo when the theme's existing .scrolled class is active (theme.js adds it at 60px) */
   .nav-logo-full.nav-logo-img{transition:height .3s ease;}
   #main-nav.scrolled .nav-logo-full.nav-logo-img{height:42px !important;}
@@ -218,46 +215,63 @@
     .footer-nav-groups{grid-template-columns:1fr 1fr;gap:1.5rem;flex-basis:100%;}
     .footer-contact{flex-basis:100%;}
   }
-  /* ===== MOBILE MENU: full override of theme.css full-screen version ===== */
+  /* ===== NAV v2 ===== */
+  .nav-dd-menu .mg-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .nav-dd-menu a.mg-card{display:block;padding:0;border-radius:12px;overflow:hidden;border:1px solid #E2E0EA;background:#fff;white-space:normal;transition:border-color .15s,box-shadow .15s,transform .15s;}
+  .nav-dd-menu a.mg-card:hover{border-color:#5028AA;background:#fff;box-shadow:0 12px 26px -16px rgba(80,40,170,.6);transform:translateY(-1px);}
+  .mg-card img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;background:#F4F1FB;}
+  .mg-card .mg-t{display:block;padding:10px 12px 12px;}
+  .mg-card strong{display:flex;justify-content:space-between;align-items:center;gap:8px;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:1.25rem;letter-spacing:.04em;color:#14121C;line-height:1.05;}
+  .mg-card strong em{font-style:normal;font-family:'DM Sans',sans-serif;font-size:15px;color:#5028AA;transition:transform .15s;}
+  .mg-card:hover strong em{transform:translateX(3px);}
+  .mg-card small{display:block;font-size:12px;color:#6B6A78;margin-top:4px;line-height:1.4;letter-spacing:0;}
+  .mg-rows{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:12px;}
+  .nav-dd-menu a.mg-row{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;white-space:normal;}
+  .nav-dd-menu a.mg-row:hover{background:#F3EFFC;}
+  .mg-row img,.mg-ico{width:42px;height:42px;border-radius:9px;object-fit:cover;flex:0 0 42px;background:#F3EFFC;display:flex;align-items:center;justify-content:center;color:#5028AA;}
+  .mg-row b,.mg-line b{display:block;font-size:13px;font-weight:700;color:#14121C;line-height:1.2;letter-spacing:0;}
+  .mg-row small,.mg-line small{display:block;font-size:11.5px;color:#6B6A78;line-height:1.3;margin-top:2px;letter-spacing:0;}
+  .mg-row:hover b,.mg-line:hover b{color:#5028AA;}
+  .mg-foot{display:flex;flex-wrap:wrap;justify-content:center;gap:4px 18px;margin:12px -14px -14px;padding:10px 14px;background:#F8F5FF;border-top:1px solid #EEEAF7;border-radius:0 0 14px 14px;font-family:'DM Sans',sans-serif;font-size:11.5px;font-weight:700;color:#5028AA;}
+  .mg-foot span::before{content:"\2713";margin-right:5px;}
+  .nav-mega .nav-dd-menu{width:660px;max-width:calc(100vw - 32px);padding:14px;display:block;border-radius:14px;}
+  .nav-shop .nav-dd-menu{width:430px;padding:14px;display:block;border-radius:14px;}
+  .nav-about .nav-dd-menu{width:290px;padding:6px;border-radius:14px;}
+  .nav-dd-menu a.mg-line{display:block;padding:9px 12px;white-space:normal;}
+  @media(min-width:769px) and (max-width:1000px){ .nav-mega .nav-dd-menu{left:0;transform:translateY(8px);} .nav-mega:hover .nav-dd-menu,.nav-mega.open .nav-dd-menu{transform:translateY(4px);} }
+  /* mobile menu */
+  .nav-hamburger.open .nav-hamburger-label{font-size:0 !important;}
+  .nav-hamburger.open .nav-hamburger-label::after{content:"Close";font-size:1.15rem;}
   @media(max-width:768px){
-    .nav-mobile-menu{
-      justify-content:flex-start !important;
-      align-items:stretch !important;
-      gap:0 !important;
-      padding:9rem 1.75rem 2.5rem !important;
-      overflow-y:auto !important;
-      background:#F8F5FF !important;
-    }
-    .nav-mobile-menu a{
-      font-family:var(--font-display,'Bebas Neue',sans-serif) !important;
-      font-size:1.5rem !important;
-      letter-spacing:0.04em !important;
-      text-align:left !important;
-      padding:0.55rem 0 !important;
-      opacity:1 !important;
-      transform:none !important;
-      animation:none !important;
-      line-height:1.15 !important;
-    }
-    .nav-mobile-menu .nav-m-head{
-      font-family:var(--font-body,'DM Sans',sans-serif) !important;
-      font-size:0.72rem !important;
-      font-weight:700 !important;
-      letter-spacing:0.18em !important;
-      color:var(--purple,#5028AA) !important;
-      text-transform:uppercase;
-      margin:1.5rem 0 0.35rem !important;
-      padding:0 !important;
-      text-align:left !important;
-    }
-    .nav-mobile-menu .nav-m-head:first-child{margin-top:0 !important;}
-    .nav-mobile-menu .nav-cta{
-      margin-top:1.75rem !important;
-      text-align:center !important;
-      align-self:stretch !important;
-      border-radius:10px;
-      font-size:1.3rem !important;
-    }
+    .nav-mobile-menu{justify-content:flex-start !important;align-items:stretch !important;gap:0 !important;padding:7.75rem 1rem 2rem !important;overflow-y:auto !important;-webkit-overflow-scrolling:touch;background:#F8F5FF !important;}
+    .nav-mobile-menu .mm{animation:mmIn .22s ease both;max-width:520px;width:100%;margin:0 auto;}
+    @keyframes mmIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .nav-mobile-menu .mm a{font-family:'DM Sans',sans-serif !important;font-size:14px !important;letter-spacing:0 !important;opacity:1 !important;transform:none !important;animation:none !important;text-align:left !important;padding:0 !important;line-height:1.25 !important;color:#14121C !important;text-decoration:none;}
+    .mm-head{font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:#5028AA;margin:1.35rem 2px .55rem;}
+    .mm-head:first-child{margin-top:0;}
+    .mm-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .nav-mobile-menu .mm a.mm-card{display:block;background:#fff;border:1px solid #E6E1F3;border-radius:14px;overflow:hidden;box-shadow:0 10px 22px -18px rgba(20,18,28,.55);}
+    .mm-card img{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;background:#F4F1FB;}
+    .mm-card .mm-t{display:block;padding:9px 11px 11px;}
+    .mm-card b{display:block;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:1.3rem;letter-spacing:.03em;line-height:1;}
+    .mm-card small{display:block;font-size:12px;color:#6B6A78;margin-top:3px;line-height:1.3;}
+    .mm-list{background:#fff;border:1px solid #E6E1F3;border-radius:14px;overflow:hidden;}
+    .mm-cards + .mm-list{margin-top:10px;}
+    .nav-mobile-menu .mm a.mm-row{display:flex;align-items:center;gap:12px;padding:10px 12px !important;border-top:1px solid #F0EDF7;}
+    .nav-mobile-menu .mm a.mm-row:first-child{border-top:0;}
+    .mm-row img,.mm-ico{width:44px;height:44px;border-radius:10px;object-fit:cover;flex:0 0 44px;background:#F3EFFC;display:flex;align-items:center;justify-content:center;color:#5028AA;}
+    .mm-row .tx{flex:1;min-width:0;}
+    .mm-row b{display:block;font-size:15px;font-weight:700;}
+    .mm-row small{display:block;font-size:12.5px;color:#6B6A78;margin-top:2px;}
+    .mm-row i{font-style:normal;color:#B7A6EE;font-size:24px;line-height:1;}
+    .mm-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    .nav-mobile-menu .mm a.mm-pill{display:block;background:#fff;border:1px solid #E6E1F3;border-radius:11px;padding:12px 13px !important;font-size:14.5px !important;font-weight:600;}
+    .mm-contact{margin-top:1.35rem;background:#14121C;border-radius:14px;padding:15px;}
+    .mm-contact p{margin:0 0 10px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;color:#fff;}
+    .mm-contact .btns{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+    .nav-mobile-menu .mm .mm-contact a{display:block;text-align:center !important;padding:11px 8px !important;border-radius:10px;font-size:14px !important;font-weight:700;color:#fff !important;background:#5028AA;}
+    .nav-mobile-menu .mm .mm-contact a.alt{background:rgba(255,255,255,.12);}
+    .mm-note{margin:12px 2px 0;font-family:'DM Sans',sans-serif;font-size:12px;color:#6B6A78;text-align:center;line-height:1.5;}
   }
   /* desktop dropdown menus */
   .nav-dd{position:relative;}
@@ -311,21 +325,37 @@
 
 <!-- MOBILE MENU OVERLAY -->
 <div class="nav-mobile-menu" id="mobile-menu">
-  <a href="/" onclick="closeMobileMenu()">Home</a>
-  <p class="nav-m-head">Shop</p>
-  <a href="/collections/apparel" onclick="closeMobileMenu()">Apparel</a>
-  <a href="/collections/pre-made-hats" onclick="closeMobileMenu()">Premade Hats</a>
-  <p class="nav-m-head">Custom</p>
-  <a href="/pages/custom-order" onclick="closeMobileMenu()">Custom Embroidered Hats</a>
-  <a href="/pages/custom-patch-hats" onclick="closeMobileMenu()">Custom Patch Hats</a>
-  <a href="/pages/quote" onclick="closeMobileMenu()">Get a Quote</a>
-  <a href="/collections/custom-hat-packages" onclick="closeMobileMenu()">Hat Packages</a>
-  <p class="nav-m-head">More</p>
-  <a href="/pages/about" onclick="closeMobileMenu()">About Us</a>
-  <a href="/pages/faq" onclick="closeMobileMenu()">FAQ</a>
-  <a href="/blogs/guides" onclick="closeMobileMenu()">Hat Guides</a>
-  <a href="/pages/embroidery-guide" onclick="closeMobileMenu()">Embroidery Guide</a>
-  <a href="/pages/our-work" onclick="closeMobileMenu()">Our Work</a>
+  <div class="mm">
+    <p class="mm-head">Custom hats</p>
+    <div class="mm-cards">
+      <a class="mm-card" href="/pages/custom-order"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/work-allstar-112fp.jpg?v=1793158026&width=500" alt="" loading="lazy"><span class="mm-t"><b>Embroidered</b><small>Stitched logos, from 5 hats</small></span></a>
+      <a class="mm-card" href="/pages/custom-patch-hats"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/work-whos-frank-patch.jpg?v=1793158026&width=500" alt="" loading="lazy"><span class="mm-t"><b>Leather Patch</b><small>Laser engraved, from 5 hats</small></span></a>
+    </div>
+    <div class="mm-list">
+      <a class="mm-row" href="/pages/custom-motocross-number-plate-hats"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/custom_103877f5-98ec-4038-8c7c-affd1301f008.png?v=1792865122&width=160" alt="" loading="lazy"><span class="tx"><b>Motocross Plate Hats</b><small>Your number plate as a patch</small></span><i>&rsaquo;</i></a>
+      <a class="mm-row" href="/collections/custom-hat-packages"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ypblack_78bf2e64-2b5d-4e07-9573-e44db9fb1e78.jpg?v=1787509830&width=160" alt="" loading="lazy"><span class="tx"><b>Hat Packages</b><small>Set pricing on 10, 24 or 48</small></span><i>&rsaquo;</i></a>
+      <a class="mm-row" href="/pages/quote"><span class="mm-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg></span><span class="tx"><b>Get a Quote</b><small>Bulk orders or something different</small></span><i>&rsaquo;</i></a>
+    </div>
+    <p class="mm-head">Shop</p>
+    <div class="mm-list">
+      <a class="mm-row" href="/collections/pre-made-hats"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/FullSizeRender_5ac7f2fd-3f12-4277-ae4c-95e39400330b.jpg?v=1789092541&width=500" alt="" loading="lazy"><span class="tx"><b>Premade Hats</b><small>Carolina hockey inspired designs</small></span><i>&rsaquo;</i></a>
+      <a class="mm-row" href="/collections/apparel"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/FullSizeRender_79c7015b-7dc0-4cf2-a0e1-7201851421c6.jpg?v=1782926666&width=500" alt="" loading="lazy"><span class="tx"><b>Apparel</b><small>Tees and more</small></span><i>&rsaquo;</i></a>
+    </div>
+    <p class="mm-head">More</p>
+    <div class="mm-grid">
+      <a class="mm-pill" href="/pages/our-work">Our Work</a>
+      <a class="mm-pill" href="/pages/reviews">Reviews</a>
+      <a class="mm-pill" href="/pages/about">About Us</a>
+      <a class="mm-pill" href="/pages/faq">FAQ</a>
+      <a class="mm-pill" href="/blogs/guides">Hat Guides</a>
+      <a class="mm-pill" href="/pages/embroidery-guide">Embroidery Guide</a>
+    </div>
+    <div class="mm-contact">
+      <p>Questions? Email or text us</p>
+      <div class="btns"><a href="sms:+13365856176">Text us</a><a class="alt" href="mailto:help@threadbreak.com">Email us</a></div>
+    </div>
+    <p class="mm-note">5 hat minimum &middot; 2-4 week lead time &middot; Free shipping to the lower 48</p>
+  </div>
 </div>
 
 <div class="shipping-banner">
@@ -337,31 +367,40 @@
     <img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tbstar-notext.png?v=1787534858" alt="{{ shop.name }}" class="nav-logo-img nav-logo-full">
   </a>
   <ul class="nav-links">
-    <li><a href="/">Home</a></li>
-    <li class="nav-dd">
-      <button type="button" class="nav-dd-toggle" aria-expanded="false">Shop <span class="nav-dd-caret">▾</span></button>
+    <li class="nav-dd nav-mega">
+      <button type="button" class="nav-dd-toggle" aria-expanded="false">Custom Hats <span class="nav-dd-caret">▾</span></button>
       <div class="nav-dd-menu">
-        <a href="/collections/apparel">Apparel</a>
-        <a href="/collections/pre-made-hats">Premade Hats</a>
+        <div class="mg-cards">
+          <a class="mg-card" href="/pages/custom-order"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/work-allstar-112fp.jpg?v=1793158026&width=500" alt="" loading="lazy"><span class="mg-t"><strong>Custom Embroidered Hats <em>&rarr;</em></strong><small>Stitched logos on the front, sides or back. From 5 hats.</small></span></a>
+          <a class="mg-card" href="/pages/custom-patch-hats"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/work-whos-frank-patch.jpg?v=1793158026&width=500" alt="" loading="lazy"><span class="mg-t"><strong>Custom Patch Hats <em>&rarr;</em></strong><small>Laser engraved leatherette patches. From 5 hats.</small></span></a>
+        </div>
+        <div class="mg-rows">
+          <a class="mg-row" href="/pages/custom-motocross-number-plate-hats"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/custom_103877f5-98ec-4038-8c7c-affd1301f008.png?v=1792865122&width=160" alt="" loading="lazy"><span><b>Motocross Plate Hats</b><small>Your number plate as a patch</small></span></a>
+          <a class="mg-row" href="/collections/custom-hat-packages"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ypblack_78bf2e64-2b5d-4e07-9573-e44db9fb1e78.jpg?v=1787509830&width=160" alt="" loading="lazy"><span><b>Hat Packages</b><small>Set pricing on 10, 24 or 48</small></span></a>
+          <a class="mg-row" href="/pages/quote"><span class="mg-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg></span><span><b>Get a Quote</b><small>Bulk or something different</small></span></a>
+        </div>
+        <div class="mg-foot"><span>5 hat minimum</span><span>Proof within 48 hours</span><span>2-4 week lead time</span><span>Free shipping to the lower 48</span></div>
       </div>
     </li>
-    <li class="nav-dd">
-      <button type="button" class="nav-dd-toggle" aria-expanded="false">Custom <span class="nav-dd-caret">▾</span></button>
-      <div class="nav-dd-menu nav-dd-wide">
-        <a href="/pages/custom-order"><strong>Custom Embroidered Hats</strong><span>Stitched logos, any quantity from 5</span></a>
-        <a href="/pages/custom-patch-hats"><strong>Custom Patch Hats</strong><span>Laser engraved leather patches</span></a>
-        <a href="/pages/quote"><strong>Get a Quote</strong><span>Can't find what you're looking for?</span></a>
-        <a href="/collections/custom-hat-packages"><strong>Hat Packages</strong><span>Set pricing on 10, 24 or 48</span></a>
+    <li class="nav-dd nav-shop">
+      <button type="button" class="nav-dd-toggle" aria-expanded="false">Shop <span class="nav-dd-caret">▾</span></button>
+      <div class="nav-dd-menu">
+        <div class="mg-cards">
+          <a class="mg-card" href="/collections/pre-made-hats"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/FullSizeRender_5ac7f2fd-3f12-4277-ae4c-95e39400330b.jpg?v=1789092541&width=500" alt="" loading="lazy"><span class="mg-t"><strong>Premade Hats <em>&rarr;</em></strong><small>Carolina hockey inspired designs</small></span></a>
+          <a class="mg-card" href="/collections/apparel"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/FullSizeRender_79c7015b-7dc0-4cf2-a0e1-7201851421c6.jpg?v=1782926666&width=500" alt="" loading="lazy"><span class="mg-t"><strong>Apparel <em>&rarr;</em></strong><small>Tees and more</small></span></a>
+        </div>
       </div>
     </li>
     <li><a href="/pages/our-work">Our Work</a></li>
-    <li class="nav-dd">
+    <li class="nav-dd nav-about">
       <button type="button" class="nav-dd-toggle" aria-expanded="false">About <span class="nav-dd-caret">▾</span></button>
       <div class="nav-dd-menu">
-        <a href="/pages/about">About Us</a>
-        <a href="/pages/faq">FAQ</a>
-        <a href="/blogs/guides">Hat Guides</a>
-        <a href="/pages/embroidery-guide">Embroidery Guide</a>
+        <a class="mg-line" href="/pages/about"><b>About Us</b><small>Who we are, in Burlington, NC</small></a>
+        <a class="mg-line" href="/pages/reviews"><b>Reviews</b><small>What our customers say</small></a>
+        <a class="mg-line" href="/pages/faq"><b>FAQ</b><small>Pricing, minimums and turnaround</small></a>
+        <a class="mg-line" href="/blogs/guides"><b>Hat Guides</b><small>Costs, hat styles and logo tips</small></a>
+        <a class="mg-line" href="/pages/embroidery-guide"><b>Embroidery Guide</b><small>What stitches well and what doesn't</small></a>
+        <a class="mg-line" href="/pages/contactus"><b>Contact</b><small>Email or text us</small></a>
       </div>
     </li>
   </ul>
@@ -517,6 +556,12 @@
   function set(){ cols.forEach(function(d){ if (mq.matches) d.removeAttribute("open"); else d.setAttribute("open",""); }); }
   set(); if (mq.addEventListener) mq.addEventListener("change", set);
   cols.forEach(function(d){ d.querySelector("summary").addEventListener("click", function(e){ if (!mq.matches) e.preventDefault(); }); });
+})();
+</script>
+<script>
+(function(){
+  var m=document.getElementById('mobile-menu'); if(!m) return;
+  m.addEventListener('click',function(e){ if(e.target.closest('a') && typeof closeMobileMenu==='function') closeMobileMenu(); });
 })();
 </script>
 </body>
