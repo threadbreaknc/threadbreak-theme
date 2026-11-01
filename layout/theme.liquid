@@ -240,6 +240,10 @@
   .nav-dd-menu a.mg-line{display:block;padding:9px 12px;white-space:normal;}
   @media(min-width:769px) and (max-width:1000px){ .nav-mega .nav-dd-menu{left:0;transform:translateY(8px);} .nav-mega:hover .nav-dd-menu,.nav-mega.open .nav-dd-menu{transform:translateY(4px);} }
   /* mobile menu */
+  /* page-level sticky bars (z-index 900) must not sit on top of the open menu */
+  body:has(.nav-mobile-menu.open) .nav-mobile-menu{z-index:2000 !important;}
+  body:has(.nav-mobile-menu.open) #main-nav{z-index:2001 !important;}
+  body:has(.nav-mobile-menu.open) .shipping-banner{z-index:2002 !important;}
   .nav-hamburger.open .nav-hamburger-label{font-size:0 !important;}
   .nav-hamburger.open .nav-hamburger-label::after{content:"Close";font-size:1.15rem;}
   @media(max-width:768px){
@@ -332,7 +336,7 @@
       <a class="mm-card" href="/pages/custom-patch-hats"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/work-whos-frank-patch.jpg?v=1793158026&width=500" alt="" loading="lazy"><span class="mm-t"><b>Leather Patch</b><small>Laser engraved, from 5 hats</small></span></a>
     </div>
     <div class="mm-list">
-      <a class="mm-row" href="/pages/custom-motocross-number-plate-hats"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/custom_103877f5-98ec-4038-8c7c-affd1301f008.png?v=1792865122&width=160" alt="" loading="lazy"><span class="tx"><b>Motocross Plate Hats</b><small>Your number plate as a patch</small></span><i>&rsaquo;</i></a>
+      <a class="mm-row" href="/pages/custom-motocross-number-plate-hats"><img src="{{ 'mx-work-red.jpg' | asset_img_url: '200x200', crop: 'center' }}" alt="" loading="lazy"><span class="tx"><b>Motocross Plate Hats</b><small>Your number plate as a patch</small></span><i>&rsaquo;</i></a>
       <a class="mm-row" href="/collections/custom-hat-packages"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ypblack_78bf2e64-2b5d-4e07-9573-e44db9fb1e78.jpg?v=1787509830&width=160" alt="" loading="lazy"><span class="tx"><b>Hat Packages</b><small>Set pricing on 10, 24 or 48</small></span><i>&rsaquo;</i></a>
       <a class="mm-row" href="/pages/quote"><span class="mm-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg></span><span class="tx"><b>Get a Quote</b><small>Bulk orders or something different</small></span><i>&rsaquo;</i></a>
     </div>
@@ -375,7 +379,7 @@
           <a class="mg-card" href="/pages/custom-patch-hats"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/work-whos-frank-patch.jpg?v=1793158026&width=500" alt="" loading="lazy"><span class="mg-t"><strong>Custom Patch Hats <em>&rarr;</em></strong><small>Laser engraved leatherette patches. From 5 hats.</small></span></a>
         </div>
         <div class="mg-rows">
-          <a class="mg-row" href="/pages/custom-motocross-number-plate-hats"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/custom_103877f5-98ec-4038-8c7c-affd1301f008.png?v=1792865122&width=160" alt="" loading="lazy"><span><b>Motocross Plate Hats</b><small>Your number plate as a patch</small></span></a>
+          <a class="mg-row" href="/pages/custom-motocross-number-plate-hats"><img src="{{ 'mx-work-red.jpg' | asset_img_url: '200x200', crop: 'center' }}" alt="" loading="lazy"><span><b>Motocross Plate Hats</b><small>Your number plate as a patch</small></span></a>
           <a class="mg-row" href="/collections/custom-hat-packages"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/ypblack_78bf2e64-2b5d-4e07-9573-e44db9fb1e78.jpg?v=1787509830&width=160" alt="" loading="lazy"><span><b>Hat Packages</b><small>Set pricing on 10, 24 or 48</small></span></a>
           <a class="mg-row" href="/pages/quote"><span class="mg-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><path d="M8 9h8M8 13h5"/></svg></span><span><b>Get a Quote</b><small>Bulk or something different</small></span></a>
         </div>
