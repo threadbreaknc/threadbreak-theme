@@ -13,6 +13,12 @@
     #tbabout .ab-story{display:flex;flex-direction:column;gap:2rem;max-width:760px;margin:0 auto 4rem;}
     #tbabout .ab-story p{font-size:1.06rem;line-height:1.7;margin:0;}
     #tbabout .ab-story p strong{color:var(--purple);}
+    #tbabout .ab-shop{display:grid;grid-template-columns:1.1fr 1fr;gap:2.5rem;align-items:center;margin:0 0 4rem;}
+    #tbabout .ab-shop img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:18px;display:block;box-shadow:0 16px 44px rgba(80,40,170,.18);}
+    #tbabout .ab-shop h2{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(2rem,4.5vw,2.8rem);line-height:1;margin:.3rem 0 1rem;}
+    #tbabout .ab-shop-copy p{font-size:1.06rem;line-height:1.7;margin:0;}
+    #tbabout .ab-shop-copy p.ab-eyebrow{font-size:.78rem;margin:0;}
+    @media(max-width:760px){#tbabout .ab-shop{grid-template-columns:1fr;gap:1.4rem;}}
     #tbabout .ab-values{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin:0 0 4rem;}
     @media(max-width:760px){#tbabout .ab-values{grid-template-columns:1fr;}}
     #tbabout .ab-value{background:var(--ice);border-radius:16px;padding:1.8rem 1.5rem;text-align:center;}
@@ -53,6 +59,15 @@
     <p>From small local businesses to growing brands, we work with customers to turn their logos and ideas into professionally embroidered headwear. Every order is produced <strong>in-house</strong>, giving us complete control over the quality of the finished product from setup to the final stitch.</p>
     <p>We focus on clean embroidery, quality materials, and attention to detail. Whether you're ordering hats for your employees, merchandise for your brand, an upcoming event, or something completely custom, our goal is to deliver a finished product you'll be proud to put your name on.</p>
     <p>We offer a variety of hat styles and work with each customer to make sure their design is suited for embroidery and looks its best on the finished hat.</p>
+  </div>
+
+  <div class="ab-shop">
+    <img src="{{ 'work-tlg-machine.jpg' | asset_img_url: '1200x' }}" alt="Natural and red Otto snapbacks with TLG embroidery hooped on a multi-head Ricoma embroidery machine at Threadbreak" loading="lazy" width="1200" height="1200">
+    <div class="ab-shop-copy">
+      <p class="ab-eyebrow">Inside the shop</p>
+      <h2>Stitched on our own machines.</h2>
+      <p>Every order runs on our multi-head, 15-needle Ricoma embroidery machines right here in Burlington. No outsourcing and no middleman. We set up your design, run it ourselves, and check each hat before it ships.</p>
+    </div>
   </div>
 
   <div class="ab-values">
