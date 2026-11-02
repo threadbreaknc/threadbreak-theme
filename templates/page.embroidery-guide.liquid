@@ -53,7 +53,7 @@
   .tbeg-gal img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:14px;display:block;background:var(--ice)}
   .tbeg-gal figcaption{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.4}
   .tbeg-hero{width:100%;height:auto;aspect-ratio:16/7;object-fit:cover;border-radius:18px;display:block;margin:0 0 30px;box-shadow:0 18px 40px -22px rgba(20,18,28,.45)}
-  @media(max-width:720px){.tbeg-gal{grid-template-columns:1fr 1fr}.tbeg-gal figure:last-child{grid-column:1/-1}.tbeg-hero{aspect-ratio:4/3}}
+  @media(max-width:720px){.tbeg-gal{grid-template-columns:1fr 1fr}.tbeg-gal figure:last-child:nth-child(odd){grid-column:1/-1}.tbeg-hero{aspect-ratio:4/3}}
   @media(max-width:720px){.tbeg-ai,.tbeg-two{grid-template-columns:1fr}}
 </style>
 
@@ -83,6 +83,9 @@
         <figure><img src="{{ 'work-allstar-112fp.jpg' | asset_img_url: '700x' }}" alt="Grey Richardson 112FP truckers with a black embroidered All Star Martial Arts logo" loading="lazy"><figcaption>Bold shapes and clean lettering stitch crisp.</figcaption></figure>
         <figure><img src="{{ 'work-camo-duck-otto.jpg' | asset_img_url: '700x' }}" alt="Otto camo snapbacks with a detailed multi-color embroidered duck hunting logo" loading="lazy"><figcaption>Detail works when it's sized right and has room to breathe.</figcaption></figure>
         <figure><img src="{{ 'guide-puff-richardson-168.jpg' | asset_img_url: '700x' }}" alt="Richardson 7-panel truckers with a 3D puff embroidered gear logo" loading="lazy"><figcaption>Thick outlines and solid shapes are perfect for 3D puff.</figcaption></figure>
+        <figure><img src="{{ 'work-dbrs-otto-white.jpg' | asset_img_url: '700x' }}" alt="White Otto 31-069 snapbacks with a red and black flat stitch DBRS logo" loading="lazy"><figcaption>Clean lettering and simple bars stitch sharp in flat embroidery.</figcaption></figure>
+        <figure><img src="{{ 'work-tlg-puff-otto.jpg' | asset_img_url: '700x' }}" alt="Natural and red Otto 31-069 snapbacks with flat stitch text and red 3D puff TLG lettering" loading="lazy"><figcaption>Mix flat stitch and 3D puff in one design for extra depth.</figcaption></figure>
+        <figure><img src="{{ 'work-tlg-puff-closeup.jpg' | asset_img_url: '700x' }}" alt="Close-up of red 3D puff lettering raised over flat stitched details" loading="lazy"><figcaption>Up close, 3D puff sits raised above the flat stitching around it.</figcaption></figure>
       </div>
     </section>
 
