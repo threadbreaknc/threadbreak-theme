@@ -1999,6 +1999,7 @@ const PLACEMENTS = [
 const FRONT_POSITIONS = ["Left panel","Centered","Right panel"];
 </script>
 
+{% render 'tb-text-option' %}
 {% render 'ss-stock' %}
 <script>
 (function(){
@@ -2615,10 +2616,13 @@ function renderUploads(){
         p.id === "left"  ? "Artwork for the left side, as you look at the hat." :
         p.id === "right" ? "Artwork for the right side, as you look at the hat." :
                            "Artwork for the back of the hat.") + '</div>' +
+      TBT.toggle(p.id) +
+      (TBT.st(p.id).on ? TBT.editor(p.id) :
       '<input type="file" data-up="' + p.id + '" accept=".png,.jpg,.jpeg,.pdf,.ai,.svg,image/*">' +
-      (f ? '<div class="up-have">Attached: ' + f.name + '</div>' : "") +
+      (f ? '<div class="up-have">Attached: ' + f.name + '</div>' : "")) +
     '</div>';
   }).join("");
+  TBT.bind(host, () => renderUploads(), (pid, file) => { state.files[pid] = file; });
   host.querySelectorAll("[data-up]").forEach(inp => {
     inp.addEventListener("change", e => {
       const file = e.target.files && e.target.files[0];
@@ -2795,12 +2799,17 @@ function orderMeta(){
     sizing: state.style ? sizingOf(state.style) : "",
     deco: state.deco.label,
     placements: places.join(", "),
-    notes: ($("notes") && $("notes").value.trim()) || "-",
+    notes: [($("notes") && $("notes").value.trim()) || "", textNotes()].filter(Boolean).join(" | ") || "-",
     proof: ($("proofMethod") && $("proofMethod").value) || "",
     proofPhone: ($("proofPhone") && $("proofPhone").value.trim()) || "",
     social: ($("noSocial") && $("noSocial").checked) ? "Do NOT share on social" : "OK to share on social",
     estimate: per === null ? "quote" : money(per) + "/hat, " + money(per * state.qty) + " total"
   };
+}
+// typed-text locations (snippets/tb-text-option.liquid), e.g. "Back text: EST. 2021 | Font: Rye | Thread: #FFFFFF"
+function textNotes(){
+  return activeUploadSlots().filter(p => TBT.has(p))
+    .map(p => ((PLACEMENTS.find(x => x.id === p) || {}).label || p) + " text: " + TBT.summary(p)).join("; ");
 }
 function scriptConfigured(){ return APPS_SCRIPT_URL && APPS_SCRIPT_URL.indexOf("PASTE") !== 0; }
 
@@ -2907,7 +2916,9 @@ async function submitCheckout(){
     "Artwork": artNote
   };
   props["Proof delivery"] = meta.proof + (meta.proof === "Text message" && meta.proofPhone ? " to " + meta.proofPhone : "");
-  if (meta.notes !== "-") props["Notes"] = meta.notes;
+  const userNotes = ($("notes") && $("notes").value.trim()) || "";
+  if (userNotes) props["Notes"] = userNotes;
+  activeUploadSlots().forEach(p => { if (TBT.has(p)) props[((PLACEMENTS.find(x => x.id === p) || {}).label || p) + " text"] = TBT.summary(p); });
   const skuLine = skuSummary();
   if (skuLine) props["_S&S SKUs"] = skuLine; // underscore = hidden from the customer, shown on the order
 

@@ -1,0 +1,116 @@
+{%- comment -%}
+  Text option for the embroidery order form. Each logo slot can switch to
+  "Type text": up to 2 lines, a set of embroidery-friendly Google fonts, any
+  thread color, with a live preview. The typed text is also rendered to a PNG
+  and attached as that location's artwork, so it rides the same Drive + cart
+  path as an uploaded logo. Used by templates/page.custom-order.liquid.
+{%- endcomment -%}
+<style>
+  #tbco .up-mode{display:flex;gap:6px;margin:0 0 10px}
+  #tbco .up-mode button{flex:1;font:inherit;font-size:13px;font-weight:700;padding:8px 10px;border:1.5px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);cursor:pointer}
+  #tbco .up-mode button.on{border-color:var(--purple);background:var(--purple);color:#fff}
+  #tbco .tt-ed input[type=text]{width:100%;box-sizing:border-box;font:inherit;font-size:14.5px;padding:10px 11px;border:1.5px solid var(--line);border-radius:9px;margin:0 0 7px;background:#fff;color:var(--ink)}
+  #tbco .tt-ed input[type=text]:focus{outline:none;border-color:var(--purple)}
+  #tbco .tt-prev{border-radius:10px;min-height:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 10px;margin:2px 0 10px;text-align:center;overflow:hidden;transition:background .2s}
+  #tbco .tt-prev span{display:block;line-height:1.08;font-size:30px;white-space:nowrap;max-width:100%}
+  #tbco .tt-lbl{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:4px 0 6px}
+  #tbco .tt-fonts{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 10px}
+  #tbco .tt-fonts button{font-size:17px;line-height:1.1;padding:8px 6px;border:1.5px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #tbco .tt-fonts button.on{border-color:var(--purple);background:var(--ice);color:var(--purple)}
+  #tbco .tt-color{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  #tbco .tt-color button{width:26px;height:26px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1.5px var(--line);cursor:pointer;padding:0}
+  #tbco .tt-color button.on{box-shadow:0 0 0 2px var(--purple)}
+  #tbco .tt-color label{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--ink);cursor:pointer;margin-left:2px}
+  #tbco .tt-color input[type=color]{width:30px;height:30px;border:0;padding:0;background:none;cursor:pointer}
+  #tbco .tt-note{font-size:11.5px;color:var(--muted);margin:8px 0 0;line-height:1.45}
+</style>
+<script>
+window.TBT = (function(){
+  var FONTS = ["Bebas Neue","Anton","Archivo Black","Alfa Slab One","Graduate","Racing Sans One","Rye","Lobster","Pacifico","Yellowtail"];
+  var QUICK = ["#14121C","#FFFFFF","#C8102E","#0B2A5B","#1F4FB5","#C9A227","#2E6B3F","#7A4A2A"];
+  var S = {};
+  var loaded = false;
+  function load(){
+    if (loaded) return; loaded = true;
+    var l = document.createElement("link"); l.rel = "stylesheet";
+    l.href = "https://fonts.googleapis.com/css2?" + FONTS.map(function(f){ return "family=" + f.replace(/ /g, "+"); }).join("&") + "&display=swap";
+    document.head.appendChild(l);
+  }
+  function st(p){ return S[p] || (S[p] = { on:false, l1:"", l2:"", font:FONTS[0], color:"#14121C" }); }
+  function esc(t){ return String(t).replace(/[&<>"]/g, function(m){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[m]; }); }
+  function lum(h){ var n = parseInt(h.slice(1), 16); var r = n >> 16 & 255, g = n >> 8 & 255, b = n & 255; return (0.299 * r + 0.587 * g + 0.114 * b) / 255; }
+  function bg(h){ return lum(h) > 0.62 ? "#2A2638" : "#F1EFF6"; }
+  function has(p){ var t = S[p]; return !!(t && t.on && (t.l1 || t.l2)); }
+  function toggle(p){
+    var t = st(p);
+    return '<div class="up-mode"><button type="button" data-tm="' + p + '" data-v="0" class="' + (t.on ? "" : "on") + '">Upload logo</button>' +
+      '<button type="button" data-tm="' + p + '" data-v="1" class="' + (t.on ? "on" : "") + '">Type text</button></div>';
+  }
+  function editor(p){
+    var t = st(p); load();
+    var sample = esc(t.l1 || "Your Text");
+    return '<div class="tt-ed" data-tt="' + p + '">' +
+      '<input type="text" maxlength="24" placeholder="Line 1" data-tl="l1" value="' + esc(t.l1) + '">' +
+      '<input type="text" maxlength="24" placeholder="Line 2 (optional)" data-tl="l2" value="' + esc(t.l2) + '">' +
+      '<div class="tt-prev" style="background:' + bg(t.color) + '"></div>' +
+      '<div class="tt-lbl">Font</div><div class="tt-fonts">' +
+        FONTS.map(function(f){ return '<button type="button" data-tf="' + f + '" class="' + (f === t.font ? "on" : "") + '" style="font-family:\'' + f + '\'">' + sample + '</button>'; }).join("") +
+      '</div>' +
+      '<div class="tt-lbl">Thread color</div><div class="tt-color">' +
+        QUICK.map(function(c){ return '<button type="button" data-tc="' + c + '" class="' + (c.toLowerCase() === t.color.toLowerCase() ? "on" : "") + '" style="background:' + c + '" aria-label="Thread color ' + c + '"></button>'; }).join("") +
+        '<label><input type="color" data-tcp value="' + t.color + '">Any color</label>' +
+      '</div>' +
+      '<p class="tt-note">We match your color to the closest thread. Text is stitched flat or 3D puff, whichever you picked above, and your mockup shows the final size.</p>' +
+    '</div>';
+  }
+  function paintPrev(box, t){
+    var pv = box.querySelector(".tt-prev"); if (!pv) return;
+    pv.style.background = bg(t.color);
+    var lines = [t.l1 || (t.l2 ? "" : "Your Text"), t.l2].filter(function(x){ return x; });
+    pv.innerHTML = lines.map(function(x){ return '<span style="font-family:\'' + t.font + '\';color:' + t.color + '">' + esc(x) + '</span>'; }).join("");
+    // shrink long lines to fit the box
+    pv.querySelectorAll("span").forEach(function(s){ s.style.fontSize = "30px"; var w = pv.clientWidth - 20; if (s.scrollWidth > w && w > 0) s.style.fontSize = Math.max(12, 30 * w / s.scrollWidth) + "px"; });
+    box.querySelectorAll("[data-tf]").forEach(function(b){ b.textContent = t.l1 || t.l2 || "Your Text"; });
+  }
+  // Renders the text to a transparent PNG so it travels like an uploaded logo.
+  function toFile(p){
+    var t = st(p), lines = [t.l1, t.l2].filter(function(x){ return x; });
+    if (!lines.length) return Promise.resolve(null);
+    var fam = "'" + t.font + "'";
+    return (document.fonts ? document.fonts.load("200px " + fam) : Promise.resolve()).catch(function(){}).then(function(){
+      var W = 1600, LH = 300, c = document.createElement("canvas"); c.width = W; c.height = LH * lines.length + 80;
+      var x = c.getContext("2d"); x.fillStyle = t.color; x.textAlign = "center"; x.textBaseline = "middle";
+      lines.forEach(function(ln, i){
+        var size = 240; x.font = size + "px " + fam;
+        var w = x.measureText(ln).width; if (w > W - 80){ size = Math.floor(size * (W - 80) / w); x.font = size + "px " + fam; }
+        x.fillText(ln, W / 2, 40 + LH * i + LH / 2);
+      });
+      return new Promise(function(res){ c.toBlob(function(b){ res(b ? new File([b], p + "-text-" + t.font.replace(/ /g, "-").toLowerCase() + ".png", { type:"image/png" }) : null); }, "image/png"); });
+    });
+  }
+  function summary(p){
+    var t = S[p]; if (!has(p)) return "";
+    return [t.l1, t.l2].filter(function(x){ return x; }).join(" / ") + " | Font: " + t.font + " | Thread: " + t.color.toUpperCase();
+  }
+  // Wires a rendered uploads host. onMode(p) re-renders, onFile(p, file) stores the artwork.
+  function bind(host, onMode, onFile){
+    host.querySelectorAll("[data-tm]").forEach(function(b){
+      b.addEventListener("click", function(){ var p = b.dataset.tm, t = st(p), v = b.dataset.v === "1"; if (t.on === v) return; t.on = v; onFile(p, null); onMode(p); });
+    });
+    host.querySelectorAll("[data-tt]").forEach(function(box){
+      var p = box.dataset.tt, t = st(p), timer = null;
+      function changed(){ paintPrev(box, t); clearTimeout(timer); timer = setTimeout(function(){ toFile(p).then(function(f){ onFile(p, f); }); }, 350); }
+      box.querySelectorAll("[data-tl]").forEach(function(i){ i.addEventListener("input", function(){ t[i.dataset.tl] = i.value.trim(); changed(); }); });
+      box.querySelectorAll("[data-tf]").forEach(function(b){ b.addEventListener("click", function(){ t.font = b.dataset.tf; box.querySelectorAll("[data-tf]").forEach(function(x){ x.classList.toggle("on", x === b); }); changed(); }); });
+      box.querySelectorAll("[data-tc]").forEach(function(b){ b.addEventListener("click", function(){ t.color = b.dataset.tc; box.querySelector("[data-tcp]").value = t.color; box.querySelectorAll("[data-tc]").forEach(function(x){ x.classList.toggle("on", x === b); }); changed(); }); });
+      var cp = box.querySelector("[data-tcp]");
+      cp.addEventListener("input", function(){ t.color = cp.value; box.querySelectorAll("[data-tc]").forEach(function(x){ x.classList.remove("on"); }); changed(); });
+      if (t.l1 || t.l2) toFile(p).then(function(f){ onFile(p, f); });
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ paintPrev(box, t); });
+      paintPrev(box, t);
+      setTimeout(function(){ paintPrev(box, t); }, 600);
+    });
+  }
+  return { st:st, has:has, toggle:toggle, editor:editor, bind:bind, summary:summary };
+})();
+</script>
