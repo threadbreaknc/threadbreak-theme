@@ -22,6 +22,7 @@
   #tbco .tt-color button.on{box-shadow:0 0 0 2px var(--purple)}
   #tbco .tt-color label{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--ink);cursor:pointer;margin-left:2px}
   #tbco .tt-color input[type=color]{width:30px;height:30px;border:0;padding:0;background:none;cursor:pointer}
+  #tbco .tt-exact{font-size:12px;line-height:1.45;color:#7a4b00;background:#FFF6E5;border:1px solid #F3DDB0;border-radius:9px;padding:8px 10px;margin:0 0 8px}
   #tbco .tt-note{font-size:11.5px;color:var(--muted);margin:8px 0 0;line-height:1.45}
 </style>
 <script>
@@ -52,6 +53,7 @@ window.TBT = (function(){
     return '<div class="tt-ed" data-tt="' + p + '">' +
       '<input type="text" maxlength="24" placeholder="Line 1" data-tl="l1" value="' + esc(t.l1) + '">' +
       '<input type="text" maxlength="24" placeholder="Line 2 (optional)" data-tl="l2" value="' + esc(t.l2) + '">' +
+      '<p class="tt-exact"><strong>We stitch it exactly as you type it.</strong> Capital and lowercase letters, spelling, spacing and punctuation all come out the way you enter them, so double-check before you order.</p>' +
       '<div class="tt-prev" style="background:' + bg(t.color) + '"></div>' +
       '<div class="tt-lbl">Font</div><div class="tt-fonts">' +
         FONTS.map(function(f){ return '<button type="button" data-tf="' + f + '" class="' + (f === t.font ? "on" : "") + '" style="font-family:\'' + f + '\'">' + sample + '</button>'; }).join("") +
