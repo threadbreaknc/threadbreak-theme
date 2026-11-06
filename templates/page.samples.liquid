@@ -41,6 +41,41 @@
   .tbsm-cta p{color:#C9C6D6;max-width:480px;margin:0 auto 20px}
   .tbsm-cta .tbsm-btns{justify-content:center}
   .tbsm-cta .tbsm-btn.alt{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#fff !important}
+  .tbsm-form-wrap{border:1px solid var(--line);border-radius:18px;padding:28px 24px;margin:0 0 44px;background:#fff;scroll-margin-top:110px;box-shadow:0 14px 40px -28px rgba(80,40,170,.5)}
+  .tbsm-form-sub{color:var(--muted) !important;margin-bottom:18px !important}
+  .sm-label,.sm-field label{display:block;font-size:14px;font-weight:700;color:var(--ink);margin:0 0 7px}
+  .sm-req{color:var(--purple)}
+  .sm-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px}
+  .sm-chip{position:relative;cursor:pointer}
+  .sm-chip input{position:absolute;opacity:0;pointer-events:none}
+  .sm-chip span{display:inline-block;padding:10px 14px;border:1.5px solid var(--line);border-radius:11px;font-size:14.5px;font-weight:600;color:var(--ink);background:#fff;transition:border-color .15s,background .15s}
+  .sm-chip input:checked + span{border-color:var(--purple);background:#F3EFFC;color:var(--purple)}
+  .sm-chip.is-locked{cursor:default}
+  .sm-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .sm-field{margin:0 0 16px}
+  .sm-field input[type=text],.sm-field input[type=email],.sm-field input[type=tel],.sm-field textarea{width:100%;box-sizing:border-box;padding:12px 13px;border:1.5px solid var(--line);border-radius:11px;font:inherit;font-size:15.5px;color:var(--ink);background:#fff}
+  .sm-field input:focus,.sm-field textarea:focus{outline:none;border-color:var(--purple)}
+  .sm-help{font-size:13.5px !important;color:var(--muted) !important;line-height:1.5 !important;margin:-8px 0 18px !important}
+  .sm-field .sm-help{margin:6px 0 0 !important}
+  .sm-file{display:block;position:relative;border:1.5px dashed #C9BEEB;border-radius:11px;padding:16px;text-align:center;font-size:14.5px;font-weight:600;color:var(--purple) !important;background:#FAF8FF;cursor:pointer}
+  .sm-file.has-file{border-style:solid;border-color:var(--purple)}
+  .sm-file input{position:absolute;inset:0;opacity:0;cursor:pointer}
+  .sm-total{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;background:var(--ice);border-radius:12px;padding:14px 16px;margin:6px 0 14px}
+  .sm-total span{font-weight:700}
+  .sm-total strong{font-family:'Bebas Neue',sans-serif;font-size:34px;line-height:1;color:var(--purple);font-weight:400}
+  .sm-total small{flex-basis:100%;font-size:13px;color:var(--muted)}
+  .sm-err{display:none;color:#c0392b !important;font-size:14px !important;font-weight:600;margin:0 0 10px !important}
+  .sm-err.show{display:block}
+  .sm-progress{display:none;align-items:center;gap:10px;margin:0 0 12px;font-size:14px;color:var(--muted)}
+  .sm-progress.show{display:flex}
+  .sm-bar{flex:1;height:6px;border-radius:9px;background:#EEE8FB;overflow:hidden}
+  .sm-bar div{height:100%;width:0;background:var(--purple);transition:width .2s}
+  .sm-submit{border:0;cursor:pointer;width:100%;font-size:16px;padding:15px 20px}
+  .sm-submit:disabled{opacity:.6;cursor:default}
+  .sm-fine{margin:10px 0 0 !important;text-align:center}
+  .sm-done{text-align:center;padding:10px 0}
+  .sm-done h3{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:36px;margin:0 0 8px;color:var(--purple)}
+  @media(max-width:700px){.sm-row{grid-template-columns:1fr;gap:0}.tbsm-form-wrap{padding:22px 16px}}
   @media(max-width:820px){.tbsm-steps{grid-template-columns:1fr 1fr}}
   @media(max-width:700px){
     .tbsm-wrap{padding-top:7.5rem}
@@ -58,11 +93,11 @@
     <p class="tbsm-lead">Want to see your logo on a real hat before you commit? We'll make one physical sample so you can check the size, placement, colors and stitch style in person. Samples are available for both embroidered and laser engraved patch hats.</p>
 
     <div class="tbsm-top">
-      <div class="tbsm-photo"><img src="{{ 'work-tlg-puff-closeup.jpg' | asset_img_url: '900x' }}" alt="Close-up of a finished embroidered hat with 3D puff lettering" loading="eager"></div>
+      <div class="tbsm-photo"><img src="https://cdn.shopify.com/s/files/1/0974/8453/7988/files/660B5CDC-607C-4CB3-AC44-66FDB8578C7D.jpg?v=1792644744&width=1000" alt="Threadbreak six head embroidery machine stitching a run of custom hats in Burlington, NC" loading="eager"></div>
       <div class="tbsm-price">
         <p class="tbsm-eyebrow">Sample cost</p>
         <div class="amt">$99<small>shipped</small></div>
-        <p class="per">One sample hat with your logo in one location. Each additional location is $25.</p>
+        <p class="per">One sample hat with your logo in one location. Each additional location is $25. Applies to hats in our current catalog.</p>
         <ul class="tbsm-list">
           <li>Your logo digitized for embroidery or set up for laser engraving</li>
           <li>One finished hat in the style and color you choose</li>
@@ -70,7 +105,7 @@
           <li>Shipping included</li>
         </ul>
         <div class="tbsm-btns">
-          <a class="tbsm-btn" href="mailto:help@threadbreak.com?subject=Sample%20request">Request a sample</a>
+          <a class="tbsm-btn" href="#sample-form">Request a sample</a>
           <a class="tbsm-btn alt" href="sms:+13365856176">Text us</a>
         </div>
       </div>
@@ -96,21 +131,127 @@
 
     <h2>How it works</h2>
     <ol class="tbsm-steps">
-      <li><b>Send your logo and pay</b>Email or text us your logo and the hat style and color you want. We send an invoice for the sample.</li>
+      <li><b>Request and pay</b>Fill out the form below with your logo and the hat you want. We email you an invoice for the sample.</li>
       <li><b>Approve the mockup</b>Within 48 hours of payment, we send a digital mockup showing size and placement.</li>
       <li><b>Get your sample</b>Once you approve, we make your hat in 1-2 weeks and ship it to you.</li>
       <li><b>Place your order</b>Order 5 or more hats and we apply your $70 credit.</li>
     </ol>
 
-    <p class="tbsm-note"><strong>Want more than one location on the sample?</strong> The $99 covers one logo location. Adding the sides or back to your sample is $25 per additional location. Not sure you need a sample at all? Every order already includes a free digital mockup before we stitch. See <a href="/pages/embroidery-guide">our embroidery guide</a> for what to expect.</p>
+    <p class="tbsm-note"><strong>Good to know.</strong> Sample pricing applies to the hats in our current <a href="/pages/custom-order">embroidery</a> and <a href="/pages/custom-patch-hats">patch hat</a> catalogs. Hats outside our catalog, specialty blanks or hats you supply may cost more, and we'll confirm the price with you before we invoice. The $99 covers one logo location. Adding the sides or back is $25 per additional location. Not sure you need a sample at all? Every order already includes a digital mockup before we stitch. See <a href="/pages/embroidery-guide">our embroidery guide</a> for what to expect.</p>
+
+    <section class="tbsm-form-wrap" id="sample-form">
+      <h2>Request a sample</h2>
+      <p class="tbsm-form-sub">Fill this out and we'll email you an invoice. Your mockup comes within 48 hours of payment.</p>
+      <form id="smForm" novalidate>
+        <p class="sm-label">Sample type <span class="sm-req">*</span></p>
+        <div class="sm-chips">
+          <label class="sm-chip"><input type="radio" name="smType" value="Embroidered" checked><span>Embroidered</span></label>
+          <label class="sm-chip"><input type="radio" name="smType" value="Laser engraved patch"><span>Laser engraved patch</span></label>
+        </div>
+
+        <div class="sm-row">
+          <div class="sm-field"><label for="smStyle">Hat style <span class="sm-req">*</span></label><input type="text" id="smStyle" placeholder="e.g. Richardson 112, Otto 31-069"></div>
+          <div class="sm-field"><label for="smColor">Hat color <span class="sm-req">*</span></label><input type="text" id="smColor" placeholder="e.g. Black/White"></div>
+        </div>
+        <p class="sm-help">Pick any hat from our <a href="/pages/custom-order" target="_blank" rel="noopener">embroidery</a> or <a href="/pages/custom-patch-hats" target="_blank" rel="noopener">patch</a> order forms. Hats outside our catalog may cost more.</p>
+
+        <p class="sm-label">Logo locations</p>
+        <div class="sm-chips">
+          <label class="sm-chip is-locked"><input type="checkbox" checked disabled data-loc="Front"><span>Front (included)</span></label>
+          <label class="sm-chip"><input type="checkbox" name="smLoc" data-loc="Left side"><span>Left side +$25</span></label>
+          <label class="sm-chip"><input type="checkbox" name="smLoc" data-loc="Right side"><span>Right side +$25</span></label>
+          <label class="sm-chip"><input type="checkbox" name="smLoc" data-loc="Back"><span>Back +$25</span></label>
+        </div>
+
+        <div class="sm-field">
+          <label>Your logo</label>
+          <label class="sm-file" id="smFileWrap"><input type="file" id="smFile" accept="image/*,.pdf,.ai,.eps,.svg,.png,.jpg,.jpeg"><span id="smFileLabel">Tap to upload your logo</span></label>
+          <p class="sm-help">PNG, JPG, PDF, AI or SVG. If you have logos for the sides or back, send them in the notes or reply to our email.</p>
+        </div>
+
+        <div class="sm-row">
+          <div class="sm-field"><label for="smName">Name <span class="sm-req">*</span></label><input type="text" id="smName" autocomplete="name"></div>
+          <div class="sm-field"><label for="smEmail">Email <span class="sm-req">*</span></label><input type="email" id="smEmail" autocomplete="email"></div>
+        </div>
+        <div class="sm-row">
+          <div class="sm-field"><label for="smPhone">Phone</label><input type="tel" id="smPhone" autocomplete="tel"></div>
+          <div class="sm-field"><label for="smQty">Order size you're planning</label><input type="text" id="smQty" placeholder="e.g. 24 hats"></div>
+        </div>
+        <div class="sm-field"><label for="smNotes">Notes</label><textarea id="smNotes" rows="3" placeholder="Thread colors, 3D puff, sizing, anything we should know"></textarea></div>
+
+        <div class="sm-total"><span>Sample total</span><strong id="smTotal">$99</strong><small>Shipping included. Final price confirmed on your invoice.</small></div>
+        <p class="sm-err" id="smErr">Please fill in the required fields.</p>
+        <div class="sm-progress" id="smProgress"><div class="sm-bar"><div id="smBar"></div></div><span id="smProgLabel">Sending...</span></div>
+        <button type="button" class="tbsm-btn sm-submit" id="smSubmit">Request my sample</button>
+        <p class="sm-help sm-fine">The sample fee is non-refundable once paid. $70 is credited toward any order of 5 or more hats.</p>
+      </form>
+      <div class="sm-done" id="smDone" hidden>
+        <h3>Got it!</h3>
+        <p id="smDoneMsg"></p>
+      </div>
+    </section>
 
     <div class="tbsm-cta">
-      <h2>Ready to see it in person?</h2>
-      <p>Send us your logo and we'll get your sample started.</p>
+      <h2>Questions first?</h2>
+      <p>Reach out and we'll help you pick the right hat for your sample.</p>
       <div class="tbsm-btns">
-        <a class="tbsm-btn" href="mailto:help@threadbreak.com?subject=Sample%20request">Email help@threadbreak.com</a>
+        <a class="tbsm-btn" href="mailto:help@threadbreak.com?subject=Sample%20question">Email help@threadbreak.com</a>
         <a class="tbsm-btn alt" href="sms:+13365856176">Text (336) 585-6176</a>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+(function(){
+  var URL_ = "https://script.google.com/macros/s/AKfycbwuCYOYP96-fhmSnVsPYHuPi0LT1segF4291MGeHJ4eWCW_FONn7deif6Wj81CD_Yox/exec";
+  var $ = function(id){ return document.getElementById(id); };
+  var file = null;
+  function val(id){ return ($(id).value || "").trim(); }
+  function locs(){ return Array.prototype.slice.call(document.querySelectorAll('input[name="smLoc"]:checked')).map(function(c){ return c.getAttribute("data-loc"); }); }
+  function total(){ return 99 + 25 * locs().length; }
+  function upd(){ $("smTotal").textContent = "$" + total(); }
+  document.querySelectorAll('input[name="smLoc"]').forEach(function(c){ c.addEventListener("change", upd); });
+  $("smFile").addEventListener("change", function(e){
+    var f = e.target.files[0]; if (!f) return;
+    $("smFileLabel").textContent = f.name + " (tap to change)";
+    $("smFileWrap").classList.add("has-file");
+    var r = new FileReader();
+    r.onload = function(ev){ file = { data: ev.target.result.split(",")[1], name: f.name, mimeType: f.type, placement: "Front" }; };
+    r.readAsDataURL(f);
+  });
+  $("smSubmit").addEventListener("click", function(){
+    var ok = val("smStyle") && val("smColor") && val("smName") && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val("smEmail"));
+    $("smErr").classList.toggle("show", !ok);
+    if (!ok){
+      var first = !val("smStyle") ? "smStyle" : !val("smColor") ? "smColor" : !val("smName") ? "smName" : "smEmail";
+      $(first).focus(); $(first).scrollIntoView({ behavior:"smooth", block:"center" }); return;
+    }
+    var btn = $("smSubmit"); btn.disabled = true;
+    var type = (document.querySelector('input[name="smType"]:checked') || {}).value || "Embroidered";
+    var places = ["Front"].concat(locs());
+    var meta = {
+      name: val("smName"), email: val("smEmail"), phone: val("smPhone") || "-",
+      style: "PHYSICAL SAMPLE - " + val("smStyle"), requestedStyle: val("smStyle"),
+      color: val("smColor"), qty: "1 (sample)",
+      deco: type, placements: places.join(", "),
+      notes: "PHYSICAL SAMPLE REQUEST. Total $" + total() + ". Planned order: " + (val("smQty") || "-") + ". Notes: " + (val("smNotes") || "-"),
+      social: "-", estimate: "sample $" + total()
+    };
+    var prog = $("smProgress"), bar = $("smBar"); prog.classList.add("show");
+    $("smProgLabel").textContent = file ? "Sending your logo..." : "Sending your request...";
+    var pct = 0, sim = setInterval(function(){ pct += (90 - pct) * 0.15; bar.style.width = pct + "%"; }, 200);
+    function done(){
+      clearInterval(sim); bar.style.width = "100%";
+      setTimeout(function(){
+        $("smForm").style.display = "none";
+        $("smDoneMsg").innerHTML = "Thanks " + meta.name.split(" ")[0] + "! We've got your sample request for a " + type.toLowerCase() + " " + meta.requestedStyle + " ($" + total() + "). We'll email your invoice from <strong>help@threadbreak.com</strong>, and your mockup follows within 48 hours of payment. Check your spam folder just in case.";
+        $("smDone").hidden = false;
+        $("smDone").scrollIntoView({ behavior:"smooth", block:"center" });
+      }, 350);
+    }
+    fetch(URL_, { method:"POST", mode:"no-cors", headers:{ "Content-Type":"application/json" },
+      body: JSON.stringify({ type:"quote", meta: meta, files: file ? [file] : [] }) }).then(done).catch(done);
+  });
+})();
+</script>
