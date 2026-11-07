@@ -1892,7 +1892,6 @@ const STYLES = [
   { id:"tt6", name:"10 10 Hats 6 Panel Performance", brand:"10 10 Hats", desc:"6-panel snapback · waterproof dry-fit · one size fits most", popular:92, features:"95/5 poly-spandex performance cap that sheds water and dries fast. Structured front, slightly curved bill, laser-perforated mesh back, and an adjustable snapback. A clean 6-panel crown built for the golf course, the boat, and the job site.",
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tt6_red.jpg?v=1790738955", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tt6_sky_blue.png?v=1790738955", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tt6_pink.png?v=1790738955", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tt6_shadow_grass_blades_camo.webp?v=1790738955"],
     colors:["Avalanche Camo", "Black", "Blackout Camo", "Dark Gray", "Deep Blue", "Deep Blue/White", "Green/Tan", "Grey/Black", "Light Grey", "Maroon", "Pink", "Red", "Shadow Grass Blades Camo", "Sky Blue", "Tan/Black", "True Navy", "White", "Dark Green"],
-    oos:["Blackout Camo"],
     colorImgs:{
       "Avalanche Camo":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tt6_avalanche_camo.jpg?v=1790738955",
       "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tt6_black.jpg?v=1790738955",
@@ -1917,7 +1916,6 @@ const STYLES = [
   { id:"tt5", name:"10 10 Hats 5 Panel Performance", brand:"10 10 Hats", desc:"5-panel snapback · waterproof dry-fit · one size fits most", popular:92, features:"95/5 poly-spandex performance cap that sheds water and dries fast. Structured front, slightly curved bill, laser-perforated mesh back, and an adjustable snapback. The seamless 5-panel front gives logos and patches a smooth canvas, with fun patterns like Pastel Palms and White Reef.",
     imgs:["https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tt5_pastel_palms.jpg?v=1790738955", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tt5_white_reef.jpg?v=1790738955", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tt5_black_palm.jpg?v=1790738955", "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tt5_sky_blue.png?v=1790738955"],
     colors:["Avalanche Camo", "Black", "Black Palm", "Blackout Camo", "Bone/Faded Camo Bill", "Bottomland Camo", "Dark Grey", "Deep Blue", "Deep Blue/White", "Grey/Black", "Light Grey", "Offshore Gray", "Offshore Navy", "Pastel Palms", "Shadow Grass Blades Camo", "Sky Blue", "Tan/Black", "True Navy", "White", "White Reef", "Dark Green", "Maroon", "Pink", "Red", "Green/Tan", "Black Reef", "Pink Flamingo", "Seashell"],
-    oos:["Blackout Camo", "Bottomland Camo"],
     colorImgs:{
       "Avalanche Camo":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tt5_avalanche_camo.jpg?v=1790738955",
       "Black":"https://cdn.shopify.com/s/files/1/0974/8453/7988/files/tt5_black.jpg?v=1790738955",
@@ -2020,6 +2018,7 @@ const FRONT_POSITIONS = ["Left panel","Centered","Right panel"];
 </script>
 
 {% render 'tb-text-option' %}
+{% render 'tt-stock' %}
 {% render 'ss-stock' %}
 <script>
 (function(){
@@ -2041,8 +2040,10 @@ const STOCK_ALIAS = {
 };
 function stockEntry(s, c){ const st = s && STOCK[s.id]; if (!st) return null; const al = STOCK_ALIAS[s.id]; return st[normColor((al && al[c]) || c)] || null; }
 // unknown color or style = treat as in stock, so a name mismatch never blocks a sale
-// s.oos = colors marked out of stock by hand (brands not in the S&S feed, e.g. 10 10 Hats)
-function isOut(s, c){ if (s && s.oos && s.oos.indexOf(c) > -1) return true; const e = stockEntry(s, c); return !!e && e.qty < STOCK_MIN; }
+const TT_MIN = 50; // 10 10 Hats colors with fewer than this at 1010hats.com show as out of stock
+function ttOut(s, c){ const t = window.TB_TT_STOCK && window.TB_TT_STOCK.styles && window.TB_TT_STOCK.styles[s.id]; return !!(t && typeof t[c] === "number" && t[c] < TT_MIN); }
+// s.oos = colors marked out of stock by hand
+function isOut(s, c){ if (s && s.oos && s.oos.indexOf(c) > -1) return true; if (s && ttOut(s, c)) return true; const e = stockEntry(s, c); return !!e && e.qty < STOCK_MIN; }
 // S&S SKU for a color (and size, for fitted), saved on the order as a hidden property
 function skuFor(s, c, z){
   const e = stockEntry(s, c); if (!e || !e.skus) return "";
