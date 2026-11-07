@@ -1998,6 +1998,7 @@ const PLACEMENTS = [
 </script>
 
 {% render 'tt-stock' %}
+{% render 'atonal-stock' %}
 {% render 'ss-stock' %}
 <script>
 (function(){
@@ -2019,8 +2020,14 @@ const STOCK_ALIAS = {
 };
 function stockEntry(s, c){ const st = s && STOCK[s.id]; if (!st) return null; const al = STOCK_ALIAS[s.id]; return st[normColor((al && al[c]) || c)] || null; }
 // unknown color or style = treat as in stock, so a name mismatch never blocks a sale
-const TT_MIN = 50; // 10 10 Hats colors with fewer than this at 1010hats.com show as out of stock
-function ttOut(s, c){ const t = window.TB_TT_STOCK && window.TB_TT_STOCK.styles && window.TB_TT_STOCK.styles[s.id]; return !!(t && typeof t[c] === "number" && t[c] < TT_MIN); }
+const TT_MIN = 50; // 10 10 Hats + Atonal colors with fewer than this at the supplier show as out of stock
+function ttOut(s, c){
+  for (const src of [window.TB_TT_STOCK, window.TB_AT_STOCK]){
+    const t = src && src.styles && src.styles[s.id];
+    if (t && typeof t[c] === "number" && t[c] < TT_MIN) return true;
+  }
+  return false;
+}
 // s.oos = colors marked out of stock by hand
 function isOut(s, c){ if (s && s.oos && s.oos.indexOf(c) > -1) return true; if (s && ttOut(s, c)) return true; const e = stockEntry(s, c); return !!e && e.qty < STOCK_MIN; }
 // S&S SKU for a color (and size, for fitted), saved on the order as a hidden property
