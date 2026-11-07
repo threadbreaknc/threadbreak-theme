@@ -281,7 +281,7 @@
     rich168: { "Black Camo": "Black/Camo/Loden", "Charcoal/White/Black": "Charcoal/Black/White", "Pale Khaki/Loden": "Pale Khaki/Loden Green" },
     rich256: { "Black": "Black/Black", "Cardinal": "Cardinal/White" }
   };
-  function isOut(s, c){ var st = STOCK[s.id]; if (!st) return false; var al = ALIAS[s.id]; var e = st[norm((al && al[c]) || c)]; return !!e && e.qty < 12; }
+  function isOut(s, c){ if (s.oos && s.oos.indexOf(c) > -1) return true; var st = STOCK[s.id]; if (!st) return false; var al = ALIAS[s.id]; var e = st[norm((al && al[c]) || c)]; return !!e && e.qty < 12; }
   function thumb(u, w){ if (!u) return ""; return u.indexOf("cdn.shopify.com") > -1 ? u.replace(/([?&])width=\d+/, "$1").replace(/[?&]$/, "") + (u.indexOf("?") > -1 ? "&" : "?") + "width=" + w : u; }
   function colorImg(s, c){ return (s.colorImgs && s.colorImgs[c]) ? cur.SSI(s.colorImgs[c], "f_fm") : s.imgs[0]; }
 
