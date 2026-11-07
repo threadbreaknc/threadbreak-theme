@@ -1,0 +1,30 @@
+name: 10 10 + Atonal stock sync
+on:
+  schedule:
+    - cron: "41 12 * * 1,3,5"   # Mon, Wed, Fri around 8:41am Eastern
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency: supplier-stock
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Pull 10 10 Hats stock
+        run: node tools/tt-stock.mjs
+        continue-on-error: true
+      - name: Pull Atonal stock
+        run: node tools/atonal-stock.mjs
+        continue-on-error: true
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- snippets/tt-stock.liquid snippets/atonal-stock.liquid; then echo "Nothing to commit"; exit 0; fi
+          git config user.name "threadbreak-stock-bot"
+          git config user.email "help@threadbreak.com"
+          git add snippets/tt-stock.liquid snippets/atonal-stock.liquid
+          git commit -m "Update 10 10 + Atonal stock"
+          git pull --rebase origin main && git push
