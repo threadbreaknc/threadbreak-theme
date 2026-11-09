@@ -1905,13 +1905,6 @@ const PLACEMENTS = [
   { id:"right", label:"Right side", add:5, variantId:68009593045124 },
   { id:"back",  label:"Back", add:5, variantId:68009593077892 },
 ];
-// DTF won't press flat on mesh, so mesh back truckers are front only.
-const MESH_IDS = ["rich112","rich112_5p","rich112p","rich112pm","rich112pl","rich115","rich168","yp6606","yp6506","yupoong","o285","ff110m","ff6511"];
-const isMesh = () => !!(state.style && MESH_IDS.indexOf(state.style.id) > -1);
-function meshClean(){
-  if (!isMesh()) return;
-  ["left","right","back"].forEach(id => { if (state.places.has(id)) state.places.delete(id); if (state.files) state.files[id] = null; });
-}
 window.TBT_DTF = true;
 // Left and right are always as you look AT the hat, never the wearer's left
 // and right. People ask about this constantly, so it is spelled out in the UI.
@@ -2096,6 +2089,13 @@ function tierFor(style, qty){
   let t = style.tiers[0];
   for (const tier of style.tiers) if (qty >= tier[0]) t = tier;
   return t;
+}
+// DTF won't press flat on mesh, so mesh back truckers are front only.
+const MESH_IDS = ["rich112","rich112_5p","rich112p","rich112pm","rich112pl","rich115","rich168","yp6606","yp6506","yupoong","o285","ff110m","ff6511"];
+const isMesh = () => !!(state.style && MESH_IDS.indexOf(state.style.id) > -1);
+function meshClean(){
+  if (!isMesh()) return;
+  ["left","right","back"].forEach(id => { if (state.places.has(id)) state.places.delete(id); if (state.files) state.files[id] = null; });
 }
 function perHat(){
   const t = tierFor(state.style, state.qty);
