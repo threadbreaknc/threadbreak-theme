@@ -696,6 +696,7 @@
 </div>
 
 
+{% render 'asc-styles' %}
 <script>
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuCYOYP96-fhmSnVsPYHuPi0LT1segF4291MGeHJ4eWCW_FONn7deif6Wj81CD_Yox/exec";
 // S&S photos are stored as "ss:<id>" / "<id>" to keep this template under Shopify's size limit.
@@ -2009,6 +2010,8 @@ const STYLES = [
     tiers:[[5,33,67582181343364],[10,28,67582181376132],[24,27,67582181408900],[48,25,67582181441668],[96,24,67582181474436]] },
 ];
 // Color options listed A to Z on every hat.
+// AS Colour hats live in snippets/asc-styles.liquid
+if (window.TB_ASC_BUILD) STYLES.push(...window.TB_ASC_BUILD([26, 22, 21, 19, 18], 68019397853316));
 STYLES.forEach(s => { if (Array.isArray(s.colors)) s.colors.sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base", numeric: true })); });
 const DECOS = [
   { id:"flat",  label:"Flat embroidery", add:0 },
@@ -2334,14 +2337,14 @@ function settleAfterCollapse(beforeTop, targetSel){
 /* ---------- step 1: hats ---------- */
 /* ---------- grid filters (brand + style) ---------- */
 const BRAND_OF = s => /richardson/i.test(s.brand) ? "Richardson" : /yupoong|yp classics/i.test(s.brand) ? "Yupoong"
-  : /otto/i.test(s.brand) ? "Otto" : /flexfit/i.test(s.brand) ? "Flexfit" : /^10 10/.test(s.brand) ? "10 10" : /atonal/i.test(s.brand) ? "Atonal" : "Other";
+  : /otto/i.test(s.brand) ? "Otto" : /flexfit/i.test(s.brand) ? "Flexfit" : /^10 10/.test(s.brand) ? "10 10" : /atonal/i.test(s.brand) ? "Atonal" : /as colour/i.test(s.brand) ? "AS Colour" : "Other";
 const KINDS = [
-  ["trucker", "Trucker", ["rich112","rich112_5p","rich112p","rich112pm","rich112pl","rich115","rich168","yp6606","yp6506","yupoong","o285","ff110m","ff6511"]],
-  ["solid", "Solid back", ["otto","atonal","atonal_a500","atonal_a500c","ff110f","yp6089","yp6789","otto120","tt6","tt5","tt7"]],
+  ["trucker", "Trucker", ["asc1108","asc1141","asc1161","rich112","rich112_5p","rich112p","rich112pm","rich112pl","rich115","rich168","yp6606","yp6506","yupoong","o285","ff110m","ff6511"]],
+  ["solid", "Solid back", ["asc1100","asc1150","asc1152","asc1130","asc1140","asc1103","otto","atonal","atonal_a500","atonal_a500c","ff110f","yp6089","yp6789","otto120","tt6","tt5","tt7"]],
   ["rope", "Rope", ["atonal_a500r","rich256","rich258","tt5r"]],
-  ["flat", "Flat bill", ["yupoong","ff110f","yp6089"]],
+  ["flat", "Flat bill", ["asc1100","asc1108","asc1150","asc1152","asc1114","asc1103","yupoong","ff110f","yp6089"]],
   ["fitted", "Fitted", ["ff6277","ff6511"]],
-  ["dad", "Dad hat / unstructured", ["yp6245","rich220","o598","atonal_a500","atonal_a500c"]],
+  ["dad", "Dad hat / unstructured", ["asc1130","asc1114","yp6245","rich220","o598","atonal_a500","atonal_a500c"]],
   ["perf", "Performance", ["rich220","rich258","rich256","tt6","tt5","tt5r","tt7"]]
 ];
 const filt = { brand: null, kind: null };
