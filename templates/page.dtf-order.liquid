@@ -1920,6 +1920,7 @@ const FRONT_POSITIONS = ["Left panel","Centered","Right panel"];
 {% render 'tb-text-option' %}
 {% render 'tt-stock' %}
 {% render 'atonal-stock' %}
+{% render 'house-stock' %}
 {% render 'ss-stock' %}
 <script>
 (function(){
@@ -1950,7 +1951,25 @@ function ttOut(s, c){
   return false;
 }
 // s.oos = colors marked out of stock by hand
-function isOut(s, c){ if (s && s.oos && s.oos.indexOf(c) > -1) return true; if (s && ttOut(s, c)) return true; const e = stockEntry(s, c); return !!e && e.qty < STOCK_MIN; }
+// Hats on our own shelf (snippets/house-stock.liquid). Listed colors show in stock
+// even when the supplier is out, but can't be ordered past the number on hand.
+const HOUSE = window.TB_HOUSE || {};
+function houseQty(s, c){ const h = s && HOUSE[s.id]; return (h && typeof h[c] === "number") ? h[c] : null; }
+function colorCount(c){ return state.colors.length === 1 ? (state.qty || 0) : (+state.split[c] || 0); }
+function houseOver(){
+  if (!state.style || isSized()) return null;
+  for (const c of state.colors){ const h = houseQty(state.style, c); if (h !== null && colorCount(c) > h) return { c: c, h: h }; }
+  return null;
+}
+function houseNote(){
+  const qf = $("qty"); if (!qf) return;
+  let n = $("houseNote");
+  if (!n){ n = document.createElement("p"); n.id = "houseNote"; n.className = "hint"; n.style.cssText = "color:#c0392b;font-weight:600;margin-top:10px"; const sh = $("splitHost"); sh.parentNode.insertBefore(n, sh.nextSibling); }
+  const o = houseOver();
+  n.style.display = o ? "" : "none";
+  n.textContent = o ? "We only have " + o.h + " " + o.c + " left in this hat. Lower " + o.c + " to " + o.h + " or add another color." : "";
+}
+function isOut(s, c){ { const hq = houseQty(s, c); if (hq !== null) return hq <= 0; } if (s && s.oos && s.oos.indexOf(c) > -1) return true; if (s && ttOut(s, c)) return true; const e = stockEntry(s, c); return !!e && e.qty < STOCK_MIN; }
 // S&S SKU for a color (and size, for fitted), saved on the order as a hidden property
 function skuFor(s, c, z){
   const e = stockEntry(s, c); if (!e || !e.skus) return "";
@@ -2363,7 +2382,7 @@ function renderColorPanel(){
           s.colors.map((c, i) =>
             '<div class="dd-opt ' + (state.colors.indexOf(c) > -1 ? "picked" : "") + (isOut(s, c) && state.colors.indexOf(c) === -1 ? " oos" : "") + '" data-color="' + c + '">' +
               '<img src="' + colorImg(s, c) + '" alt="' + c + '" loading="' + (i < 8 ? "eager" : "lazy") + '" decoding="async" onerror="this.onerror=null;this.src=\'' + s.imgs[0] + '\'">' +
-              '<span>' + c + (isOut(s, c) ? ' <em class="oos-tag">Out of stock</em>' : '') + '</span>' +
+              '<span>' + c + (isOut(s, c) ? ' <em class="oos-tag">Out of stock</em>' : (houseQty(s, c) > 0 ? ' <em class="oos-tag" style="background:#FFF6E5;color:#7a4b00">Only ' + houseQty(s, c) + ' left</em>' : '')) + '</span>' +
               (state.colors.indexOf(c) > -1 ? '<span class="tick">&#10003;</span>' : "") +
             '</div>').join("") +
           // lives inside #ddMenu so "sticky" pins it to the bottom of the
@@ -2609,6 +2628,7 @@ function canLeave(step){
   if (step === 1) return !!state.style && state.colors.length > 0;
   if (step === 2){
     if (!state.qty || state.qty < 5) return false;
+    if (houseOver()) return false;
     if (isSized() || state.colors.length > 1) return splitTotal() === state.qty;
     return true;
   }
@@ -2684,6 +2704,7 @@ function renderRail(){
 
 /* ---------- summaries + sticky bar ---------- */
 function sync(){
+  houseNote();
   if (meshClean() || isMesh() !== lastMesh){ lastMesh = isMesh(); renderDesign(); }
   $("sum1").innerHTML = state.style
     ? nameOf(state.style) + (state.colors.length ? " &middot; " + (state.colors.length === 1 ? state.colors[0] : state.colors.length + " colors") : "")
