@@ -2093,9 +2093,12 @@ function tierFor(style, qty){
 // DTF won't press flat on mesh, so mesh back truckers are front only.
 const MESH_IDS = ["rich112","rich112_5p","rich112p","rich112pm","rich112pl","rich115","rich168","yp6606","yp6506","yupoong","o285","ff110m","ff6511"];
 const isMesh = () => !!(state.style && MESH_IDS.indexOf(state.style.id) > -1);
+let lastMesh = false;
 function meshClean(){
-  if (!isMesh()) return;
-  ["left","right","back"].forEach(id => { if (state.places.has(id)) state.places.delete(id); if (state.files) state.files[id] = null; });
+  if (!isMesh()) return false;
+  let hit = false;
+  ["left","right","back"].forEach(id => { if (state.places.has(id)){ state.places.delete(id); hit = true; } if (state.files) state.files[id] = null; });
+  return hit;
 }
 function perHat(){
   const t = tierFor(state.style, state.qty);
@@ -2675,7 +2678,7 @@ function renderRail(){
 
 /* ---------- summaries + sticky bar ---------- */
 function sync(){
-  meshClean();
+  if (meshClean() || isMesh() !== lastMesh){ lastMesh = isMesh(); renderDesign(); }
   $("sum1").innerHTML = state.style
     ? nameOf(state.style) + (state.colors.length ? " &middot; " + (state.colors.length === 1 ? state.colors[0] : state.colors.length + " colors") : "")
     : "";
