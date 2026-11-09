@@ -3,7 +3,8 @@
   "Type text": up to 2 lines, a set of embroidery-friendly Google fonts, any
   thread color, with a live preview. The typed text is also rendered to a PNG
   and attached as that location's artwork, so it rides the same Drive + cart
-  path as an uploaded logo. Used by templates/page.custom-order.liquid.
+  path as an uploaded logo. Used by templates/page.custom-order.liquid and
+  templates/page.dtf-order.liquid (that page sets window.TBT_DTF = true for print wording).
 {%- endcomment -%}
 <style>
   #tbco .up-mode{display:flex;gap:6px;margin:0 0 10px}
@@ -27,6 +28,8 @@
 </style>
 <script>
 window.TBT = (function(){
+  var DTF = window.TBT_DTF === true;
+  var CLBL = DTF ? "Color" : "Thread color";
   var FONTS = ["Bebas Neue","Anton","Archivo Black","Alfa Slab One","Graduate","Racing Sans One","Rye","Lobster","Pacifico","Yellowtail"];
   var QUICK = ["#14121C","#FFFFFF","#C8102E","#0B2A5B","#1F4FB5","#C9A227","#2E6B3F","#7A4A2A"];
   var S = {};
@@ -53,16 +56,16 @@ window.TBT = (function(){
     return '<div class="tt-ed" data-tt="' + p + '">' +
       '<input type="text" maxlength="24" placeholder="Line 1" data-tl="l1" value="' + esc(t.l1) + '">' +
       '<input type="text" maxlength="24" placeholder="Line 2 (optional)" data-tl="l2" value="' + esc(t.l2) + '">' +
-      '<p class="tt-exact"><strong>We stitch it exactly as you type it.</strong> Capital and lowercase letters, spelling, spacing and punctuation all come out the way you enter them, so double-check before you order.</p>' +
+      '<p class="tt-exact"><strong>We ' + (DTF ? 'print' : 'stitch') + ' it exactly as you type it.</strong> Capital and lowercase letters, spelling, spacing and punctuation all come out the way you enter them, so double-check before you order.</p>' +
       '<div class="tt-prev" style="background:' + bg(t.color) + '"></div>' +
       '<div class="tt-lbl">Font</div><div class="tt-fonts">' +
         FONTS.map(function(f){ return '<button type="button" data-tf="' + f + '" class="' + (f === t.font ? "on" : "") + '" style="font-family:\'' + f + '\'">' + sample + '</button>'; }).join("") +
       '</div>' +
-      '<div class="tt-lbl">Thread color</div><div class="tt-color">' +
-        QUICK.map(function(c){ return '<button type="button" data-tc="' + c + '" class="' + (c.toLowerCase() === t.color.toLowerCase() ? "on" : "") + '" style="background:' + c + '" aria-label="Thread color ' + c + '"></button>'; }).join("") +
+      '<div class="tt-lbl">' + CLBL + '</div><div class="tt-color">' +
+        QUICK.map(function(c){ return '<button type="button" data-tc="' + c + '" class="' + (c.toLowerCase() === t.color.toLowerCase() ? "on" : "") + '" style="background:' + c + '" aria-label="' + CLBL + ' ' + c + '"></button>'; }).join("") +
         '<label><input type="color" data-tcp value="' + t.color + '">Any color</label>' +
       '</div>' +
-      '<p class="tt-note">We match your color to the closest thread. Text is stitched flat or 3D puff, whichever you picked above, and your mockup shows the final size.</p>' +
+      '<p class="tt-note">' + (DTF ? 'We print the color you pick. Your mockup shows the final size.' : 'We match your color to the closest thread. Text is stitched flat or 3D puff, whichever you picked above, and your mockup shows the final size.') + '</p>' +
     '</div>';
   }
   function paintPrev(box, t){
@@ -92,7 +95,7 @@ window.TBT = (function(){
   }
   function summary(p){
     var t = S[p]; if (!has(p)) return "";
-    return [t.l1, t.l2].filter(function(x){ return x; }).join(" / ") + " | Font: " + t.font + " | Thread: " + t.color.toUpperCase();
+    return [t.l1, t.l2].filter(function(x){ return x; }).join(" / ") + " | Font: " + t.font + (DTF ? " | Color: " : " | Thread: ") + t.color.toUpperCase();
   }
   // Wires a rendered uploads host. onMode(p) re-renders, onFile(p, file) stores the artwork.
   function bind(host, onMode, onFile){
