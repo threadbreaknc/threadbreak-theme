@@ -10,12 +10,14 @@ window.TB_ASC = [{"id":"asc1100","name":"AS Colour 1100 Stock Cap","brand":"AS C
 window.TB_ASC_BUILD = function(prices, firstId){
   var BASE = "https://cdn11.bigcommerce.com/s-hsi95a83fz/images/stencil/800x800/";
   var Q = [5,10,24,48,96];
+  // color shown on each hat card in the grid, so they don't all read as black
+  var LEAD = {"asc1100": "Forest Green", "asc1108": "Khaki", "asc1150": "Eucalyptus", "asc1152": "Sage", "asc1130": "Bone", "asc1140": "Petrol Blue", "asc1141": "Army", "asc1161": "Sunset", "asc1114": "Seafoam", "asc1103": "Mineral"};
   return window.TB_ASC.map(function(s, i){
     var colors = Object.keys(s.views), ci = {}, cv = {};
     colors.forEach(function(c){ var v = s.views[c].map(function(p){ return BASE + p + ".jpg"; }); ci[c] = v[0]; cv[c] = v; });
-    var first = ci["Black"] || ci[colors[0]];
+    var lead = (LEAD[s.id] && cv[LEAD[s.id]]) ? LEAD[s.id] : colors[0];
     return { id:s.id, name:s.name, brand:s.brand, desc:s.desc, popular:90, features:s.features,
-      imgs:(cv["Black"] || cv[colors[0]]).slice(), colors:colors, colorImgs:ci, colorViews:cv, oos:s.oos.slice(),
+      imgs:cv[lead].slice(), colors:colors, colorImgs:ci, colorViews:cv, oos:s.oos.slice(),
       tiers:Q.map(function(q, k){ return [q, prices[k], firstId + (i * 5 + k) * 32768]; }) };
   });
 };

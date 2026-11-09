@@ -103,6 +103,9 @@
   #tbco .hat:focus-visible{outline:2.5px solid var(--purple);outline-offset:2px}
   #tbco .hat.on{border-color:var(--purple);box-shadow:0 6px 22px rgba(80,40,170,.18);overflow:visible;z-index:5}
   #tbco .hats.picking .hat{display:none}
+  #tbco .hat-group{grid-column:1/-1;font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.02em;line-height:1;margin:10px 0 -2px;color:var(--ink)}
+  #tbco .hat-group:first-child{margin-top:2px}
+  #tbco .hats.picking .hat-group,#tbco .hats.filtering .hat-group{display:none}
   #tbco .hats.picking .hat.on{display:grid;cursor:default}
   #tbco .hats.picking .hat.on:hover{transform:none}
   #tbco .hat-img{width:100%;aspect-ratio:1/1;object-fit:contain;background:#fff;display:block}
@@ -2122,7 +2125,9 @@ const sorted = STYLES.filter(s => HIDDEN_STYLES.indexOf(s.id) === -1).sort((a, b
   return a.brand.localeCompare(b.brand);
 });
 
-const BADGES = { rich112_5p: "Most popular", otto: "Best value", atonal_a500r: "Premium rope" };
+// Shown first under "Top sellers", in this order. Everything else follows under "All other hats".
+const TOP_SELLERS = ["rich112","otto","otto120","tt5","atonal_a500r","yupoong"];
+const BADGES = { otto: "Best value", atonal_a500r: "Premium rope" };
 
 // Display name without the model number; the model lives in the secondary line.
 const CLEAN_NAME = {
@@ -2380,7 +2385,8 @@ function renderHats(){
   grid.classList.toggle("picking", picking);
   renderFilters(picking);
 
-  grid.innerHTML = sorted.map((s, idx) => {
+  const ordered = TOP_SELLERS.map(id => sorted.find(s => s.id === id)).filter(Boolean).concat(sorted.filter(s => TOP_SELLERS.indexOf(s.id) === -1));
+  grid.innerHTML = ordered.map((s, idx) => {
     const on = state.style && state.style.id === s.id;
     const badge = BADGES[s.id] ? '<div class="hat-badge">' + BADGES[s.id] + '</div>' : "";
     const low = s.tiers[s.tiers.length - 1][1];
@@ -2430,6 +2436,14 @@ function renderHats(){
       '<div class="hat-expand" id="colorHost"></div></div>';
   }).join("");
 
+  // group headings (hidden while a hat is open or a filter is on)
+  grid.classList.toggle("filtering", !!(filt.brand || filt.kind));
+  if (!picking){
+    const mk = t => { const d = document.createElement("div"); d.className = "hat-group"; d.textContent = t; return d; };
+    const cards = [...grid.querySelectorAll(".hat")];
+    const firstOther = cards.find(c => TOP_SELLERS.indexOf(c.dataset.hat) === -1);
+    if (cards[0] && cards[0] !== firstOther){ grid.insertBefore(mk("Top sellers"), cards[0]); if (firstOther) grid.insertBefore(mk("All other hats"), firstOther); }
+  }
   grid.querySelectorAll("[data-hat]").forEach(el => {
     const pick = ev => {
       if (ev.target.closest(".hat-expand") || ev.target.closest("[data-change]")) return;
