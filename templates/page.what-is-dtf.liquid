@@ -1,0 +1,194 @@
+{%- comment -%}
+  What is DTF: process, durability and care, DTF vs embroidery vs patch, best designs, AI art, FAQ.
+  Page /pages/what-is-dtf. Copy lives here, same layout classes as page.embroidery-guide.
+{%- endcomment -%}
+<style>
+  .tbeg{--purple:#5028AA;--ink:#14121C;--muted:#5c5a68;--line:#E2E0EA;--ice:#F4F1FB;--ok:#2f8a4e;--no:#c0392b;background:#fff;color:var(--ink);font-family:'DM Sans',system-ui,sans-serif}
+  .tbeg-wrap{max-width:980px;margin:0 auto;padding:8.5rem 20px 4rem}
+  .tbeg-eyebrow{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin:0 0 8px}
+  .tbeg h1{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(2.6rem,7vw,4.4rem);line-height:1;margin:0 0 12px}
+  .tbeg-lead{font-size:18px;line-height:1.65;color:#2a2638;max-width:700px;margin:0 0 22px}
+  .tbeg ul.tbeg-jump{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 34px;padding:0;list-style:none}
+  .tbeg ul.tbeg-jump li{margin:0;display:block;list-style:none;flex:0 0 auto}
+  .tbeg-jump a{display:inline-block;padding:8px 13px;border:1px solid var(--line);border-radius:999px;font-size:14px;font-weight:600;color:var(--ink);text-decoration:none}
+  .tbeg-jump a:hover{border-color:var(--purple);color:var(--purple)}
+  .tbeg section{margin:0 0 44px;scroll-margin-top:110px}
+  .tbeg h2{font-size:clamp(24px,3.4vw,30px);line-height:1.2;margin:0 0 10px;font-weight:700}
+  .tbeg p{font-size:16.5px;line-height:1.7;color:#2a2638;margin:0 0 14px}
+  .tbeg ul{margin:0 0 14px;padding-left:1.25rem;list-style:disc}
+  .tbeg li{font-size:16px;line-height:1.6;color:#2a2638;margin:0 0 7px}
+  .tbeg a{color:var(--purple);font-weight:600}
+  .tbeg-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:6px 0 10px}
+  @media(max-width:599px){
+    .tbeg-grid{grid-template-columns:1fr;gap:0;border:1px solid var(--line);border-radius:14px;padding:2px 16px;background:#fff}
+    .tbeg-grid .tbeg-card{border:0;border-radius:0;padding:14px 0 12px;border-bottom:1px solid var(--line)}
+    .tbeg-grid .tbeg-card:last-child{border-bottom:0}
+    .tbeg-grid .tbeg-card h3{font-size:16px;margin-bottom:4px}
+    .tbeg-grid .tbeg-card p{font-size:14.5px;margin:0 0 0 31px;line-height:1.5}
+    .tbeg ul.tbeg-jump{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 -16px 28px;padding:0 16px}
+    .tbeg ul.tbeg-jump::-webkit-scrollbar{display:none}
+    .tbeg-jump a{white-space:nowrap;padding:7px 12px;font-size:13.5px}
+    .tbeg h2{font-size:24px}
+  }
+  .tbeg-card{border:1px solid var(--line);border-radius:14px;padding:18px 18px 14px;background:#fff}
+  .tbeg-card h3{font-size:17px;margin:0 0 6px;display:flex;align-items:flex-start;gap:9px;line-height:1.3}
+  .tbeg-card p{font-size:15px;margin:0 0 6px;color:var(--muted)}
+  .tbeg-ok h3::before,.tbeg-no h3::before{flex:0 0 auto;width:22px;height:22px;border-radius:50%;color:#fff;font-size:13px;display:inline-flex;align-items:center;justify-content:center;font-weight:800}
+  .tbeg-ok h3::before{content:"\2713";background:var(--ok)}
+  .tbeg-no h3::before{content:"\2715";background:var(--no)}
+  .tbeg-note{background:var(--ice);border-radius:14px;padding:18px 20px;margin:10px 0 0}
+  .tbeg-note p:last-child,.tbeg-note ul:last-child{margin-bottom:0}
+  .tbeg-ai{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:start}
+  .tbeg-ai img{width:100%;border-radius:14px;border:1px solid var(--line);display:block}
+  .tbeg-ai figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+  .tbeg-two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .tbeg-cta{background:var(--ink);color:#fff;border-radius:16px;padding:26px 22px}
+  .tbeg-cta h2{color:#fff;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:34px;margin:0 0 6px}
+  .tbeg-cta p{color:rgba(255,255,255,.82);margin:0 0 16px}
+  .tbeg-cta .btns{display:flex;flex-wrap:wrap;gap:10px}
+  .tbeg-cta a{display:inline-block;padding:12px 18px;border-radius:10px;font-weight:700;text-decoration:none}
+  .tbeg-cta .b1{background:var(--purple);color:#fff}.tbeg-cta .b2{background:#fff;color:var(--ink)}
+  .tbeg-gal{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0 4px}
+  .tbeg-gal figure{margin:0}
+  .tbeg-gal img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:14px;display:block;background:var(--ice)}
+  .tbeg-gal figcaption{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.4}
+  .tbeg-hero{width:100%;height:auto;aspect-ratio:16/7;object-fit:cover;border-radius:18px;display:block;margin:0 0 30px;box-shadow:0 18px 40px -22px rgba(20,18,28,.45)}
+  @media(max-width:720px){.tbeg-gal{grid-template-columns:1fr 1fr}.tbeg-gal figure:last-child:nth-child(odd){grid-column:1/-1}.tbeg-hero{aspect-ratio:4/3}}
+  @media(max-width:720px){.tbeg-ai,.tbeg-two{grid-template-columns:1fr}}
+</style>
+<style>
+  .tbdg-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:8px 0 6px}
+  .tbdg-step{border:1px solid var(--line);border-radius:14px;padding:16px 15px 12px;background:#fff}
+  .tbdg-step svg{display:block;width:100%;height:auto;max-width:150px;margin:0 auto 10px}
+  .tbdg-step b{display:flex;align-items:center;gap:8px;font-size:16px;margin:0 0 5px}
+  .tbdg-step b span{flex:0 0 24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;font-size:12.5px;display:inline-flex;align-items:center;justify-content:center}
+  .tbdg-step p{font-size:14.5px;line-height:1.55;color:var(--muted);margin:0}
+  .tbdg-tbl{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;font-size:14.5px;margin:6px 0 10px}
+  .tbdg-tbl th,.tbdg-tbl td{padding:11px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line);line-height:1.45}
+  .tbdg-tbl tr:last-child td{border-bottom:0}
+  .tbdg-tbl thead th{background:var(--ink);color:#fff;font-size:13px;letter-spacing:.04em;text-transform:uppercase}
+  .tbdg-tbl thead th.hl{background:var(--purple)}
+  .tbdg-tbl td.hl{background:var(--ice);font-weight:600}
+  .tbdg-tbl tbody th{font-weight:700;color:var(--ink);background:#FAFAFC;width:22%}
+  .tbdg-tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tbdg-care{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .tbdg-faq details{border:1px solid var(--line);border-radius:12px;padding:0 16px;margin:0 0 10px;background:#fff}
+  .tbdg-faq summary{cursor:pointer;font-weight:700;font-size:16px;padding:14px 0;list-style:none}
+  .tbdg-faq summary::-webkit-details-marker{display:none}
+  .tbdg-faq summary::after{content:"+";float:right;color:var(--purple);font-size:20px;line-height:1}
+  .tbdg-faq details[open] summary::after{content:"\2212"}
+  .tbdg-faq details p{font-size:15.5px}
+  @media(max-width:860px){.tbdg-steps{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){.tbdg-steps{grid-template-columns:1fr}.tbdg-step{display:grid;grid-template-columns:84px 1fr;gap:12px;align-items:center}.tbdg-step svg{margin:0}.tbdg-care{grid-template-columns:1fr}.tbdg-tbl{font-size:13.5px;min-width:560px}}
+</style>
+<div class="tbeg">
+  <div class="tbeg-wrap">
+    <p class="tbeg-eyebrow">DTF guide</p>
+    <h1>What is DTF printing?</h1>
+    <p class="tbeg-lead">DTF stands for direct to film. It's how we put a full color design on a hat without thread. If your logo has gradients, a photo, lots of colors or fine detail, or it came out of an AI tool, DTF prints it the way it looks on your screen.</p>
+    <ul class="tbeg-jump">
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#durability">Durability &amp; care</a></li>
+      <li><a href="#compare">DTF vs embroidery</a></li>
+      <li><a href="#designs">Best designs</a></li>
+      <li><a href="#ai">AI designs</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+
+    <section id="how">
+      <h2>How DTF works</h2>
+      <p>DTF is a heat transfer, but it isn't vinyl and it isn't a sticker. Your design is printed with real ink, then bonded into the fabric with heat and pressure.</p>
+      <div class="tbdg-steps">
+        <div class="tbdg-step"><svg viewBox="0 0 160 110" aria-hidden="true"><rect x="0" y="0" width="160" height="110" rx="12" fill="#F4F1FB"/><rect x="30" y="18" width="100" height="62" rx="4" fill="#fff" stroke="#C9C2DE" stroke-width="2"/><rect x="40" y="10" width="80" height="12" rx="3" fill="#14121C"/><circle cx="62" cy="49" r="13" fill="#E8435A"/><circle cx="80" cy="49" r="13" fill="#F2B632" opacity=".9"/><circle cx="98" cy="49" r="13" fill="#2C8FD6" opacity=".9"/><rect x="52" y="86" width="56" height="6" rx="3" fill="#C9C2DE"/></svg><div><b><span>1</span>Print</b><p>Your design is printed in full color onto a clear film, with a layer of white ink behind it so colors stay bright on dark hats.</p></div></div>
+        <div class="tbdg-step"><svg viewBox="0 0 160 110" aria-hidden="true"><rect x="0" y="0" width="160" height="110" rx="12" fill="#F4F1FB"/><rect x="30" y="42" width="100" height="44" rx="4" fill="#fff" stroke="#C9C2DE" stroke-width="2"/><circle cx="62" cy="64" r="11" fill="#E8435A"/><circle cx="80" cy="64" r="11" fill="#F2B632"/><circle cx="98" cy="64" r="11" fill="#2C8FD6"/><circle cx="50" cy="20" r="1.8" fill="#9A93B3"/><circle cx="62" cy="28" r="1.8" fill="#9A93B3"/><circle cx="74" cy="16" r="1.8" fill="#9A93B3"/><circle cx="86" cy="30" r="1.8" fill="#9A93B3"/><circle cx="98" cy="22" r="1.8" fill="#9A93B3"/><circle cx="110" cy="34" r="1.8" fill="#9A93B3"/><circle cx="70" cy="38" r="1.8" fill="#9A93B3"/><circle cx="92" cy="40" r="1.8" fill="#9A93B3"/><circle cx="56" cy="36" r="1.8" fill="#9A93B3"/><circle cx="104" cy="14" r="1.8" fill="#9A93B3"/><path d="M64 6h32l-6 10H70z" fill="#5028AA"/></svg><div><b><span>2</span>Powder</b><p>A fine adhesive powder goes on while the ink is wet, then it's cured with heat. That powder is what bonds the print to the hat.</p></div></div>
+        <div class="tbdg-step"><svg viewBox="0 0 160 110" aria-hidden="true"><rect x="0" y="0" width="160" height="110" rx="12" fill="#F4F1FB"/><path d="M28 82c0-30 22-54 52-54s52 24 52 54z" fill="#3B3F4A"/><path d="M20 82h120c-6 10-30 14-60 14S26 92 20 82z" fill="#2B2E36"/><rect x="38" y="8" width="84" height="16" rx="4" fill="#5028AA"/><rect x="74" y="24" width="12" height="10" fill="#5028AA"/><path d="M58 54c0-6 10-10 22-10s22 4 22 10v8H58z" fill="#fff" opacity=".9"/></svg><div><b><span>3</span>Press</b><p>We heat press the transfer onto your hat in our shop in Burlington, NC.</p></div></div>
+        <div class="tbdg-step"><svg viewBox="0 0 160 110" aria-hidden="true"><rect x="0" y="0" width="160" height="110" rx="12" fill="#F4F1FB"/><path d="M28 84c0-30 22-54 52-54s52 24 52 54z" fill="#3B3F4A"/><path d="M20 84h120c-6 10-30 14-60 14S26 94 20 84z" fill="#2B2E36"/><circle cx="68" cy="60" r="9" fill="#E8435A"/><circle cx="80" cy="60" r="9" fill="#F2B632"/><circle cx="92" cy="60" r="9" fill="#2C8FD6"/><path d="M104 22l22-10 4 10-22 10z" fill="#fff" stroke="#C9C2DE" stroke-width="2"/></svg><div><b><span>4</span>Peel</b><p>The film peels away and only your design is left, bonded to the fabric with a thin, smooth finish.</p></div></div>
+      </div>
+    </section>
+
+    <section id="durability">
+      <h2>How long does DTF last?</h2>
+      <p>A properly pressed DTF print is bonded into the fibers, so it flexes with the hat instead of sitting on top of it. On shirts, DTF transfers are commonly rated for 50 or more washes. Hats rarely go through a washing machine, so for most people the print lasts as long as the hat does.</p>
+      <p>Being straight with you: embroidery is still the toughest decoration there is. After years of heavy sun and sweat, any print can start to show some fading or wear at the edges. If you want a hat that outlasts everything, go with thread. If you want full color at a lower price, DTF holds up great.</p>
+      <div class="tbdg-care">
+        <div class="tbeg-card tbeg-ok"><h3>Do</h3><ul style="margin:6px 0 4px">
+          <li>Spot clean with cool water and mild soap</li>
+          <li>Hand wash cold if the whole hat needs it</li>
+          <li>Let it air dry, ideally on something round so it keeps its shape</li>
+          <li>Wait 24 hours after you get it before the first wash</li>
+        </ul></div>
+        <div class="tbeg-card tbeg-no"><h3>Don't</h3><ul style="margin:6px 0 4px">
+          <li>Put it in the dryer or dishwasher</li>
+          <li>Use bleach or harsh cleaners on the print</li>
+          <li>Scrub the print with a stiff brush</li>
+          <li>Iron over the print</li>
+        </ul></div>
+      </div>
+    </section>
+
+    <section id="compare">
+      <h2>DTF vs embroidery vs leather patch</h2>
+      <div class="tbdg-tblwrap"><table class="tbdg-tbl">
+        <thead><tr><th></th><th class="hl">DTF print</th><th>Embroidery</th><th>Laser engraved patch</th></tr></thead>
+        <tbody>
+          <tr><th>Look</th><td class="hl">Flat, full color print</td><td>Raised, textured thread</td><td>Engraved leatherette, tone on tone</td></tr>
+          <tr><th>Colors</th><td class="hl">Unlimited</td><td>Solid thread colors</td><td>One tone, set by the patch material</td></tr>
+          <tr><th>Gradients &amp; photos</th><td class="hl">Yes</td><td>No</td><td>No</td></tr>
+          <tr><th>Fine detail</th><td class="hl">Very fine detail and small text</td><td>Bold shapes, text about 1/4 in or bigger</td><td>Fine lines and small text</td></tr>
+          <tr><th>Durability</th><td class="hl">Very good</td><td>The best</td><td>Very good</td></tr>
+          <tr><th>Locations</th><td class="hl">Front, sides, back. Front only on mesh truckers</td><td>Front, sides, back</td><td>Front</td></tr>
+          <tr><th>Price</th><td class="hl">Our lowest per hat</td><td>Higher</td><td>In between</td></tr>
+          <tr><th>Best for</th><td class="hl">Colorful logos, AI art, photos, tighter budgets</td><td>Classic logos and a premium stitched look</td><td>Detailed logos with a clean, premium look</td></tr>
+        </tbody>
+      </table></div>
+      <p style="font-size:15px;color:var(--muted)">Not sure which one fits your logo? <a href="sms:+13365856176">Text us</a> or <a href="mailto:help@threadbreak.com">email it over</a> and we'll tell you what we'd pick.</p>
+    </section>
+
+    <section id="designs">
+      <h2>What prints best</h2>
+      <div class="tbeg-grid">
+        <div class="tbeg-card tbeg-ok"><h3>Full color logos</h3><p>As many colors as you want, with no extra charge for more colors.</p></div>
+        <div class="tbeg-card tbeg-ok"><h3>Gradients, glows and shadows</h3><p>The things thread can't do, DTF prints smooth.</p></div>
+        <div class="tbeg-card tbeg-ok"><h3>Photos and realistic art</h3><p>Pets, people, product shots and detailed illustrations all print well.</p></div>
+        <div class="tbeg-card tbeg-ok"><h3>Small text and thin lines</h3><p>Detail that would blur in thread stays sharp in print.</p></div>
+      </div>
+      <h2 style="margin-top:26px">Where DTF isn't the right fit</h2>
+      <div class="tbeg-grid">
+        <div class="tbeg-card tbeg-no"><h3>Mesh backs</h3><p>The print can't press flat on mesh, so side and back prints aren't offered on trucker hats. Fronts are fine.</p></div>
+        <div class="tbeg-card tbeg-no"><h3>Very textured fabric</h3><p>Ridges like corduroy can show through the print. We'll point it out on your mockup.</p></div>
+        <div class="tbeg-card tbeg-no"><h3>Oversized designs</h3><p>Front prints top out around 4.5 in wide by 2.5 in tall. Low profile hats, sides and back take a smaller print.</p></div>
+        <div class="tbeg-card tbeg-no"><h3>That raised, stitched look</h3><p>DTF is flat. If you want texture and depth, go with <a href="/pages/custom-order">embroidery</a> or <a href="/pages/custom-patch-hats">a patch</a>.</p></div>
+      </div>
+    </section>
+
+    <section id="ai">
+      <h2>Got an AI-generated design? Print it.</h2>
+      <div class="tbeg-note">
+        <p>AI images are full of shading, glows and fine detail. That's tough to stitch in thread, but it's exactly what DTF is good at. Most AI designs print as they are, with no redrawing.</p>
+        <p><strong>A few tips so it prints clean:</strong></p>
+        <ul>
+          <li>Download the biggest version you can, ideally 2000 pixels wide or more.</li>
+          <li>Ask the AI tool for a <strong>transparent or plain background</strong>, or tell us to remove it.</li>
+          <li><strong>Check every word.</strong> AI tools often warp letters or make up words, and we print exactly what's in the file.</li>
+          <li>Skip tiny text along the edges. It's the first thing that gets lost at hat size.</li>
+        </ul>
+        <p>We check every file before printing and will let you know if it's too low resolution to print clean. Please make sure you have the rights to use the design.</p>
+      </div>
+    </section>
+
+    <section id="faq" class="tbdg-faq">
+      <h2>DTF questions</h2>
+      <details><summary>Will it crack or peel?</summary><p>Not with normal wear. DTF is flexible and bonds into the fabric, so it bends with the hat. Most cracking and peeling comes from dryer heat, harsh chemicals or scrubbing, so follow the care tips above.</p></details>
+      <details><summary>Is DTF the same as vinyl?</summary><p>No. Vinyl is cut from a sheet of solid color and layered on, which gets thick and limits you to a few colors. DTF is printed ink, so it's thinner and can be any number of colors.</p></details>
+      <details><summary>Does it work on dark hats?</summary><p>Yes. Every print has a white layer underneath, so colors stay bright on black, navy and camo.</p></details>
+      <details><summary>What does it feel like?</summary><p>Thin and smooth with a slight sheen. You can feel it, but it's much lower than embroidery or a patch.</p></details>
+      <details><summary>What's the minimum and lead time?</summary><p>5 hats minimum, same as our other custom hats. Current lead time is 2-4 weeks after you approve your free mockup.</p></details>
+    </section>
+
+    <div class="tbeg-cta">
+      <h2>Ready for full color?</h2>
+      <p>Pick a hat, send your design and get a free mockup before anything is printed. 5 hat minimum, free shipping to the lower 48.</p>
+      <div class="btns"><a class="b1" href="/pages/custom-dtf-hats">Start a DTF order</a><a class="b2" href="/pages/embroidery-guide">Read the embroidery guide</a></div>
+    </div>
+  </div>
+</div>
