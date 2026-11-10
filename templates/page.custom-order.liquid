@@ -239,6 +239,9 @@
   #tbco .chip.on{border-color:var(--purple);background:var(--ice);color:var(--purple);font-weight:600}
   #tbco .chip .tag{font-size:10.5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:var(--purple);color:#fff;border-radius:999px;padding:2px 8px;margin-left:7px;display:inline-block;vertical-align:1px}
   #tbco .chip .tag.inc{background:var(--good)}
+  #tbco .chip.off{opacity:.5;cursor:not-allowed;background:#f6f6f8}
+  #tbco .chip.off:hover{border-color:var(--line)}
+  #tbco .chip .tag.no{background:#8a8896}
 
   /* step 3 pieces */
   #tbco .fld{font-size:13.5px;font-weight:700;margin-top:20px;margin-bottom:7px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -485,6 +488,7 @@
 
       <p class="fld">Placement</p>
       <div class="chips" id="places"></div>
+      <p class="hint" id="beanieNote" style="display:none;margin-top:8px"><strong>Beanies are stitched flat on the front cuff.</strong> 3D puff and side or back logos aren't available on knit beanies. Cuff logos are usually up to about 2 inches tall.</p>
       <div class="orient-note">
         <span class="orient-icon" aria-hidden="true">&#9432;</span>
         <p><strong>Left and right are based on looking at the hat from the front, not the wearer's perspective.</strong></p>
@@ -700,6 +704,7 @@
 
 
 {% render 'asc-styles' %}
+{% render 'beanie-styles' %}
 <script>
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuCYOYP96-fhmSnVsPYHuPi0LT1segF4291MGeHJ4eWCW_FONn7deif6Wj81CD_Yox/exec";
 // S&S photos are stored as "ss:<id>" / "<id>" to keep this template under Shopify's size limit.
@@ -2014,6 +2019,8 @@ const STYLES = [
 ];
 // Color options listed A to Z on every hat.
 // AS Colour hats live in snippets/asc-styles.liquid
+// Beanies (embroidery only) live in snippets/beanie-styles.liquid
+if (window.TB_BEANIE_BUILD) STYLES.push(...window.TB_BEANIE_BUILD(68022236676228));
 if (window.TB_ASC_BUILD) STYLES.push(...window.TB_ASC_BUILD([26, 22, 21, 19, 18], 68019397853316));
 STYLES.forEach(s => { if (Array.isArray(s.colors)) s.colors.sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base", numeric: true })); });
 const DECOS = [
@@ -2231,7 +2238,19 @@ function tierFor(style, qty){
   for (const tier of style.tiers) if (qty >= tier[0]) t = tier;
   return t;
 }
+// Beanies: stitched flat on the front cuff only (no puff, no sides/back, always centered)
+const isBeanie = () => !!(state.style && state.style.beanie);
+let lastBeanie = false;
+function beanieClean(){
+  if (!isBeanie()) return false;
+  let hit = false;
+  ["left","right","back"].forEach(id => { if (state.places.has(id)){ state.places.delete(id); hit = true; } if (state.files) state.files[id] = null; });
+  if (state.deco && state.deco.id !== DECOS[0].id){ state.deco = DECOS[0]; hit = true; }
+  if (state.frontPos !== "Centered"){ state.frontPos = "Centered"; hit = true; }
+  return hit;
+}
 function perHat(){
+  beanieClean();
   const t = tierFor(state.style, state.qty);
   if (!t) return null;
   let p = t[1] + (state.deco.add || 0);
@@ -2342,7 +2361,7 @@ function settleAfterCollapse(beforeTop, targetSel){
 /* ---------- step 1: hats ---------- */
 /* ---------- grid filters (brand + style) ---------- */
 const BRAND_OF = s => /richardson/i.test(s.brand) ? "Richardson" : /yupoong|yp classics/i.test(s.brand) ? "Yupoong"
-  : /otto/i.test(s.brand) ? "Otto" : /flexfit/i.test(s.brand) ? "Flexfit" : /^10 10/.test(s.brand) ? "10 10" : /atonal/i.test(s.brand) ? "Atonal" : /as colour/i.test(s.brand) ? "AS Colour" : "Other";
+  : /otto/i.test(s.brand) ? "Otto" : /flexfit/i.test(s.brand) ? "Flexfit" : /^10 10/.test(s.brand) ? "10 10" : /atonal/i.test(s.brand) ? "Atonal" : /as colour/i.test(s.brand) ? "AS Colour" : /sportsman/i.test(s.brand) ? "Sportsman" : "Other";
 const KINDS = [
   ["trucker", "Trucker", ["asc1108","asc1141","asc1161","rich112","rich112_5p","rich112p","rich112pm","rich112pl","rich115","rich168","yp6606","yp6506","yupoong","o285","ff110m","ff6511"]],
   ["solid", "Solid back", ["asc1100","asc1150","asc1152","asc1130","asc1140","asc1103","otto","atonal","atonal_a500","atonal_a500c","ff110f","yp6089","yp6789","otto120","tt6","tt5","tt7"]],
@@ -2350,9 +2369,18 @@ const KINDS = [
   ["flat", "Flat bill", ["asc1100","asc1108","asc1150","asc1152","asc1114","asc1103","yupoong","ff110f","yp6089"]],
   ["fitted", "Fitted", ["ff6277","ff6511"]],
   ["dad", "Dad hat / unstructured", ["asc1130","asc1114","yp6245","rich220","o598","atonal_a500","atonal_a500c"]],
+  ["beanie", "Beanies", ["otto82404","otto821316","otto82481","sp12","sp15","yp1501kc"]],
   ["perf", "Performance", ["rich220","rich258","rich256","tt6","tt5","tt5r","tt7"]]
 ];
 const filt = { brand: null, kind: null };
+// Links can open the grid pre-filtered (?style=beanie) or with a hat already picked (?hat=sp12)
+(function(){
+  try {
+    const q = new URLSearchParams(location.search);
+    const k = q.get("style"); if (k && KINDS.some(x => x[0] === k)) filt.kind = k;
+    const h = q.get("hat"); const hs = h && STYLES.find(x => x.id === h); if (hs){ state.style = hs; state.colors = []; state.split = {}; }
+  } catch (e) {}
+})();
 const kindHas = (k, s) => { const e = KINDS.find(x => x[0] === k); return !!e && e[2].indexOf(s.id) > -1; };
 const passes = (s, f) => (!f.brand || BRAND_OF(s) === f.brand) && (!f.kind || kindHas(f.kind, s));
 function renderFilters(picking){
@@ -2646,26 +2674,33 @@ function evenSplit(){
 
 /* ---------- step 3: design ---------- */
 function renderDesign(){
-  $("decos").innerHTML = DECOS.map(d =>
-    '<button type="button" class="chip ' + (d.id === state.deco.id ? "on" : "") + '" data-d="' + d.id + '">' + d.label +
-    (d.add ? '<span class="tag">+' + money(d.add) + '/hat</span>' : '<span class="tag inc">Included</span>') + '</button>').join("");
+  beanieClean();
+  const bn = isBeanie();
+  if ($("beanieNote")) $("beanieNote").style.display = bn ? "" : "none";
+  $("decos").innerHTML = DECOS.map((d, i) => {
+    const off = bn && i > 0;
+    return '<button type="button" class="chip ' + (d.id === state.deco.id ? "on" : "") + (off ? " off" : "") + '" data-d="' + d.id + '"' + (off ? ' disabled aria-disabled="true"' : '') + '>' + d.label +
+    (off ? '<span class="tag no">Not on beanies</span>' : d.add ? '<span class="tag">+' + money(d.add) + '/hat</span>' : '<span class="tag inc">Included</span>') + '</button>';
+  }).join("");
   $("decos").querySelectorAll("[data-d]").forEach(b =>
-    b.addEventListener("click", () => { state.deco = DECOS.find(d => d.id === b.dataset.d); renderDesign(); sync(); }));
+    b.addEventListener("click", () => { if (b.disabled) return; state.deco = DECOS.find(d => d.id === b.dataset.d); renderDesign(); sync(); }));
 
-  $("places").innerHTML = PLACEMENTS.map(p =>
-    '<button type="button" class="chip ' + (state.places.has(p.id) ? "on" : "") + '" data-p="' + p.id + '">' + p.label +
-    (p.add ? '<span class="tag">+' + money(p.add) + '/hat</span>' : '<span class="tag inc">Included</span>') + '</button>').join("");
+  $("places").innerHTML = PLACEMENTS.map(p => {
+    const off = bn && !p.locked;
+    return '<button type="button" class="chip ' + (state.places.has(p.id) ? "on" : "") + (off ? " off" : "") + '" data-p="' + p.id + '"' + (off ? ' disabled aria-disabled="true"' : '') + '>' + (bn && p.locked ? "Front cuff" : p.label) +
+    (off ? '<span class="tag no">Not on beanies</span>' : p.add ? '<span class="tag">+' + money(p.add) + '/hat</span>' : '<span class="tag inc">Included</span>') + '</button>';
+  }).join("");
   $("places").querySelectorAll("[data-p]").forEach(b =>
     b.addEventListener("click", () => {
       const pl = PLACEMENTS.find(x => x.id === b.dataset.p);
-      if (pl.locked) return;
+      if (pl.locked || (isBeanie() && !pl.locked)) return;
       state.places.has(pl.id) ? state.places.delete(pl.id) : state.places.add(pl.id);
       renderDesign(); sync();
     }));
 
   const fpWrap = $("frontPosWrap");
   if (fpWrap){
-    fpWrap.style.display = state.places.has("front") ? "" : "none";
+    fpWrap.style.display = (state.places.has("front") && !bn) ? "" : "none";
     $("frontPos").innerHTML = FRONT_POSITIONS.map(p =>
       '<button type="button" class="chip ' + (p === state.frontPos ? "on" : "") + '" data-fp="' + p + '">' + p + '</button>').join("");
     $("frontPos").querySelectorAll("[data-fp]").forEach(b =>
@@ -2685,7 +2720,7 @@ function renderUploads(){
         (p.add ? '<span class="up-tag">+' + money(p.add) + '/hat</span>' : '<span class="up-tag inc">Included</span>') +
       '</div>' +
       '<div class="up-slot-sub">' + (
-        p.id === "front" ? "Your main logo, stitched on the front panel." :
+        p.id === "front" ? (isBeanie() ? "Your logo, stitched flat on the front cuff." : "Your main logo, stitched on the front panel.") :
         p.id === "left"  ? "Artwork for the left side, as you look at the hat." :
         p.id === "right" ? "Artwork for the right side, as you look at the hat." :
                            "Artwork for the back of the hat.") + '</div>' +
@@ -2813,6 +2848,7 @@ function renderRail(){
 
 /* ---------- summaries + sticky bar ---------- */
 function sync(){
+  if (beanieClean() || isBeanie() !== lastBeanie){ lastBeanie = isBeanie(); renderDesign(); }
   houseNote();
   $("sum1").innerHTML = state.style
     ? nameOf(state.style) + (state.colors.length ? " &middot; " + (state.colors.length === 1 ? state.colors[0] : state.colors.length + " colors") : "")

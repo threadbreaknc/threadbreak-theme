@@ -37,6 +37,10 @@ const MAP = {
   yp6789:     { brand: "YP Classics", styles: ["6789M"] },
   ff110m:     { brand: "Flexfit", styles: ["110M"] },
   ff6511:     { brand: "Flexfit", styles: ["6511"] },
+  // beanies (embroidery form only)
+  sp12:       { brand: "Sportsman", styles: ["SP12"] },
+  sp15:       { brand: "Sportsman", styles: ["SP15"] },
+  yp1501kc:   { brand: "YP Classics", styles: ["1501KC"] },
 };
 
 // extra styles to pull into the catalog (candidates for the forms)

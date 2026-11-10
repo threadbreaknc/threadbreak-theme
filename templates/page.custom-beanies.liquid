@@ -1,0 +1,154 @@
+{%- comment -%}
+  Custom beanies landing page (/pages/custom-beanies). Beanie data comes from snippets/beanie-styles.liquid.
+  Orders go through the embroidery form, opened pre-filtered with ?style=beanie (and ?hat=<id> from a card).
+{%- endcomment -%}
+<style>
+  .tbeg{--purple:#5028AA;--ink:#14121C;--muted:#5c5a68;--line:#E2E0EA;--ice:#F4F1FB;--ok:#2f8a4e;--no:#c0392b;background:#fff;color:var(--ink);font-family:'DM Sans',system-ui,sans-serif}
+  .tbeg-wrap{max-width:980px;margin:0 auto;padding:8.5rem 20px 4rem}
+  .tbeg-eyebrow{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple);margin:0 0 8px}
+  .tbeg h1{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(2.6rem,7vw,4.4rem);line-height:1;margin:0 0 12px}
+  .tbeg-lead{font-size:18px;line-height:1.65;color:#2a2638;max-width:700px;margin:0 0 22px}
+  .tbeg ul.tbeg-jump{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 34px;padding:0;list-style:none}
+  .tbeg ul.tbeg-jump li{margin:0;display:block;list-style:none;flex:0 0 auto}
+  .tbeg-jump a{display:inline-block;padding:8px 13px;border:1px solid var(--line);border-radius:999px;font-size:14px;font-weight:600;color:var(--ink);text-decoration:none}
+  .tbeg-jump a:hover{border-color:var(--purple);color:var(--purple)}
+  .tbeg section{margin:0 0 44px;scroll-margin-top:110px}
+  .tbeg h2{font-size:clamp(24px,3.4vw,30px);line-height:1.2;margin:0 0 10px;font-weight:700}
+  .tbeg p{font-size:16.5px;line-height:1.7;color:#2a2638;margin:0 0 14px}
+  .tbeg ul{margin:0 0 14px;padding-left:1.25rem;list-style:disc}
+  .tbeg li{font-size:16px;line-height:1.6;color:#2a2638;margin:0 0 7px}
+  .tbeg a{color:var(--purple);font-weight:600}
+  .tbeg-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:6px 0 10px}
+  @media(max-width:599px){
+    .tbeg-grid{grid-template-columns:1fr;gap:0;border:1px solid var(--line);border-radius:14px;padding:2px 16px;background:#fff}
+    .tbeg-grid .tbeg-card{border:0;border-radius:0;padding:14px 0 12px;border-bottom:1px solid var(--line)}
+    .tbeg-grid .tbeg-card:last-child{border-bottom:0}
+    .tbeg-grid .tbeg-card h3{font-size:16px;margin-bottom:4px}
+    .tbeg-grid .tbeg-card p{font-size:14.5px;margin:0 0 0 31px;line-height:1.5}
+    .tbeg ul.tbeg-jump{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin:0 -16px 28px;padding:0 16px}
+    .tbeg ul.tbeg-jump::-webkit-scrollbar{display:none}
+    .tbeg-jump a{white-space:nowrap;padding:7px 12px;font-size:13.5px}
+    .tbeg h2{font-size:24px}
+  }
+  .tbeg-card{border:1px solid var(--line);border-radius:14px;padding:18px 18px 14px;background:#fff}
+  .tbeg-card h3{font-size:17px;margin:0 0 6px;display:flex;align-items:flex-start;gap:9px;line-height:1.3}
+  .tbeg-card p{font-size:15px;margin:0 0 6px;color:var(--muted)}
+  .tbeg-ok h3::before,.tbeg-no h3::before{flex:0 0 auto;width:22px;height:22px;border-radius:50%;color:#fff;font-size:13px;display:inline-flex;align-items:center;justify-content:center;font-weight:800}
+  .tbeg-ok h3::before{content:"\2713";background:var(--ok)}
+  .tbeg-no h3::before{content:"\2715";background:var(--no)}
+  .tbeg-note{background:var(--ice);border-radius:14px;padding:18px 20px;margin:10px 0 0}
+  .tbeg-note p:last-child,.tbeg-note ul:last-child{margin-bottom:0}
+  .tbeg-ai{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;align-items:start}
+  .tbeg-ai img{width:100%;border-radius:14px;border:1px solid var(--line);display:block}
+  .tbeg-ai figcaption{font-size:13px;color:var(--muted);margin-top:6px}
+  .tbeg-two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .tbeg-cta{background:var(--ink);color:#fff;border-radius:16px;padding:26px 22px}
+  .tbeg-cta h2{color:#fff;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:34px;margin:0 0 6px}
+  .tbeg-cta p{color:rgba(255,255,255,.82);margin:0 0 16px}
+  .tbeg-cta .btns{display:flex;flex-wrap:wrap;gap:10px}
+  .tbeg-cta a{display:inline-block;padding:12px 18px;border-radius:10px;font-weight:700;text-decoration:none}
+  .tbeg-cta .b1{background:var(--purple);color:#fff}.tbeg-cta .b2{background:#fff;color:var(--ink)}
+  .tbeg-gal{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0 4px}
+  .tbeg-gal figure{margin:0}
+  .tbeg-gal img{width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;border-radius:14px;display:block;background:var(--ice)}
+  .tbeg-gal figcaption{font-size:13px;color:var(--muted);margin-top:6px;line-height:1.4}
+  .tbeg-hero{width:100%;height:auto;aspect-ratio:16/7;object-fit:cover;border-radius:18px;display:block;margin:0 0 30px;box-shadow:0 18px 40px -22px rgba(20,18,28,.45)}
+  @media(max-width:720px){.tbeg-gal{grid-template-columns:1fr 1fr}.tbeg-gal figure:last-child:nth-child(odd){grid-column:1/-1}.tbeg-hero{aspect-ratio:4/3}}
+  @media(max-width:720px){.tbeg-ai,.tbeg-two{grid-template-columns:1fr}}
+</style>
+<style>
+  .tbbn-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:8px 0 10px}
+  .tbbn-card{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;text-decoration:none;color:var(--ink);transition:transform .15s,border-color .15s,box-shadow .15s}
+  .tbbn-card:hover{transform:translateY(-3px);border-color:var(--purple);box-shadow:0 10px 26px rgba(20,18,28,.09)}
+  .tbbn-img{aspect-ratio:1/1;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .tbbn-img img{width:100%;height:100%;object-fit:contain;display:block}
+  .tbbn-body{padding:12px 14px 14px;border-top:1px solid var(--line)}
+  .tbbn-body b{display:block;font-size:15.5px;line-height:1.3}
+  .tbbn-body small{display:block;font-size:13px;color:var(--muted);margin-top:3px;line-height:1.4}
+  .tbbn-body .pr{display:block;font-size:13.5px;font-weight:700;color:var(--purple);margin-top:6px}
+  .tbbn-sw{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}
+  .tbbn-sw i{width:14px;height:14px;border-radius:50%;border:1px solid var(--line);background-size:cover;background-position:center}
+  .tbbn-steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+  .tbbn-steps div{border:1px solid var(--line);border-radius:14px;padding:16px 15px}
+  .tbbn-steps b{display:flex;align-items:center;gap:8px;font-size:16px;margin-bottom:5px}
+  .tbbn-steps b span{flex:0 0 24px;height:24px;border-radius:50%;background:var(--purple);color:#fff;font-size:12.5px;display:inline-flex;align-items:center;justify-content:center}
+  .tbbn-steps p{font-size:14.5px;color:var(--muted);margin:0;line-height:1.55}
+  .tbbn-price{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;font-size:15px}
+  .tbbn-price th,.tbbn-price td{padding:11px 12px;text-align:left;border-bottom:1px solid var(--line)}
+  .tbbn-price tr:last-child td{border-bottom:0}
+  .tbbn-price thead th{background:var(--ink);color:#fff;font-size:12.5px;letter-spacing:.05em;text-transform:uppercase}
+  .tbbn-hero-cta{display:inline-block;background:var(--purple);color:#fff !important;text-decoration:none;font-weight:700;padding:13px 20px;border-radius:10px;margin:0 0 28px}
+  @media(max-width:860px){.tbbn-grid{grid-template-columns:1fr 1fr}.tbbn-steps{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){.tbbn-steps{grid-template-columns:1fr}.tbbn-price{font-size:14px}}
+</style>
+{% render 'beanie-styles' %}
+<div class="tbeg">
+  <div class="tbeg-wrap">
+    <p class="tbeg-eyebrow">Custom beanies</p>
+    <h1>Custom embroidered beanies</h1>
+    <p class="tbeg-lead">Your logo stitched on the cuff of a warm knit beanie. Same deal as our hats: 5 beanie minimum, free digitizing, a free mockup before anything gets stitched, and free shipping to the lower 48.</p>
+    <a class="tbbn-hero-cta" href="/pages/custom-order?style=beanie">Start a beanie order &rarr;</a>
+
+    <section id="styles">
+      <h2>Pick your beanie</h2>
+      <div class="tbbn-grid" id="tbbnGrid"></div>
+    </section>
+
+    <section id="pricing">
+      <h2>Pricing</h2>
+      <p>Price per beanie, with your logo embroidered on the front cuff. Mix colors in the same style and they count toward one price break.</p>
+      <div class="tbdg-tblwrap" style="overflow-x:auto"><table class="tbbn-price">
+        <thead><tr><th>Quantity</th><th>Most beanies</th><th>Otto 12 in cuffed and fleece lined</th></tr></thead>
+        <tbody>
+          <tr><td>5 to 9</td><td>$25</td><td>$28</td></tr>
+          <tr><td>10 to 23</td><td>$21</td><td>$24</td></tr>
+          <tr><td>24 to 47</td><td>$20</td><td>$23</td></tr>
+          <tr><td>48 to 95</td><td>$18</td><td>$21</td></tr>
+          <tr><td>96+</td><td>$17</td><td>$20</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="how">
+      <h2>How it works</h2>
+      <div class="tbbn-steps">
+        <div><b><span>1</span>Pick a beanie</b><p>Choose a style and as many colors as you want.</p></div>
+        <div><b><span>2</span>Send your logo</b><p>Any file works. We digitize it for free.</p></div>
+        <div><b><span>3</span>Approve your mockup</b><p>We send a proof within 48 hours. Nothing gets stitched until you approve it.</p></div>
+        <div><b><span>4</span>We stitch and ship</b><p>Made in Burlington, NC. Current lead time is 2-4 weeks after approval.</p></div>
+      </div>
+    </section>
+
+    <section id="good-to-know">
+      <h2>Good to know</h2>
+      <div class="tbeg-grid">
+        <div class="tbeg-card tbeg-ok"><h3>Stitched on the cuff</h3><p>Logos go on the front cuff, usually up to about 2 inches tall. The 9 inch short beanie has no cuff, so the logo goes on the front.</p></div>
+        <div class="tbeg-card tbeg-ok"><h3>Flat embroidery</h3><p>Knit is stretchy and textured, so beanies are stitched flat. 3D puff and side or back logos aren't offered on beanies.</p></div>
+        <div class="tbeg-card tbeg-ok"><h3>Bold logos work best</h3><p>Simple shapes and short text read best on a knit cuff. Tiny details can sink into the ribbing. See our <a href="/pages/embroidery-guide">embroidery guide</a>.</p></div>
+        <div class="tbeg-card tbeg-ok"><h3>Need them by a date?</h3><p>Text us at <a href="sms:+13365856176">(336) 585-6176</a> or email <a href="mailto:help@threadbreak.com">help@threadbreak.com</a> before you order.</p></div>
+      </div>
+    </section>
+
+    <div class="tbeg-cta">
+      <h2>Ready to order?</h2>
+      <p>Pick a beanie, add your logo and get a free mockup within 48 hours.</p>
+      <div class="btns"><a class="b1" href="/pages/custom-order?style=beanie">Start a beanie order</a><a class="b2" href="/pages/custom-order">Shop hats instead</a></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  var grid = document.getElementById("tbbnGrid"); if (!grid || !window.TB_BEANIES) return;
+  var PRICE = { otto82404: 20, otto821316: 20 };
+  grid.innerHTML = window.TB_BEANIES.map(function(b){
+    var colors = Object.keys(b.views), lead = b.views[b.lead] ? b.lead : colors[0];
+    var low = b.prices[b.prices.length - 1];
+    var sw = colors.slice(0, 10).map(function(c){ return '<i title="' + c + '" style="background-image:url(\'' + b.views[c][0] + '\')"></i>'; }).join("");
+    return '<a class="tbbn-card" href="/pages/custom-order?style=beanie&hat=' + b.id + '">' +
+      '<div class="tbbn-img"><img src="' + b.views[lead][0] + '" alt="' + b.name + ' in ' + lead + '" loading="lazy"></div>' +
+      '<div class="tbbn-body"><b>' + b.name + '</b><small>' + b.desc + '</small>' +
+      '<span class="pr">As low as $' + low + ' each &middot; ' + colors.length + ' colors</span>' +
+      '<div class="tbbn-sw">' + sw + '</div></div></a>';
+  }).join("");
+})();
+</script>
