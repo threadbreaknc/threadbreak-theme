@@ -2213,7 +2213,8 @@ const BRAND_LOGOS = [
   { test: /atonal/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/logo_atonal.png?v=1790739725", alt: "Atonal" },
   { test: /otto/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/logo_otto.png?v=1790739725", alt: "Otto" },
   { test: /^10 ?10/i, src: "{{ '1010hats.png' | asset_url }}", alt: "10 10 Hats" },
-  { test: /flexfit/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/flexfit-logo.png?v=1792360646", alt: "Flexfit" }
+  { test: /flexfit/i, src: "https://cdn.shopify.com/s/files/1/0974/8453/7988/files/flexfit-logo.png?v=1792360646", alt: "Flexfit" },
+  { test: /as colour/i, src: "{{ 'ascolour-logo.png' | asset_url }}", alt: "AS Colour" }
 ];
 function brandLogo(s){
   const hit = BRAND_LOGOS.find(b => b.test.test(s.brand) || b.test.test(s.name));
