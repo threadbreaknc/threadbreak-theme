@@ -7463,6 +7463,1135 @@
      "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/36561_fm.jpg"
     }
    ]
+  },
+  "Sportsman SP12": {
+   "brand": "Sportsman",
+   "style": "SP12",
+   "title": "12\" Solid Cuffed Beanie",
+   "description": "100% acrylic Grey Camo &amp; Green Camo are 95/5&nbsp;acrylic/elastane Heather Grey is 62/38 acrylic/polyester All other Heather colors are 50/50 acrylic/polyester Adjustable cuff, shown as 3&quot;&nbsp;",
+   "colors": [
+    {
+     "name": "Black",
+     "skus": {
+      "One Size": "B83995500"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/25968_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/25968_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38035_fm.jpg"
+    },
+    {
+     "name": "Blaze Orange",
+     "skus": {
+      "One Size": "B83995180"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/25969_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/25969_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38036_fm.jpg"
+    },
+    {
+     "name": "Brown",
+     "skus": {
+      "One Size": "B83995550"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/25970_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/25970_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38037_fm.jpg"
+    },
+    {
+     "name": "Camel",
+     "skus": {
+      "One Size": "B83995360"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/31197_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/31197_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38038_fm.jpg"
+    },
+    {
+     "name": "Cardinal",
+     "skus": {
+      "One Size": "B83995520"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/25971_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/25971_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38039_fm.jpg"
+    },
+    {
+     "name": "Dark Heather Grey",
+     "skus": {
+      "One Size": "B83995260"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/91529_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/91529_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38040_fm.jpg"
+    },
+    {
+     "name": "Forest Green",
+     "skus": {
+      "One Size": "B83995540"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/25973_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/25973_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38168_fm.jpg"
+    },
+    {
+     "name": "Gold",
+     "skus": {
+      "One Size": "B83995120"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/25974_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/25974_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38042_fm.jpg"
+    },
+    {
+     "name": "Green Camo",
+     "skus": {
+      "One Size": "B83995980"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/108570_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/108570_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38043_fm.jpg"
+    },
+    {
+     "name": "Grey Camo",
+     "skus": {
+      "One Size": "B83995960"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/108571_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/108571_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38044_fm.jpg"
+    },
+    {
+     "name": "Heather Brown",
+     "skus": {
+      "One Size": "B83995560"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/82362_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/82362_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38045_fm.jpg"
+    },
+    {
+     "name": "Heather Cardinal",
+     "skus": {
+      "One Size": "B83995320"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/82355_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/82355_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38046_fm.jpg"
+    },
+    {
+     "name": "Heather Charcoal",
+     "skus": {
+      "One Size": "B83995090"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/25972_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/25972_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38169_fm.jpg"
+    },
+    {
+     "name": "Heather Dark Royal",
+     "skus": {
+      "One Size": "B83995780"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/82366_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/82366_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38048_fm.jpg"
+    },
+    {
+     "name": "Heather Grey",
+     "skus": {
+      "One Size": "B83995350"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/25975_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/25975_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38049_fm.jpg"
+    },
+    {
+     "name": "Heather Kelly",
+     "skus": {
+      "One Size": "B83995610"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/82356_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/82356_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38050_fm.jpg"
+    },
+    {
+     "name": "Heather Navy",
+     "skus": {
+      "One Size": "B83995640"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/70918_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/70918_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38051_fm.jpg"
+    },
+    {
+     "name": "Heather Orange",
+     "skus": {
+      "One Size": "B83995310"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/82360_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/82360_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38052_fm.jpg"
+    },
+    {
+     "name": "Heather Purple",
+     "skus": {
+      "One Size": "B83995800"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/70923_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/70923_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38053_fm.jpg"
+    },
+    {
+     "name": "Heather Red",
+     "skus": {
+      "One Size": "B83995710"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/70914_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/70914_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38054_fm.jpg"
+    },
+    {
+     "name": "Heather Royal",
+     "skus": {
+      "One Size": "B83995740"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/70922_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/70922_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38055_fm.jpg"
+    },
+    {
+     "name": "Kelly",
+     "skus": {
+      "One Size": "B83995600"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/46322_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/46322_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38056_fm.jpg"
+    },
+    {
+     "name": "Maroon",
+     "skus": {
+      "One Size": "B83995530"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/25976_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/25976_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38057_fm.jpg"
+    },
+    {
+     "name": "Navy",
+     "skus": {
+      "One Size": "B83995650"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/25977_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/25977_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38153_fm.jpg"
+    },
+    {
+     "name": "Neon Fuchsia",
+     "skus": {
+      "One Size": "B83995690"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/44688_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/44688_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38059_fm.jpg"
+    },
+    {
+     "name": "Neon Green",
+     "skus": {
+      "One Size": "B83995160"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/44689_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/44689_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38154_fm.jpg"
+    },
+    {
+     "name": "Neon Pink",
+     "skus": {
+      "One Size": "B83995030"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/44690_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/44690_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38061_fm.jpg"
+    },
+    {
+     "name": "Neon Yellow",
+     "skus": {
+      "One Size": "B83995050"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/44691_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/44691_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38062_fm.jpg"
+    },
+    {
+     "name": "Orange",
+     "skus": {
+      "One Size": "B83995660"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/25978_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/25978_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38063_fm.jpg"
+    },
+    {
+     "name": "Pink",
+     "skus": {
+      "One Size": "B83995300"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/25979_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/25979_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38064_fm.jpg"
+    },
+    {
+     "name": "Purple",
+     "skus": {
+      "One Size": "B83995670"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/29256_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/29256_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38065_fm.jpg"
+    },
+    {
+     "name": "Red",
+     "skus": {
+      "One Size": "B83995700"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/25980_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/25980_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38066_fm.jpg"
+    },
+    {
+     "name": "Royal",
+     "skus": {
+      "One Size": "B83995750"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/25981_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/25981_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38174_fm.jpg"
+    },
+    {
+     "name": "Safety Yellow",
+     "skus": {
+      "One Size": "B83995410"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/29257_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/29257_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38068_fm.jpg"
+    },
+    {
+     "name": "White",
+     "skus": {
+      "One Size": "B83995000"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/28632_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/28632_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38157_fm.jpg"
+    }
+   ]
+  },
+  "Sportsman SP15": {
+   "brand": "Sportsman",
+   "style": "SP15",
+   "title": "12\" Pom-Pom Cuffed Beanie",
+   "description": "100% acrylic Dark Heather Grey 50/50&nbsp;acrylic/polyester Dark Heather Grey/Black, Dark Heather Grey/Navy &amp; Dark Heather Grey/Red are 74/26 acrylic/polyester Light Heather Grey is 62/38&nbsp;acrylic/polyester Royal/Light Heather Grey is 82/18&nbsp;acrylic/polyester All other Heather colors are 50/50 acrylic/polyester 4 Top-seams 3&#39;&#39; cuff Pom-pom on top",
+   "colors": [
+    {
+     "name": "Black",
+     "skus": {
+      "One Size": "B21595500"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/39345_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/39345_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38073_fm.jpg"
+    },
+    {
+     "name": "Black/ Gold",
+     "skus": {
+      "One Size": "B21595520"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/43355_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/43355_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38074_fm.jpg"
+    },
+    {
+     "name": "Black/ Red",
+     "skus": {
+      "One Size": "B21595510"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/43356_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/43356_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38075_fm.jpg"
+    },
+    {
+     "name": "Dark Heather Grey",
+     "skus": {
+      "One Size": "B21595580"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/39346_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/39346_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38076_fm.jpg"
+    },
+    {
+     "name": "Dark Heather Grey/ Black",
+     "skus": {
+      "One Size": "B21595590"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/39347_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/39347_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38077_fm.jpg"
+    },
+    {
+     "name": "Dark Heather Grey/ Navy",
+     "skus": {
+      "One Size": "B21595570"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/39348_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/39348_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38078_fm.jpg"
+    },
+    {
+     "name": "Dark Heather Grey/ Red",
+     "skus": {
+      "One Size": "B21595560"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/39349_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/39349_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38079_fm.jpg"
+    },
+    {
+     "name": "Forest",
+     "skus": {
+      "One Size": "B21595540"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/43359_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/43359_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38080_fm.jpg"
+    },
+    {
+     "name": "Forest/ Gold",
+     "skus": {
+      "One Size": "B21595140"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/43368_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/43368_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38081_fm.jpg"
+    },
+    {
+     "name": "Gold",
+     "skus": {
+      "One Size": "B21595120"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/43357_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/43357_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38082_fm.jpg"
+    },
+    {
+     "name": "Heather Cardinal",
+     "skus": {
+      "One Size": "B21595320"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/82372_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/82372_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38084_fm.jpg"
+    },
+    {
+     "name": "Heather Charcoal",
+     "skus": {
+      "One Size": "B21595920"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/70925_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/70925_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38085_fm.jpg"
+    },
+    {
+     "name": "Heather Dark Royal",
+     "skus": {
+      "One Size": "B21595740"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/82381_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/82381_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38086_fm.jpg"
+    },
+    {
+     "name": "Heather Kelly",
+     "skus": {
+      "One Size": "B21595610"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/82378_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/82378_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38088_fm.jpg"
+    },
+    {
+     "name": "Heather Orange",
+     "skus": {
+      "One Size": "B21595330"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/82379_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/82379_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38090_fm.jpg"
+    },
+    {
+     "name": "Heather Purple",
+     "skus": {
+      "One Size": "B21595800"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/70932_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/70932_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38091_fm.jpg"
+    },
+    {
+     "name": "Heather Red",
+     "skus": {
+      "One Size": "B21595720"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/70928_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/70928_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38092_fm.jpg"
+    },
+    {
+     "name": "Heather Royal",
+     "skus": {
+      "One Size": "B21595760"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/70931_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/70931_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38093_fm.jpg"
+    },
+    {
+     "name": "Light Heather Grey",
+     "skus": {
+      "One Size": "B21595350"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/43361_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/43361_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38087_fm.jpg"
+    },
+    {
+     "name": "Navy",
+     "skus": {
+      "One Size": "B21595650"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/39350_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/39350_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38094_fm.jpg"
+    },
+    {
+     "name": "Navy/ Gold",
+     "skus": {
+      "One Size": "B21595130"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/43362_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/43362_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38095_fm.jpg"
+    },
+    {
+     "name": "Navy/ Red",
+     "skus": {
+      "One Size": "B21595630"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/43363_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/43363_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38096_fm.jpg"
+    },
+    {
+     "name": "Neon Fuchsia",
+     "skus": {
+      "One Size": "B21595690"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/50828_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/50828_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38097_fm.jpg"
+    },
+    {
+     "name": "Neon Green",
+     "skus": {
+      "One Size": "B21595160"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/50829_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/50829_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38098_fm.jpg"
+    },
+    {
+     "name": "Neon Pink",
+     "skus": {
+      "One Size": "B21595030"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/50830_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/50830_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38099_fm.jpg"
+    },
+    {
+     "name": "Red",
+     "skus": {
+      "One Size": "B21595700"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/39351_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/39351_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38100_fm.jpg"
+    },
+    {
+     "name": "Red/ Black",
+     "skus": {
+      "One Size": "B21595710"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/43364_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/43364_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38101_fm.jpg"
+    },
+    {
+     "name": "Red/ Gold",
+     "skus": {
+      "One Size": "B21595170"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/43370_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/43370_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38102_fm.jpg"
+    },
+    {
+     "name": "Royal Blue",
+     "skus": {
+      "One Size": "B21595750"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/43358_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/43358_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38103_fm.jpg"
+    },
+    {
+     "name": "Royal/ Light Heather Grey",
+     "skus": {
+      "One Size": "B21595180"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/43371_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/43371_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38104_fm.jpg"
+    },
+    {
+     "name": "Royal/ Red",
+     "skus": {
+      "One Size": "B21595150"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/43369_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/43369_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38105_fm.jpg"
+    }
+   ]
+  },
+  "YP Classics 1501KC": {
+   "brand": "YP Classics",
+   "style": "1501KC",
+   "title": "Cuffed Beanie",
+   "description": "100% acrylic, hypoallergenic&nbsp; 12&quot; in length",
+   "colors": [
+    {
+     "name": "Baby Pink",
+     "skus": {
+      "One Size": "B18595260"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/71033_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/71033_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38550_fm.jpg"
+    },
+    {
+     "name": "Black",
+     "skus": {
+      "One Size": "B18595500"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/51224_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/51224_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38551_fm.jpg"
+    },
+    {
+     "name": "Blaze Orange",
+     "skus": {
+      "One Size": "B18595660"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/71032_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/71032_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38552_fm.jpg"
+    },
+    {
+     "name": "Brown",
+     "skus": {
+      "One Size": "B18595550"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/71034_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/71034_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38553_fm.jpg"
+    },
+    {
+     "name": "Caramel",
+     "skus": {
+      "One Size": "B18595600"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/91531_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/91531_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38554_fm.jpg"
+    },
+    {
+     "name": "Carolina Blue",
+     "skus": {
+      "One Size": "B18595250"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/71035_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/71035_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38555_fm.jpg"
+    },
+    {
+     "name": "Dark Grey",
+     "skus": {
+      "One Size": "B18595090"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/51225_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/51225_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38556_fm.jpg"
+    },
+    {
+     "name": "Gold",
+     "skus": {
+      "One Size": "B18595120"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/68456_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/68456_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38557_fm.jpg"
+    },
+    {
+     "name": "Heather",
+     "skus": {
+      "One Size": "B18595580"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/51226_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/51226_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38558_fm.jpg"
+    },
+    {
+     "name": "Maroon",
+     "skus": {
+      "One Size": "B18595530"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/71037_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/71037_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38559_fm.jpg"
+    },
+    {
+     "name": "Navy",
+     "skus": {
+      "One Size": "B18595650"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/51227_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/51227_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38560_fm.jpg"
+    },
+    {
+     "name": "Olive",
+     "skus": {
+      "One Size": "B18595620"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/71038_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/71038_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38561_fm.jpg"
+    },
+    {
+     "name": "Purple",
+     "skus": {
+      "One Size": "B18595670"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/71039_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/71039_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38562_fm.jpg"
+    },
+    {
+     "name": "Red",
+     "skus": {
+      "One Size": "B18595700"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/51228_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/51228_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38563_fm.jpg"
+    },
+    {
+     "name": "Royal",
+     "skus": {
+      "One Size": "B18595750"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/51229_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/51229_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38564_fm.jpg"
+    },
+    {
+     "name": "Safety Green",
+     "skus": {
+      "One Size": "B18595420"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/71040_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/71040_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38565_fm.jpg"
+    },
+    {
+     "name": "Safety Yellow",
+     "skus": {
+      "One Size": "B18595410"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/71041_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/71041_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38566_fm.jpg"
+    },
+    {
+     "name": "Spruce",
+     "skus": {
+      "One Size": "B18595230"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/51230_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/51230_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38567_fm.jpg"
+    },
+    {
+     "name": "White",
+     "skus": {
+      "One Size": "B18595000"
+     },
+     "sizes": [
+      "One Size"
+     ],
+     "front": "https://www.ssactivewear.com/Images/Color/51231_f_fl.jpg",
+     "side": null,
+     "back": "https://www.ssactivewear.com/Images/Color/51231_b_fl.jpg",
+     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/38568_fm.jpg"
+    }
+   ]
   }
  }
 }
