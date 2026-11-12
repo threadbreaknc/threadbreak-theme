@@ -1945,7 +1945,7 @@ function stockEntry(s, c){ const st = s && STOCK[s.id]; if (!st) return null; co
 // unknown color or style = treat as in stock, so a name mismatch never blocks a sale
 const TT_MIN = 50; // 10 10 Hats + Atonal colors with fewer than this at the supplier show as out of stock
 function ttOut(s, c){
-  for (const src of [window.TB_TT_STOCK, window.TB_AT_STOCK]){
+  for (const src of [window.TB_TT_STOCK, window.TB_AT_STOCK, window.TB_ASC_STOCK]){
     const t = src && src.styles && src.styles[s.id];
     if (t && typeof t[c] === "number" && t[c] < TT_MIN) return true;
   }
