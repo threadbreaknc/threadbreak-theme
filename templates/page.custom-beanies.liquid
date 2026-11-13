@@ -132,7 +132,7 @@
     <section id="good-to-know">
       <h2>Good to know</h2>
       <div class="tbeg-grid">
-        <div class="tbeg-card tbeg-ok"><h3>Stitched on the cuff</h3><p>Logos go on the front cuff, usually up to about 2 inches tall. The 9 inch short beanie has no cuff, so the logo goes on the front.</p></div>
+        <div class="tbeg-card tbeg-ok"><h3>Stitched on the cuff</h3><p>Logos go on the front cuff, usually up to about 2 inches tall.</p></div>
         <div class="tbeg-card tbeg-ok"><h3>Flat embroidery</h3><p>Knit is stretchy and textured, so beanies are stitched flat. 3D puff and side or back logos aren't offered on beanies.</p></div>
         <div class="tbeg-card tbeg-ok"><h3>Bold logos work best</h3><p>Simple shapes and short text read best on a knit cuff. Tiny details can sink into the ribbing. See our <a href="/pages/embroidery-guide">embroidery guide</a>.</p></div>
         <div class="tbeg-card tbeg-ok"><h3>Need them by a date?</h3><p>Text us at <a href="sms:+13365856176">(336) 585-6176</a> or email <a href="mailto:help@threadbreak.com">help@threadbreak.com</a> before you order.</p></div>
@@ -150,7 +150,7 @@
 (function(){
   var grid = document.getElementById("tbbnGrid"); if (!grid || !window.TB_BEANIES) return;
   var PRICE = { otto82404: 20, otto821316: 20 };
-  grid.innerHTML = window.TB_BEANIES.map(function(b){
+  grid.innerHTML = window.TB_BEANIES.filter(function(b){ return !b.hidden; }).map(function(b){
     var colors = Object.keys(b.views), lead = b.views[b.lead] ? b.lead : colors[0];
     var low = b.prices[b.prices.length - 1];
     var sw = colors.slice(0, 10).map(function(c){ return '<i title="' + c + '" style="background-image:url(\'' + b.views[c][0] + '\')"></i>'; }).join("");
