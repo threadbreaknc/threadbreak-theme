@@ -4480,19 +4480,6 @@
      "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/36478_fm.jpg"
     },
     {
-     "name": "Kryptek Highlander",
-     "skus": {
-      "S/M": "B26095993"
-     },
-     "sizes": [
-      "S/M"
-     ],
-     "front": "https://www.ssactivewear.com/Images/Color/90089_f_fl.jpg",
-     "side": "https://www.ssactivewear.com/Images/Color/90089_d_fl.jpg",
-     "back": "https://www.ssactivewear.com/Images/Color/90089_b_fl.jpg",
-     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/36479_fm.jpg"
-    },
-    {
      "name": "Kryptek Typhon",
      "skus": {
       "S/M": "B26095983",
@@ -4536,19 +4523,6 @@
      "side": "https://www.ssactivewear.com/Images/Color/83021_d_fl.jpg",
      "back": "https://www.ssactivewear.com/Images/Color/83021_b_fl.jpg",
      "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/36485_fm.jpg"
-    },
-    {
-     "name": "Multicam Arid",
-     "skus": {
-      "S/M": "B26095033"
-     },
-     "sizes": [
-      "S/M"
-     ],
-     "front": "https://www.ssactivewear.com/Images/Color/83022_f_fl.jpg",
-     "side": "https://www.ssactivewear.com/Images/Color/83022_d_fl.jpg",
-     "back": "https://www.ssactivewear.com/Images/Color/83022_b_fl.jpg",
-     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/36486_fm.jpg"
     },
     {
      "name": "Multicam Black",
@@ -4656,19 +4630,6 @@
      "side": "https://www.ssactivewear.com/Images/Color/20247_d_fl.jpg",
      "back": "https://www.ssactivewear.com/Images/Color/20247_b_fl.jpg",
      "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/36492_fm.jpg"
-    },
-    {
-     "name": "Pepper Green",
-     "skus": {
-      "S/M": "B26095543"
-     },
-     "sizes": [
-      "S/M"
-     ],
-     "front": "https://www.ssactivewear.com/Images/Color/71043_f_fl.jpg",
-     "side": "https://www.ssactivewear.com/Images/Color/71043_d_fl.jpg",
-     "back": "https://www.ssactivewear.com/Images/Color/71043_b_fl.jpg",
-     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/36493_fm.jpg"
     },
     {
      "name": "Poseidon Black",
@@ -5500,19 +5461,6 @@
      "side": "https://www.ssactivewear.com/Images/Color/68093_d_fl.jpg",
      "back": "https://www.ssactivewear.com/Images/Color/68093_b_fl.jpg",
      "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/16573_fm.jpg"
-    },
-    {
-     "name": "Spruce/ Birch/ Light Navy",
-     "skus": {
-      "M/L": "B79195630"
-     },
-     "sizes": [
-      "M/L"
-     ],
-     "front": "https://www.ssactivewear.com/Images/Color/82084_f_fl.jpg",
-     "side": "https://www.ssactivewear.com/Images/Color/82084_d_fl.jpg",
-     "back": "https://www.ssactivewear.com/Images/Color/82084_b_fl.jpg",
-     "swatch": "https://www.ssactivewear.com/Images/ColorSwatch/19146_fm.jpg"
     },
     {
      "name": "Tan/ Loden/ Brown",
