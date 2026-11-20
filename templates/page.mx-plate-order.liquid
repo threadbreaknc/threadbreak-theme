@@ -1,4 +1,4 @@
-{%- comment -%} build: mx-plate-landing-v20 {%- endcomment -%}
+{%- comment -%} build: mx-plate-landing-v21 {%- endcomment -%}
 {%- comment -%}
   Custom Motocross Number Plate Hats (threadbreak.com/pages/custom-motocross-number-plate-hats)
   Template suffix: mx-plate-order  (templates/page.mx-plate-order.liquid)
@@ -69,7 +69,7 @@
 <div class="field-label"><span class="n">3</span> Number and name</div>
 <label class="mini" for="numInput">Number</label>
 <input type="text" id="numInput" maxlength="3" inputmode="text" autocapitalize="characters" autocomplete="off" placeholder="617">
-<div class="mini" style="margin-top:18px">Name on the plate</div>
+<div class="mini" style="margin-top:18px">Name on the plate (produced in ALL CAPS)</div>
 <div class="seg" id="nameMode">
 <button type="button" data-m="name" aria-pressed="true">Add a name</button>
 <button type="button" data-m="none" aria-pressed="false">No name</button>
@@ -77,7 +77,7 @@
 <div id="nameWrap" style="margin-top:10px">
 <input type="text" id="nameInput" maxlength="14" autocapitalize="characters" autocomplete="off" placeholder="SMITH">
 </div>
-<p class="hint">The designs show "NAME" where your name goes. Choose No name for the version without it. Names are engraved in ALL CAPS.</p>
+<p class="hint">The designs show "NAME" where your name goes. Choose No name for the version without it. Names are produced in ALL CAPS.</p>
 </div>
 <div class="field-block">
 <div class="field-label"><span class="n">4</span> Leatherette color</div>
@@ -119,7 +119,7 @@
 <div class="summary" id="summary">Pick a brand and design to get started.</div>
 <button class="cta cta-block" id="addBtn" disabled>Add to cart</button>
 <p class="cart-msg" id="cartMsg"></p>
-<p class="proof-note">We produce your patch exactly as entered, so double-check the number and spelling before ordering. Every hat is made to order. Most orders ship within 1 week, but some may take up to 2 weeks depending on hat availability. Need it sooner? Email help@threadbreak.com before you order.</p>
+<p class="proof-note">We produce your patch exactly as entered, so double-check the number and spelling before ordering. Names are produced in all caps. Every hat is made to order. Most orders ship within 1 week, but some may take up to 2 weeks depending on hat availability. Need it sooner? Email help@threadbreak.com before you order.</p>
 </div>
 </div>
 </section>
@@ -127,6 +127,8 @@
 <div class="wrap">
 <div class="mx-work-head"><h2 class="mx-work-title">Recent work</h2><div class="mx-work-nav"><span class="mx-work-hint"><span class="mx-hint-touch">Swipe for more</span><span class="mx-hint-mouse">Scroll for more</span></span><button type="button" class="mx-work-btn" id="workPrev" aria-label="Previous photos">&#8249;</button><button type="button" class="mx-work-btn" id="workNext" aria-label="Next photos">&#8250;</button></div></div>
 <div class="mx-work-wrap"><div class="mx-work-row">
+<figure><img src="{{ 'mx-work-otto117.jpg' | asset_url }}" alt="Black and red mesh trucker hat with a red carbon fiber number plate patch" loading="lazy" width="800" height="800"><figcaption>Red Carbon Fiber leatherette on an Otto black and red mesh trucker</figcaption></figure>
+<figure><img src="{{ 'mx-work-flex517.jpg' | asset_url }}" alt="Black Flexfit 110 snapback with a vintage sky blue number plate patch" loading="lazy" width="800" height="800"><figcaption>Vintage Sky Blue leatherette on a Flexfit 110 snapback</figcaption></figure>
 <figure><img src="{{ 'mx-work-otto38.jpg' | asset_url }}" alt="Black Otto 99-598 low profile hat with a saddle tan number plate patch" loading="lazy" width="800" height="800"><figcaption>Saddle Tan leatherette on an Otto 99-598 5-panel low profile</figcaption></figure>
 <figure><img src="{{ 'mx-work-otto29.jpg' | asset_url }}" alt="Three black Otto 99-598 hats with red carbon fiber number plate patches" loading="lazy" width="800" height="800"><figcaption>Red Carbon Fiber leatherette, family pack on Otto 99-598 hats</figcaption></figure>
 <figure><img src="{{ 'mx-work-silver.jpg' | asset_url }}" alt="Black Flexfit 110 snapback with a brushed silver number plate patch" loading="lazy" width="800" height="800"><figcaption>Brushed Silver leatherette on a Flexfit 110 snapback</figcaption></figure>
