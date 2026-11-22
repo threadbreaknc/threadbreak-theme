@@ -258,6 +258,7 @@
 {% render 'tt-stock' %}
 {% render 'atonal-stock' %}
 {% render 'asc-styles' %}
+{% render 'logo-prep' %}
 {% render 'house-stock' %}
 {% render 'ss-stock' %}
 <script>
@@ -382,9 +383,11 @@
     var f = e.target.files[0]; if (!f) return;
     $("smFileLabel").textContent = f.name + " (tap to change)";
     $("smFileWrap").classList.add("has-file");
-    var r = new FileReader();
-    r.onload = function(ev){ file = { data: ev.target.result.split(",")[1], name: f.name, mimeType: f.type, placement: "Front" }; };
-    r.readAsDataURL(f);
+    (window.TBPrepLogo ? window.TBPrepLogo(f) : Promise.resolve(f)).then(function(pf){ // shrinks big phone photos first
+      var r = new FileReader();
+      r.onload = function(ev){ file = { data: ev.target.result.split(",")[1], name: pf.name, mimeType: pf.type, placement: "Front" }; };
+      r.readAsDataURL(pf);
+    });
   });
   function hatName(){ return $("smManual").hidden ? (pick.s ? pick.s.name : "") : val("smStyle"); }
   function hatColor(){ return $("smManual").hidden ? pick.c : val("smColor"); }

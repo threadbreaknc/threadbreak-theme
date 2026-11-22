@@ -1,0 +1,44 @@
+{%- comment -%}
+  Shrinks big phone photos (HEIC, large JPG/PNG) in the browser before they're sent,
+  so logo uploads take a few seconds instead of 20+. Vector and document files
+  (PDF, AI, EPS, SVG) and small images are sent untouched. If the browser can't
+  read the image (e.g. HEIC in Chrome), the original file is sent.
+  Used by the order forms, the sample page and the quote form: window.TBPrepLogo(file) -> Promise<File>
+{%- endcomment -%}
+<script>
+window.TBPrepLogo = function(file){
+  var MAX_SIDE = 3000, KEEP_UNDER = 1.5 * 1024 * 1024;
+  return new Promise(function(resolve){
+    try {
+      if (!file) return resolve(file);
+      var name = file.name || "logo", type = (file.type || "").toLowerCase();
+      var heic = /heic|heif/.test(type) || /\.(heic|heif)$/i.test(name);
+      var raster = heic || /^image\/(jpeg|jpg|png|webp)$/.test(type) || /\.(jpe?g|png|webp)$/i.test(name);
+      if (!raster || (!heic && file.size <= KEEP_UNDER)) return resolve(file);
+      var url = URL.createObjectURL(file), img = new Image(), done = false;
+      var give = function(f){ if (done) return; done = true; try { URL.revokeObjectURL(url); } catch (e) {} resolve(f); };
+      var timer = setTimeout(function(){ give(file); }, 8000);
+      img.onerror = function(){ clearTimeout(timer); give(file); };
+      img.onload = function(){
+        clearTimeout(timer);
+        try {
+          var w = img.naturalWidth, h = img.naturalHeight;
+          if (!w || !h) return give(file);
+          var k = Math.min(1, MAX_SIDE / Math.max(w, h));
+          var c = document.createElement("canvas"); c.width = Math.round(w * k); c.height = Math.round(h * k);
+          var x = c.getContext("2d");
+          var png = /png/.test(type) || /\.png$/i.test(name); // keep transparency for PNG logos
+          if (!png){ x.fillStyle = "#fff"; x.fillRect(0, 0, c.width, c.height); }
+          x.drawImage(img, 0, 0, c.width, c.height);
+          c.toBlob(function(b){
+            if (!b || (b.size >= file.size && !heic)) return give(file);
+            var base = name.replace(/\.[^.]+$/, "");
+            give(new File([b], base + (png ? ".png" : ".jpg"), { type: png ? "image/png" : "image/jpeg" }));
+          }, png ? "image/png" : "image/jpeg", 0.9);
+        } catch (e) { give(file); }
+      };
+      img.src = url;
+    } catch (e) { resolve(file); }
+  });
+};
+</script>

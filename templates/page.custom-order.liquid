@@ -2041,6 +2041,7 @@ const FRONT_POSITIONS = ["Left panel","Centered","Right panel"];
 {% render 'tb-text-option' %}
 {% render 'tt-stock' %}
 {% render 'atonal-stock' %}
+{% render 'logo-prep' %}
 {% render 'house-stock' %}
 {% render 'ss-stock' %}
 <script>
@@ -2932,7 +2933,8 @@ async function sendToDrive(type){
     const f = state.files[p];
     if (!f) continue;
     const label = (PLACEMENTS.find(x => x.id === p) || {}).label || p;
-    files.push({ placement: label, name: f.name, mimeType: f.type || "application/octet-stream", data: await fileToB64(f) });
+    const pf = window.TBPrepLogo ? await window.TBPrepLogo(f) : f; // shrinks big phone photos first
+    files.push({ placement: label, name: pf.name, mimeType: pf.type || "application/octet-stream", data: await fileToB64(pf) });
     uploaded.push(label);
   }
   const body = JSON.stringify({ type: type, meta: orderMeta(), files: files });

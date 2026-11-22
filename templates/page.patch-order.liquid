@@ -2006,6 +2006,7 @@ const PLACEMENTS = [
 
 {% render 'tt-stock' %}
 {% render 'atonal-stock' %}
+{% render 'logo-prep' %}
 {% render 'house-stock' %}
 {% render 'ss-stock' %}
 <script>
@@ -3398,7 +3399,8 @@ async function sendToDrive(type){
   if (!scriptConfigured()) return { ok:false, skipped:true, uploaded:[] };
   const uploaded = [], files = [];
   if (state.logoFile){
-    files.push({ kind: "artwork", placement: state.placement.label, name: state.logoFile.name, mimeType: state.logoFile.type || "application/octet-stream", data: await fileToB64(state.logoFile) });
+    const pf = window.TBPrepLogo ? await window.TBPrepLogo(state.logoFile) : state.logoFile; // shrinks big phone photos first
+    files.push({ kind: "artwork", placement: state.placement.label, name: pf.name, mimeType: pf.type || "application/octet-stream", data: await fileToB64(pf) });
     uploaded.push(state.placement.label);
   }
   const shot = mockupB64();

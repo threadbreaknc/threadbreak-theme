@@ -193,6 +193,7 @@
 
 </div>
 
+{% render 'logo-prep' %}
 <script>
 (function(){
   var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwuCYOYP96-fhmSnVsPYHuPi0LT1segF4291MGeHJ4eWCW_FONn7deif6Wj81CD_Yox/exec";
@@ -257,9 +258,11 @@
         wrap.querySelector(".q-file-name").textContent = f.name;
         wrap.querySelector(".q-file-label").textContent = "Logo added - tap to change";
         wrap.classList.add("has-file");
-        var reader = new FileReader();
-        reader.onload = function(ev){ locFiles[loc] = { data: ev.target.result.split(",")[1], name: f.name, type: f.type }; };
-        reader.readAsDataURL(f);
+        (window.TBPrepLogo ? window.TBPrepLogo(f) : Promise.resolve(f)).then(function(pf){ // shrinks big phone photos first
+          var reader = new FileReader();
+          reader.onload = function(ev){ locFiles[loc] = { data: ev.target.result.split(",")[1], name: pf.name, type: pf.type }; };
+          reader.readAsDataURL(pf);
+        });
       });
     });
     // clicking the label opens the file input
