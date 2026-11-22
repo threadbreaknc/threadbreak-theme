@@ -142,8 +142,6 @@
 <script>
 // Tier-priced custom order lines: change quantity in the cart.
 (function(){
-  var TIERS = [[96, "96+ hats"], [48, "48–95 hats"], [24, "24–47 hats"], [10, "10–23 hats"], [5, "5–9 hats"]];
-  var tierFor = function(q){ for (var i = 0; i < TIERS.length; i++) if (q >= TIERS[i][0]) return TIERS[i][1]; return null; };
   var post = function(url, body){ return fetch(url, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(body) }).then(function(r){ if (!r.ok) throw new Error(url + " " + r.status); return r.json(); }); };
   document.querySelectorAll(".cart-tier-qty").forEach(function(box){
     var input = box.querySelector(".qty-input"), note = box.parentNode.querySelector(".cart-tier-note");
@@ -155,21 +153,37 @@
       busy = true; box.classList.add("busy"); if (note) note.textContent = "Updating...";
       var props = {}; try { props = JSON.parse(box.dataset.props || "{}"); } catch (e) {}
       var style = box.dataset.style;
-      Promise.all([
-        fetch("/products/" + box.dataset.handle + ".js").then(function(r){ return r.json(); }),
-        fetch("/cart.js").then(function(r){ return r.json(); })
-      ]).then(function(res){
-        var prod = res[0], cart = res[1], label = tierFor(q);
-        var v = prod.variants.find(function(x){ return x.option1 === style && x.option2 === label; });
-        if (!v) throw new Error("no tier variant");
-        // add-on lines (extra locations, puff) for this hat follow the new quantity
-        var updates = {};
-        cart.items.forEach(function(it){ if (it.key !== box.dataset.key && it.properties && it.properties["Applies to"] === style && it.quantity === start) updates[it.key] = q; });
-        return post("/cart/change.js", { id: box.dataset.key, quantity: 0 })
-          .then(function(){ return post("/cart/add.js", { items: [{ id: v.id, quantity: q, properties: props }] }); })
-          .then(function(){ return Object.keys(updates).length ? post("/cart/update.js", { updates: updates }) : null; });
+      var base = "/products/" + box.dataset.handle + "?view=tbvariant";
+      var getJ = function(u){ return fetch(u, { headers: { "Accept": "application/json" } }).then(function(r){ if (!r.ok) throw new Error(u + " " + r.status); return r.json(); }); };
+      Promise.all([ getJ(base), getJ("/cart.js") ]).then(function(res){
+        var info = res[0], cart = res[1];
+        var line = cart.items.find(function(it){ return it.key === box.dataset.key; });
+        if (!line) throw new Error("line gone");
+        // pick the tier for this quantity by its starting number ("5–9 hats", "96–143 hats", "96+ hats")
+        var sv = (info.options[0] || []).find(function(o){ return o.name === style; });
+        var tiers = (info.options[1] || []).map(function(o){ return { id: o.id, name: o.name, min: parseInt(o.name, 10) || 0 }; })
+          .filter(function(t){ return t.min >= 5 && t.min <= q; }).sort(function(a, b){ return b.min - a.min; });
+        if (!sv || !tiers.length) throw new Error("no tier");
+        var tryTier = function(k){
+          if (k >= tiers.length) throw new Error("no tier variant");
+          return getJ(base + "&option_values=" + sv.id + "," + tiers[k].id).then(function(d){
+            var v = d.variant;
+            return (v && v.option1 === style && v.option2 === tiers[k].name) ? v : tryTier(k + 1);
+          });
+        };
+        return tryTier(0).then(function(v){
+          // add-on lines (extra locations, puff) for this hat follow the new quantity
+          var updates = {};
+          cart.items.forEach(function(it){ if (it.key !== box.dataset.key && it.properties && it.properties["Applies to"] === style && it.quantity === start) updates[it.key] = q; });
+          var addons = function(){ return Object.keys(updates).length ? post("/cart/update.js", { updates: updates }) : null; };
+          if (v.id === line.variant_id) return post("/cart/change.js", { id: box.dataset.key, quantity: q }).then(addons);
+          // add the new tier first, then drop the old line, so nothing is lost if a step fails
+          return post("/cart/add.js", { items: [{ id: v.id, quantity: q, properties: line.properties || props }] })
+            .then(function(){ return post("/cart/change.js", { id: box.dataset.key, quantity: 0 }); })
+            .then(addons);
+        });
       }).then(function(){ window.location.reload(); })
-        .catch(function(){ busy = false; box.classList.remove("busy"); input.value = start; if (note) note.textContent = "Couldn't update. Remove it and rebuild your order, or email help@threadbreak.com."; });
+        .catch(function(err){ try { console.warn("cart qty", err); } catch(e){} busy = false; box.classList.remove("busy"); input.value = start; if (note) note.textContent = "Couldn't update. Remove it and rebuild your order, or email help@threadbreak.com."; });
     }
     box.querySelectorAll("[data-tq]").forEach(function(b){ b.addEventListener("click", function(){ input.value = Math.max(5, (+input.value || 0) + (+b.dataset.tq)); clearTimeout(timer); timer = setTimeout(apply, 700); }); });
     input.addEventListener("change", apply);

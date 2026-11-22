@@ -1,0 +1,8 @@
+{%- layout none -%}
+{%- comment -%}
+  Used by the cart quantity stepper. /products/<handle>.js stops at 250 variants,
+  so the cart asks here instead. With ?option_values=<style id>,<tier id> Shopify
+  selects that exact variant.
+{%- endcomment -%}
+{%- assign v = product.selected_or_first_available_variant -%}
+{"variant":{"id":{{ v.id }},"option1":{{ v.option1 | json }},"option2":{{ v.option2 | json }}},"options":[{%- for o in product.options_with_values -%}[{%- for val in o.values -%}{"id":{{ val.id }},"name":{{ val.name | json }}}{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%}]{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%}]}
