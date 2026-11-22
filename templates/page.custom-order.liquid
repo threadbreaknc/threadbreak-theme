@@ -296,6 +296,7 @@
   #tbco .embroidery-notice{display:flex;gap:12px;align-items:flex-start;background:var(--ice);border:1.5px solid var(--purple);border-left:5px solid var(--purple);border-radius:12px;padding:14px 16px;margin-top:18px}
   #tbco .embroidery-notice p{font-size:13px;line-height:1.55;margin:0}
   #tbco .embroidery-notice strong{color:var(--purple)}
+  #tbco .embroidery-notice p a{color:var(--purple);font-weight:700}
   #tbco .en-icon{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--purple);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
   #tbco .en-toggle{background:none;border:none;padding:0;margin-top:8px;font-family:inherit;font-size:12.5px;font-weight:600;color:var(--purple);text-decoration:underline;cursor:pointer}
   #tbco .en-example{margin-top:10px}
@@ -501,33 +502,17 @@
       <p class="hint">Front is included. <strong>Each additional location is $7 per hat.</strong> Both sides are $14 per hat. <strong>3D puff applies to the front logo only</strong>, so sides and back are always stitched flat.</p>
 
       <p class="fld">Your logo or text</p>
-      <p class="hint" style="margin-top:-4px">No logo? Tap <strong>Type text</strong> on any location to pick a font and thread color.</p>
-      <div class="uploads" id="uploads"></div>
-      <p class="hint">One file per location: PNG, JPG, PDF, AI, or SVG, up to 10 MB each. Digitizing is free. No file handy? Skip it and email us after.</p>
-
-      <a href="/pages/custom-patch-hats" class="patch-suggest">
-        <div class="patch-suggest-body">
-          <p class="patch-suggest-head">Very detailed logo?</p>
-          <p>Fine lines, small text and intricate artwork lose detail in thread. A <strong>laser engraved leather patch</strong> holds detail far better and gives a premium look.</p>
-          <span class="patch-suggest-cta">See patch hats &rarr;</span>
-        </div>
-      </a>
-      <a href="/pages/custom-dtf-hats" class="patch-suggest">
-        <div class="patch-suggest-body">
-          <p class="patch-suggest-head">Full color or AI artwork?</p>
-          <p>Gradients, glows, photos and lots of colors can't be stitched. A <strong>full color DTF print</strong> keeps all of it, usually as-is, and costs less per hat.</p>
-          <span class="patch-suggest-cta">See DTF print hats &rarr;</span>
-        </div>
-      </a>
+            <div class="uploads" id="uploads"></div>
+      <p class="hint">One file per location: PNG, JPG, PDF, AI, or SVG. Any size is fine. Digitizing is free. No file handy? Skip it and email us after.</p>
 
       <div class="embroidery-notice">
         <span class="en-icon" aria-hidden="true">!</span>
         <div>
-          <p class="en-ai-disclaimer"><strong>AI-generated artwork:</strong> AI images usually aren't ready to stitch as-is, so every one is reviewed by our design team before production. If yours needs to be professionally recreated into a production-ready file, we'll let you know and quote any recreation fee before anything is made. Standard digitizing is still free.</p>
+          <p class="en-ai-disclaimer"><strong>Detailed, full color or AI artwork?</strong> Thread can't hold tiny detail, gradients or photos. Fine detail looks best as a <a href="/pages/custom-patch-hats">leather patch</a>, full color as a <a href="/pages/custom-dtf-hats">DTF print</a>. We review every AI image and quote any redraw fee before anything is made.</p>
           <div class="en-links">
             <button type="button" class="en-toggle" id="enToggle">View example</button>
-            <button type="button" class="en-toggle" id="aiToggle">Using AI artwork? Read this</button>
-            <button type="button" class="en-toggle" id="varToggle">What to expect from embroidery</button>
+            <button type="button" class="en-toggle" id="aiToggle">AI art tips</button>
+            <button type="button" class="en-toggle" id="varToggle">What to expect</button>
           </div>
           <div class="en-ai" id="varTips" hidden>
             <p><strong>Small differences are normal</strong></p>
@@ -2731,10 +2716,9 @@ function renderUploads(){
         p.id === "left"  ? "Artwork for the left side, as you look at the hat." :
         p.id === "right" ? "Artwork for the right side, as you look at the hat." :
                            "Artwork for the back of the hat.") + '</div>' +
-      TBT.toggle(p.id) +
-      (TBT.st(p.id).on ? TBT.editor(p.id) :
+      (TBT.st(p.id).on ? TBT.toggle(p.id) + TBT.editor(p.id) :
       '<input type="file" data-up="' + p.id + '" accept=".png,.jpg,.jpeg,.pdf,.ai,.svg,image/*">' +
-      (f ? '<div class="up-have">Attached: ' + f.name + '</div>' : "")) +
+      (f ? '<div class="up-have">Attached: ' + f.name + '</div>' : "") + TBT.toggle(p.id)) +
     '</div>';
   }).join("");
   TBT.bind(host, () => renderUploads(), (pid, file) => { state.files[pid] = file; });
@@ -2746,9 +2730,6 @@ function renderUploads(){
   host.querySelectorAll("[data-up]").forEach(inp => {
     inp.addEventListener("change", async e => {
       let file = e.target.files && e.target.files[0];
-      // big phone photos get shrunk right away instead of being turned away
-      if (file && file.size > 10 * 1024 * 1024 && window.TBPrepLogo){ try { file = await window.TBPrepLogo(file); } catch(err){} }
-      if (file && file.size > 10 * 1024 * 1024){ alert("That file is over 10 MB, even after shrinking. Please send a smaller file or email it to help@threadbreak.com."); e.target.value = ""; return; }
       state.files[inp.dataset.up] = file || null;
       renderUploads();
     });
@@ -3149,8 +3130,8 @@ document.querySelectorAll("#tbco [data-back]").forEach(b => {
 
 bindToggle("puffBtn","puffInfo","What is 3D puff?","Hide");
 bindToggle("enToggle","enExample","View example","Hide example");
-bindToggle("aiToggle","aiTips","Using AI artwork? Read this","Hide AI tips");
-bindToggle("varToggle","varTips","What to expect from embroidery","Hide");
+bindToggle("aiToggle","aiTips","AI art tips","Hide AI tips");
+bindToggle("varToggle","varTips","What to expect","Hide");
 
 renderHats();
 renderDesign();

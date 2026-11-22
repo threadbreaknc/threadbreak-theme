@@ -493,9 +493,8 @@
       </div>
 
       <p class="fld">Your logo or text</p>
-      <p class="hint" style="margin-top:-4px">No logo? Tap <strong>Type text</strong> on any location to pick a font and color.</p>
-      <div class="uploads" id="uploads"></div>
-      <p class="hint">One file per location: PNG, JPG, PDF, AI, or SVG, up to 10 MB each. A high resolution PNG with a transparent background prints best. No file handy? Skip it and email us after.</p>
+            <div class="uploads" id="uploads"></div>
+      <p class="hint">One file per location: PNG, JPG, PDF, AI, or SVG. Any size is fine. A high resolution PNG with a transparent background prints best. No file handy? Skip it and email us after.</p>
 
       <div class="art-note">
         <p><strong>Colors and artwork:</strong> We print your colors as they appear in your file. Screens vary, so printed colors can look slightly different in person. We check every file before printing, AI artwork included, and will let you know if it's too low resolution to print clean. Make sure you have the rights to use the design.</p>
@@ -2599,10 +2598,9 @@ function renderUploads(){
         p.id === "left"  ? "Artwork for the left side, as you look at the hat." :
         p.id === "right" ? "Artwork for the right side, as you look at the hat." :
                            "Artwork for the back of the hat.") + '</div>' +
-      TBT.toggle(p.id) +
-      (TBT.st(p.id).on ? TBT.editor(p.id) :
+      (TBT.st(p.id).on ? TBT.toggle(p.id) + TBT.editor(p.id) :
       '<input type="file" data-up="' + p.id + '" accept=".png,.jpg,.jpeg,.pdf,.ai,.svg,image/*">' +
-      (f ? '<div class="up-have">Attached: ' + f.name + '</div>' : "")) +
+      (f ? '<div class="up-have">Attached: ' + f.name + '</div>' : "") + TBT.toggle(p.id)) +
     '</div>';
   }).join("");
   TBT.bind(host, () => renderUploads(), (pid, file) => { state.files[pid] = file; });
@@ -2614,9 +2612,6 @@ function renderUploads(){
   host.querySelectorAll("[data-up]").forEach(inp => {
     inp.addEventListener("change", async e => {
       let file = e.target.files && e.target.files[0];
-      // big phone photos get shrunk right away instead of being turned away
-      if (file && file.size > 10 * 1024 * 1024 && window.TBPrepLogo){ try { file = await window.TBPrepLogo(file); } catch(err){} }
-      if (file && file.size > 10 * 1024 * 1024){ alert("That file is over 10 MB, even after shrinking. Please send a smaller file or email it to help@threadbreak.com."); e.target.value = ""; return; }
       state.files[inp.dataset.up] = file || null;
       renderUploads();
     });

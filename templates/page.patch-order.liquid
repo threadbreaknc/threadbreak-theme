@@ -3617,9 +3617,8 @@ document.querySelectorAll("#tbpo [data-back]").forEach(b => {
     input.dispatchEvent(new Event("change"));
   });
 })();
-$("logoInput").addEventListener("change", async e => {
+$("logoInput").addEventListener("change", e => {
   let file = e.target.files && e.target.files[0];
-  if (file && file.size > 10 * 1024 * 1024 && window.TBPrepLogo){ try { file = await window.TBPrepLogo(file); } catch(err){} }
   if (!file){
     state.logoFile = null; state.logoImage = null;
     state.logoScale = 1; state.logoX = 0; state.logoY = 0;
@@ -3627,10 +3626,6 @@ $("logoInput").addEventListener("change", async e => {
     syncFileUI();
     renderPatchPreview();
     return;
-  }
-  if (file.size > 10 * 1024 * 1024){
-    alert("That file is over 10 MB, even after shrinking. Please send a smaller file or email it to help@threadbreak.com.");
-    e.target.value = ""; return;
   }
   state.logoFile = file;
   // new artwork starts centered at full size
