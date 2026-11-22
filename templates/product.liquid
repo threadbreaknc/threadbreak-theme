@@ -1,3 +1,4 @@
+{% render 'logo-prep' %}
 {%- comment -%} brand mark, matched off vendor or title {%- endcomment -%}
 {%- assign brand_logo = "" -%}
 {%- assign brand_alt = "" -%}
@@ -1106,8 +1107,9 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
     });
   })();
 
-  $("pbo-artwork").addEventListener("change", function(e){
+  $("pbo-artwork").addEventListener("change", async function(e){
     var file = e.target.files && e.target.files[0];
+    if (file && file.size > 10 * 1024 * 1024 && window.TBPrepLogo){ try { file = await window.TBPrepLogo(file); } catch(err){} }
     if (!file){
       state.logoFile = null; state.logoImage = null;
       state.logoScale = 1; state.logoX = 0; state.logoY = 0;
@@ -1117,7 +1119,7 @@ data-variant-thumb="{% if variant.featured_image %}{{ variant.featured_image | i
       return;
     }
     if (file.size > 10 * 1024 * 1024){
-      alert("That file is over 10 MB. Please send a smaller file or email it to help@threadbreak.com.");
+      alert("That file is over 10 MB, even after shrinking. Please send a smaller file or email it to help@threadbreak.com.");
       e.target.value = ""; return;
     }
     state.logoFile = file;
