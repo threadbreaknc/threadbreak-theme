@@ -423,6 +423,12 @@
   #tbco header .props span{color:var(--ink);font-size:12.5px}
   @media(max-width:640px){#tbco header{padding:20px 0 0}}
 </style>
+<style>
+  #tbco .bf-box{display:flex;gap:14px;align-items:center;margin:16px 0 0;padding:14px 16px;border-radius:14px;background:#0d0b14;color:#fff;border:2px solid #5028AA}
+  #tbco .bf-box .bf-pill{flex:0 0 auto;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.06em;background:#5028AA;color:#fff;border-radius:7px;padding:5px 9px 3px;line-height:1}
+  #tbco .bf-box p{margin:0;font-size:14px;line-height:1.5;color:#fff}
+  #tbco .bf-box p .bf-sub{display:block;color:#c9bdf0;font-size:13px;margin-top:2px}
+</style>
 
 <header class="tbco-hero">
   <div class="wrap">
@@ -468,6 +474,7 @@
       </div>
       <div class="price-now" id="priceNow"></div>
       <div id="nudge"></div>
+      <div id="bfNudge"></div>
       <div id="splitHost"></div>
       <div class="btn-row"><button type="button" class="back" data-back="1">Back</button><button type="button" class="next" id="next2" disabled>Add Your Design</button></div>
     </div>
@@ -2735,6 +2742,13 @@ function renderRail(){
 }
 
 /* ---------- summaries + sticky bar ---------- */
+/* Black Friday: 10% off 5-9 hat DTF orders (automatic discount; config in snippets/bf-promo.liquid) */
+function bfRender(){
+  const el = $("bfNudge"); if (!el) return;
+  const q = state.qty || 0;
+  if (!(window.TB_BF && TB_BF.active()) || q < 5 || q > 9){ el.innerHTML = ""; return; }
+  el.innerHTML = '<div class="bf-box"><span class="bf-pill">BLACK FRIDAY</span><p><strong>' + TB_BF.smallPct + '% off this order</strong>, taken off automatically at checkout.<span class="bf-sub">No code needed. Applies to DTF orders of 5 to 9 hats.</span></p></div>';
+}
 function sync(){
   houseNote();
   if (meshClean() || isMesh() !== lastMesh){ lastMesh = isMesh(); renderDesign(); }
@@ -2742,6 +2756,7 @@ function sync(){
     ? nameOf(state.style) + (state.colors.length ? " &middot; " + (state.colors.length === 1 ? state.colors[0] : state.colors.length + " colors") : "")
     : "";
   $("sum2").textContent = state.qty ? state.qty + " hats" : "";
+  bfRender();
   $("sum3").textContent = state.deco.label;
   $("sum4").textContent = "";
 
