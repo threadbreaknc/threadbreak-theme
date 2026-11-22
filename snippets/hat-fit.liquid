@@ -1,0 +1,66 @@
+{%- comment -%}
+  Makes every hat photo in the picker grid the same size in its box. Photos come
+  from different suppliers with the hat at different sizes (AS Colour shoots small
+  in a big white frame, Richardson is tall, Otto is wide). This finds the hat in
+  each photo and scales and centers it so they all match. Used by the three order forms.
+{%- endcomment -%}
+<style>
+  #hats .hat-imgwrap{overflow:hidden}
+  #hats .hat-imgwrap img.hat-img{transform-origin:50% 50%}
+</style>
+<script>
+(function(){
+  var FILL = 0.84, MAXZ = 2.4, MINZ = 0.9, cache = {}, pending = {};
+  function measure(src, cb){
+    if (cache[src]) return cb(cache[src]);
+    if (pending[src]) return pending[src].push(cb);
+    pending[src] = [cb];
+    var im = new Image(); im.crossOrigin = "anonymous";
+    im.onload = function(){
+      var res = null;
+      try {
+        var N = 160, c = document.createElement("canvas"); c.width = c.height = N;
+        var x = c.getContext("2d"); x.fillStyle = "#fff"; x.fillRect(0, 0, N, N);
+        var s = Math.min(N / im.naturalWidth, N / im.naturalHeight), w = im.naturalWidth * s, h = im.naturalHeight * s;
+        x.drawImage(im, (N - w) / 2, (N - h) / 2, w, h);
+        var d = x.getImageData(0, 0, N, N).data, x0 = N, x1 = -1, y0 = N, y1 = -1;
+        for (var y = 0; y < N; y++) for (var xx = 0; xx < N; xx++){
+          var k = (y * N + xx) * 4;
+          if (d[k] < 236 || d[k + 1] < 236 || d[k + 2] < 236){ if (xx < x0) x0 = xx; if (xx > x1) x1 = xx; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+        }
+        var bw = x1 - x0 + 1, bh = y1 - y0 + 1;
+        if (x1 > 0 && bw > N * 0.2 && bh > N * 0.15){
+          var z = Math.max(MINZ, Math.min(MAXZ, FILL * N / bw, FILL * N / bh));
+          res = { z: z, tx: (0.5 - (x0 + x1 + 1) / 2 / N) * 100, ty: (0.5 - (y0 + y1 + 1) / 2 / N) * 100 };
+        }
+      } catch (e) {}
+      cache[src] = res || { z: 1, tx: 0, ty: 0 };
+      (pending[src] || []).forEach(function(f){ f(cache[src]); }); delete pending[src];
+    };
+    im.onerror = function(){ cache[src] = { z: 1, tx: 0, ty: 0 }; (pending[src] || []).forEach(function(f){ f(cache[src]); }); delete pending[src]; };
+    im.src = src.split("#")[0];
+  }
+  function fit(img){
+    if (!img || img.classList.contains("hat-logo")) return;
+    var src = img.currentSrc || img.src; if (!src || img.dataset.fitSrc === src) return;
+    img.dataset.fitSrc = src;
+    measure(src, function(r){
+      if (img.dataset.fitSrc !== src) return;
+      // translate first (in box %), then scale, so the hat's center lands in the middle
+      img.style.transform = "scale(" + r.z.toFixed(3) + ") translate(" + r.tx.toFixed(2) + "%," + r.ty.toFixed(2) + "%)";
+    });
+  }
+  function scan(root){
+    (root || document).querySelectorAll("#hats .hat-imgwrap img.hat-img").forEach(function(img){
+      if (img.complete && img.naturalWidth) fit(img);
+    });
+  }
+  function boot(){
+    var g = document.getElementById("hats"); if (!g) return;
+    g.addEventListener("load", function(e){ if (e.target && e.target.classList && e.target.classList.contains("hat-img")) fit(e.target); }, true);
+    new MutationObserver(function(){ scan(g); }).observe(g, { childList: true, subtree: true });
+    scan(g);
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot); else boot();
+})();
+</script>
