@@ -2545,6 +2545,11 @@ function renderColorPanel(){
   }
   if (menu) menu.addEventListener("scroll", cue);
   $("ddBtn").addEventListener("click", e => { e.stopPropagation(); dd.classList.toggle("open"); setTimeout(cue, 20); });
+  // People tap the "Choose your colors" heading and the "Pick a color to preview" caption
+  // expecting the color list to open, so those open it too.
+  const openDD = e => { e.stopPropagation(); dd.classList.add("open"); setTimeout(cue, 20); };
+  host.querySelectorAll(".colorpanel h3, .colorpanel .cp-sub").forEach(el => { el.style.cursor = "pointer"; el.addEventListener("click", openDD); });
+  const heroCap = $("hatHeroCap"); if (heroCap){ heroCap.style.cursor = "pointer"; heroCap.addEventListener("click", e => { openDD(e); dd.scrollIntoView({ behavior: "smooth", block: "center" }); }); }
   menu.addEventListener("click", e => e.stopPropagation());
   document.addEventListener("click", () => { if (dd) dd.classList.remove("open"); });
 
@@ -2733,6 +2738,11 @@ function renderUploads(){
     '</div>';
   }).join("");
   TBT.bind(host, () => renderUploads(), (pid, file) => { state.files[pid] = file; });
+  // tapping a slot's "Front logo" label opens its file picker
+  host.querySelectorAll(".up-slot").forEach(slot => {
+    const lab = slot.querySelector(".up-slot-label"), inp = slot.querySelector('input[type="file"]');
+    if (lab && inp){ lab.style.cursor = "pointer"; lab.addEventListener("click", () => inp.click()); }
+  });
   host.querySelectorAll("[data-up]").forEach(inp => {
     inp.addEventListener("change", e => {
       const file = e.target.files && e.target.files[0];

@@ -2,6 +2,8 @@
 <style>
   .cart-item-qty-locked{display:inline-flex;align-items:center;padding:6px 14px;background:#F3EFFC;border:1.5px solid #E2E0EA;border-radius:8px}
   .qty-locked-label{font-weight:600;color:#14121C;font-size:0.95rem}
+  .cart-tier-qty.busy{opacity:.5;pointer-events:none}
+  .qty-locked-note a{color:#5028AA;font-weight:600}
   .qty-locked-note{display:block;font-size:0.72rem;color:#6B6A78;margin-top:5px;max-width:260px;line-height:1.35}
 </style>
 <div class="cart-page">
@@ -55,11 +57,29 @@
                 {%- assign is_tier_locked = true -%}
               {%- endif -%}
               {%- if is_tier_locked -%}
-                <div class="cart-item-qty cart-item-qty-locked">
-                  <span class="qty-locked-label">Qty: {{ item.quantity }}</span>
-                  <input type="hidden" name="updates[]" value="{{ item.quantity }}">
-                </div>
-                <span class="qty-locked-note">Custom order quantity is set on the order form. To change it, remove this and rebuild your order.</span>
+                {%- assign hat_colors = item.properties['Hat Color(s)'] | default: '' -%}
+                {%- assign multi_color = false -%}
+                {%- if hat_colors contains ' x' -%}{%- assign multi_color = true -%}{%- endif -%}
+                {%- if multi_color -%}
+                  <div class="cart-item-qty cart-item-qty-locked">
+                    <span class="qty-locked-label">Qty: {{ item.quantity }}</span>
+                    <input type="hidden" name="updates[]" value="{{ item.quantity }}">
+                  </div>
+                  <span class="qty-locked-note">This order is split across colors ({{ hat_colors }}). To change quantities, remove it and <a href="{{ item.url | split: '?' | first | replace: '/products/custom-embroidered-hat', '/pages/custom-order' | replace: '/products/custom-patch-hat', '/pages/custom-patch-hats' | replace: '/products/custom-dtf-print-hat', '/pages/custom-dtf-hats' }}">rebuild it</a>.</span>
+                {%- else -%}
+                  {%- comment -%}
+                    Custom order lines are priced by quantity tier (5-9, 10-23, 24-47, 48-95, 96+),
+                    so changing the quantity swaps the line to the matching tier variant and keeps
+                    the add-on lines (extra locations, 3D puff) in step. See the script below.
+                  {%- endcomment -%}
+                  <div class="cart-item-qty cart-tier-qty" data-key="{{ item.key }}" data-handle="{{ item.product.handle }}" data-style="{{ item.variant.option1 | escape }}" data-props="{{ item.properties | json | escape }}">
+                    <button type="button" class="qty-btn" data-tq="-1" aria-label="Fewer">−</button>
+                    <input type="number" class="qty-input" value="{{ item.quantity }}" min="5" inputmode="numeric" aria-label="Quantity">
+                    <button type="button" class="qty-btn" data-tq="1" aria-label="More">+</button>
+                    <input type="hidden" name="updates[]" value="{{ item.quantity }}">
+                  </div>
+                  <span class="qty-locked-note cart-tier-note">5 minimum. Price per hat updates with quantity.</span>
+                {%- endif -%}
               {%- else -%}
                 <div class="cart-item-qty">
                   <button type="button" class="qty-btn cart-qty-minus" data-line="{{ forloop.index }}">−</button>
@@ -120,6 +140,42 @@
 {%- endif -%}
 
 <script>
+// Tier-priced custom order lines: change quantity in the cart.
+(function(){
+  var TIERS = [[96, "96+ hats"], [48, "48–95 hats"], [24, "24–47 hats"], [10, "10–23 hats"], [5, "5–9 hats"]];
+  var tierFor = function(q){ for (var i = 0; i < TIERS.length; i++) if (q >= TIERS[i][0]) return TIERS[i][1]; return null; };
+  var post = function(url, body){ return fetch(url, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(body) }).then(function(r){ if (!r.ok) throw new Error(url + " " + r.status); return r.json(); }); };
+  document.querySelectorAll(".cart-tier-qty").forEach(function(box){
+    var input = box.querySelector(".qty-input"), note = box.parentNode.querySelector(".cart-tier-note");
+    var start = +input.value, busy = false, timer = null;
+    function apply(){
+      var q = Math.round(+input.value || 0);
+      if (q < 5){ q = 5; input.value = 5; }
+      if (q === start || busy) return;
+      busy = true; box.classList.add("busy"); if (note) note.textContent = "Updating...";
+      var props = {}; try { props = JSON.parse(box.dataset.props || "{}"); } catch (e) {}
+      var style = box.dataset.style;
+      Promise.all([
+        fetch("/products/" + box.dataset.handle + ".js").then(function(r){ return r.json(); }),
+        fetch("/cart.js").then(function(r){ return r.json(); })
+      ]).then(function(res){
+        var prod = res[0], cart = res[1], label = tierFor(q);
+        var v = prod.variants.find(function(x){ return x.option1 === style && x.option2 === label; });
+        if (!v) throw new Error("no tier variant");
+        // add-on lines (extra locations, puff) for this hat follow the new quantity
+        var updates = {};
+        cart.items.forEach(function(it){ if (it.key !== box.dataset.key && it.properties && it.properties["Applies to"] === style && it.quantity === start) updates[it.key] = q; });
+        return post("/cart/change.js", { id: box.dataset.key, quantity: 0 })
+          .then(function(){ return post("/cart/add.js", { items: [{ id: v.id, quantity: q, properties: props }] }); })
+          .then(function(){ return Object.keys(updates).length ? post("/cart/update.js", { updates: updates }) : null; });
+      }).then(function(){ window.location.reload(); })
+        .catch(function(){ busy = false; box.classList.remove("busy"); input.value = start; if (note) note.textContent = "Couldn't update. Remove it and rebuild your order, or email help@threadbreak.com."; });
+    }
+    box.querySelectorAll("[data-tq]").forEach(function(b){ b.addEventListener("click", function(){ input.value = Math.max(5, (+input.value || 0) + (+b.dataset.tq)); clearTimeout(timer); timer = setTimeout(apply, 700); }); });
+    input.addEventListener("change", apply);
+  });
+})();
+
 (function(){
   // Remove by line item key. A positional index goes stale the moment the cart
   // changes, and the plain GET /cart/change?line= fallback is what produced the
