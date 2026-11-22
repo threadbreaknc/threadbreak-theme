@@ -100,12 +100,15 @@
   /* logo sits closer to the left edge */
   #main-nav{padding-left:1.75rem;}
   @media(max-width:700px){ #main-nav{padding-left:1.1rem;} }
-  .nav-logo-full.nav-logo-img{height:64px !important;width:auto !important;display:block;object-fit:contain;align-self:center;filter:none !important;animation:none !important;position:relative;top:0;}
+  /* Pages leave about 64px under the banner for the fixed nav (6rem total), so the
+     nav has to stay that height. Bigger logo, thinner padding. */
+  #main-nav:not(.scrolled){padding-top:5px !important;padding-bottom:5px !important;}
+  .nav-logo-full.nav-logo-img{height:54px !important;width:auto !important;display:block;object-fit:contain;align-self:center;filter:none !important;animation:none !important;position:relative;top:0;}
   /* one logo file for both placements: the footer sits on the dark band, so the
      mark is forced to solid white rather than needing a second artwork file. */
   .footer-logo-full.footer-logo{height:80px !important;width:auto !important;display:block;object-fit:contain;
     filter:brightness(0) invert(1) !important;}
-  @media(max-width:700px){ .nav-logo-full.nav-logo-img{height:50px !important;} .footer-logo-full.footer-logo{height:64px !important;} }
+  @media(max-width:700px){ .nav-logo-full.nav-logo-img{height:46px !important;} .footer-logo-full.footer-logo{height:64px !important;} }
   /* shrink the logo when the theme's existing .scrolled class is active (theme.js adds it at 60px) */
   .nav-logo-full.nav-logo-img{transition:height .3s ease;}
   #main-nav.scrolled .nav-logo-full.nav-logo-img{height:42px !important;}
