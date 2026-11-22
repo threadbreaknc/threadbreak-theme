@@ -154,7 +154,7 @@
       var props = {}; try { props = JSON.parse(box.dataset.props || "{}"); } catch (e) {}
       var style = box.dataset.style;
       var base = "/products/" + box.dataset.handle + "?view=tbvariant";
-      var getJ = function(u){ return fetch(u, { headers: { "Accept": "application/json" } }).then(function(r){ if (!r.ok) throw new Error(u + " " + r.status); return r.json(); }); };
+      var getJ = function(u){ return fetch(u).then(function(r){ if (!r.ok) throw new Error(u + " " + r.status); return r.json(); }); };
       Promise.all([ getJ(base), getJ("/cart.js") ]).then(function(res){
         var info = res[0], cart = res[1];
         var line = cart.items.find(function(it){ return it.key === box.dataset.key; });
