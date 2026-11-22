@@ -176,7 +176,7 @@
     var q = 0, lines = [], hatColor = "";
     cart.items.forEach(function(it){
       if (it.handle === "black-friday-bonus"){ lines.push(it); return; }
-      if (it.handle === "custom-embroidered-hat" && !/beanie/i.test(it.variant_title || "")){ q += it.quantity; if (!hatColor && it.properties) hatColor = String(it.properties["Hat Color(s)"] || "").split(/ x|,/)[0].trim(); }
+      if ((it.handle === "custom-embroidered-hat" && !/beanie/i.test(it.variant_title || "")) || it.handle === "custom-patch-hat"){ q += it.quantity; if (!hatColor && it.properties) hatColor = String(it.properties["Hat Color(s)"] || "").split(/ x|,/)[0].trim(); }
       else if (it.product_type === "Custom Hat Bundle"){ q += (parseInt(it.product_title, 10) || 0) * it.quantity; }
     });
     var want = BF.active() ? BF.bonusFor(q) : null;

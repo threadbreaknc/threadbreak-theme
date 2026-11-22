@@ -419,6 +419,21 @@
   #tbpo header .props span{color:var(--ink);font-size:12.5px}
   @media(max-width:640px){#tbpo header{padding:20px 0 0}}
 </style>
+<style>
+  #tbpo .bf-box{display:flex;gap:14px;align-items:center;margin:16px 0 0;padding:14px 16px;border-radius:14px;background:#0d0b14;color:#fff;border:2px solid #5028AA}
+  #tbpo .bf-box .bf-pill{flex:0 0 auto;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.06em;background:#5028AA;color:#fff;border-radius:7px;padding:5px 9px 3px;line-height:1}
+  #tbpo .bf-box p{margin:0;font-size:14px;line-height:1.5;color:#fff}
+  #tbpo .bf-box p .bf-sub{display:block;color:#c9bdf0;font-size:13px;margin-top:2px}
+  #tbpo .bf-bonus{margin:16px 0 0;border:2px solid #5028AA;border-radius:14px;overflow:hidden}
+  #tbpo .bf-bonus-head{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#0d0b14;color:#fff;padding:12px 16px}
+  #tbpo .bf-bonus-head b{font-size:15px}
+  #tbpo .bf-bonus-head s{color:#a99fc7;font-size:13px;margin-right:6px}
+  #tbpo .bf-bonus-head em{font-style:normal;font-weight:800;color:#b79cff}
+  #tbpo .bf-bonus-body{padding:14px 16px;background:#F4F1FB}
+  #tbpo .bf-bonus-body label{display:block;font-size:13px;font-weight:700;margin:0 0 6px}
+  #tbpo .bf-bonus-body select{width:100%;max-width:320px;height:42px;border:1.5px solid #E2E0EA;border-radius:10px;padding:0 10px;font:inherit;background:#fff}
+  #tbpo .bf-bonus-body p{margin:8px 0 0;font-size:12.5px;color:#5c5a68;line-height:1.5}
+</style>
 
 <header class="tbco-hero">
   <div class="wrap">
@@ -464,6 +479,7 @@
       </div>
       <div class="price-now" id="priceNow"></div>
       <div id="nudge"></div>
+      <div id="bfNudge"></div>
       <div id="splitHost"></div>
       <div class="btn-row"><button type="button" class="back" data-back="1">Back</button><button type="button" class="next" id="next2" disabled>Design Your Patch</button></div>
     </div>
@@ -568,6 +584,7 @@
     <div class="tbstep-head"><div class="tbstep-num">4</div><h2>Review</h2><div class="tbstep-sum" id="sum4"></div></div>
     <div class="tbstep-body">
       <div id="review"></div>
+      <div id="bfBonus"></div>
 
       <div class="proof-note">
         <span class="en-icon" aria-hidden="true">!</span>
@@ -3240,6 +3257,7 @@ function renderReview(){
   ];
   $("review").innerHTML = rows.map(r =>
     '<div class="rev-line"><span>' + r[0] + '</span><strong>' + r[1] + '</strong></div>').join("");
+  bfReview();
 }
 
 /* ---------- step machinery ---------- */
@@ -3318,6 +3336,7 @@ function sync(){
     ? nameOf(state.style) + (state.colors.length ? " &middot; " + (state.colors.length === 1 ? state.colors[0] : state.colors.length + " colors") : "")
     : "";
   $("sum2").textContent = state.qty ? state.qty + " hats" : "";
+  bfRender();
   $("sum3").innerHTML = state.material.name + " &middot; " + state.shape.label + " &middot; " + state.placement.label + (effectiveEdge() !== "none" ? " &middot; " + edgeLabel() : "");
   $("sum4").textContent = "";
 
@@ -3546,6 +3565,7 @@ async function submitCheckout(){
         files["Patch preview"] = new File([arr], "patch-preview.png", { type: "image/png" });
       }
     } catch (_) {}
+    bfAddItem(items);
     const res = await addToCart(items, files);
     if (!res.ok){
       let detail = "";
@@ -3563,6 +3583,41 @@ async function submitCheckout(){
     box.scrollIntoView({ behavior:"smooth", block:"center" });
     console.error("[tbpo] cart add failed", e, items);
   }
+}
+
+/* ---------- Black Friday bonus (config in snippets/bf-promo.liquid) ---------- */
+function bfOn(){ return !!(window.TB_BF && TB_BF.active() && state.style); }
+function bfRender(){
+  const el = $("bfNudge"); if (!el) return;
+  if (!bfOn() || !state.qty){ el.innerHTML = ""; return; }
+  const q = state.qty, b = TB_BF.bonusFor(q), n = TB_BF.nextFor(q);
+  let main, sub = "";
+  if (!b){
+    if (!n){ el.innerHTML = ""; return; }
+    main = "<strong>Add " + (n.min - q) + " more hat" + (n.min - q === 1 ? "" : "s") + "</strong> and get " + n.label.replace("FREE", "free") + ".";
+  } else {
+    main = "<strong>You get " + b.label + "</strong>, added to your cart automatically.";
+    if (n) sub = "Add " + (n.min - q) + " more for " + n.label.replace("FREE", "free") + ".";
+  }
+  el.innerHTML = '<div class="bf-box"><span class="bf-pill">BLACK FRIDAY</span><p>' + main + (sub ? '<span class="bf-sub">' + sub + '</span>' : "") + '</p></div>';
+}
+function bfReview(){
+  const el = $("bfBonus"); if (!el) return;
+  const b = bfOn() ? TB_BF.bonusFor(state.qty) : null;
+  if (!b){ el.innerHTML = ""; return; }
+  const list = TB_BF.colors[b.kind];
+  if (!state.bfColor || list.indexOf(state.bfColor) < 0) state.bfColor = list[0];
+  const what = b.kind === "beanie" ? TB_BF.beanieName + ", your logo embroidered on the cuff." : TB_BF.patchName + " with your logo laser engraved on a leather patch.";
+  el.innerHTML = '<div class="bf-bonus"><div class="bf-bonus-head"><b>' + b.label + '</b><span><s>' + money(b.value) + '</s><em>FREE</em></span></div>' +
+    '<div class="bf-bonus-body"><label for="bfColor">' + (b.kind === "beanie" ? "Beanie color" : "Patch hat color") + '</label>' +
+    '<select id="bfColor">' + list.map(c => '<option' + (c === state.bfColor ? " selected" : "") + '>' + c + '</option>').join("") + '</select>' +
+    '<p>' + what + ' Same logo as your hats, shown on your mockup before anything is made. Want a mix of colors? Just tell us when you approve the mockup.</p></div></div>';
+  $("bfColor").addEventListener("change", e => { state.bfColor = e.target.value; });
+}
+function bfAddItem(items){
+  const b = bfOn() ? TB_BF.bonusFor(state.qty) : null;
+  if (!b) return;
+  items.push({ id: b.id, quantity: 1, properties: { "Color": state.bfColor || TB_BF.colors[b.kind][0], "Logo": "Same as patch hat order", "_bf": "1" } });
 }
 
 /* ---------- wire up ---------- */
