@@ -409,14 +409,22 @@
     #tbco .bar-cta{padding:9px 18px;font-size:16px}
   }
 
+
+  /* slim page title instead of the dark photo banner */
+  #tbco header{background:none;color:var(--ink);padding:30px 0 4px;overflow:visible}
+  #tbco header::after{display:none}
+  #tbco header h1{font-size:clamp(30px,4.4vw,44px);line-height:1;margin:0 0 6px;color:var(--ink)}
+  #tbco header h1 br{display:none}
+  #tbco header h1 em{color:var(--purple)}
+  #tbco header .sub{color:var(--muted);font-size:14.5px;margin:0}
+  #tbco header .props{margin-top:8px}
+  #tbco header .props span{color:var(--ink);font-size:12.5px}
+  @media(max-width:640px){#tbco header{padding:20px 0 0}}
 </style>
 
 <header class="tbco-hero">
-  <div class="hero-photos" aria-hidden="true">
-    <div style="background-image:url('{{ 'work-dtf-am-vegas-otto.jpg' | asset_img_url: '1600x' }}');background-position:center 22%"></div>
-  </div>
   <div class="wrap">
-    <h1>Your logo.<br>In <em>full color.</em></h1>
+    <h1>Your logo. <br>In <em>full color.</em></h1>
     <p class="sub">Custom DTF printed hats on name-brand blanks. Photos, gradients and fine detail all welcome. Free mockup before anything is printed.</p>
     <div class="props">
       <span>Made in Burlington, NC</span>

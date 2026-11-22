@@ -405,16 +405,22 @@
     #tbpo .bar-cta{padding:9px 18px;font-size:16px}
   }
 
+
+  /* slim page title instead of the dark photo banner */
+  #tbpo header{background:none;color:var(--ink);padding:30px 0 4px;overflow:visible}
+  #tbpo header::after{display:none}
+  #tbpo header h1{font-size:clamp(30px,4.4vw,44px);line-height:1;margin:0 0 6px;color:var(--ink)}
+  #tbpo header h1 br{display:none}
+  #tbpo header h1 em{color:var(--purple)}
+  #tbpo header .sub{color:var(--muted);font-size:14.5px;margin:0}
+  #tbpo header .props{margin-top:8px}
+  #tbpo header .props span{color:var(--ink);font-size:12.5px}
+  @media(max-width:640px){#tbpo header{padding:20px 0 0}}
 </style>
 
 <header class="tbco-hero">
-  <div class="hero-photos" aria-hidden="true">
-    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/EMT_patch_hat.jpg?v=1790523398&width=1100')"></div>
-    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/Threadbreak_hats.jpg?v=1790523398&width=1100')"></div>
-    <div style="background-image:url('https://cdn.shopify.com/s/files/1/0974/8453/7988/files/patch-example-panelcraft.jpg?v=1789705673&width=1100')"></div>
-  </div>
   <div class="wrap">
-    <h1>Your logo.<br>Laser <em>engraved.</em></h1>
+    <h1>Your logo. <br>Laser <em>engraved.</em></h1>
     <p class="sub">Custom leatherette patch hats on name-brand blanks. Free mockup before anything hits the laser.</p>
     <div class="props">
       <span>Engraved in Burlington, NC</span>
