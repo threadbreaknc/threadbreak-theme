@@ -97,6 +97,8 @@
   @media(max-width:640px){#tbco .fsel{max-width:none} #tbco .fcount{width:100%}}
   #tbco .hat.f-hide{display:none}
   #tbco .hats{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:13px}
+  /* four across on desktop so the Top sellers row is always full */
+  @media(min-width:700px){#tbco .hats:not(.picking){grid-template-columns:repeat(4,minmax(0,1fr))}}
   #tbco .hats.picking{grid-template-columns:1fr}
   #tbco .hat{border:1.5px solid var(--line);border-radius:13px;background:#fff;cursor:pointer;overflow:hidden;transition:.2s;position:relative;scroll-margin-top:150px}
   #tbco .hat:hover{border-color:#B7A6EE;transform:translateY(-2px)}
@@ -2021,7 +2023,7 @@ const sorted = STYLES.filter(s => HIDDEN_STYLES.indexOf(s.id) === -1).sort((a, b
 });
 
 // Shown first under "Top sellers", in this order. Everything else follows under "All other hats".
-const TOP_SELLERS = ["o165","rich112","otto","otto120","tt5","atonal_a500r","yupoong"];
+const TOP_SELLERS = ["o165","rich112","otto","otto120"];
 const BADGES = { otto: "Best value", atonal_a500r: "Premium rope" };
 
 // Display name without the model number; the model lives in the secondary line.
