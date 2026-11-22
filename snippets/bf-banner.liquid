@@ -1,0 +1,18 @@
+{%- comment -%} Swaps the top shipping banner for a Black Friday link while the promo runs. {%- endcomment -%}
+<style>
+  .shipping-banner.bf-on{background:#0d0b14 !important;border-bottom:2px solid #5028AA}
+  .shipping-banner.bf-on .sb-msg{animation:none !important;visibility:visible !important;opacity:1 !important;transform:none !important;position:static !important}
+  .shipping-banner.bf-on a.bf-link{color:#fff;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+  .shipping-banner.bf-on .bf-tag{background:#5028AA;color:#fff;border-radius:4px;padding:1px 6px;letter-spacing:.08em}
+  .shipping-banner.bf-on .bf-arr{color:#b79cff}
+  @media(max-width:600px){ .shipping-banner.bf-on .bf-long{display:none} }
+</style>
+<script>
+(function(){
+  if (!window.TB_BF || !TB_BF.active()) return;
+  var b = document.querySelector(".shipping-banner");
+  if (!b || /\/pages\/black-friday/.test(location.pathname)) return;
+  b.classList.add("bf-on");
+  b.innerHTML = '<a href="/pages/black-friday" class="shipping-banner-text sb-msg bf-link"><span class="bf-tag">BLACK FRIDAY</span> FREE HATS ON CUSTOM ORDERS<span class="bf-long"> + PREMADE DEALS</span> <span class="bf-arr">&rarr;</span></a>';
+})();
+</script>

@@ -1,0 +1,315 @@
+{%- comment -%}
+  Black Friday 2026 deals page (/pages/black-friday). Promo dates + bonus tiers live in
+  snippets/bf-promo.liquid; the 12% and premade discounts are automatic discounts in admin.
+{%- endcomment -%}
+{%- assign patch_img = 'https://cdn.shopify.com/s/files/1/0974/8453/7988/files/menu-patch-hat-v4.jpg?v=1793503993&width=900' -%}
+{%- assign emb_img = 'https://cdn.shopify.com/s/files/1/0974/8453/7988/files/menu-embroidered-hat-v4.jpg?v=1793503993&width=900' -%}
+{%- assign beanie_img = 'https://s3-us-west-2.amazonaws.com/ottocap/media/products/otto/82-404/82-404-017-F.jpg' -%}
+{%- assign beanie_img2 = 'https://s3-us-west-2.amazonaws.com/ottocap/media/products/otto/82-404/82-404-003-F.jpg' -%}
+{%- assign shirt = all_products['bus-in-net-white-t-shirt-gildan-50-50-dryblend'] -%}
+{%- assign premade = collections['pre-made-hats'] -%}
+<style>
+  .tbbf{--p:#5028AA;--p2:#7a52e0;--glow:#b79cff;--ink:#0d0b14;--ink2:#17141f;--line:rgba(255,255,255,.12);background:var(--ink);color:#fff;font-family:'DM Sans',system-ui,sans-serif;overflow:hidden}
+  .tbbf *{box-sizing:border-box}
+  .tbbf a{color:inherit}
+  .tbbf-wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+  .tbbf-bebas{font-family:'Bebas Neue',sans-serif;font-weight:400;letter-spacing:.01em}
+
+  /* hero */
+  .tbbf-hero{position:relative;padding:9.5rem 0 4.5rem;background:
+     radial-gradient(1100px 500px at 85% -10%, rgba(122,82,224,.55), transparent 60%),
+     radial-gradient(700px 400px at -10% 110%, rgba(80,40,170,.45), transparent 60%),
+     repeating-linear-gradient(115deg, rgba(255,255,255,.035) 0 2px, transparent 2px 22px), var(--ink)}
+  .tbbf-hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:36px;align-items:center}
+  .tbbf-kicker{display:inline-flex;align-items:center;gap:10px;font-weight:700;font-size:13px;letter-spacing:.16em;text-transform:uppercase;color:var(--glow)}
+  .tbbf-kicker i{display:inline-block;width:34px;height:2px;background:var(--glow)}
+  .tbbf-title{margin:14px 0 0;line-height:.82;font-size:clamp(5rem,15vw,11.5rem)}
+  .tbbf-title span{display:block}
+  .tbbf-title .o{color:transparent;-webkit-text-stroke:2px #fff}
+  .tbbf-title .p{color:var(--glow)}
+  .tbbf-lead{font-size:clamp(17px,2vw,20px);line-height:1.55;color:rgba(255,255,255,.85);max-width:560px;margin:22px 0 26px}
+  .tbbf-btns{display:flex;flex-wrap:wrap;gap:12px}
+  .tbbf-btn{display:inline-flex;align-items:center;gap:8px;padding:15px 22px;border-radius:12px;font-weight:800;font-size:15px;text-decoration:none;transition:transform .15s, box-shadow .15s}
+  .tbbf-btn:hover{transform:translateY(-2px)}
+  .tbbf-btn.fill{background:var(--p);color:#fff;box-shadow:0 10px 30px -10px rgba(122,82,224,.9)}
+  .tbbf-btn.line{border:2px solid rgba(255,255,255,.35);color:#fff}
+  .tbbf-clock{margin-top:30px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .tbbf-clock-lbl{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+  .tbbf-clock-units{display:flex;gap:8px}
+  .tbbf-clock-units div{min-width:62px;text-align:center;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:10px;padding:8px 6px 6px}
+  .tbbf-clock-units b{display:block;font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:34px;line-height:1}
+  .tbbf-clock-units small{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.55)}
+  .tbbf-stack{position:relative;height:440px}
+  .tbbf-stack img{position:absolute;object-fit:cover;border-radius:20px;box-shadow:0 30px 60px -25px rgba(0,0,0,.8);border:1px solid var(--line)}
+  .tbbf-stack .a{width:72%;aspect-ratio:1;top:0;right:0}
+  .tbbf-stack .b{width:52%;aspect-ratio:1;bottom:0;left:0;background:#fff}
+  .tbbf-burst{position:absolute;top:46%;left:44%;transform:translate(-50%,-50%) rotate(-8deg);width:132px;height:132px;border-radius:50%;background:var(--p);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;box-shadow:0 0 0 8px rgba(122,82,224,.25),0 20px 40px -10px rgba(0,0,0,.6);z-index:2}
+  .tbbf-burst b{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:44px;line-height:.9}
+  .tbbf-burst small{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+
+  /* ticker */
+  .tbbf-tick{background:var(--p);overflow:hidden;white-space:nowrap;border-block:1px solid rgba(255,255,255,.15)}
+  .tbbf-tick-in{display:inline-flex;gap:38px;padding:13px 0;animation:tbbfTick 32s linear infinite}
+  .tbbf-tick span{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.04em}
+  .tbbf-tick span::after{content:"\2605";margin-left:38px;color:var(--glow)}
+  @keyframes tbbfTick{to{transform:translateX(-50%)}}
+  @media(prefers-reduced-motion:reduce){.tbbf-tick-in{animation:none}}
+
+  /* sections */
+  .tbbf-sec{padding:5rem 0;scroll-margin-top:100px}
+  .tbbf-sec.alt{background:var(--ink2)}
+  .tbbf-h2{font-size:clamp(3rem,7vw,5rem);line-height:.9;margin:8px 0 12px}
+  .tbbf-h2 em{font-style:normal;color:var(--glow)}
+  .tbbf-sub{font-size:17px;line-height:1.6;color:rgba(255,255,255,.75);max-width:640px;margin:0 0 34px}
+
+  /* custom ladder */
+  .tbbf-ladder{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+  .tbbf-step{position:relative;display:flex;flex-direction:column;border-radius:18px;overflow:hidden;background:#1d1a27;border:1px solid var(--line);text-decoration:none;transition:transform .18s,border-color .18s}
+  .tbbf-step:hover{transform:translateY(-4px);border-color:var(--glow)}
+  .tbbf-step.hot{background:linear-gradient(160deg,#5028AA,#2b1766);border-color:var(--glow)}
+  .tbbf-step-top{padding:20px 20px 0}
+  .tbbf-step-q{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--glow)}
+  .tbbf-step.hot .tbbf-step-q{color:#fff}
+  .tbbf-step-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(3.4rem,6vw,4.6rem);line-height:.85;margin:10px 0 2px}
+  .tbbf-step-big small{display:block;font-size:.42em;line-height:1;color:rgba(255,255,255,.85);margin-top:4px}
+  .tbbf-step-val{font-size:13px;color:rgba(255,255,255,.7);margin:6px 0 14px}
+  .tbbf-step-val s{opacity:.7}
+  .tbbf-step-img{margin-top:auto;aspect-ratio:4/3;background:#fff;position:relative}
+  .tbbf-step-img img{width:100%;height:100%;object-fit:cover;display:block}
+  .tbbf-step-img .x{position:absolute;right:10px;bottom:10px;background:var(--ink);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:24px;line-height:1;border-radius:8px;padding:6px 10px 4px}
+  .tbbf-step-pct{margin-top:auto;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;background:repeating-linear-gradient(135deg,#25212f 0 10px,#1d1a27 10px 20px)}
+  .tbbf-step-pct b{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:6.5rem;line-height:1;color:transparent;-webkit-text-stroke:2px var(--glow)}
+  .tbbf-arrow{display:flex;align-items:center;gap:10px;margin:22px 0 0;font-size:14px;color:rgba(255,255,255,.7)}
+  .tbbf-bar{flex:1;height:6px;border-radius:99px;background:linear-gradient(90deg,rgba(183,156,255,.25),var(--glow))}
+  .tbbf-note{margin-top:26px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  .tbbf-note div{border:1px solid var(--line);border-radius:14px;padding:16px 18px;font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.8)}
+  .tbbf-note b{display:block;color:#fff;margin-bottom:4px}
+  .tbbf-cta-row{margin-top:30px;display:flex;flex-wrap:wrap;gap:12px}
+
+  /* premade */
+  .tbbf-pm{display:grid;grid-template-columns:.9fr 1.1fr;gap:34px;align-items:start}
+  .tbbf-deal{display:grid;gap:14px}
+  .tbbf-deal-card{display:flex;align-items:center;gap:18px;border-radius:18px;padding:20px 22px;background:#1d1a27;border:1px solid var(--line)}
+  .tbbf-deal-card.hot{background:linear-gradient(160deg,#5028AA,#2b1766);border-color:var(--glow)}
+  .tbbf-deal-n{flex:0 0 auto;width:86px;height:86px;border-radius:16px;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;border:1px solid var(--line)}
+  .tbbf-deal-n b{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:46px;line-height:.9}
+  .tbbf-deal-n small{font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--glow)}
+  .tbbf-deal-t b{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:38px;line-height:.95;display:block}
+  .tbbf-deal-t span{font-size:14px;color:rgba(255,255,255,.75)}
+  .tbbf-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+  .tbbf .tbbf-pcard{text-decoration:none;display:block;border-radius:14px;overflow:hidden;background:#fff;color:var(--ink);transition:transform .15s}
+  .tbbf-pcard .ph{position:relative;aspect-ratio:1/1;background:#f2f1f6;overflow:hidden}
+  .tbbf .tbbf-pcard .ph img{position:absolute;inset:0;width:100% !important;height:100% !important;max-height:none !important;object-fit:cover;display:block}
+  .tbbf-pcard:hover{transform:translateY(-3px)}
+
+  .tbbf .tbbf-pcard span{display:block;padding:9px 10px 11px;font-size:12.5px;font-weight:700;line-height:1.3;color:var(--ink)}
+  .tbbf-pcard span em{display:block;font-style:normal;font-weight:500;color:#5c5a68;margin-top:2px}
+
+  /* shirt */
+  .tbbf-shirt{display:grid;grid-template-columns:.8fr 1.2fr;gap:0;border-radius:22px;overflow:hidden;border:1px solid var(--line);background:#1d1a27}
+  .tbbf-shirt-img{background:#fff;position:relative}
+  .tbbf-shirt-img img{width:100%;height:100%;object-fit:cover;display:block;min-height:300px}
+  .tbbf-tag{position:absolute;top:16px;left:16px;background:#c0392b;color:#fff;font-weight:800;font-size:12px;letter-spacing:.12em;text-transform:uppercase;border-radius:8px;padding:7px 10px}
+  .tbbf-shirt-tx{padding:34px 34px}
+  .tbbf-price{display:flex;align-items:baseline;gap:14px;margin:8px 0 10px}
+  .tbbf-price b{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:5rem;line-height:.9;color:var(--glow)}
+  .tbbf-price s{font-size:22px;color:rgba(255,255,255,.5)}
+  .tbbf-left{display:flex;gap:6px;margin:4px 0 22px}
+  .tbbf-left i{width:34px;height:10px;border-radius:99px;background:var(--glow)}
+
+  /* fine print */
+  .tbbf-fine{padding:3.5rem 0 4.5rem;border-top:1px solid var(--line)}
+  .tbbf-fine h3{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:30px;margin:0 0 10px}
+  .tbbf-fine ul{margin:0;padding-left:1.1rem;columns:2;column-gap:40px}
+  .tbbf-fine li{font-size:14px;line-height:1.6;color:rgba(255,255,255,.7);margin:0 0 8px;break-inside:avoid}
+
+  @media(max-width:960px){
+    .tbbf-hero-grid,.tbbf-pm,.tbbf-shirt{grid-template-columns:1fr}
+    .tbbf-stack{height:340px;max-width:460px}
+    .tbbf-ladder{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .tbbf-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .tbbf-note{grid-template-columns:1fr}
+  }
+  @media(max-width:560px){
+    .tbbf-hero{padding-top:8rem}
+    .tbbf-stack{height:280px}
+    .tbbf-burst{width:104px;height:104px}.tbbf-burst b{font-size:34px}
+    .tbbf-ladder{grid-template-columns:1fr 1fr;gap:10px}
+    .tbbf-step-top{padding:14px 14px 0}
+    .tbbf-step-big{font-size:2.9rem}
+    .tbbf-grid{grid-template-columns:1fr 1fr}
+    .tbbf-clock-units div{min-width:54px}
+    .tbbf-shirt-tx{padding:24px 20px}
+    .tbbf-fine ul{columns:1}
+    .tbbf-sec{padding:3.6rem 0}
+  }
+</style>
+
+<div class="tbbf">
+  <section class="tbbf-hero">
+    <div class="tbbf-wrap tbbf-hero-grid">
+      <div>
+        <div class="tbbf-kicker"><i></i>Nov 25 &ndash; Nov 30 &middot; Threadbreak</div>
+        <h1 class="tbbf-title tbbf-bebas"><span class="o">Black</span><span>Friday</span><span class="p">Deals</span></h1>
+        <p class="tbbf-lead">Free hats on custom embroidered orders, stacked deals on premade snapbacks, and our last Bus In Net tees for $20.</p>
+        <div class="tbbf-btns">
+          <a class="tbbf-btn fill" href="#custom">Custom hat deals &rarr;</a>
+          <a class="tbbf-btn line" href="#premade">Premade hat deals</a>
+        </div>
+        <div class="tbbf-clock" id="tbbfClock" hidden>
+          <span class="tbbf-clock-lbl" id="tbbfClockLbl">Ends in</span>
+          <div class="tbbf-clock-units"><div><b id="tbbfD">0</b><small>Days</small></div><div><b id="tbbfH">0</b><small>Hrs</small></div><div><b id="tbbfM">0</b><small>Min</small></div><div><b id="tbbfS">0</b><small>Sec</small></div></div>
+        </div>
+      </div>
+      <div class="tbbf-stack" aria-hidden="true">
+        <img class="a" src="{{ emb_img }}" alt="" loading="eager">
+        <img class="b" src="{{ beanie_img }}" alt="" loading="eager">
+        <div class="tbbf-burst"><small>Up to</small><b>10</b><small>Free</small></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="tbbf-tick" aria-hidden="true"><div class="tbbf-tick-in">
+    {%- for i in (1..2) -%}
+      <span>Order 10, get 2 free patch hats</span><span>Order 24, get 5 free beanies</span><span>Order 48, get 10 free beanies</span><span>12% off 5&ndash;9 hats</span><span>Premade: 35% off your 3rd hat</span><span>Bus In Net tee $20</span>
+    {%- endfor -%}
+  </div></div>
+
+  <section class="tbbf-sec" id="custom">
+    <div class="tbbf-wrap">
+      <div class="tbbf-kicker"><i></i>Custom embroidered hats</div>
+      <h2 class="tbbf-h2 tbbf-bebas">Order more, <em>get free hats</em></h2>
+      <p class="tbbf-sub">Your logo, embroidered in house. The more you order, the more free gear you get. Free items go in your cart automatically, and you pick the color.</p>
+
+      <div class="tbbf-ladder">
+        <a class="tbbf-step" href="/pages/custom-order">
+          <div class="tbbf-step-top">
+            <div class="tbbf-step-q">Order 5&ndash;9 hats</div>
+            <div class="tbbf-step-big">12% off<small>your whole order</small></div>
+            <div class="tbbf-step-val">Taken off at checkout</div>
+          </div>
+          <div class="tbbf-step-pct"><b>12%</b></div>
+        </a>
+        <a class="tbbf-step" href="/pages/custom-order">
+          <div class="tbbf-step-top">
+            <div class="tbbf-step-q">Order 10+ hats</div>
+            <div class="tbbf-step-big">Get 2 free<small>laser engraved patch hats</small></div>
+            <div class="tbbf-step-val"><s>$50</s> value &middot; your logo on leather</div>
+          </div>
+          <div class="tbbf-step-img"><img src="{{ patch_img }}" alt="Laser engraved leather patch hat" loading="lazy"><span class="x">x2</span></div>
+        </a>
+        <a class="tbbf-step hot" href="/pages/custom-order">
+          <div class="tbbf-step-top">
+            <div class="tbbf-step-q">Order 24+ hats</div>
+            <div class="tbbf-step-big">Get 5 free<small>embroidered beanies</small></div>
+            <div class="tbbf-step-val"><s>$120</s> value &middot; logo on the cuff</div>
+          </div>
+          <div class="tbbf-step-img"><img src="{{ beanie_img }}" alt="Otto cuffed knit beanie" loading="lazy"><span class="x">x5</span></div>
+        </a>
+        <a class="tbbf-step hot" href="/pages/custom-order">
+          <div class="tbbf-step-top">
+            <div class="tbbf-step-q">Order 48+ hats</div>
+            <div class="tbbf-step-big">Get 10 free<small>embroidered beanies</small></div>
+            <div class="tbbf-step-val"><s>$240</s> value &middot; logo on the cuff</div>
+          </div>
+          <div class="tbbf-step-img"><img src="{{ beanie_img2 }}" alt="Black Otto cuffed knit beanie" loading="lazy"><span class="x">x10</span></div>
+        </a>
+      </div>
+      <div class="tbbf-arrow"><span>5 hats</span><span class="tbbf-bar"></span><span>48+ hats</span></div>
+
+      <div class="tbbf-note">
+        <div><b>Automatic</b>Build your order like normal. The free items or the 12% off show up on their own, no code needed.</div>
+        <div><b>Same logo, your colors</b>Free hats and beanies use the logo from your order. Pick the color in your cart, and see it all on your mockup first.</div>
+        <div><b>Hat packages count too</b>Our 10, 24 and 48 hat packages get the same free items.</div>
+      </div>
+      <div class="tbbf-cta-row">
+        <a class="tbbf-btn fill" href="/pages/custom-order">Start your custom order &rarr;</a>
+        <a class="tbbf-btn line" href="/collections/custom-hat-packages">Shop hat packages</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="tbbf-sec alt" id="premade">
+    <div class="tbbf-wrap tbbf-pm">
+      <div>
+        <div class="tbbf-kicker"><i></i>Premade snapbacks</div>
+        <h2 class="tbbf-h2 tbbf-bebas">Stack your <em>hats</em></h2>
+        <p class="tbbf-sub">Mix and match any premade hats. The discount comes off automatically in your cart.</p>
+        <div class="tbbf-deal">
+          <div class="tbbf-deal-card"><div class="tbbf-deal-n"><small>Buy</small><b>2</b></div><div class="tbbf-deal-t"><b>15% off your 2nd hat</b><span>Any two premade hats</span></div></div>
+          <div class="tbbf-deal-card hot"><div class="tbbf-deal-n"><small>Buy</small><b>3</b></div><div class="tbbf-deal-t"><b>35% off your 3rd hat</b><span>Best deal. Grab one for everyone.</span></div></div>
+        </div>
+        <div class="tbbf-cta-row"><a class="tbbf-btn fill" href="/collections/pre-made-hats">Shop premade hats &rarr;</a></div>
+      </div>
+      <div class="tbbf-grid">
+        {%- assign shown = 0 -%}
+        {%- for p in premade.products -%}
+          {%- if shown >= 8 -%}{%- break -%}{%- endif -%}
+          {%- if p.available and p.featured_image -%}
+            {%- unless p.title contains 'Clearance' or p.title contains 'DEFECT' -%}
+              <a class="tbbf-pcard" href="{{ p.url }}"><div class="ph"><img src="{{ p.featured_image | image_url: width: 400 }}" alt="{{ p.featured_image.alt | default: p.title | escape }}" loading="lazy" width="400" height="400"></div><span>{{ p.title | truncate: 46 }}<em>{{ p.price | money }}</em></span></a>
+              {%- assign shown = shown | plus: 1 -%}
+            {%- endunless -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </section>
+
+  {%- if shirt and shirt.id -%}
+  <section class="tbbf-sec" id="shirt">
+    <div class="tbbf-wrap">
+      <div class="tbbf-shirt">
+        <div class="tbbf-shirt-img">
+          <img src="{{ shirt.featured_image | image_url: width: 900 }}" alt="{{ shirt.title | escape }}" loading="lazy">
+          <span class="tbbf-tag">Last 4 &middot; XL only</span>
+        </div>
+        <div class="tbbf-shirt-tx">
+          <div class="tbbf-kicker"><i></i>While they last</div>
+          <h2 class="tbbf-h2 tbbf-bebas">Bus In Net <em>tee</em></h2>
+          <div class="tbbf-price"><b>$20</b><s>$35</s></div>
+          <div class="tbbf-left" aria-label="4 left"><i></i><i></i><i></i><i></i></div>
+          <p class="tbbf-sub" style="margin-bottom:22px">The original Bus In Net design on a white Gildan tee. Only XL left, and only four of them. Once they're gone, they're gone.</p>
+          <a class="tbbf-btn fill" href="{{ shirt.url }}">Grab an XL &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  {%- endif -%}
+
+  <section class="tbbf-fine">
+    <div class="tbbf-wrap">
+      <h3>The fine print</h3>
+      <ul>
+        <li>Deals run Wednesday, Nov 25 at 6pm ET through Monday, Nov 30 at 11:59pm ET.</li>
+        <li>One deal per order. Free hats/beanies and the 12% off can't be combined with each other or with other discount codes.</li>
+        <li>Free items apply to custom embroidered hat orders and hat packages. Custom beanie, patch and DTF orders aren't included.</li>
+        <li>Free patch hats are Otto 31-069 5-panels. Free beanies are Otto 82-404 cuffed beanies. Both use the logo from your order.</li>
+        <li>Premade deals apply to premade hats only. Shirts are excluded.</li>
+        <li>Custom orders ship 2&ndash;4 weeks after mockup approval. Free shipping to the lower 48.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  var BF = window.TB_BF; if (!BF) return;
+  var box = document.getElementById("tbbfClock"), lbl = document.getElementById("tbbfClockLbl");
+  var s = Date.parse(BF.start), e = Date.parse(BF.end);
+  function pad(n){ return n < 10 ? "0" + n : "" + n; }
+  function tick(){
+    var now = Date.now(), target;
+    if (now < s){ target = s; lbl.textContent = "Starts in"; }
+    else if (now < e){ target = e; lbl.textContent = "Ends in"; }
+    else { box.hidden = true; return; }
+    box.hidden = false;
+    var d = Math.max(0, Math.floor((target - now) / 1000));
+    document.getElementById("tbbfD").textContent = Math.floor(d / 86400);
+    document.getElementById("tbbfH").textContent = pad(Math.floor(d % 86400 / 3600));
+    document.getElementById("tbbfM").textContent = pad(Math.floor(d % 3600 / 60));
+    document.getElementById("tbbfS").textContent = pad(d % 60);
+  }
+  tick(); setInterval(tick, 1000);
+})();
+</script>

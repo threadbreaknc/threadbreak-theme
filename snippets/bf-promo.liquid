@@ -1,0 +1,53 @@
+{%- comment -%}
+  Black Friday 2026 promo config. Used by the custom order form, the cart,
+  the site banner and /pages/black-friday.
+  - Dates are Eastern time. Outside the window nothing shows and the cart drops bonus lines.
+  - Add ?bfpreview=1 to any URL to see the promo early (remembered for the browser tab).
+  - Bonus lines are variants of the "Black Friday Bonus" product ($0, compare-at = value).
+  - 12% off (5-9 hats) and the premade ladder are automatic discounts in Shopify admin.
+{%- endcomment -%}
+<script>
+window.TB_BF = window.TB_BF || (function(){
+  var BF = {
+    start: "2026-11-25T18:00:00-05:00",
+    end:   "2026-12-01T00:00:00-05:00",
+    // highest first; qty counts embroidered hats only (no beanies, patch or DTF orders)
+    bonus: [
+      { min: 48, id: 68164090527876, kind: "beanie", count: 10, value: 240, label: "10 FREE Embroidered Beanies" },
+      { min: 24, id: 68164090495108, kind: "beanie", count: 5,  value: 120, label: "5 FREE Embroidered Beanies" },
+      { min: 10, id: 68164090462340, kind: "patch",  count: 2,  value: 50,  label: "2 FREE Laser Engraved Patch Hats" }
+    ],
+    beanieName: "Otto 82-404 Cuffed Beanie",
+    patchName: "Otto 31-069 5-Panel",
+    colors: {
+      beanie: ["Black","Navy","Dark Green","Gold","Neon Orange","Neon Yellow"],
+      patch: ["Black","White","Grey","Red","Pink","Camo","Neon Orange","Neon Yellow","Royal Blue","Black/White","Black/Red","Red/Black","Black/Grey","Black/Khaki","Black/Natural","Black/Royal Blue","Red/White","Red/Natural","Royal Blue/Natural","Royal Blue/White","Dark Green/Natural","Charcoal Grey/Black"]
+    },
+    smallPct: 12
+  };
+  BF.ids = BF.bonus.map(function(b){ return b.id; });
+  BF.preview = function(){
+    try {
+      if (/[?&]bfpreview=1/.test(location.search)) sessionStorage.setItem("tbBfPreview", "1");
+      if (/[?&]bfpreview=0/.test(location.search)) sessionStorage.removeItem("tbBfPreview");
+      return sessionStorage.getItem("tbBfPreview") === "1";
+    } catch (e) { return /[?&]bfpreview=1/.test(location.search); }
+  };
+  BF.active = function(){
+    if (BF.preview()) return true;
+    var n = Date.now();
+    return n >= Date.parse(BF.start) && n < Date.parse(BF.end);
+  };
+  BF.bonusFor = function(q){
+    q = +q || 0;
+    for (var i = 0; i < BF.bonus.length; i++) if (q >= BF.bonus[i].min) return BF.bonus[i];
+    return null;
+  };
+  BF.nextFor = function(q){
+    q = +q || 0;
+    for (var i = BF.bonus.length - 1; i >= 0; i--) if (BF.bonus[i].min > q) return BF.bonus[i];
+    return null;
+  };
+  return BF;
+})();
+</script>

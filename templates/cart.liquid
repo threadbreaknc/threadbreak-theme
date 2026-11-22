@@ -5,6 +5,10 @@
   .cart-tier-qty.busy{opacity:.5;pointer-events:none}
   .qty-locked-note a{color:#5028AA;font-weight:600}
   .qty-locked-note{display:block;font-size:0.72rem;color:#6B6A78;margin-top:5px;max-width:260px;line-height:1.35}
+  .bf-cart-pick label{display:flex;align-items:center;gap:8px;font-size:.82rem;font-weight:700;color:#14121C}
+  .bf-cart-pick select{height:36px;border:1.5px solid #E2E0EA;border-radius:8px;padding:0 8px;font:inherit;font-weight:500;background:#fff}
+  .bf-cart-free{font-weight:800;color:#5028AA}
+  .bf-cart-free s{color:#9a98a6;font-weight:500;margin-right:4px}
 </style>
 <div class="cart-page">
   <div class="about-sparkles" id="about-sparkles" aria-hidden="true"></div>
@@ -56,7 +60,17 @@
               {%- if item.product.type == 'Custom Hats' or item.product.tags contains 'custom-order-form' -%}
                 {%- assign is_tier_locked = true -%}
               {%- endif -%}
-              {%- if is_tier_locked -%}
+              {%- assign is_bf = false -%}
+              {%- if item.product.handle == 'black-friday-bonus' -%}{%- assign is_bf = true -%}{%- endif -%}
+              {%- if is_bf -%}
+                <div class="bf-cart-pick">
+                  <label>Color
+                    <select class="bf-color" data-key="{{ item.key }}" data-kind="{% if item.variant.title contains 'Beanie' %}beanie{% else %}patch{% endif %}" data-props="{{ item.properties | json | escape }}" data-current="{{ item.properties['Color'] | escape }}"></select>
+                  </label>
+                  <input type="hidden" name="updates[]" value="{{ item.quantity }}">
+                </div>
+                <span class="qty-locked-note">Black Friday bonus. Same logo as your hats, on your mockup.</span>
+              {%- elsif is_tier_locked -%}
                 {%- assign hat_colors = item.properties['Hat Color(s)'] | default: '' -%}
                 {%- assign multi_color = false -%}
                 {%- if hat_colors contains ' x' -%}{%- assign multi_color = true -%}{%- endif -%}
@@ -87,7 +101,11 @@
                   <button type="button" class="qty-btn cart-qty-plus" data-line="{{ forloop.index }}">+</button>
                 </div>
               {%- endif -%}
+              {%- if is_bf -%}
+                <span class="cart-item-total bf-cart-free"><s>{{ item.variant.compare_at_price | money }}</s> FREE</span>
+              {%- else -%}
               <span class="cart-item-total">{{ item.line_price | money }}</span>
+              {%- endif -%}
               {%- comment -%}
                 Remove by line item key, not by position. A line number goes stale as
                 soon as the cart changes, and the GET /cart/change?line= fallback is
@@ -140,6 +158,41 @@
 {%- endif -%}
 
 <script>
+// Black Friday bonus: keep the free line in step with the embroidered hats in the cart
+// (custom order form lines + 10/24/48 hat packages; beanies, patch and DTF orders don't count).
+(function(){
+  var BF = window.TB_BF; if (!BF) return;
+  var post = function(url, body){ return fetch(url, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(body) }).then(function(r){ if (!r.ok) throw new Error(url + " " + r.status); return r.json(); }); };
+  document.querySelectorAll(".bf-color").forEach(function(sel){
+    var list = BF.colors[sel.dataset.kind] || [], cur = sel.dataset.current;
+    sel.innerHTML = list.map(function(c){ return "<option" + (c === cur ? " selected" : "") + ">" + c + "</option>"; }).join("");
+    sel.addEventListener("change", function(){
+      var props = {}; try { props = JSON.parse(sel.dataset.props || "{}"); } catch (e) {}
+      props["Color"] = sel.value; sel.disabled = true;
+      post("/cart/change.js", { id: sel.dataset.key, quantity: 1, properties: props }).then(function(){ window.location.reload(); }).catch(function(){ sel.disabled = false; });
+    });
+  });
+  fetch("/cart.js").then(function(r){ return r.json(); }).then(function(cart){
+    var q = 0, lines = [], hatColor = "";
+    cart.items.forEach(function(it){
+      if (it.handle === "black-friday-bonus"){ lines.push(it); return; }
+      if (it.handle === "custom-embroidered-hat" && !/beanie/i.test(it.variant_title || "")){ q += it.quantity; if (!hatColor && it.properties) hatColor = String(it.properties["Hat Color(s)"] || "").split(/ x|,/)[0].trim(); }
+      else if (it.product_type === "Custom Hat Bundle"){ q += (parseInt(it.product_title, 10) || 0) * it.quantity; }
+    });
+    var want = BF.active() ? BF.bonusFor(q) : null;
+    var ok = want ? (lines.length === 1 && lines[0].variant_id === want.id && lines[0].quantity === 1) : !lines.length;
+    if (ok) return;
+    var updates = {}; lines.forEach(function(l){ updates[l.key] = 0; });
+    var step = lines.length ? post("/cart/update.js", { updates: updates }) : Promise.resolve();
+    step.then(function(){
+      if (!want) return;
+      var list = BF.colors[want.kind], old = lines[0] && lines[0].properties && lines[0].properties["Color"];
+      var color = (old && list.indexOf(old) > -1) ? old : (list.indexOf(hatColor) > -1 ? hatColor : list[0]);
+      return post("/cart/add.js", { items: [{ id: want.id, quantity: 1, properties: { "Color": color, "Logo": "Same as hat order", "_bf": "1" } }] });
+    }).then(function(){ window.location.reload(); }).catch(function(e){ try { console.warn("bf bonus", e); } catch (x) {} });
+  });
+})();
+
 // Tier-priced custom order lines: change quantity in the cart.
 (function(){
   var post = function(url, body){ return fetch(url, { method: "POST", headers: { "Content-Type": "application/json", "Accept": "application/json" }, body: JSON.stringify(body) }).then(function(r){ if (!r.ok) throw new Error(url + " " + r.status); return r.json(); }); };
